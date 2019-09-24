@@ -24,6 +24,7 @@ class Store {
     this.renderers = storeConfig.renderers;
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
+    this.rerenderingRequired = false;
   }
 
   _loadLayers(){
@@ -31,6 +32,7 @@ class Store {
     .then(lV => {
       this.lyrView = lV;
       this.filters.forEach(f => f.load(this.lyr));
+      this.rerenderingRequired = true
     });
   }
 
@@ -69,8 +71,7 @@ class Store {
       'esri/core/promiseUtils',
       'esri/identity/OAuthInfo',
       'esri/identity/IdentityManager',
-      'esri/renderers/support/jsonUtils',
-      "esri/widgets/TimeSlider"
+      'esri/renderers/support/jsonUtils'
     ], options)
     .then(([Map, MapView, FeatureLayer, promiseUtils, OAuthInfo, esriId, rendererJsonUtils]) => {
       pUtils = promiseUtils; 
@@ -128,6 +129,7 @@ class Store {
 decorate(Store, {
   user: observable,
   rendererField: observable,
+  rerenderingRequired: observable,
   where: computed,
   load: action.bound,
   setRendererField: action.bound,

@@ -29,6 +29,15 @@ const eventsConfig = {
         "Event value: {eventvalue}<br>" +
         "Event timestamp: {eventtimestamp}"
   }
+  // ,
+  // timeInfo: {
+  //   startField: "eventtimestamp", // name of the date field
+  //   interval: {
+  //     // set time interval to one day
+  //     unit: "days",
+  //     value: 1
+  //   }
+  // }
 
 }
 
