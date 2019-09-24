@@ -15,7 +15,11 @@ const safetyConfig = {
     {name: 'bicycles_density', type: 'minmax', params: {log: true}},
     {name: 'harsh_cornering_ratio', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
     {name: 'harsh_acc_ratio', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
-  ]
+  ],
+  popupTemplate: {
+    title: "Hello world!",
+    content: "Road safety score: <b>{eventvalue}</b>"
+  }
 }
 
 export default safetyConfig;
