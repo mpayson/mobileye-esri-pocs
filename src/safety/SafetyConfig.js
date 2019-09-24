@@ -10,6 +10,7 @@ const safetyConfig = {
                  "symbol":{"color":[170,170,170,255],"width":1.5,"type":"esriSLS","style":"esriSLSSolid"}}
   },
   filters: [
+    {name: 'project', type: 'select'},
     {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
     {name: 'pedestrians_density', type: 'minmax', params: {log: true}},
     {name: 'bicycles_density', type: 'minmax', params: {log: true}},
