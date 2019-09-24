@@ -96,8 +96,9 @@ class Store {
       this.user = credential.userId;
       this.lyr = new FL({
         portalItem: {id: this.layerId},
-        renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField])
+        // renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField])
       });
+      console.log(this.renderers, this.rendererField, rjsonUtils.fromJSON(this.renderers))
       this.map = new M({
         basemap: 'dark-gray-vector',
         layers: [this.lyr]
