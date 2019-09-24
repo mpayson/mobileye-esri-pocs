@@ -61,16 +61,38 @@ const EventsApp = observer(class App extends React.Component {
 
     const modulePromise = loadModules([
       'esri/widgets/Search',
-      'esri/widgets/Legend'
+      'esri/widgets/Legend',
+      'esri/widgets/TimeSlider'
+
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend], mapView]) => {
+      .then(([[Search, Legend, TimeSlider], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
         this.view.ui.add(search, "top-right");
         const legend = new Legend({view: this.view});
+
+        console.log(this.store.lyr.timeInfo);
+        // create a new time slider widget
+        // set other properties when the layer view is loaded
+        // by default timeSlider.mode is "time-window" - shows
+        // data falls within time range
+        // const timeSlider = new TimeSlider({
+        //   container: "timeSlider",
+        //   playRate: 50,
+        //   stops: {
+        //     interval: {
+        //       value: 1,
+        //       unit: "hours"
+        //     }
+        //   }
+        // });
+        // this.timeSlider = timeSlider;
+        //this.view.ui.add(timeSlider, "manual");
+        //timeSlider.values = [start, end];
+
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
       });
@@ -78,9 +100,9 @@ const EventsApp = observer(class App extends React.Component {
 
   render() {
     let panel;
-    switch(this.state.navKey){
+    switch (this.state.navKey) {
       case 'Layers':
-        panel = <LayerPanel store={this.store} map={this.map} layer={this.lyr} layerView={this.lyrView}/>;
+        panel = <LayerPanel store={this.store} map={this.map}/>;
         break;
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;
@@ -94,6 +116,16 @@ const EventsApp = observer(class App extends React.Component {
       default:
         panel = null;
     }
+
+    // Init Time Slider
+    // if (this.store.rerenderingRequired){
+    //   this.timeSlider.fullTimeExtent = {
+    //     start: new Date(2019, 1, 1),
+    //     end: new Date(2020, 1, 1)
+    //   };
+    //   //this.store.rerenderingRequired = false;
+    // }
+
 
     const signin = this.store.user
       ? (
