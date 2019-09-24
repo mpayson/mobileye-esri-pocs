@@ -21,7 +21,17 @@ const eventsConfig = {
     {name: 'eventsubtype', type: 'minmax', params: {log: true}},
     {name: 'project', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
     {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
-  ]
+  ],
+  popupTemplate: {
+    title: "Event information:",
+    content: "Event type: <b>{eventsubtype}</b><br>" +
+        "Project: {project}<br>" +
+        "Event value: {eventvalue}<br>" +
+        "Event timestamp: {eventtimestamp}"
+  }
+
 }
 
 export default eventsConfig;
+
+
