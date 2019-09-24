@@ -25,3 +25,5 @@ const eventsConfig = {
 }
 
 export default eventsConfig;
+
+

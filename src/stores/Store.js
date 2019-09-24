@@ -68,7 +68,8 @@ class Store {
       'esri/core/promiseUtils',
       'esri/identity/OAuthInfo',
       'esri/identity/IdentityManager',
-      'esri/renderers/support/jsonUtils'
+      'esri/renderers/support/jsonUtils',
+      "esri/widgets/TimeSlider"
     ], options)
     .then(([Map, MapView, FeatureLayer, promiseUtils, OAuthInfo, esriId, rendererJsonUtils]) => {
       pUtils = promiseUtils; 
