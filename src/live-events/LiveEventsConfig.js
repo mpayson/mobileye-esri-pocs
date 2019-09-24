@@ -1,4 +1,4 @@
-const safetyConfig = {
+const liveEventsConfig = {
   layerItemId: '9524ea255f4e452bb1e79d951ed65a5f',
   initialRendererField: 'eventvalue',
   renderers: {
@@ -17,4 +17,4 @@ const safetyConfig = {
   ]
 }
 
-export default safetyConfig;
+export default liveEventsConfig;

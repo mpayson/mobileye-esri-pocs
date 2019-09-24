@@ -9,7 +9,7 @@ import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import LayerPanel from './LayerPanel';
 import Store from '../stores/Store';
-import safetyConfig from './SafetyConfig';
+import liveEventsConfig from './LiveEventsConfig';
 
 const { Header, Content, Sider } = Layout;
 
@@ -26,7 +26,7 @@ const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>
 )
 
-const SafetyApp = observer(class App extends React.Component {
+const LiveEventsApp = observer(class App extends React.Component {
 
   state = {
     collapsed: true,
@@ -37,7 +37,7 @@ const SafetyApp = observer(class App extends React.Component {
   constructor(props, context){
     super(props, context);
     this.mapViewRef = React.createRef();
-    this.store = new Store(safetyConfig);
+    this.store = new Store(liveEventsConfig);
   }
 
   onCollapse = collapsed => {
@@ -169,4 +169,4 @@ const SafetyApp = observer(class App extends React.Component {
   }
 });
 
-export default SafetyApp;
+export default LiveEventsApp;
