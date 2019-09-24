@@ -12,4 +12,10 @@ const getMinMaxWhere = (field, min, max) => {
   return where;
 }
 
-export {getMinMaxWhere};
+const getMultiSelectWhere = (field, values) => {
+  if(!values || values.length < 1) return null;
+  const wstr = values.join("','");
+  return `${field} IN ('${wstr}')`;
+}
+
+export {getMinMaxWhere, getMultiSelectWhere};

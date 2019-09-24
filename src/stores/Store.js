@@ -1,5 +1,5 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
-import { MinMaxFilter } from './Filters';
+import { MinMaxFilter, MultiSelectFilter } from './Filters';
 import {loadModules} from 'esri-loader';
 import config from '../config/config';
 import options from '../config/esri-loader-options';
@@ -17,6 +17,8 @@ class Store {
       switch(f.type){
         case 'minmax':
           return new MinMaxFilter(f.name, f.params)
+        case 'multiselect':
+          return new MultiSelectFilter(f.name, f.params);
         default:
           throw new Error("Unknown filter type!")
       }
