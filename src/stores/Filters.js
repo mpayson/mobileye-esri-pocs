@@ -1,7 +1,7 @@
-import { decorate, observable, action } from 'mobx';
+import { decorate, observable, action, computed } from 'mobx';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import {getMinMaxWhere} from '../utils/Utils';
+import {getMinMaxWhere, getMultiSelectWhere} from '../utils/Utils';
 
 const getMaxQuery = (field) => ({
   onStatisticField: field,
@@ -20,12 +20,71 @@ class Filter {
     this.fieldInfo = {};
   }
   load(featureLayer){
+
     if(!featureLayer.loaded){
       throw new Error("Please wait until the layer is loaded");
     }
     this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
   }
 }
+
+// this.precipLyr.queryFeatures({
+//   where: "1=1",
+//   returnDistinctValues: true,
+//   outFields: ['label']
+// }).then(res => {
+//   const uniqueValues = res.features.map(f => 
+//     f.attributes['label']
+//   );
+//   console.log(res);
+//   this.setState({
+//     precipOptions: uniqueValues
+//   });
+// })
+
+class MultiSelectFilter extends Filter{
+  
+  type = 'multiselect';
+  loaded = false;
+  options = [];
+  values = [];
+  
+  constructor(fieldName, params){
+    super(fieldName);
+  }
+
+  load(featureLayer){
+    super.load(featureLayer);
+    featureLayer.queryFeatures({
+      where: "1=1",
+      returnDistinctValues: true,
+      outFields: [this.field]
+    }).then(res => {
+      this.options = res.features.map(f => 
+        f.attributes[this.field]
+      ).sort();
+      this.loaded = true;
+    })
+  }
+
+  onValuesChange(v){
+    this.values = v;
+  }
+
+  get where(){
+    return getMultiSelectWhere(this.field, this.values);
+  }
+
+};
+
+decorate(MultiSelectFilter, {
+  options: observable,
+  loaded: observable,
+  values: observable,
+  load: action.bound,
+  where: computed,
+  onValuesChange: action.bound
+})
 
 class MinMaxFilter extends Filter{
 
@@ -109,4 +168,4 @@ decorate(MinMaxFilter, {
   onValuesChange: action.bound
 })
 
-export {MinMaxFilter}
+export {MinMaxFilter, MultiSelectFilter}
