@@ -31,6 +31,7 @@ class Store {
   _loadLayers(){
     this.view.whenLayerView(this.lyr)
     .then(lV => {
+      console.log(lV);
       this.lyrView = lV;
       this.filters.forEach(f => f.load(this.lyr));
     });
