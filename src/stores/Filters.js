@@ -36,10 +36,11 @@ class MinMaxFilter extends Filter{
   max = null;
   where = null;
 
-  constructor(fieldName, lowerBound=null, upperBound=null){
+  constructor(fieldName, params){
     super(fieldName);
-    this.lowerBound = lowerBound;
-    this.upperBound = upperBound;
+    this.lowerBound = params.lowerBound || null;
+    this.upperBound = params.upperBound || null;
+    this.log = params.log || false;
     this.bins = [];
     this.loaded = false;
   }
@@ -83,7 +84,8 @@ class MinMaxFilter extends Filter{
           field: field,
           numBins: 50,
           minValue: this.lowerBound,
-          maxValue: this.upperBound
+          maxValue: this.upperBound,
+          // sqlExpression: `L( ${this.field} )`
         })
       })
       .then(histRes => {
