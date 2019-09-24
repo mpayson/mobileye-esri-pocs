@@ -1,13 +1,9 @@
 import React from 'react';
 import {loadModules} from 'esri-loader';
 import { observer } from "mobx-react";
-import options from '../esri-loader-options';
+import options from '../config/esri-loader-options';
 
 const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React.Component{
-  state = {
-    sliderValues: null
-  }
-  hasSlider = false;
 
   constructor(props, context){
     super(props, context);
@@ -70,10 +66,11 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
     if(!this.slider && this.store.loaded) this.createSlider();
 
     const title = this.store.fieldInfo.alias;
+
     return(
       <>
         <p>{title}</p>
-        <div style={{height: "6rem", paddingBottom: "1rem"}}>
+        <div style={{height: "6rem", width: "10rem"}}>
           <div ref={this.sliderRef}></div>
         </div>
       </>

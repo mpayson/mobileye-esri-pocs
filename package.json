@@ -9,7 +9,6 @@
     "calcite-ui-icons-react": "^0.7.2",
     "customize-cra": "^0.6.0",
     "esri-loader": "^2.10.0",
-    "gh-pages": "^2.1.1",
     "grunt-browser-sync": "^2.2.0",
     "grunt-contrib-clean": "^2.0.0",
     "mobx": "^5.13.0",
@@ -47,6 +46,7 @@
   "devDependencies": {
     "arcgis-js-api": "^4.12.1",
     "browser-sync": "^2.26.7",
+    "gh-pages": "^2.1.1",
     "grunt": "^1.0.4",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",

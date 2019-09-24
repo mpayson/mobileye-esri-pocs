@@ -1,7 +1,7 @@
 import { decorate, observable, action } from 'mobx';
 import {loadModules} from 'esri-loader';
-import options from '../esri-loader-options';
-import {getMinMaxWhere} from '../Utils';
+import options from '../config/esri-loader-options';
+import {getMinMaxWhere} from '../utils/Utils';
 
 const getMaxQuery = (field) => ({
   onStatisticField: field,
@@ -21,7 +21,7 @@ class Filter {
   }
   load(featureLayer){
     if(!featureLayer.loaded){
-      throw "Please wait until the layer is loaded";
+      throw new Error("Please wait until the layer is loaded");
     }
     this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
   }
@@ -29,6 +29,7 @@ class Filter {
 
 class MinMaxFilter extends Filter{
 
+  type = 'minmax';
   bins = [];
   loaded = false;
   min = null;
@@ -101,6 +102,7 @@ decorate(MinMaxFilter, {
   max: observable,
   where: observable,
   loaded: observable,
+  fieldInfo: observable,
   load: action.bound,
   onValuesChange: action.bound
 })

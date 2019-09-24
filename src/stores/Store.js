@@ -1,33 +1,28 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
 import { MinMaxFilter } from './Filters';
 import {loadModules} from 'esri-loader';
-import config from '../config';
-import renderers from '../Renderers';
-import options from '../esri-loader-options';
+import config from '../config/config';
+import options from '../config/esri-loader-options';
 
 const {appId, portalUrl} = config;
 let pUtils;
-
-const setRenderer = (lyr, field) => {
-  loadModules(['esri/renderers/support/jsonUtils'], options)
-  .then(([rendererJsonUtils]) => {
-    lyr.renderer = rendererJsonUtils.fromJSON(renderers[field]);
-  });
-}
 
 class Store {
 
   credential = {};
 
-  constructor(layerId){
-    this.layerId = layerId;
-    this.filters = [
-      new MinMaxFilter('eventvalue'),
-      new MinMaxFilter('pedestrians_density'),
-      new MinMaxFilter('bicycles_density'),
-      new MinMaxFilter('harsh_cornering_ratio'),
-      new MinMaxFilter('harsh_acc_ratio')
-    ];
+  constructor(storeConfig){
+    this.layerId = storeConfig.layerItemId;
+    this.filters = storeConfig.filters.map(f => {
+      switch(f.type){
+        case 'minmax':
+          return new MinMaxFilter(f.name, f.lowerBound, f.upperBound)
+        default:
+          throw new Error("Unknown filter type!")
+      }
+    });
+    this.renderers = storeConfig.renderers;
+    this.rendererField = storeConfig.initialRendererField;
   }
 
   _loadLayers(){
@@ -48,11 +43,23 @@ class Store {
         onApplyFilter(this.lyrView, where);
       }
     });
+    this.rendererHandler = autorun(_ => {
+      const rendererField = this.rendererField;
+      if(!this.lyr) return;
+      loadModules(['esri/renderers/support/jsonUtils'], options)
+        .then(([rendererJsonUtils]) => {
+          this.lyr.renderer = rendererJsonUtils.fromJSON(this.renderers[rendererField]);
+        });
+    })
+  }
+
+  setRendererField(field){
+    this.rendererField = field;
   }
 
   load(mapViewDiv){
 
-    let M, MV, FL;
+    let M, MV, FL, rjsonUtils;
     
     return loadModules([
       'esri/Map',
@@ -60,15 +67,17 @@ class Store {
       'esri/layers/FeatureLayer',
       'esri/core/promiseUtils',
       'esri/identity/OAuthInfo',
-      'esri/identity/IdentityManager'
+      'esri/identity/IdentityManager',
+      'esri/renderers/support/jsonUtils'
     ], options)
-    .then(([Map, MapView, FeatureLayer, promiseUtils, OAuthInfo, esriId]) => {
+    .then(([Map, MapView, FeatureLayer, promiseUtils, OAuthInfo, esriId, rendererJsonUtils]) => {
       pUtils = promiseUtils; 
       this._buildAutoRunEffects();
 
       M = Map;
       MV = MapView;
       FL = FeatureLayer;
+      rjsonUtils = rendererJsonUtils;
 
       const info = new OAuthInfo({
         appId
@@ -87,8 +96,8 @@ class Store {
       this.user = credential.userId;
       this.lyr = new FL({
         portalItem: {id: this.layerId},
+        renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField])
       });
-      setRenderer(this.lyr, 'eventvalue');
       this.map = new M({
         basemap: 'dark-gray-vector',
         layers: [this.lyr]
@@ -115,8 +124,10 @@ class Store {
 
 decorate(Store, {
   user: observable,
+  rendererField: observable,
   where: computed,
   load: action.bound,
+  setRendererField: action.bound,
   _loadLayers: action.bound,
 });
 
