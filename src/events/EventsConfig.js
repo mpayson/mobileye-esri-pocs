@@ -17,10 +17,10 @@ const eventsConfig = {
   },
   filters: [
     {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
-    {name: 'eventtype', type: 'minmax', params: {log: true}},
-    {name: 'eventsubtype', type: 'minmax', params: {log: true}},
-    {name: 'project', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
-    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
+    {name: 'eventtype', type: 'multiselect'},
+    {name: 'eventsubtype', type: 'multiselect'},
+    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
+//    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
   popupTemplate: {
     title: "Event information:",
