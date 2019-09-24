@@ -16,7 +16,7 @@ class Store {
     this.filters = storeConfig.filters.map(f => {
       switch(f.type){
         case 'minmax':
-          return new MinMaxFilter(f.name, f.lowerBound, f.upperBound)
+          return new MinMaxFilter(f.name, f.params)
         default:
           throw new Error("Unknown filter type!")
       }

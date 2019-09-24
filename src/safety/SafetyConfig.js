@@ -1,3 +1,4 @@
+// update to map
 const safetyConfig = {
   layerItemId: '9524ea255f4e452bb1e79d951ed65a5f',
   initialRendererField: 'eventvalue',
@@ -9,11 +10,11 @@ const safetyConfig = {
                  "symbol":{"color":[170,170,170,255],"width":1.5,"type":"esriSLS","style":"esriSLSSolid"}}
   },
   filters: [
-    {name: 'eventvalue', type: 'minmax', lowerBound: 0, upperBound: 100},
-    {name: 'pedestrians_density', type: 'minmax'},
-    {name: 'bicycles_density', type: 'minmax'},
-    {name: 'harsh_cornering_ratio', type: 'minmax', lowerBound: 0, upperBound: 100},
-    {name: 'harsh_acc_ratio', type: 'minmax', lowerBound: 0, upperBound: 100},
+    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
+    {name: 'pedestrians_density', type: 'minmax', params: {log: true}},
+    {name: 'bicycles_density', type: 'minmax', params: {log: true}},
+    {name: 'harsh_cornering_ratio', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
+    {name: 'harsh_acc_ratio', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ]
 }
 
