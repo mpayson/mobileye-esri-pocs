@@ -1,5 +1,5 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
-import { MinMaxFilter } from './Filters';
+import { MinMaxFilter, MultiSelectFilter } from './Filters';
 import {loadModules} from 'esri-loader';
 import config from '../config/config';
 import options from '../config/esri-loader-options';
@@ -17,12 +17,15 @@ class Store {
       switch(f.type){
         case 'minmax':
           return new MinMaxFilter(f.name, f.params)
+        case 'multiselect':
+          return new MultiSelectFilter(f.name, f.params);
         default:
           throw new Error("Unknown filter type!")
       }
     });
     this.renderers = storeConfig.renderers;
     this.rendererField = storeConfig.initialRendererField;
+    this.popupTemplate = storeConfig.popupTemplate;
   }
 
   _loadLayers(){
@@ -68,7 +71,8 @@ class Store {
       'esri/core/promiseUtils',
       'esri/identity/OAuthInfo',
       'esri/identity/IdentityManager',
-      'esri/renderers/support/jsonUtils'
+      'esri/renderers/support/jsonUtils',
+      "esri/widgets/TimeSlider"
     ], options)
     .then(([Map, MapView, FeatureLayer, promiseUtils, OAuthInfo, esriId, rendererJsonUtils]) => {
       pUtils = promiseUtils; 
@@ -96,9 +100,9 @@ class Store {
       this.user = credential.userId;
       this.lyr = new FL({
         portalItem: {id: this.layerId},
-        // renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField])
+        renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField]),
+        popupTemplate: this.popupTemplate
       });
-      console.log(this.renderers, this.rendererField, rjsonUtils.fromJSON(this.renderers))
       this.map = new M({
         basemap: 'dark-gray-vector',
         layers: [this.lyr]
