@@ -23,6 +23,7 @@ class Store {
     });
     this.renderers = storeConfig.renderers;
     this.rendererField = storeConfig.initialRendererField;
+    this.popupTemplate = storeConfig.popupTemplate;
   }
 
   _loadLayers(){
@@ -96,7 +97,8 @@ class Store {
       this.user = credential.userId;
       this.lyr = new FL({
         portalItem: {id: this.layerId},
-        renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField])
+        renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField]),
+        popupTemplate: this.popupTemplate
       });
       this.map = new M({
         basemap: 'dark-gray-vector',
