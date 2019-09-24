@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css","App.css"],"names":[],"mappings":"AAAA,KACE,0BAA2B,CAC3B,0BACF,CCHA,MACI,WAAY,CACZ,6BAAoC,CACpC,WACJ","file":"main.655a3b27.chunk.css","sourcesContent":["body {\n  overscroll-behavior-y: none;\n  overscroll-behavior-x: none;\n}",".logo {\n    height: 32px;\n    background: rgba(255, 255, 255, 0.2);\n    margin: 16px;\n}"]}
