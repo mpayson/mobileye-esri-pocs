@@ -74,7 +74,6 @@ const EventsApp = observer(class App extends React.Component {
         this.view.ui.add(search, "top-right");
         const legend = new Legend({view: this.view});
 
-        console.log(this.store.lyr.timeInfo);
         // create a new time slider widget
         // set other properties when the layer view is loaded
         // by default timeSlider.mode is "time-window" - shows
