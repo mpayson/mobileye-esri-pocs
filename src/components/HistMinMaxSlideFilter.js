@@ -19,10 +19,12 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
   labelFunction = (value, type) => {
     let label = ''
     if (type === "max")
-      label = Math.ceil((!this.store.upperBoundSupplied && this.store.isLogarithmic) ? Math.pow(this.store.upperBound, this.store.logBase) : this.store.upperBound);
-    if (type === "min")
-      label = Math.floor((!this.store.lowerBoundSupplied && this.store.isLogarithmic) ? Math.pow(this.store.lowerBound, this.store.logBase) : this.store.lowerBound);
-
+      label = Math.ceil((!this.store.upperBoundSupplied && this.store.isLogarithmic) ? Math.pow(this.store.logBase,this.store.upperBound ) : this.store.upperBound);
+    if (type === "min") {
+      label = 0
+      if (this.store.lowerBound !== 0)
+        label = Math.floor((!this.store.lowerBoundSupplied && this.store.isLogarithmic) ? Math.pow(this.store.logBase, this.store.lowerBound) : this.store.lowerBound);
+    }
     return label;
   }
 
@@ -44,7 +46,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
         excludedBarColor: "#bfbfbf",
         rangeType: "between",
         container: this.sliderRef.current,
-        precision: 0
+        precision: 1
       });
       this.slider.labelFormatFunction = this.labelFunction;
 

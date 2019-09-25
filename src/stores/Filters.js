@@ -149,7 +149,6 @@ class MinMaxFilter extends Filter{
       }).then(qRes => {
 
         const attrs = qRes.features[0].attributes;
-
         return [
           isLwr ? this.lowerBound : attrs[`MIN_${field}`],
           isUpr ? this.upperBound : attrs[`MAX_${field}`]
@@ -164,9 +163,9 @@ class MinMaxFilter extends Filter{
         this.upperBound = Math.ceil(rawMax);
         if (this.isLogarithmic){
           if (!this.lowerBoundSupplied && this.lowerBound !== 0)
-            this.lowerBound = Math.log(this.lowerBound) / Math.log(this.logBase);
+            this.lowerBound = Math.floor((Math.log(this.lowerBound) / Math.log(this.logBase)) * 100) / 100;
           if (!this.upperBoundSupplied && this.upperBound !== 0)
-            this.upperBound = Math.log(this.upperBound) / Math.log(this.logBase)
+            this.upperBound = Math.ceil((Math.log(this.upperBound) / Math.log(this.logBase)) * 100) / 100;
         }
         console.log(`Field: ${this.field}, Min:${this.lowerBound}, Max:${this.upperBound}`);
 
@@ -188,13 +187,18 @@ class MinMaxFilter extends Filter{
   onValuesChange(min, max){
     this.min = min;
     this.max = max;
+    //console.log(`${min},${max}`)
   }
 
   get where(){
     if(this.min === this.lowerBound && this.max === this.upperBound){
       return null;
     }
-    return getMinMaxWhere(this.field, this.min, this.max);
+
+    let maxWhere = (!this.upperBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.max) : this.max;
+    let minWhere = (!this.lowerBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.min) : this.min;
+
+    return getMinMaxWhere(this.field, minWhere, maxWhere);
   }
 }
 decorate(MinMaxFilter, {

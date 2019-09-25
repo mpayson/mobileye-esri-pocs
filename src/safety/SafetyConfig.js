@@ -44,13 +44,13 @@ const safetyConfig = {
   },
   filters: [
       //lowerBound: 0, upperBound: 100,
-    {name: 'eventvalue', type: 'minmax', params: {log: true}},
-    {name: 'harsh_cornering_ratio', type: 'minmax', params: {log: true}},
-    {name: 'harsh_acc_ratio', type: 'minmax', params: {log: true}},
-    {name: 'pedestrians_density', type: 'minmax', params: {log: true}},
-    {name: 'bicycles_density', type: 'minmax', params: {log: true}},
-    {name: 'speeding_ratio', type: 'minmax', params: {log: true}},
-    {name: 'avarge_speed', type: 'minmax', params: {log: true}}
+    {name: 'eventvalue', type: 'minmax', params: {isLogarithmic: true, log: true}},
+    {name: 'harsh_cornering_ratio', type: 'minmax', params: {isLogarithmic: true, log: true}},
+    {name: 'harsh_acc_ratio', type: 'minmax', params: {isLogarithmic: true, log: true}},
+    {name: 'pedestrians_density', type: 'minmax', params: {isLogarithmic: true, log: true}},
+    {name: 'bicycles_density', type: 'minmax', params: {isLogarithmic: true, log: true}},
+    {name: 'speeding_ratio', type: 'minmax', params: {isLogarithmic: true, log: true}},
+    {name: 'avarge_speed', type: 'minmax', params: {isLogarithmic: true, log: true}}
   ],
   popupTemplate: {
     title: "Hello world!",
