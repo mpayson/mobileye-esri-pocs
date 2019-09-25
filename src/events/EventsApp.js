@@ -37,6 +37,7 @@ const EventsApp = observer(class App extends React.Component {
   constructor(props, context){
     super(props, context);
     this.mapViewRef = React.createRef();
+    this.sliderRef = React.createRef();
     this.store = new Store(eventsConfig);
   }
 
@@ -71,7 +72,6 @@ const EventsApp = observer(class App extends React.Component {
       .then(([[Search, Legend, TimeSlider], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
-        this.view.ui.add(search, "top-right");
         const legend = new Legend({view: this.view});
 
         // create a new time slider widget
@@ -182,6 +182,9 @@ const EventsApp = observer(class App extends React.Component {
               <Col
                 span={24}
                 style={{height: "calc(100vh - 64px)"}}>
+              <div
+                style={{ position: 'absolute', left: '30%', right: '15px', bottom: '30px'}}
+                ref={this.sliderRef}/>
               <div
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>

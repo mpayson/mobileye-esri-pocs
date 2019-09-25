@@ -29,9 +29,9 @@ const MenuInformationIcon = () => (
 const SafetyApp = observer(class App extends React.Component {
 
   state = {
-    collapsed: true,
+    collapsed: false,
     loaded: false,
-    navKey: "Layers"
+    navKey: null
   };
 
   constructor(props, context){
