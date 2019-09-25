@@ -20,7 +20,9 @@ const getMultiSelectWhere = (field, values) => {
 
 const getSelectWhere = (field, value) => {
   if(!value) return null;
-  return `${field} = '${value}'`;
+  return typeof value === 'number'
+    ? `${field} = ${value}`
+    : `${field} = '${value}'`;
 }
 
 export {getMinMaxWhere, getMultiSelectWhere, getSelectWhere};

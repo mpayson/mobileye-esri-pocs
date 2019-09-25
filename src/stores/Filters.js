@@ -103,7 +103,6 @@ class MinMaxFilter extends Filter{
   loaded = false;
   min = null;
   max = null;
-  where = null;
 
   constructor(fieldName, params){
     super(fieldName);
@@ -165,15 +164,21 @@ class MinMaxFilter extends Filter{
   onValuesChange(min, max){
     this.min = min;
     this.max = max;
-    this.where = getMinMaxWhere(this.field, min, max);
+  }
+
+  get where(){
+    if(this.min === this.lowerBound && this.max === this.upperBound){
+      return null;
+    }
+    return getMinMaxWhere(this.field, this.min, this.max);
   }
 }
 decorate(MinMaxFilter, {
   min: observable,
   max: observable,
-  where: observable,
   loaded: observable,
   fieldInfo: observable,
+  where: computed,
   load: action.bound,
   onValuesChange: action.bound
 })

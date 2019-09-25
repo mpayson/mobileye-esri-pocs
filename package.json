@@ -27,7 +27,7 @@
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "postinstall": "grunt setup && grunt dev"
+    "postinstall": "grunt setup && grunt build"
   },
   "eslintConfig": {
     "extends": "react-app"
