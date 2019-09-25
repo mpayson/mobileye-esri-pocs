@@ -118,11 +118,11 @@ class MinMaxFilter extends Filter{
     super(fieldName);
     this.lowerBound = params.lowerBound || null;
     this.upperBound = params.upperBound || null;
-    this.log = params.log || false;
+    this.isLogarithmic = params.isLogarithmic || false;
     this.bins = [];
     this.loaded = false;
   }
-  load(featureLayer){
+  load(featureLayer, view){
     super.load(featureLayer);
     const field = this.field;
 
@@ -163,7 +163,8 @@ class MinMaxFilter extends Filter{
           numBins: 50,
           minValue: this.lowerBound,
           maxValue: this.upperBound,
-          // sqlExpression: `L( ${this.field} )`
+          // valueExpression: `Log($feature.${this.field}, 10)`,
+          // view
         })
       })
       .then(histRes => {

@@ -37,7 +37,7 @@ class Store {
     this.view.whenLayerView(this.lyr)
     .then(lV => {
       this.lyrView = lV;
-      this.filters.forEach(f => f.load(this.lyr));
+      this.filters.forEach(f => f.load(this.lyr, this.view));
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
