@@ -30,7 +30,7 @@ class Store {
     this.rendererOptions = [...Object.keys(this.renderers)];
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
-    this.rerenderingRequired = false;
+    this.layerLoaded = false;
   }
 
   _loadLayers(){
@@ -42,7 +42,9 @@ class Store {
         p.set(f.name, f.alias);
         return p;
       }, new Map());
-      this.rerenderingRequired = true;
+      this.layerLoaded = true;
+
+
     });
   }
 
@@ -152,7 +154,7 @@ class Store {
 decorate(Store, {
   user: observable,
   rendererField: observable,
-  rerenderingRequired: observable,
+  layerLoaded: observable,
   aliasMap: observable,
   where: computed,
   load: action.bound,

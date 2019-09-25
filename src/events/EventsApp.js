@@ -79,19 +79,25 @@ const EventsApp = observer(class App extends React.Component {
         // by default timeSlider.mode is "time-window" - shows
         // data falls within time range
         const timeSlider = new TimeSlider({
-          container: this.sliderRef.current,
-          playRate: 50,
-          stops: {
-            interval: {
-              value: 1,
-              unit: "hours"
-            }
-          }
+          container: "timeSlider",
+          mode: "time-window",
+          view: this.view
         });
+
+        // const timeSlider = new TimeSlider({
+        //   container: "timeSlider",
+        //   playRate: 50,
+        //   stops: {
+        //     interval: {
+        //       value: 1,
+        //       unit: "hours"
+        //     }
+        //   }
+        // });
         this.timeSlider = timeSlider;
-        this.view.ui.add(timeSlider, "manual");
-        this.view.ui.add(legend, "top-right");
-        this.view.ui.add(search, "top-right");
+        //timeSlider.values = [new Date(2019, 1, 1), new Date(2020, 1, 1)];
+        this.view.ui.add(timeSlider, "top-right");
+        this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
       });
   }
@@ -116,13 +122,15 @@ const EventsApp = observer(class App extends React.Component {
     }
 
     // Init Time Slider
-    // if (this.store.rerenderingRequired){
-    //   this.timeSlider.fullTimeExtent = {
-    //     start: new Date(2019, 1, 1),
-    //     end: new Date(2020, 1, 1)
-    //   };
-    //   //this.store.rerenderingRequired = false;
-    // }
+    if (this.store.layerLoaded){
+      const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
+
+      // set up time slider properties
+      this.timeSlider.fullTimeExtent = fullTimeExtent;
+      // this.timeSlider.stops = {
+      //   interval: this.store.lyr.timeInfo.interval
+      // };
+    }
 
 
     const signin = this.store.user
