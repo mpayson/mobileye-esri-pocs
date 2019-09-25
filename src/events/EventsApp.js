@@ -81,7 +81,9 @@ const EventsApp = observer(class App extends React.Component {
         const timeSlider = new TimeSlider({
           container: "timeSlider",
           mode: "time-window",
-          view: this.view
+          view: this.view,
+          loop: false
+
         });
 
         // const timeSlider = new TimeSlider({
