@@ -23,9 +23,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
     return (
       <>
-        <Card size="small">
-          <h1>Explore</h1>
-        </Card>
         <Card size="small" style={{marginTop: "10px"}}>
           <h1>Apply Filters</h1>
           {FilterViews}
