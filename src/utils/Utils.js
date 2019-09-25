@@ -18,4 +18,9 @@ const getMultiSelectWhere = (field, values) => {
   return `${field} IN ('${wstr}')`;
 }
 
-export {getMinMaxWhere, getMultiSelectWhere};
+const getSelectWhere = (field, value) => {
+  if(!value) return null;
+  return `${field} = '${value}'`;
+}
+
+export {getMinMaxWhere, getMultiSelectWhere, getSelectWhere};

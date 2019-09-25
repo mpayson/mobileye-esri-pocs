@@ -1,5 +1,5 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
-import { MinMaxFilter, MultiSelectFilter } from './Filters';
+import { MinMaxFilter, MultiSelectFilter, SelectFilter } from './Filters';
 import {loadModules} from 'esri-loader';
 import config from '../config/config';
 import options from '../config/esri-loader-options';
@@ -19,6 +19,8 @@ class Store {
           return new MinMaxFilter(f.name, f.params)
         case 'multiselect':
           return new MultiSelectFilter(f.name, f.params);
+        case 'select':
+          return new SelectFilter(f.name, f.params);
         default:
           throw new Error("Unknown filter type!")
       }
@@ -32,6 +34,7 @@ class Store {
   _loadLayers(){
     this.view.whenLayerView(this.lyr)
     .then(lV => {
+      console.log(lV);
       this.lyrView = lV;
       this.filters.forEach(f => f.load(this.lyr));
       this.rerenderingRequired = true

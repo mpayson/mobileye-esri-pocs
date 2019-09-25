@@ -1,7 +1,7 @@
 import { decorate, observable, action, computed } from 'mobx';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import {getMinMaxWhere, getMultiSelectWhere} from '../utils/Utils';
+import {getMinMaxWhere, getMultiSelectWhere, getSelectWhere} from '../utils/Utils';
 
 const getMaxQuery = (field) => ({
   onStatisticField: field,
@@ -28,27 +28,12 @@ class Filter {
   }
 }
 
-// this.precipLyr.queryFeatures({
-//   where: "1=1",
-//   returnDistinctValues: true,
-//   outFields: ['label']
-// }).then(res => {
-//   const uniqueValues = res.features.map(f => 
-//     f.attributes['label']
-//   );
-//   console.log(res);
-//   this.setState({
-//     precipOptions: uniqueValues
-//   });
-// })
-
-class MultiSelectFilter extends Filter{
-  
-  type = 'multiselect';
+class SelectFilter extends Filter{
+  type = 'select';
   loaded = false;
   options = [];
-  values = [];
-  
+  selectValue = null;
+
   constructor(fieldName, params){
     super(fieldName);
   }
@@ -67,23 +52,48 @@ class MultiSelectFilter extends Filter{
     })
   }
 
-  onValuesChange(v){
-    this.values = v;
+  onValueChange(v){
+    console.log("CALLED")
+    if(this.selectValue === v){
+      this.selectValue = null;
+    } else {
+      this.selectValue = v;
+    }
   }
 
   get where(){
-    return getMultiSelectWhere(this.field, this.values);
+    return getSelectWhere(this.field, this.selectValue);
+  }
+
+}
+
+decorate(SelectFilter, {
+  options: observable,
+  loaded: observable,
+  selectValue: observable,
+  load: action.bound,
+  where: computed,
+  onValueChange: action.bound
+})
+
+class MultiSelectFilter extends SelectFilter{
+  
+  type = 'multiselect';
+  selectValue = [];
+
+  onValueChange(v){
+    this.selectValue = v;
+  }
+  
+  get where(){
+    return getMultiSelectWhere(this.field, this.selectValue);
   }
 
 };
 
 decorate(MultiSelectFilter, {
-  options: observable,
-  loaded: observable,
-  values: observable,
-  load: action.bound,
-  where: computed,
-  onValuesChange: action.bound
+  onValueChange: action.bound,
+  where: computed
 })
 
 class MinMaxFilter extends Filter{
@@ -168,4 +178,4 @@ decorate(MinMaxFilter, {
   onValuesChange: action.bound
 })
 
-export {MinMaxFilter, MultiSelectFilter}
+export {SelectFilter, MinMaxFilter, MultiSelectFilter}
