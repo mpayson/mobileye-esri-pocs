@@ -53,7 +53,10 @@ class Store {
       if(!this.lyr) return;
       loadModules(['esri/renderers/support/jsonUtils'], options)
         .then(([rendererJsonUtils]) => {
-          this.lyr.renderer = rendererJsonUtils.fromJSON(this.renderers[rendererField]);
+          if (this.renderers[rendererField]._type == 'jsapi')
+            this.lyr.renderer = this.renderers[rendererField];
+          else
+            this.lyr.renderer = rendererJsonUtils.fromJSON(this.renderers[rendererField]);
         });
     })
   }
@@ -97,11 +100,17 @@ class Store {
         });
     })
     .then(credential => {
+      let renderer;
+      if (this.renderers[this.rendererField]._type == 'jsapi')
+        renderer = this.renderers[this.rendererField];
+      else
+        renderer = rjsonUtils.fromJSON(this.renderers[this.rendererField]);
       this.credential = credential;
       this.user = credential.userId;
       this.lyr = new FL({
         portalItem: {id: this.layerId},
-        renderer: rjsonUtils.fromJSON(this.renderers[this.rendererField]),
+        renderer: renderer,
+
         popupTemplate: this.popupTemplate
       });
       this.map = new M({
