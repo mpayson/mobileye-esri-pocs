@@ -1,5 +1,6 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
 import { MinMaxFilter, MultiSelectFilter, SelectFilter } from './Filters';
+import { HistogramStore } from './HistogramStore';
 import {loadModules} from 'esri-loader';
 import config from '../config/config';
 import options from '../config/esri-loader-options';
@@ -26,6 +27,11 @@ class Store {
           throw new Error("Unknown filter type!")
       }
     });
+    if (typeof storeConfig.histograms === 'undefined') {
+      this.histograms = []
+    } else {
+      this.histograms = storeConfig.histograms.map(f => new HistogramStore(f.name, f.params));
+    }
     this.renderers = storeConfig.renderers;
     this.rendererOptions = [...Object.keys(this.renderers)];
     this.rendererField = storeConfig.initialRendererField;
@@ -39,6 +45,7 @@ class Store {
     .then(lV => {
       this.lyrView = lV;
       this.filters.forEach(f => f.load(this.lyr, this.view));
+      this.histograms.forEach(f => f.load(this.lyr));
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
