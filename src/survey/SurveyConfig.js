@@ -11,9 +11,19 @@ const surveyConfig = {
   ],
   popupTemplate: {
     title: "Sign Informaion:",
-    content: "Sign type: <b>{sign_type}</b><br>" +
+    content: "Sign type: <b>{sign_type}{expression/speed-units}</b><br>" +
         "Viewed on {publish_date} (version {map_version})<br>" +
-        "Size: {bounding_height}x{bounding_width} m<br>" 
+        "Size: {bounding_height}x{bounding_width} m<br>",
+    expressionInfos: [{
+          name: "speed-units",
+          title: "Speed units",
+          expression: "When(($feature.sign_type >= 0 && $feature.sign_type <= 13) || ($feature.sign_type >= 28 && $feature.sign_type <= 41), ' KM/h speed limit', '')"
+    } ,
+    {
+      name: "is-electronic",
+      title: "Is electronic",
+      expression: "When($feature.is_electronic == 1, ' (electronic)', '')"
+    }]
   }
 }
 
