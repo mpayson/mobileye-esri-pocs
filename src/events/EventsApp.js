@@ -97,6 +97,7 @@ const EventsApp = observer(class App extends React.Component {
         this.timeSlider = timeSlider;
         //timeSlider.values = [new Date(2019, 1, 1), new Date(2020, 1, 1)];
         this.view.ui.add(timeSlider, "top-right");
+        this.view.ui.add(search, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
       });

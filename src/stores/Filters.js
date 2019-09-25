@@ -122,7 +122,7 @@ class MinMaxFilter extends Filter{
     this.bins = [];
     this.loaded = false;
   }
-  load(featureLayer){
+  load(featureLayer, view){
     super.load(featureLayer);
     const field = this.field;
 
@@ -162,8 +162,7 @@ class MinMaxFilter extends Filter{
           field: field,
           numBins: 50,
           minValue: this.lowerBound,
-          maxValue: this.upperBound,
-          // sqlExpression: `L( ${this.field} )`
+          maxValue: this.upperBound
         })
       })
       .then(histRes => {
