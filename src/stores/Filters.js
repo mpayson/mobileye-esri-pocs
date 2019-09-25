@@ -118,7 +118,7 @@ class MinMaxFilter extends Filter{
     super(fieldName);
     this.lowerBound = params.lowerBound || null;
     this.upperBound = params.upperBound || null;
-    this.log = params.log || false;
+    this.isLogarithmic = params.isLogarithmic || false;
     this.bins = [];
     this.loaded = false;
   }
@@ -162,7 +162,9 @@ class MinMaxFilter extends Filter{
           field: field,
           numBins: 50,
           minValue: this.lowerBound,
-          maxValue: this.upperBound
+          maxValue: this.upperBound,
+          // valueExpression: `Log($feature.${this.field}, 10)`,
+          // view
         })
       })
       .then(histRes => {
