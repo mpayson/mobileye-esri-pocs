@@ -31,6 +31,7 @@ class Store {
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
     this.layerLoaded = false;
+    this.viewConfig = storeConfig.viewConfig;
   }
 
   _loadLayers(){
@@ -132,8 +133,8 @@ class Store {
       this.view = new MV({
         map: this.map,
         container: mapViewDiv,
-        center: [-74.00157, 40.71955],
-        zoom: 12
+        center: this.viewConfig.center,//[-74.00157, 40.71955],
+        zoom: this.viewConfig.zoom//12
       });
       this._loadLayers();
       return this.view;

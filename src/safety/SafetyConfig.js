@@ -55,7 +55,12 @@ const safetyConfig = {
   popupTemplate: {
     title: "Hello world!",
     content: "Road safety score: <b>{eventvalue}</b>"
+  },
+  viewConfig: {
+    center: [-74.00157, 40.71955],
+    zoom: 12
   }
+
 }
 
 export default safetyConfig;

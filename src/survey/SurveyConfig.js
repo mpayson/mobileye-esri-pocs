@@ -25,6 +25,10 @@ const surveyConfig = {
       title: "Is electronic",
       expression: "When($feature.is_electronic == 1, ' (electronic)', '')"
     }]
+  },
+  viewConfig: {
+    center: [11.57549,48.13743],
+    zoom: 12
   }
 }
 

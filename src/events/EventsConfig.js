@@ -42,16 +42,11 @@ const eventsConfig = {
         "Project: {project}<br>" +
         "Event value: {eventvalue}<br>" +
         "Event timestamp: {eventtimestamp}"
+  },
+  viewConfig: {
+    center: [-74.00157, 40.71955],
+    zoom: 12
   }
-  // ,
-  // timeInfo: {
-  //   startField: "eventtimestamp", // name of the date field
-  //   interval: {
-  //     // set time interval to one day
-  //     unit: "days",
-  //     value: 1
-  //   }
-  // }
 
 }
 
