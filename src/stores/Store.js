@@ -28,7 +28,7 @@ class Store {
       }
     });
     if (typeof storeConfig.histograms === 'undefined') {
-      this.histograms = {}
+      this.histograms = []
     } else {
       this.histograms = storeConfig.histograms.map(f => new HistogramStore(f.name, f.params));
     }
