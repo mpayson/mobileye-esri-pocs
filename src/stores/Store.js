@@ -43,8 +43,6 @@ class Store {
         return p;
       }, new Map());
       this.layerLoaded = true;
-
-
     });
   }
 
