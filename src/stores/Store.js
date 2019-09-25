@@ -10,6 +10,7 @@ let pUtils;
 class Store {
 
   credential = {};
+  aliasMap = null;
 
   constructor(storeConfig){
     this.layerId = storeConfig.layerItemId;
@@ -26,6 +27,7 @@ class Store {
       }
     });
     this.renderers = storeConfig.renderers;
+    this.rendererOptions = [...Object.keys(this.renderers)];
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
     this.rerenderingRequired = false;
@@ -34,10 +36,13 @@ class Store {
   _loadLayers(){
     this.view.whenLayerView(this.lyr)
     .then(lV => {
-      console.log(lV);
       this.lyrView = lV;
       this.filters.forEach(f => f.load(this.lyr));
-      this.rerenderingRequired = true
+      this.aliasMap = this.lyr.fields.reduce((p, f) => {
+        p.set(f.name, f.alias);
+        return p;
+      }, new Map());
+      this.rerenderingRequired = true;
     });
   }
 
@@ -54,12 +59,14 @@ class Store {
     this.rendererHandler = autorun(_ => {
       const rendererField = this.rendererField;
       if(!this.lyr) return;
+      const renderer = this.renderers[rendererField];
+      if(renderer._type === 'jsapi') {
+        this.lyr.renderer = renderer;
+        return;
+      } 
       loadModules(['esri/renderers/support/jsonUtils'], options)
         .then(([rendererJsonUtils]) => {
-          if (this.renderers[rendererField]._type == 'jsapi')
-            this.lyr.renderer = this.renderers[rendererField];
-          else
-            this.lyr.renderer = rendererJsonUtils.fromJSON(this.renderers[rendererField]);
+          this.lyr.renderer = rendererJsonUtils.fromJSON(this.renderers[rendererField]);
         });
     })
   }
@@ -82,6 +89,7 @@ class Store {
       'esri/renderers/support/jsonUtils'
     ], options)
     .then(([Map, MapView, FeatureLayer, promiseUtils, OAuthInfo, esriId, rendererJsonUtils]) => {
+      // .then(([Map, MapView, FeatureLayer, promiseUtils, rendererJsonUtils]) => {
       pUtils = promiseUtils; 
       this._buildAutoRunEffects();
 
@@ -104,7 +112,8 @@ class Store {
     })
     .then(credential => {
       let renderer;
-      if (this.renderers[this.rendererField]._type == 'jsapi')
+      console.log(this.renderers, this.rendererField)
+      if (this.renderers[this.rendererField]._type === 'jsapi')
         renderer = this.renderers[this.rendererField];
       else
         renderer = rjsonUtils.fromJSON(this.renderers[this.rendererField]);
@@ -144,6 +153,7 @@ decorate(Store, {
   user: observable,
   rendererField: observable,
   rerenderingRequired: observable,
+  aliasMap: observable,
   where: computed,
   load: action.bound,
   setRendererField: action.bound,
