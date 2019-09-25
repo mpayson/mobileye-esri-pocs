@@ -16,11 +16,23 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
     this.store.onValuesChange(min, max);
   }
 
+  labelFunction = (value, type) => {
+    let label = ''
+    if (type === "max")
+      label = Math.ceil((!this.store.upperBoundSupplied && this.store.isLogarithmic) ? Math.pow(this.store.upperBound, this.store.logBase) : this.store.upperBound);
+    if (type === "min")
+      label = Math.floor((!this.store.lowerBoundSupplied && this.store.isLogarithmic) ? Math.pow(this.store.lowerBound, this.store.logBase) : this.store.lowerBound);
+
+    return label;
+  }
+
   componentDidMount(){
     loadModules([
       'esri/widgets/HistogramRangeSlider',
     ], options)
     .then(([HistogramRangeSlider]) => {
+
+
       this.slider = new HistogramRangeSlider({
         bins: this.store.bins,
         min: this.store.lowerBound,
@@ -34,6 +46,8 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
         container: this.sliderRef.current,
         precision: 0
       });
+      this.slider.labelFormatFunction = this.labelFunction;
+
       this.listener = this.slider.watch("values", this.onValuesChange);
     })
     .catch(er => console.log(er));

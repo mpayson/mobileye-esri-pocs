@@ -43,9 +43,10 @@ const safetyConfig = {
     }
   },
   filters: [
-    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
-    {name: 'harsh_cornering_ratio', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
-    {name: 'harsh_acc_ratio', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
+      //lowerBound: 0, upperBound: 100,
+    {name: 'eventvalue', type: 'minmax', params: {log: true}},
+    {name: 'harsh_cornering_ratio', type: 'minmax', params: {log: true}},
+    {name: 'harsh_acc_ratio', type: 'minmax', params: {log: true}},
     {name: 'pedestrians_density', type: 'minmax', params: {log: true}},
     {name: 'bicycles_density', type: 'minmax', params: {log: true}},
     {name: 'speeding_ratio', type: 'minmax', params: {log: true}},

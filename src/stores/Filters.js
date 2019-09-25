@@ -118,6 +118,9 @@ class MinMaxFilter extends Filter{
     super(fieldName);
     this.lowerBound = params.lowerBound || null;
     this.upperBound = params.upperBound || null;
+    this.upperBoundSupplied = this.upperBound !== null;
+    this.lowerBoundSupplied = this.lowerBound !== null;
+    this.logBase = 10;
     this.isLogarithmic = params.isLogarithmic || false;
     this.bins = [];
     this.loaded = false;
@@ -144,7 +147,9 @@ class MinMaxFilter extends Filter{
         where: "1=1",
         outStatistics: queries
       }).then(qRes => {
+
         const attrs = qRes.features[0].attributes;
+
         return [
           isLwr ? this.lowerBound : attrs[`MIN_${field}`],
           isUpr ? this.upperBound : attrs[`MAX_${field}`]
@@ -157,14 +162,22 @@ class MinMaxFilter extends Filter{
         const [rawMin, rawMax] = minMaxRes;
         this.lowerBound = Math.floor(rawMin);
         this.upperBound = Math.ceil(rawMax);
+        if (this.isLogarithmic){
+          if (!this.lowerBoundSupplied && this.lowerBound !== 0)
+            this.lowerBound = Math.log(this.lowerBound) / Math.log(this.logBase);
+          if (!this.upperBoundSupplied && this.upperBound !== 0)
+            this.upperBound = Math.log(this.upperBound) / Math.log(this.logBase)
+        }
+        console.log(`Field: ${this.field}, Min:${this.lowerBound}, Max:${this.upperBound}`);
+
         return getHistogram({
           layer: featureLayer,
           field: field,
           numBins: 50,
           minValue: this.lowerBound,
           maxValue: this.upperBound,
-          // valueExpression: `Log($feature.${this.field}, 10)`,
-          // view
+          valueExpression: this.isLogarithmic ? `IIf($feature.${this.field} != 0,Log($feature.${this.field}) / Log(${this.logBase}),0)` : `$feature.${this.field}`,
+          view
         })
       })
       .then(histRes => {
