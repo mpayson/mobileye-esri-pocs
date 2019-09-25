@@ -33,6 +33,7 @@ class SelectFilter extends Filter{
   loaded = false;
   options = [];
   selectValue = null;
+  domainMap = new Map();
 
   constructor(fieldName, params){
     super(fieldName);
@@ -40,6 +41,15 @@ class SelectFilter extends Filter{
 
   load(featureLayer){
     super.load(featureLayer);
+    // const domain = featureLayer.getFieldDomain(this.field);
+    // if(domain){
+    //   this.domainMap = domain.codedValues.reduce((p, cv) => {
+    //     p.set(cv.code, cv.name);
+    //     console.log(p);
+    //     return p;
+    //   }, new Map());
+    //   console.log(domain);
+    // }
     featureLayer.queryFeatures({
       where: "1=1",
       returnDistinctValues: true,
@@ -49,7 +59,7 @@ class SelectFilter extends Filter{
         f.attributes[this.field]
       ).sort();
       this.loaded = true;
-    })
+    });
   }
 
   onValueChange(v){
@@ -108,11 +118,14 @@ class MinMaxFilter extends Filter{
     super(fieldName);
     this.lowerBound = params.lowerBound || null;
     this.upperBound = params.upperBound || null;
-    this.log = params.log || false;
+    this.upperBoundSupplied = this.upperBound !== null;
+    this.lowerBoundSupplied = this.lowerBound !== null;
+    this.logBase = 10;
+    this.isLogarithmic = params.isLogarithmic || false;
     this.bins = [];
     this.loaded = false;
   }
-  load(featureLayer){
+  load(featureLayer, view){
     super.load(featureLayer);
     const field = this.field;
 
@@ -134,6 +147,7 @@ class MinMaxFilter extends Filter{
         where: "1=1",
         outStatistics: queries
       }).then(qRes => {
+
         const attrs = qRes.features[0].attributes;
         return [
           isLwr ? this.lowerBound : attrs[`MIN_${field}`],
@@ -147,13 +161,22 @@ class MinMaxFilter extends Filter{
         const [rawMin, rawMax] = minMaxRes;
         this.lowerBound = Math.floor(rawMin);
         this.upperBound = Math.ceil(rawMax);
+        if (this.isLogarithmic){
+          if (!this.lowerBoundSupplied && this.lowerBound !== 0)
+            this.lowerBound = Math.floor((Math.log(this.lowerBound) / Math.log(this.logBase)) * 100) / 100;
+          if (!this.upperBoundSupplied && this.upperBound !== 0)
+            this.upperBound = Math.ceil((Math.log(this.upperBound) / Math.log(this.logBase)) * 100) / 100;
+        }
+        console.log(`Field: ${this.field}, Min:${this.lowerBound}, Max:${this.upperBound}`);
+
         return getHistogram({
           layer: featureLayer,
           field: field,
           numBins: 50,
           minValue: this.lowerBound,
           maxValue: this.upperBound,
-          // sqlExpression: `L( ${this.field} )`
+          valueExpression: this.isLogarithmic ? `IIf($feature.${this.field} != 0,Log($feature.${this.field}) / Log(${this.logBase}),0)` : `$feature.${this.field}`,
+          view
         })
       })
       .then(histRes => {
@@ -164,13 +187,18 @@ class MinMaxFilter extends Filter{
   onValuesChange(min, max){
     this.min = min;
     this.max = max;
+    //console.log(`${min},${max}`)
   }
 
   get where(){
     if(this.min === this.lowerBound && this.max === this.upperBound){
       return null;
     }
-    return getMinMaxWhere(this.field, this.min, this.max);
+
+    let maxWhere = (!this.upperBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.max) : this.max;
+    let minWhere = (!this.lowerBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.min) : this.min;
+
+    return getMinMaxWhere(this.field, minWhere, maxWhere);
   }
 }
 decorate(MinMaxFilter, {

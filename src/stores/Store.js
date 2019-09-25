@@ -36,20 +36,21 @@ class Store {
     this.rendererOptions = [...Object.keys(this.renderers)];
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
-    this.rerenderingRequired = false;
+    this.layerLoaded = false;
+    this.viewConfig = storeConfig.viewConfig;
   }
 
   _loadLayers(){
     this.view.whenLayerView(this.lyr)
     .then(lV => {
       this.lyrView = lV;
-      this.filters.forEach(f => f.load(this.lyr));
+      this.filters.forEach(f => f.load(this.lyr, this.view));
       this.histograms.forEach(f => f.load(this.lyr));
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
       }, new Map());
-      this.rerenderingRequired = true;
+      this.layerLoaded = true;
     });
   }
 
@@ -139,8 +140,8 @@ class Store {
       this.view = new MV({
         map: this.map,
         container: mapViewDiv,
-        center: [-74.00157, 40.71955],
-        zoom: 12
+        center: this.viewConfig.center,//[-74.00157, 40.71955],
+        zoom: this.viewConfig.zoom//12
       });
       this._loadLayers();
       return this.view;
@@ -159,7 +160,7 @@ class Store {
 decorate(Store, {
   user: observable,
   rendererField: observable,
-  rerenderingRequired: observable,
+  layerLoaded: observable,
   aliasMap: observable,
   where: computed,
   load: action.bound,

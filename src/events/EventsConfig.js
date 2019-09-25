@@ -4,7 +4,7 @@ import bicycleImage from '../resources/images/ET_BICYCLE.png'
 import pedImage from '../resources/images/ET_PED_ON_HW.png'
 
 const eventsConfig = {
-  layerItemId: '31cafff739334c648e2908ce2be1f048',
+  layerItemId: 'b6e8773284fe4b6891c7196a57e238b8',
   initialRendererField: 'eventsubtype',
   renderers : {
     'eventsubtype': {
@@ -42,16 +42,11 @@ const eventsConfig = {
         "Project: {project}<br>" +
         "Event value: {eventvalue}<br>" +
         "Event timestamp: {eventtimestamp}"
+  },
+  viewConfig: {
+    center: [-74.00157, 40.71955],
+    zoom: 12
   }
-  // ,
-  // timeInfo: {
-  //   startField: "eventtimestamp", // name of the date field
-  //   interval: {
-  //     // set time interval to one day
-  //     unit: "days",
-  //     value: 1
-  //   }
-  // }
 
 }
 

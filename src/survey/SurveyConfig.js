@@ -29,6 +29,10 @@ const surveyConfig = {
       title: "Landmark type",
       expression: "When($feature.landmark_type == 2, ' (electronic)', '')"
     }]
+  },
+  viewConfig: {
+    center: [11.57549,48.13743],
+    zoom: 12
   }
 }
 

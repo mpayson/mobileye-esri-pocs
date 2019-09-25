@@ -8,7 +8,8 @@ import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import LayerPanel from './LayerPanel';
-import Store from '../stores/Store';
+import RoutePanel from './RoutePanel';
+import SafetyStore from './SafetyStore';
 import safetyConfig from './SafetyConfig';
 
 const { Header, Content, Sider } = Layout;
@@ -29,15 +30,15 @@ const MenuInformationIcon = () => (
 const SafetyApp = observer(class App extends React.Component {
 
   state = {
-    collapsed: true,
+    collapsed: false,
     loaded: false,
-    navKey: "Layers"
+    navKey: 'Route'
   };
 
   constructor(props, context){
     super(props, context);
     this.mapViewRef = React.createRef();
-    this.store = new Store(safetyConfig);
+    this.store = new SafetyStore(safetyConfig);
   }
 
   onCollapse = collapsed => {
@@ -80,13 +81,13 @@ const SafetyApp = observer(class App extends React.Component {
     let panel;
     switch(this.state.navKey){
       case 'Layers':
-        panel = <LayerPanel store={this.store} map={this.map} layer={this.lyr} layerView={this.lyrView}/>;
+        panel = <LayerPanel store={this.store}/>;
         break;
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;
         break;
       case 'Route':
-        panel = <h1>Routing seems like a lot of work</h1>;
+        panel = <RoutePanel store={this.store}/>
         break;
       case 'About':
         panel = <h1>This is a slick app! Thanks Max!</h1>;
@@ -155,8 +156,8 @@ const SafetyApp = observer(class App extends React.Component {
                 visible={this.state.navKey}
                 mask={false}
                 getContainer={false}
-                style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100%-40px)"}}
-                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
+                style={{ position: 'absolute', background: "#f5f5f5"}}
+                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%", overflowY: 'scroll' }}
               >
                 {panel}
               </Drawer>

@@ -37,6 +37,7 @@ const EventsApp = observer(class App extends React.Component {
   constructor(props, context){
     super(props, context);
     this.mapViewRef = React.createRef();
+    this.sliderRef = React.createRef();
     this.store = new Store(eventsConfig);
   }
 
@@ -71,13 +72,20 @@ const EventsApp = observer(class App extends React.Component {
       .then(([[Search, Legend, TimeSlider], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
-        this.view.ui.add(search, "top-right");
         const legend = new Legend({view: this.view});
 
         // create a new time slider widget
         // set other properties when the layer view is loaded
         // by default timeSlider.mode is "time-window" - shows
         // data falls within time range
+        const timeSlider = new TimeSlider({
+          container: "timeSlider",
+          mode: "time-window",
+          view: this.view,
+          loop: false
+
+        });
+
         // const timeSlider = new TimeSlider({
         //   container: "timeSlider",
         //   playRate: 50,
@@ -88,10 +96,10 @@ const EventsApp = observer(class App extends React.Component {
         //     }
         //   }
         // });
-        // this.timeSlider = timeSlider;
-        //this.view.ui.add(timeSlider, "manual");
-        //timeSlider.values = [start, end];
-
+        this.timeSlider = timeSlider;
+        //timeSlider.values = [new Date(2019, 1, 1), new Date(2020, 1, 1)];
+        this.view.ui.add(timeSlider, "top-right");
+        this.view.ui.add(search, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
       });
@@ -117,13 +125,15 @@ const EventsApp = observer(class App extends React.Component {
     }
 
     // Init Time Slider
-    // if (this.store.rerenderingRequired){
-    //   this.timeSlider.fullTimeExtent = {
-    //     start: new Date(2019, 1, 1),
-    //     end: new Date(2020, 1, 1)
-    //   };
-    //   //this.store.rerenderingRequired = false;
-    // }
+    if (this.store.layerLoaded){
+      const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
+
+      // set up time slider properties
+      this.timeSlider.fullTimeExtent = fullTimeExtent;
+      // this.timeSlider.stops = {
+      //   interval: this.store.lyr.timeInfo.interval
+      // };
+    }
 
 
     const signin = this.store.user
@@ -175,6 +185,9 @@ const EventsApp = observer(class App extends React.Component {
               <Col
                 span={24}
                 style={{height: "calc(100vh - 64px)"}}>
+              <div
+                style={{ position: 'absolute', left: '30%', right: '15px', bottom: '30px'}}
+                ref={this.sliderRef}/>
               <div
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
