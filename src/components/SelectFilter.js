@@ -4,7 +4,7 @@ import { Select } from 'antd';
 const { Option } = Select;
 
 const SelectFilter = observer( ({store, mode}) => {
-  const children = store.options.map(o => {
+  const children = store.options.slice().sort().map(o => {
     return <Option key={o}>{o}</Option>
   })
   const title = store.fieldInfo.alias;

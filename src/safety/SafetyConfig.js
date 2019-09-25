@@ -6,11 +6,11 @@ const getRenderer = (field) => ({
     type: "color",
     field,
     stops: [
-      { value: 0, color: [13,38,68,255], label: '0' },
+      { value: 1, color: [13,38,68,255], label: '1' },
       { value: 2, color: [56,98,122,255], label: null },
       { value: 4, color: [98,158,176,255], label: '4' },
-      { value: 6, color: [177,205,194,255], label: null },
-      { value: 8, color: [255,252,212,255], label: '8'},
+      { value: 8, color: [177,205,194,255], label: null },
+      { value: 16, color: [255,252,212,255], label: '16'},
     ]
   }]
 })
