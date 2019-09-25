@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { Card } from 'antd';
 import HistMinMaxSlideFilter from '../components/HistMinMaxSlideFilter';
 import MultiSelectFilter from '../components/MultiSelectFilter';
+import SelectFilter from '../components/SelectFilter';
 
 const LayerPanel = observer(class LayerPanel extends React.Component{
 
@@ -14,6 +15,8 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           return <HistMinMaxSlideFilter store={f} key={f.field}/>
         case 'multiselect':
           return <MultiSelectFilter store={f} key={f.field}/>
+        case 'select':
+          return <SelectFilter store={f} key={f.field}/>
         default:
           throw new Error("Unknown filter type!");
       }
