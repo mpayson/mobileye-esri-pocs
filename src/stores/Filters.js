@@ -41,15 +41,15 @@ class SelectFilter extends Filter{
 
   load(featureLayer){
     super.load(featureLayer);
-    // const domain = featureLayer.getFieldDomain(this.field);
-    // if(domain){
-    //   this.domainMap = domain.codedValues.reduce((p, cv) => {
-    //     p.set(cv.code, cv.name);
-    //     console.log(p);
-    //     return p;
-    //   }, new Map());
-    //   console.log(domain);
-    // }
+    const domain = featureLayer.getFieldDomain(this.field);
+    if(domain){
+      this.domainMap = domain.codedValues.reduce((p, cv) => {
+        p.set(cv.code, cv.name);
+        console.log(p);
+        return p;
+      }, new Map());
+      console.log(domain);
+    }
     featureLayer.queryFeatures({
       where: "1=1",
       returnDistinctValues: true,
