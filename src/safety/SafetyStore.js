@@ -154,13 +154,14 @@ class SafetyStore extends Store {
       'esri/tasks/RouteTask',
       'esri/tasks/support/RouteParameters',
       'esri/tasks/support/FeatureSet',
-      'esri/geometry/SpatialReference'
+      'esri/geometry/SpatialReference',
+      "esri/geometry/geometryEngine"
     ], options);
 
     Promise.all([pQuery, pModules])
     .then(([
       qres,
-      [ RouteTask, RouteParameters, FeatureSet, SpatialReference]
+      [ RouteTask, RouteParameters, FeatureSet, SpatialReference,geometryEngine]
     ]) => {
 
       const routeTask = new RouteTask({
@@ -169,21 +170,24 @@ class SafetyStore extends Store {
   
       const routeParams = new RouteParameters({
         stops: new FeatureSet(),
-        polylineBarriers: new FeatureSet(),
+        //polylineBarriers: new FeatureSet(),
+        polygonBarriers: new FeatureSet(),
         outSpatialReference: SpatialReference.WebMercator
       });
   
       routeParams.stops.features.push(this.startGraphic);
       routeParams.stops.features.push(this.endGraphic);
 
-      routeParams.polylineBarriers = qres.features.slice(0,1000).map((f,i) => {
-        this.lyrView.highlight(f);
-        // f.attributes['Attr_TravelTime'] = f.attributes['eventvalue'];
-        // f.attributes['BarrierType'] = 2;
-        // f.attributes['Name'] = i;
-        return f;
-      })
-  
+      var scorepolys = qres.features.slice(0,100).map((f,i) => {
+        var scorebuffer = {
+          geometry: geometryEngine.geodesicBuffer(f.geometry, 15, "meters"),
+          symbol: {type: "simple-fill", color: 'red'}
+        }
+        return scorebuffer;  
+      });
+      this.view.graphics.addMany(scorepolys);
+      routeParams.polygonBarriers.features = scorepolys;
+
       return routeTask.solve(routeParams)
     })
     .then(data => {

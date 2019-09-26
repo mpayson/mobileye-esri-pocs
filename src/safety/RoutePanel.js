@@ -71,7 +71,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
             <div>Travel Time
               <span style={{float: 'right'}}>
                 <Icon type={store.safetyTimeDelta > 0 ? 'arrow-up' : 'arrow-down'}/>
-                <b>{` ${store.safetyTimeDelta ? Math.abs(store.safetyTimeDelta) : ' - - '}%`}</b>
+                <b>{` ${store.safetyTimeDelta ? Math.round(Math.abs(store.safetyTimeDelta)) : ' - - '}%`}</b>
               </span>
             </div>
           }
@@ -97,7 +97,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
             <div>Travel Safety Score
               <span style={{float: 'right'}}>
                 <Icon type={store.safetyScoreeDelta > 0 ? 'arrow-up' : 'arrow-down'}/>
-                <b>{` ${store.safetyScoreDelta ? Math.abs(store.safetyScoreDelta) : ' - - '}%`}</b>
+                <b>{` ${store.safetyScoreDelta ? Math.round(Math.abs(store.safetyScoreDelta)) : ' - - '}%`}</b>
               </span>
             </div>
           }
