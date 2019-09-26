@@ -25,13 +25,22 @@ const surveyConfig = {
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "sign_type",
       defaultSymbol: {type: "simple-marker", color: "blue"},
-      visualVaraiables: [{
+      visualVariables: [{
         type: "opacity",
         field: "comparsion_to_prev_map",
         stops: [
-              {value: "2", opacity: 0.3},
-              {value: "1", opacity: 1},
-              {value: "0", opacity: 1}
+              {value: '2', opacity: 0.3},
+              {value: '1', opacity: 1},
+              {value: '0', opacity: 1}
+        ]
+      },
+      {
+        type: "size",
+        field: "comparsion_to_prev_map",
+        stops: [
+          { value: '2', size: 20},
+          { value: '1', size: 30},
+          { value: '0', size: 20}
         ]
       }],
       uniqueValueInfos: [
@@ -62,7 +71,7 @@ const surveyConfig = {
         {value: '38', symbol: {type: "picture-marker", url: sign110Image}},
         {value: '39', symbol: {type: "picture-marker", url: sign120Image}},
         {value: '40', symbol: {type: "picture-marker", url: sign130Image}},
-        {value: '41', symbol: {type: "picture-marker", url: sign140Image}}, 
+        {value: '41', symbol: {type: "picture-marker", url: sign140Image}}
     ]
   }
   },
@@ -73,13 +82,13 @@ const surveyConfig = {
     
   ],
   histograms: [
-    {name: 'edge_length_or_diameter', params: {}},
+    {name: 'edge_length_or_diameter', withFilter : true, params: {}},
   ],
   popupTemplate: {
-    title: "Sign Informaion:",
-    content: "Sign type: <b>{sign_type}{expression/speed-units}{expression/is-electronic}</b><br>" +
-        "Detected at {publish_date} (version {map_version})<br>" +
-        "{expression/size_marker}: {edge_length_or_diameter} m<br>",
+    title: "{expression/title-expression}",
+    content: "Sign type: <b>{sign_type}{expression/speed-units}{expression/landmark_type}</b><br>" +
+             "Detected at {publish_date} (version {map_version})<br>" +
+             "{expression/size_marker}: {edge_length_or_diameter} m<br>",
     expressionInfos: [{
           name: "speed-units",
           title: "Speed units",
@@ -94,6 +103,11 @@ const surveyConfig = {
       name: "landmark_type",
       title: "Landmark type",
       expression: "When($feature.landmark_type == 2, ' (electronic)', '')"
+    },
+    {
+      name: "title-expression",
+      title: "Title Expression",
+      expression: "When($feature.edge_length_or_diameter == 2, '<b>Missing<\b> Sign', $feature.edge_length_or_diameter == 1, '<b>New<\b> Sign',  'Sign information')"
     }]
   },
   viewConfig: { 
