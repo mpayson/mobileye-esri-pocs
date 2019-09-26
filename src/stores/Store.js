@@ -30,7 +30,13 @@ class Store {
     if (typeof storeConfig.histograms === 'undefined') {
       this.histograms = []
     } else {
-      this.histograms = storeConfig.histograms.map(f => new HistogramStore(f.name, f.params));
+      this.histograms = storeConfig.histograms.map(f => {
+        if(f.withFilter) {        
+          return new MinMaxFilter(f.name, f.params);
+        } else {
+          return new HistogramStore(f.name, f.params);
+        }
+      });
     }
     this.renderers = storeConfig.renderers;
     this.rendererOptions = [...Object.keys(this.renderers)];
@@ -45,7 +51,7 @@ class Store {
     .then(lV => {
       this.lyrView = lV;
       this.filters.forEach(f => f.load(this.lyr, this.view));
-      this.histograms.forEach(f => f.load(this.lyr));
+      this.histograms.forEach(f => f.load(this.lyr, this.view));
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
@@ -120,7 +126,7 @@ class Store {
     })
     .then(credential => {
       let renderer;
-      console.log(this.renderers, this.rendererField)
+      //console.log(this.renderers, this.rendererField)
       if (this.renderers[this.rendererField]._type === 'jsapi')
         renderer = this.renderers[this.rendererField];
       else

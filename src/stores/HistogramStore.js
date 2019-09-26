@@ -42,7 +42,7 @@ class HistogramStore {
         })
         .then(histRes => {
             this.bins = histRes.bins;
-            console.log("ORK 1", this.bins)
+//            console.log("ORK 1", this.bins)
             this.loaded = true;})
     }
   

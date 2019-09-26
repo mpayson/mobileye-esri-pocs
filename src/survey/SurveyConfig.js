@@ -82,7 +82,7 @@ const surveyConfig = {
     
   ],
   histograms: [
-    {name: 'edge_length_or_diameter', withFilter : true, params: {}},
+    {name: 'edge_length_or_diameter', withFilter : true, params: {isLogarithmic: false, log: true}},
   ],
   popupTemplate: {
     title: "{expression/title-expression}",

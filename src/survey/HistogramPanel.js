@@ -9,7 +9,7 @@ const HistogramPanel = observer(class HistogramPanel extends React.Component{
   render(){
 
     const HistogramViews = this.props.store.histograms.map(f => {
-      if(f.withFilter) {
+      if(typeof f === 'MinMaxFilter') {        
         return <HistMinMaxSlideFilter store={f} key={f.field}/>
       } else {
         return <HistogramComponent store={f} key={f.field}/>

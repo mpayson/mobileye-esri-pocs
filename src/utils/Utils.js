@@ -14,8 +14,13 @@ const getMinMaxWhere = (field, min, max) => {
 
 const getMultiSelectWhere = (field, values) => {
   if(!values || values.length < 1) return null;
-  const wstr = values.join("','");
-  return `${field} IN ('${wstr}')`;
+  if(typeof value === 'number') {
+    const wstr = values.join(",");
+    return `${field} IN (${wstr})`;
+  } else {
+    const wstr = values.join("','");
+    return `${field} IN ('${wstr}')`;
+  }
 }
 
 const getSelectWhere = (field, value) => {
