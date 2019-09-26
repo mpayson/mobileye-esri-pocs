@@ -1,9 +1,61 @@
+import sign10Image from '../resources/images/SIGN_ICON_10.png'
+import sign20Image from '../resources/images/SIGN_ICON_20.png'
+import sign30Image from '../resources/images/SIGN_ICON_30.png'
+import sign40Image from '../resources/images/SIGN_ICON_40.png'
+import sign50Image from '../resources/images/SIGN_ICON_50.png'
+import sign60Image from '../resources/images/SIGN_ICON_60.png'
+import sign70Image from '../resources/images/SIGN_ICON_70.png'
+import sign80Image from '../resources/images/SIGN_ICON_80.png'
+import sign90Image from '../resources/images/SIGN_ICON_90.png'
+import sign100Image from '../resources/images/SIGN_ICON_100.png'
+import sign110Image from '../resources/images/SIGN_ICON_110.png'
+import sign120Image from '../resources/images/SIGN_ICON_120.png'
+import sign130Image from '../resources/images/SIGN_ICON_130.png'
+import sign140Image from '../resources/images/SIGN_ICON_140.png'
+
+
 // update to map
+
 const surveyConfig = {
   layerItemId: '8560701bf1b44bccb3da5bb876e7f625',
   initialRendererField: 'signs',
   renderers: {
-    'signs': {"type":"simple","symbol":{"type":"esriPMS","url":"RedSphere.png","imageData":"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","contentType":"image/png","width":15,"height":15}}
+    'signs': {
+      _type: "jsapi",
+      type: "unique-value",  // autocasts as new UniqueValueRenderer()
+      field: "sign_type",
+      defaultSymbol: {type: "simple-marker", color: "blue"},
+      uniqueValueInfos: [
+        {value: '0', symbol: {type: "picture-marker", url: sign10Image}},
+        {value: '1', symbol: {type: "picture-marker", url: sign20Image}},
+        {value: '2', symbol: {type: "picture-marker", url: sign30Image}},
+        {value: '3', symbol: {type: "picture-marker", url: sign40Image}},
+        {value: '4', symbol: {type: "picture-marker", url: sign50Image}},
+        {value: '5', symbol: {type: "picture-marker", url: sign60Image}},
+        {value: '6', symbol: {type: "picture-marker", url: sign70Image}},
+        {value: '7', symbol: {type: "picture-marker", url: sign80Image}},
+        {value: '8', symbol: {type: "picture-marker", url: sign90Image}},
+        {value: '9', symbol: {type: "picture-marker", url: sign100Image}},
+        {value: '10', symbol: {type: "picture-marker", url: sign110Image}},
+        {value: '11', symbol: {type: "picture-marker", url: sign120Image}},
+        {value: '12', symbol: {type: "picture-marker", url: sign130Image}},
+        {value: '13', symbol: {type: "picture-marker", url: sign140Image}},
+        {value: '28', symbol: {type: "picture-marker", url: sign10Image}},
+        {value: '29', symbol: {type: "picture-marker", url: sign20Image}},
+        {value: '30', symbol: {type: "picture-marker", url: sign30Image}},
+        {value: '31', symbol: {type: "picture-marker", url: sign40Image}},
+        {value: '32', symbol: {type: "picture-marker", url: sign50Image}},
+        {value: '33', symbol: {type: "picture-marker", url: sign60Image}},
+        {value: '34', symbol: {type: "picture-marker", url: sign70Image}},
+        {value: '35', symbol: {type: "picture-marker", url: sign80Image}},
+        {value: '36', symbol: {type: "picture-marker", url: sign90Image}},
+        {value: '37', symbol: {type: "picture-marker", url: sign100Image}},
+        {value: '38', symbol: {type: "picture-marker", url: sign110Image}},
+        {value: '39', symbol: {type: "picture-marker", url: sign120Image}},
+        {value: '40', symbol: {type: "picture-marker", url: sign130Image}},
+        {value: '41', symbol: {type: "picture-marker", url: sign140Image}}, 
+    ]
+  }
   },
   filters: [
     {name: 'map_version', type: 'select', params: {}},
@@ -17,13 +69,18 @@ const surveyConfig = {
   popupTemplate: {
     title: "Sign Informaion:",
     content: "Sign type: <b>{sign_type}{expression/speed-units}{expression/is-electronic}</b><br>" +
-        "Viewed on {publish_date} (version {map_version})<br>" +
-        "Size: {bounding_height}x{bounding_width} m<br>",
+        "Detected at {publish_date} (version {map_version})<br>" +
+        "{expression/size_marker}: {edge_length_or_diameter} m<br>",
     expressionInfos: [{
           name: "speed-units",
           title: "Speed units",
           expression: "When(($feature.sign_type >= 0 && $feature.sign_type <= 13) || ($feature.sign_type >= 28 && $feature.sign_type <= 41), ' KM/h speed limit', '')"
     } ,
+    {
+      name: "size_marker",
+      title: "Size marker",
+      expression: "When ($feature.landmark_type == 1, 'Diameter', 'Edge size')"
+    },
     {
       name: "landmark_type",
       title: "Landmark type",
@@ -32,7 +89,7 @@ const surveyConfig = {
   },
   viewConfig: {
     center: [11.57549,48.13743],
-    zoom: 12
+    zoom: 10
   }
 }
 
