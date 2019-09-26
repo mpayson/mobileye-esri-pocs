@@ -3,7 +3,10 @@ import { observer } from "mobx-react";
 import {
   Input,
   Button,
-  Icon
+  Icon,
+  Statistic,
+  Card,
+  Divider
 } from 'antd';
 import PinIcon from 'calcite-ui-icons-react/PinPlusIcon';
 
@@ -58,9 +61,61 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
           style={{width: "100%"}}
           disabled={!(store.startGraphic && store.endGraphic)}
           type="primary"
-          ghost>
+          ghost
+          onClick={store.generateRoutes}>
           Generate routes
         </Button>
+        <Divider/>
+        <Card
+          title={
+            <div>Travel Time
+              <span style={{float: 'right'}}>
+                <Icon type={store.safetyTimeDelta > 0 ? 'arrow-up' : 'arrow-down'}/>
+                <b>{` ${store.safetyTimeDelta ? Math.abs(store.safetyTimeDelta) : ' - - '}%`}</b>
+              </span>
+            </div>
+          }
+          size="small"
+          style={{marginBottom: '15px'}}>
+          <Statistic
+            title="Without accounting for risk"
+            value={store.stdTravelTime ? store.stdTravelTime : ' - - '}
+            precision={0}
+            prefix={<Icon type="minus" style={{color: 'rgb(94, 43, 255)'}}/>}
+            suffix="min"
+          />
+          <Statistic
+            title="Accounting for risk"
+            value={store.safetyTravelTime ? store.safetyTravelTime : ' - - '}
+            precision={0}
+            prefix={<Icon type="minus" style={{color: "rgb(227, 69, 143)"}}/>}
+            suffix="min"
+          />
+        </Card>
+        <Card
+          title={
+            <div>Travel Safety Score
+              <span style={{float: 'right'}}>
+                <Icon type={store.safetyScoreeDelta > 0 ? 'arrow-up' : 'arrow-down'}/>
+                <b>{` ${store.safetyScoreDelta ? Math.abs(store.safetyScoreDelta) : ' - - '}%`}</b>
+              </span>
+            </div>
+          }
+          size="small">
+          <Statistic
+            title="Without accounting for risk"
+            value={store.stdTravelScore ? store.stdTravelScore : ' - - '}
+            precision={2}
+            prefix={<Icon type="minus" style={{color: 'rgb(94, 43, 255)'}}/>}
+          />
+          <Statistic
+            title="Accounting for risk"
+            value={store.safetyTravelScore ? store.safetyTravelScore : ' - - '}
+            precision={2}
+            prefix={<Icon type="minus" style={{color: "rgb(227, 69, 143)"}}/>}
+          />
+        </Card>
+
       </>
     ) 
   }
