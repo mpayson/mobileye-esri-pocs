@@ -25,14 +25,22 @@ const surveyConfig = {
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "sign_type",
       defaultSymbol: {type: "simple-marker", color: "blue"},
-      visualVaraiables: [{
+      visualVariables: [{
         type: "opacity",
         field: "comparsion_to_prev_map",
         stops: [
-              {value: "2", opacity: 0.3},
-              {value: "1", opacity: 1},
-              {value: "0", opacity: 1}
+              {value: '2', opacity: 0.3},
+              {value: '1', opacity: 1},
+              {value: '0', opacity: 1}
         ]
+      },
+      {
+        type: "size",
+        field: "edge_length_or_diameter",
+          minDataValue: 0.0,
+          maxDataValue: 2.0,
+          minSize: 0,
+          maxSize: 30
       }],
       uniqueValueInfos: [
         {value: '0', symbol: {type: "picture-marker", url: sign10Image}},
@@ -62,24 +70,26 @@ const surveyConfig = {
         {value: '38', symbol: {type: "picture-marker", url: sign110Image}},
         {value: '39', symbol: {type: "picture-marker", url: sign120Image}},
         {value: '40', symbol: {type: "picture-marker", url: sign130Image}},
-        {value: '41', symbol: {type: "picture-marker", url: sign140Image}}, 
+        {value: '41', symbol: {type: "picture-marker", url: sign140Image}}
     ]
   }
   },
   filters: [
-    {name: 'map_version', type: 'select', params: {}},
     {name: 'sign_type', type: 'multiselect', params: {}},
+    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {}},
     {name: 'landmark_type', type: 'multiselect', params: {}},
+    {name: 'map_version', type: 'select', params: {}},
     
   ],
   histograms: [
-    {name: 'edge_length_or_diameter', params: {}},
+    {name: 'display_text', withFilter : true, params: {isLogarithmic: false, log: true, numBins: 14}},
+    {name: 'edge_length_or_diameter', withFilter : true, params: {isLogarithmic: false, log: true}},
   ],
   popupTemplate: {
-    title: "Sign Informaion:",
-    content: "Sign type: <b>{sign_type}{expression/speed-units}{expression/is-electronic}</b><br>" +
-        "Detected at {publish_date} (version {map_version})<br>" +
-        "{expression/size_marker}: {edge_length_or_diameter} m<br>",
+    title: "{expression/title-expression}",
+    content: "Sign type: <b>{sign_type}{expression/speed-units}{expression/landmark_type}</b><br>" +
+             "Detected at {publish_date} (version {map_version})<br>" +
+             "{expression/size_marker}: {edge_length_or_diameter} m<br>",
     expressionInfos: [{
           name: "speed-units",
           title: "Speed units",
@@ -94,6 +104,11 @@ const surveyConfig = {
       name: "landmark_type",
       title: "Landmark type",
       expression: "When($feature.landmark_type == 2, ' (electronic)', '')"
+    },
+    {
+      name: "title-expression",
+      title: "Title Expression",
+      expression: "When($feature.edge_length_or_diameter == 2, '<b>Missing<\b> Sign', $feature.edge_length_or_diameter == 1, '<b>New<\b> Sign',  'Sign information')"
     }]
   },
   viewConfig: { 

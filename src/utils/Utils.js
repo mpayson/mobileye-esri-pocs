@@ -9,20 +9,30 @@ const getMinMaxWhere = (field, min, max) => {
   } else if(isMin){
     where = field + " >= " + min;
   }
+  console.log("ORK hmm", where)
   return where;
 }
 
-const getMultiSelectWhere = (field, values) => {
+const getMultiSelectWhere = (field, values, fieldType) => {
   if(!values || values.length < 1) return null;
-  const wstr = values.join("','");
-  return `${field} IN ('${wstr}')`;
+  let where = null;
+  if(fieldType === 'string') {
+    const wstr = values.join("','");
+    where = `${field} IN ('${wstr}')`;
+  } else {
+    const wstr = values.join(",");
+    where =  `${field} IN (${wstr})`;
+  }
+  return where;
 }
 
-const getSelectWhere = (field, value) => {
+const getSelectWhere = (field, value, fieldType) => {
   if(!value) return null;
-  return typeof value === 'number'
-    ? `${field} = ${value}`
-    : `${field} = '${value}'`;
+  let where = null;
+  where = (fieldType === 'string')
+    ? `${field} = '${value}'` :
+    `${field} = ${value}`;
+  return where
 }
 
 export {getMinMaxWhere, getMultiSelectWhere, getSelectWhere};
