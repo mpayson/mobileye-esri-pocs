@@ -141,7 +141,12 @@ class Store {
         map: this.map,
         container: mapViewDiv,
         center: this.viewConfig.center,//[-74.00157, 40.71955],
-        zoom: this.viewConfig.zoom//12
+        zoom: this.viewConfig.zoom, //12,
+        highlightOptions: {
+          color: "red",
+          haloOpacity: 1,
+          fillOpacity: 1
+        }
       });
       this._loadLayers();
       return this.view;

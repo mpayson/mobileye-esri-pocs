@@ -32,7 +32,7 @@ const SafetyApp = observer(class App extends React.Component {
   state = {
     collapsed: false,
     loaded: false,
-    navKey: 'Route'
+    navKey: null
   };
 
   constructor(props, context){
