@@ -27,17 +27,15 @@ class Store {
           throw new Error("Unknown filter type!")
       }
     });
-    if (typeof storeConfig.histograms === 'undefined') {
-      this.histograms = []
-    } else {
-      this.histograms = storeConfig.histograms.map(f => {
+    this.histograms =  (typeof storeConfig.histograms === 'undefined') ? [] :
+      storeConfig.histograms.map(f => {
         if(f.withFilter) {        
           return new MinMaxFilter(f.name, f.params);
         } else {
           return new HistogramStore(f.name, f.params);
         }
       });
-    }
+    
     this.renderers = storeConfig.renderers;
     this.rendererOptions = [...Object.keys(this.renderers)];
     this.rendererField = storeConfig.initialRendererField;

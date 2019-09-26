@@ -45,7 +45,6 @@ class SelectFilter extends Filter{
     if(domain){
       this.domainMap = domain.codedValues.reduce((p, cv) => {
         p.set(cv.code, cv.name);
-        console.log(p);
         return p;
       }, new Map());
       console.log(domain);
@@ -72,7 +71,7 @@ class SelectFilter extends Filter{
   }
 
   get where(){
-    return getSelectWhere(this.field, this.selectValue);
+    return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
   }
 
 }
@@ -96,7 +95,7 @@ class MultiSelectFilter extends SelectFilter{
   }
   
   get where(){
-    return getMultiSelectWhere(this.field, this.selectValue);
+    return getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
   }
 
 };
@@ -122,6 +121,7 @@ class MinMaxFilter extends Filter{
     this.lowerBoundSupplied = this.lowerBound !== null;
     this.logBase = 10;
     this.isLogarithmic = params.isLogarithmic || false;
+    this.numBins = (typeof params.numBins === 'undefined') ? 50 : params.numBins;
     this.bins = [];
     this.loaded = false;
   }
@@ -172,7 +172,7 @@ class MinMaxFilter extends Filter{
         return getHistogram({
           layer: featureLayer,
           field: field,
-          numBins: 50,
+          numBins: this.numBins,
           minValue: this.lowerBound,
           maxValue: this.upperBound,
           valueExpression: this.isLogarithmic ? `IIf($feature.${this.field} != 0,Log($feature.${this.field}) / Log(${this.logBase}),0)` : `$feature.${this.field}`,
@@ -198,6 +198,7 @@ class MinMaxFilter extends Filter{
     let maxWhere = (!this.upperBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.max) : this.max;
     let minWhere = (!this.lowerBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.min) : this.min;
 
+    
     return getMinMaxWhere(this.field, minWhere, maxWhere);
   }
 }

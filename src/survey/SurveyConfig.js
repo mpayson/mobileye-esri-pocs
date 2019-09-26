@@ -36,12 +36,11 @@ const surveyConfig = {
       },
       {
         type: "size",
-        field: "comparsion_to_prev_map",
-        stops: [
-          { value: '2', size: 20},
-          { value: '1', size: 30},
-          { value: '0', size: 20}
-        ]
+        field: "edge_length_or_diameter",
+          minDataValue: 0.0,
+          maxDataValue: 2.0,
+          minSize: 0,
+          maxSize: 30
       }],
       uniqueValueInfos: [
         {value: '0', symbol: {type: "picture-marker", url: sign10Image}},
@@ -76,12 +75,14 @@ const surveyConfig = {
   }
   },
   filters: [
-    {name: 'map_version', type: 'select', params: {}},
     {name: 'sign_type', type: 'multiselect', params: {}},
+    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {}},
     {name: 'landmark_type', type: 'multiselect', params: {}},
+    {name: 'map_version', type: 'select', params: {}},
     
   ],
   histograms: [
+    {name: 'display_text', withFilter : true, params: {isLogarithmic: false, log: true, numBins: 14}},
     {name: 'edge_length_or_diameter', withFilter : true, params: {isLogarithmic: false, log: true}},
   ],
   popupTemplate: {

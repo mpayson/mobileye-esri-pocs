@@ -72,7 +72,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
     }
 
     const title = this.store.fieldInfo.alias;
-
+    
     return(
       <>
         <p>{title}</p>
