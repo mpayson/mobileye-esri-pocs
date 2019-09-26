@@ -5,7 +5,11 @@ const { Option } = Select;
 
 const SelectFilter = observer( ({store, mode}) => {
   const children = store.options.slice().sort().map(o => {
-    return <Option key={o}>{o}</Option>
+    let label = o;
+    if (store.domainMap.has(o)) {
+        label = store.domainMap.get(o);
+    }
+    return <Option key={o}>{label}</Option>
   })
   const title = store.fieldInfo.alias;
   return (

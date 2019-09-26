@@ -2,11 +2,13 @@ import React from 'react';
 import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
+import GraphHistogramIcon from 'calcite-ui-icons-react/GraphHistogramIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import LayerPanel from './LayerPanel';
+import HistogramPanel from './HistogramPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
 
@@ -14,6 +16,9 @@ const { Header, Content, Sider } = Layout;
 
 const MenuFilterIcon = () => (
   <LayerFilterIcon size="18" filled/>
+)
+const MenuHistogramIcon = () => (
+  <GraphHistogramIcon size="18" filled/>
 )
 const MenuBookmarkIcon = () => (
   <BookmarkIcon size="18" filled/>
@@ -78,6 +83,9 @@ const SurveyApp = observer(class App extends React.Component {
       case 'Layers':
         panel = <LayerPanel store={this.store} map={this.map} layer={this.lyr} layerView={this.lyrView}/>;
         break;
+      case 'Histograms':
+        panel = <HistogramPanel store={this.store} map={this.map} layer={this.lyr} layerView={this.lyrView}/>;
+        break;
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;
         break;
@@ -117,6 +125,10 @@ const SurveyApp = observer(class App extends React.Component {
               <Menu.Item key="Layers">
                 <Icon component={MenuFilterIcon} />
                 <span>Layers</span>
+              </Menu.Item>
+              <Menu.Item key="Histograms">
+                <Icon component={MenuHistogramIcon} />
+                <span>Histograms</span>
               </Menu.Item>
               <Menu.Item key="Bookmarks">
                 <Icon component={MenuBookmarkIcon} />
