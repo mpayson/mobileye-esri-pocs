@@ -25,6 +25,15 @@ const surveyConfig = {
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "sign_type",
       defaultSymbol: {type: "simple-marker", color: "blue"},
+      visualVaraiables: [{
+        type: "opacity",
+        field: "comparsion_to_prev_map",
+        stops: [
+              {value: "2", opacity: 0.3},
+              {value: "1", opacity: 1},
+              {value: "0", opacity: 1}
+        ]
+      }],
       uniqueValueInfos: [
         {value: '0', symbol: {type: "picture-marker", url: sign10Image}},
         {value: '1', symbol: {type: "picture-marker", url: sign20Image}},
@@ -64,7 +73,7 @@ const surveyConfig = {
     
   ],
   histograms: [
-    {name: 'sign_type', params: {}},
+    {name: 'edge_length_or_diameter', params: {}},
   ],
   popupTemplate: {
     title: "Sign Informaion:",
@@ -87,9 +96,9 @@ const surveyConfig = {
       expression: "When($feature.landmark_type == 2, ' (electronic)', '')"
     }]
   },
-  viewConfig: {
-    center: [11.57549,48.13743],
-    zoom: 10
+  viewConfig: { 
+    center: [11.432656,48.194704],
+    zoom: 12
   }
 }
 
