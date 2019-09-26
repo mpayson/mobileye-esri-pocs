@@ -76,7 +76,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
     return(
       <>
         <p>{title}</p>
-        <div style={{height: "6rem", width: "10rem"}}>
+        <div style={{height: "6rem", width: "100%"}}>
           <div ref={this.sliderRef}></div>
         </div>
       </>
