@@ -197,7 +197,7 @@ const EventsApp = observer(class App extends React.Component {
                 visible={this.state.navKey}
                 mask={false}
                 getContainer={false}
-                style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100%-40px)"}}
+                style={{ position: 'absolute', background: "#f5f5f5"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
               >
                 {panel}

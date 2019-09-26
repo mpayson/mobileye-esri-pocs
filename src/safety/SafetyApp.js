@@ -156,7 +156,7 @@ const SafetyApp = observer(class App extends React.Component {
                 visible={this.state.navKey}
                 mask={false}
                 getContainer={false}
-                style={{ position: 'absolute', background: "#f5f5f5"}}
+                style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%", overflowY: 'scroll' }}
               >
                 {panel}
