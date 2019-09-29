@@ -22,7 +22,6 @@ class AppState {
         localStorage.removeItem(SESSION_ID);
       }
     }
-    localStorage.removeItem(SESSION_ID);
   }
 
   _registerSession(newSession){

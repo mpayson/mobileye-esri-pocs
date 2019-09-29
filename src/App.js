@@ -28,9 +28,8 @@ const OAuth = _ => {
   )
 }
 
-const PrivateRoute = observer(({Component, appState, ...rest}) => {
-  console.log(appState.isAuthenticated);
-  return <Route
+const PrivateRoute = observer(({Component, appState, ...rest}) => (
+  <Route
     {...rest}
     render={(props) => (
       appState.isAuthenticated === true
@@ -40,7 +39,7 @@ const PrivateRoute = observer(({Component, appState, ...rest}) => {
             state: {from: props.location}
           }}/>
     )}/>
-});
+));
 
 const Home = observer(class Home extends React.Component{
   
@@ -122,7 +121,7 @@ class App extends React.Component{
     super(props, context);
     const relativeRedirectUri = '';
     this.appState = new AppState({...config, relativeRedirectUri});
-    console.log('v 0.0.0.3')
+    console.log('v 0.0.0.4')
   }
 
   render(){
