@@ -7,6 +7,8 @@ const SESSION_ID = '__MOBILEYE_ESRI_POCS__';
 
 class AppState {
 
+  redirectToReferrer = false;
+
   constructor(appConfig){
     this.config = appConfig;
     this.session = null;
@@ -25,6 +27,7 @@ class AppState {
 
   _registerSession(newSession){
     this.session = newSession;
+    this.redirectToReferrer = true;
     localStorage.setItem(SESSION_ID, this.session.serialize());
   }
 
@@ -58,6 +61,7 @@ class AppState {
 
 decorate(AppState, {
   session: observable,
+  redirectToReferrer: observable,
   displayName: computed,
   isAuthenticated: computed,
   _registerSession: action.bound,

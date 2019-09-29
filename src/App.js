@@ -23,7 +23,8 @@ const OAuth = _ => {
     clientId: appId,
   });
   return(
-    <div/>
+    // <div/>
+    <h1>HELLO WORLD THIS IS MY PAGE FOR HANDLING OAUTH!!!!</h1>
   )
 }
 
@@ -34,7 +35,10 @@ const PrivateRoute = observer(({Component, appState, ...rest}) => {
     render={(props) => (
       appState.isAuthenticated === true
         ? <Component appState={appState} {...props}/>
-        : <Redirect to="/"/>
+        : <Redirect to={{
+            pathname: '/',
+            state: {from: props.location}
+          }}/>
     )}/>
 });
 
@@ -50,6 +54,11 @@ const Home = observer(class Home extends React.Component{
     let topComponent = appState.isAuthenticated
       ? <h1>Hello <b>{appState.displayName}</b>, welcome to our demos!</h1>
       : <Button type="primary" size="large" onClick={appState.login}>Log in to get started</Button>;
+
+    const {from} = this.props.location.state || {from: null};
+    if(appState.redirectToReferrer && from){
+      return <Redirect to={from}/>
+    }
 
     // Not good practice, should find a way to inject router Link into antd Button
     const linkClass = "ant-btn ant-btn-primary ant-btn-background-ghost ant-btn-block ant-btn ant-btn-lg";
@@ -111,15 +120,16 @@ class App extends React.Component{
 
   constructor(props, context){
     super(props, context);
-    const relativeRedirectUri = 'oauth';
+    const relativeRedirectUri = '';
     this.appState = new AppState({...config, relativeRedirectUri});
+    console.log('v 0.0.0.3')
   }
 
   render(){
     if(window.location.hash.includes("access_token=")){
       return (
         <BrowserRouter>
-          <Route path="/oauth" exact component={OAuth} />
+          <Route path="/" component={OAuth} />
         </BrowserRouter>
       )
     }
