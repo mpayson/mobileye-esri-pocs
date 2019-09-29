@@ -38,7 +38,7 @@ const EventsApp = observer(class App extends React.Component {
     super(props, context);
     this.mapViewRef = React.createRef();
     this.sliderRef = React.createRef();
-    this.store = new Store(eventsConfig);
+    this.store = new Store(props.appState, eventsConfig);
   }
 
   onCollapse = collapsed => {
@@ -136,14 +136,14 @@ const EventsApp = observer(class App extends React.Component {
     }
 
 
-    const signin = this.store.user
+    const signin = this.props.appState.displayName
       ? (
         <Menu
           theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.store.user}</Menu.Item>
+          <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
         </Menu>
       )
       : null;

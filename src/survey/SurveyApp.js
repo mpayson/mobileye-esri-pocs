@@ -38,7 +38,7 @@ const SurveyApp = observer(class App extends React.Component {
   constructor(props, context){
     super(props, context);
     this.mapViewRef = React.createRef();
-    this.store = new Store(surveyConfig);
+    this.store = new Store(props.appState, surveyConfig);
   }
 
   onCollapse = collapsed => {
@@ -96,14 +96,14 @@ const SurveyApp = observer(class App extends React.Component {
         panel = null;
     }
 
-    const signin = this.store.user
+    const signin = this.props.appState.displayName
       ? (
         <Menu
           theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.store.user}</Menu.Item>
+          <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
         </Menu>
       )
       : null;

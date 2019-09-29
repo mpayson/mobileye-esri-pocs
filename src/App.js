@@ -1,6 +1,8 @@
 import React from 'react'
-import { BrowserRouter as Router, BrowserRouter, Route, Link } from "react-router-dom";
+import { observer } from "mobx-react";
+import { BrowserRouter as Router, BrowserRouter, Route, Link, Redirect } from "react-router-dom";
 import { Row, Col, Card, Layout, Button, Divider } from 'antd';
+import AppState from './stores/AppState';
 import MapImage from './resources/images/map.png';
 import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
@@ -9,9 +11,11 @@ import {
   UserSession
 } from "@esri/arcgis-rest-auth";
 import config from './config/config';
+import {loadScript} from 'esri-loader';
+import options from './config/esri-loader-options';
 
 const { Content } = Layout;
-const { appId, portalUrl } = config;
+const { appId } = config;
 
 // TODO, see if faster way to accept callback without loading whole app
 const OAuth = _ => {
@@ -23,32 +27,32 @@ const OAuth = _ => {
   )
 }
 
-class Home extends React.Component{
+const PrivateRoute = observer(({Component, appState, ...rest}) => {
+  console.log(appState.isAuthenticated);
+  return <Route
+    {...rest}
+    render={(props) => (
+      appState.isAuthenticated === true
+        ? <Component appState={appState} {...props}/>
+        : <Redirect to="/"/>
+    )}/>
+});
 
-  state = {
-    session: null
-  }
-
-  onLoginClick = () => {
-    UserSession.beginOAuth2({
-      clientId: appId,
-      redirectUri: `${window.location.origin}${window.location.pathname}oauth`,
-      popup: true
-    }).then(newSession => {
-      this.setState({
-        session: newSession
-      })
-    })
-    .catch(error => {
-      console.log(error);
-    });
+const Home = observer(class Home extends React.Component{
+  
+  componentDidMount(){
+    loadScript(options);
   }
 
   render(){
+    let appState = this.props.appState;
 
-    let topComponent = this.state.session
-      ? <h1>Hello <b>{this.state.session.username}</b>, welcome to our demos!</h1>
-      : <Button type="primary" size="large" onClick={this.onLoginClick}>Log in to get started</Button>;
+    let topComponent = appState.isAuthenticated
+      ? <h1>Hello <b>{appState.displayName}</b>, welcome to our demos!</h1>
+      : <Button type="primary" size="large" onClick={appState.login}>Log in to get started</Button>;
+
+    // Not good practice, should find a way to inject router Link into antd Button
+    const linkClass = "ant-btn ant-btn-primary ant-btn-background-ghost ant-btn-block ant-btn ant-btn-lg";
 
     return(
       <Layout style={{ minHeight: '100vh' }}>
@@ -60,53 +64,86 @@ class Home extends React.Component{
           </Row>
           <Divider/>
           <Row type="flex" justify="space-around" align="middle">
-            <Col span={3}/>
-            <Col span={4}>
+            <Col md={{span: 0}} xl={{span: 2}}/>
+            <Col md={{span: 6}} xl={{span: 4}}>
               <Card
               cover={<img alt="example" src={MapImage} />}>
-                <Link to="/safety" className="ant-btn ant-btn-primary ant-btn-background-ghost ant-btn-block ant-btn ant-btn-lg">Explore Safety</Link>
+                <Link
+                  to="/safety"
+                  className={linkClass}
+                  disabled={!appState.isAuthenticated}>
+                  Explore Safety
+                </Link>
               </Card>
             </Col>
-            <Col span={4}>
+            <Col md={{span: 6}} xl={{span: 4}}>
               <Card
               cover={<img alt="example" src={MapImage}/>}>
-                <Link to="/events" className="ant-btn ant-btn-primary ant-btn-background-ghost ant-btn-block ant-btn ant-btn-lg">Explore Events</Link>
+                <Link
+                  to="/events"
+                  className={linkClass}
+                  disabled={!appState.isAuthenticated}>
+                  Explore Events
+                </Link>
               </Card>
             </Col>
-            <Col span={4}>
+            <Col md={{span: 6}} xl={{span: 4}}>
               <Card
               cover={<img alt="example" src={MapImage} />}>
-                <Link to="/survey" className="ant-btn ant-btn-primary ant-btn-background-ghost ant-btn-block ant-btn ant-btn-lg">Explore Survey</Link>
+              <Link
+                to="/survey"
+                className={linkClass}
+                disabled={!appState.isAuthenticated}>
+                Explore Survey
+              </Link>
               </Card>
             </Col>
-            <Col span={3}/>
+            <Col md={{span: 0}} xl={{span: 2}}/>
           </Row>
         </Content>
       </Layout>
     )
   }
-}
+});
 
-function App() {
 
-  // Need to use browser router if in OAuth callback
-  // Otherwise return the full app
-  if(window.location.hash.includes("access_token=")){
-    return (
-      <BrowserRouter>
-        <Route path="/oauth" exact component={OAuth} />
-      </BrowserRouter>
-    )
+class App extends React.Component{
+
+  constructor(props, context){
+    super(props, context);
+    const relativeRedirectUri = 'oauth';
+    this.appState = new AppState({...config, relativeRedirectUri});
   }
 
-  return (
-    <Router>
-      <Route path="/" exact component={Home}/>
-      <Route path="/safety" component={SafetyApp} />
-      <Route path="/events" component={EventsApp} />
-      <Route path="/survey" component={SurveyApp} />
-    </Router>
-  )
+  render(){
+    if(window.location.hash.includes("access_token=")){
+      return (
+        <BrowserRouter>
+          <Route path="/oauth" exact component={OAuth} />
+        </BrowserRouter>
+      )
+    }
+    return(
+      <Router>
+        <Route
+          path="/"
+          exact
+          render={props => <Home {...props} appState={this.appState}/>}/>
+        <PrivateRoute
+          path="/safety"
+          appState={this.appState}
+          Component={SafetyApp}/>
+        <PrivateRoute
+          path="/events"
+          appState={this.appState}
+          Component={EventsApp}/>
+        <PrivateRoute
+          path="/survey"
+          appState={this.appState}
+          Component={SurveyApp}/>
+      </Router>
+    )
+  }
 }
 
 export default App;
