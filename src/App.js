@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import { BrowserRouter as Router, BrowserRouter, Route, Link, Redirect } from "react-router-dom";
+import { HashRouter as Router, BrowserRouter, Route, Link, Redirect } from "react-router-dom";
 import { Row, Col, Card, Layout, Button, Divider } from 'antd';
 import AppState from './stores/AppState';
 import MapImage from './resources/images/map.png';
