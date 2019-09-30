@@ -2,6 +2,8 @@ import React from 'react';
 import {loadModules} from 'esri-loader';
 import { observer } from "mobx-react";
 import options from '../config/esri-loader-options';
+import { Collapse } from 'antd';
+const { Panel } = Collapse;
 
 const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React.Component{
 
@@ -33,7 +35,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
       'esri/widgets/HistogramRangeSlider',
     ], options)
     .then(([HistogramRangeSlider]) => {
-
+      console.log('mountin', this.sliderRef)
 
       this.slider = new HistogramRangeSlider({
         bins: this.store.bins,
@@ -60,7 +62,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
   }
 
   render(){
-
+    console.log('rendering', this.sliderRef)
     if(this.slider && this.store.loaded){
       this.slider.bins = this.store.bins;
       this.slider.min = this.store.lowerBound;
@@ -71,15 +73,10 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
       ];
     }
 
-    const title = this.store.fieldInfo.alias;
-    
     return(
-      <>
-        <p>{title}</p>
-        <div style={{height: "6rem", width: "100%"}}>
-          <div ref={this.sliderRef}></div>
-        </div>
-      </>
+      <div style={{height: "6rem", width: "100%"}}>
+        <div ref={this.sliderRef}></div>
+      </div>
     )
   }
 });

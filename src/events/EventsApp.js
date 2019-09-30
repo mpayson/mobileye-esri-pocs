@@ -7,7 +7,7 @@ import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import LayerPanel from './LayerPanel';
+import FilterPanel from '../components/FilterPanel';
 import Store from '../stores/Store';
 import eventsConfig from './EventsConfig';
 
@@ -109,7 +109,7 @@ const EventsApp = observer(class App extends React.Component {
     let panel;
     switch (this.state.navKey) {
       case 'Layers':
-        panel = <LayerPanel store={this.store} map={this.map}/>;
+        panel = <FilterPanel store={this.store}/>;
         break;
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;

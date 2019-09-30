@@ -11,10 +11,8 @@ const SelectFilter = observer( ({store, mode}) => {
     }
     return <Option key={o}>{label}</Option>
   })
-  const title = store.fieldInfo.alias;
   return (
     <div style={{marginBottom: "1rem"}}>
-      <p>{title}</p>
       <Select
         mode={mode}
         style={{ width: '100%' }}

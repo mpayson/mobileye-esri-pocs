@@ -20,13 +20,32 @@ class Filter {
     this.fieldInfo = {};
   }
   load(featureLayer){
-
     if(!featureLayer.loaded){
       throw new Error("Please wait until the layer is loaded");
     }
     this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
   }
+  get alias(){
+    if(this.fieldInfo) return this.fieldInfo.alias;
+    return null;
+  }
+
+  get where(){
+    return null;
+  }
+  
+  get isActive(){
+    return !!this.where;
+  }
+
 }
+
+decorate(Filter, {
+  fieldInfo: observable,
+  alias: computed,
+  where: computed,
+  isActive: computed
+})
 
 class SelectFilter extends Filter{
   type = 'select';

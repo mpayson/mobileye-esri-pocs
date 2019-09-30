@@ -7,7 +7,7 @@ import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import LayerPanel from './LayerPanel';
+import FilterPanel from '../components/FilterPanel';
 import HistogramPanel from './HistogramPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
@@ -81,10 +81,10 @@ const SurveyApp = observer(class App extends React.Component {
     let panel;
     switch(this.state.navKey){
       case 'Layers':
-        panel = <LayerPanel store={this.store} map={this.map} layer={this.lyr} layerView={this.lyrView}/>;
+        panel = <FilterPanel store={this.store}/>;
         break;
       case 'Histograms':
-        panel = <HistogramPanel store={this.store} map={this.map} layer={this.lyr} layerView={this.lyrView}/>;
+        panel = <HistogramPanel store={this.store}/>;
         break;
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;
