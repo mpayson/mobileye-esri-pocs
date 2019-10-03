@@ -2,7 +2,8 @@ import React from 'react';
 import { observer } from "mobx-react";
 import HistMinMaxSlideFilter from '../components/HistMinMaxSlideFilter';
 import SelectFilter from '../components/SelectFilter';
-import { Collapse, Card } from 'antd';
+import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
+import { Collapse, Card, Button } from 'antd';
 const { Panel } = Collapse;
 
 const getFilterView = (filter) => {
@@ -40,14 +41,17 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
       )
     });
 
-    return (
-      <Card size="small" style={{marginTop: "10px"}}>
-        <h1>Apply Filters</h1>
-        <Collapse bordered={false} expandIconPosition='right'>
-        {filterViews}
-        </Collapse>
-      </Card>
-    )
+  return (
+    <Card size="small" style={{marginTop: "10px"}}>
+      <div style={{display: "inline-block", width: "100%"}}>
+        <h1 style={{float: "left"}}><LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/><span style={{marginLeft: "10px"}}>Filters</span></h1>
+        <Button type="danger" size="small" ghost style={{float: "right", marginTop: "3px"}} onClick={this.props.store.clearFilters}>Clear</Button>
+      </div>
+      <Collapse bordered={false} expandIconPosition='right'>
+      {filterViews}
+      </Collapse>
+    </Card>
+  )
   }
   
 });

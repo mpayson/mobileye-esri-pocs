@@ -130,6 +130,10 @@ class Store {
     });
   }
 
+  clearFilters(){
+    this.filters.forEach(f => f.clear());
+  }
+
   get where(){
     const where = this.filters
       .filter(f => !!f.where)
@@ -152,6 +156,7 @@ decorate(Store, {
   load: action.bound,
   setRendererField: action.bound,
   _loadLayers: action.bound,
+  clearFilters: action.bound
 });
 
 export default Store;

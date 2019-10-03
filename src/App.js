@@ -23,8 +23,7 @@ const OAuth = _ => {
     clientId: appId,
   });
   return(
-    // <div/>
-    <h1>HELLO WORLD THIS IS MY PAGE FOR HANDLING OAUTH!!!!</h1>
+    <div/>
   )
 }
 
@@ -51,7 +50,7 @@ const Home = observer(class Home extends React.Component{
     let appState = this.props.appState;
 
     let topComponent = appState.isAuthenticated
-      ? <h1>Hello <b>{appState.displayName}</b>, welcome to our demos!</h1>
+      ? <h1>Hello <b>{appState.displayName}</b>, please select the application you would like to use:</h1>
       : <Button type="primary" size="large" onClick={appState.login}>Log in to get started</Button>;
 
     const {from} = this.props.location.state || {from: null};
