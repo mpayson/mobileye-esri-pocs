@@ -1,7 +1,7 @@
 const getRenderer = (field) => ({
   _type: "jsapi",
   type: "simple",
-  symbol: { type: "simple-line" },
+  symbol: { type: "simple-line", width: "2.5px" },
   visualVariables: [{
     type: "color",
     field,

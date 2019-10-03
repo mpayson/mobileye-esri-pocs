@@ -114,9 +114,6 @@ const EventsApp = observer(class App extends React.Component {
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;
         break;
-      case 'Route':
-        panel = <h1>Routing seems like a lot of work</h1>;
-        break;
       case 'About':
         panel = <h1>This is a slick app! Thanks Max!</h1>;
         break;
@@ -151,7 +148,7 @@ const EventsApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Live Events</h1>
+          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Mobileye City Lab</h1>
           {signin}
         </Header>
         <Layout>
@@ -169,10 +166,6 @@ const EventsApp = observer(class App extends React.Component {
               <Menu.Item key="Bookmarks">
                 <Icon component={MenuBookmarkIcon} />
                 <span>Bookmarks</span>
-              </Menu.Item>
-              <Menu.Item key="Route">
-                <Icon component={MenuRouteFromIcon} />
-                <span>Route</span>
               </Menu.Item>
               <Menu.Item key="About">
                 <Icon component={MenuInformationIcon} />
