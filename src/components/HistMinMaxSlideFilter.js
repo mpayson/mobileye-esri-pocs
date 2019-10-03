@@ -35,8 +35,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
       'esri/widgets/HistogramRangeSlider',
     ], options)
     .then(([HistogramRangeSlider]) => {
-      console.log('mountin', this.sliderRef)
-
+      const precision = this.store.isLogarithmic ? 4 : 1;
       this.slider = new HistogramRangeSlider({
         bins: this.store.bins,
         min: this.store.lowerBound,
@@ -48,7 +47,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
         excludedBarColor: "#bfbfbf",
         rangeType: "between",
         container: this.sliderRef.current,
-        precision: 1
+        precision
       });
       this.slider.labelFormatFunction = this.labelFunction;
 

@@ -221,15 +221,15 @@ class MinMaxFilter extends Filter{
   }
 
   get where(){
-    if(this.min === this.lowerBound && this.max === this.upperBound){
-      return null;
+    let where;
+    if(this.min <= this.lowerBound && this.max >= this.upperBound){
+      where = null;
+    } else {
+      let maxWhere = (!this.upperBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.max) : this.max;
+      let minWhere = (!this.lowerBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.min) : this.min;
+      where = getMinMaxWhere(this.field, minWhere, maxWhere);
     }
-
-    let maxWhere = (!this.upperBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.max) : this.max;
-    let minWhere = (!this.lowerBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.min) : this.min;
-
-    
-    return getMinMaxWhere(this.field, minWhere, maxWhere);
+    return where;
   }
 }
 decorate(MinMaxFilter, {
