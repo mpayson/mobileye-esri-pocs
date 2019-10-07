@@ -3,7 +3,8 @@ import { observer } from "mobx-react";
 import HistMinMaxSlideFilter from '../components/HistMinMaxSlideFilter';
 import SelectFilter from '../components/SelectFilter';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
-import { Collapse, Card, Button } from 'antd';
+import PanelCard from './PanelCard';
+import { Collapse, Button } from 'antd';
 const { Panel } = Collapse;
 
 const getFilterView = (filter) => {
@@ -27,6 +28,29 @@ const customPanelStyle = {
 
 const FilterPanel = observer(class FilterPanel extends React.Component{
 
+  state = {
+    activeKeys: []
+  }
+
+  onAccordionChange = (keys) => {
+    this.setState({
+      activeKeys: keys
+    })
+  }
+
+  onToggleClick = () => {
+    if(this.state.activeKeys.length > 0){
+      this.setState({
+        activeKeys: []
+      });
+    } else {
+      const keys = this.props.store.filters.map(f => f.field);
+      this.setState({
+        activeKeys: keys
+      })
+    }
+  }
+
   render(){
     const filters = this.props.store.filters;
     const filterViews = filters.map(f => {
@@ -41,17 +65,29 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
       )
     });
 
-  return (
-    <Card size="small" style={{marginTop: "10px"}}>
-      <div style={{display: "inline-block", width: "100%"}}>
-        <h1 style={{float: "left"}}><LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/><span style={{marginLeft: "10px"}}>Filters</span></h1>
-        <Button type="danger" size="small" ghost style={{float: "right", marginTop: "3px"}} onClick={this.props.store.clearFilters}>Clear</Button>
-      </div>
-      <Collapse bordered={false} expandIconPosition='right'>
-      {filterViews}
-      </Collapse>
-    </Card>
-  )
+    const toggleButtonText = this.state.activeKeys.length > 0
+      ? 'Close all'
+      : 'Open all';
+
+    return (
+      <PanelCard
+        title="Filters"
+        icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
+        collapsible={true}>
+          <div style={{display: "inline-block", width: "100%"}}>
+            <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
+            <Button size="small" onClick={this.onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
+          </div>
+          <Collapse
+            activeKey={this.state.activeKeys}
+            bordered={false}
+            expandIconPosition='right'
+            onChange={this.onAccordionChange}>
+            {filterViews}
+          </Collapse>
+      </PanelCard>
+
+    )
   }
   
 });

@@ -1,0 +1,7 @@
+.no-padding > .ant-collapse-content > .ant-collapse-content-box {
+  padding: 10px 0px !important;
+}
+
+.no-padding > .ant-collapse-header{
+  padding: 0px !important;
+}
