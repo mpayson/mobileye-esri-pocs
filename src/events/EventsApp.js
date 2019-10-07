@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
-import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
@@ -18,9 +17,6 @@ const MenuFilterIcon = () => (
 )
 const MenuBookmarkIcon = () => (
   <BookmarkIcon size="18" filled/>
-)
-const MenuRouteFromIcon = () => (
-  <RouteFromIcon size="20" filled/>
 )
 const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>

@@ -56,10 +56,6 @@ class SelectFilter extends Filter{
   selectValue = null;
   domainMap = new Map();
 
-  constructor(fieldName, params){
-    super(fieldName, params);
-  }
-
   load(featureLayer){
     super.load(featureLayer);
     const domain = featureLayer.getFieldDomain(this.field);

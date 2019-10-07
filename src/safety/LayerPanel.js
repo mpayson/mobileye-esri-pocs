@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from "mobx-react";
 import {
-  Card,
   Switch,
   Radio,
   Typography } from 'antd';

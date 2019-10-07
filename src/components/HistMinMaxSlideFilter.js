@@ -2,8 +2,6 @@ import React from 'react';
 import {loadModules} from 'esri-loader';
 import { observer } from "mobx-react";
 import options from '../config/esri-loader-options';
-import { Collapse } from 'antd';
-const { Panel } = Collapse;
 
 const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React.Component{
 
