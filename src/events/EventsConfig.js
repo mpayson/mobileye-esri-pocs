@@ -33,7 +33,7 @@ const eventsConfig = {
 //    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 20, log: true}},
 //    {name: 'eventtype', type: 'multiselect'},
     {name: 'eventsubtype', type: 'multiselect', params: {caption: "Event type"}},
-    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
+//    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
   popupTemplate: {
