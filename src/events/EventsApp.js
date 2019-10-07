@@ -72,7 +72,7 @@ const EventsApp = observer(class App extends React.Component {
       .then(([[Search, Legend, TimeSlider], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
-        const legend = new Legend({view: this.view});
+        const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
 
         // create a new time slider widget
         // set other properties when the layer view is loaded
