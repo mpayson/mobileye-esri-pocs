@@ -1,1 +1,0 @@
-{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,KACE,0BAA2B,CAC3B,0BACF","file":"main.d03d2b53.chunk.css","sourcesContent":["body {\n  overscroll-behavior-y: none;\n  overscroll-behavior-x: none;\n}"]}
