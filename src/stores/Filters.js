@@ -15,9 +15,10 @@ const getMinQuery = (field) => ({
 });
 
 class Filter {
-  constructor(fieldName){
+  constructor(fieldName, params = null){
     this.field = fieldName;
     this.fieldInfo = {};
+    this.caption = (params !== null && "caption" in params)?  params.caption : null;
   }
   load(featureLayer){
     if(!featureLayer.loaded){
@@ -26,6 +27,7 @@ class Filter {
     this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
   }
   get alias(){
+    if (this.caption !== null) return this.caption;
     if(this.fieldInfo) return this.fieldInfo.alias;
     return null;
   }
@@ -55,7 +57,7 @@ class SelectFilter extends Filter{
   domainMap = new Map();
 
   constructor(fieldName, params){
-    super(fieldName);
+    super(fieldName, params);
   }
 
   load(featureLayer){
