@@ -126,13 +126,13 @@ const SafetyApp = observer(class App extends React.Component {
                 <Icon component={MenuFilterIcon} />
                 <span>Layers</span>
               </Menu.Item>
-              <Menu.Item key="Bookmarks">
-                <Icon component={MenuBookmarkIcon} />
-                <span>Bookmarks</span>
-              </Menu.Item>
               <Menu.Item key="Route">
                 <Icon component={MenuRouteFromIcon} />
                 <span>Route</span>
+              </Menu.Item>
+              <Menu.Item key="Bookmarks">
+                <Icon component={MenuBookmarkIcon} />
+                <span>Bookmarks</span>
               </Menu.Item>
               <Menu.Item key="About">
                 <Icon component={MenuInformationIcon} />

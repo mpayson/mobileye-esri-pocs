@@ -2,6 +2,12 @@ import {decorate, observable, action } from 'mobx';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import Store from '../stores/Store';
+import { message } from 'antd';
+
+message.config({
+  // top: "calc(100vh - 70px)"
+  top: "75px"
+})
 
 const scoreStatQuery = {
   onStatisticField: 'eventvalue',
@@ -17,9 +23,11 @@ class SafetyStore extends Store {
   endStr = '';
   isSketchLoaded = false;
 
+  stdRoute = null;
   stdTravelTime = null;
-  safetyTravelTime = null;
   stdTravelScore = null;
+  scoreRoute = null;
+  safetyTravelTime = null;
   safetyTravelScore = null;
 
   load(mapViewDiv){
@@ -38,6 +46,32 @@ class SafetyStore extends Store {
       })
   }
 
+  clearRouteData(){
+    if(this.startGraphic){
+      this.view.graphics.remove(this.startGraphic);
+      this.startGraphic = null;
+    }
+    if(this.endGraphic){
+      this.view.graphics.remove(this.endGraphic);
+      this.endGraphic = null;
+    }
+    if(this.stdRoute){
+      this.view.graphics.remove(this.stdRoute);
+      this.stdRoute = null;
+    }
+    if(this.scoreRoute){
+      this.view.graphics.remove(this.scoreRoute);
+      this.scoreRoute = null;
+    }
+    this.editMode = null;
+    this.startStr = '';
+    this.endStr = '';
+    this.stdTravelTime = null;
+    this.stdTravelScore = null;
+    this.safetyTravelTime = null;
+    this.safetyTravelScore = null;
+  }
+
   onCreateComplete(evt){
     if(evt.state !== 'complete') return;
     if(this.editMode === 'start'){
@@ -49,23 +83,30 @@ class SafetyStore extends Store {
     } else {
       this.view.graphics.remove(evt.graphic);
     }
+    if(this.startGraphic && this.endGraphic){
+      this.view.goTo([this.startGraphic, this.endGraphic])
+    }
   }
 
   setAddressFromGeocode(stopType, graphic){
+
     loadModules(['esri/tasks/Locator'], options)
-    .then(([Locator]) => {
-      const locator = new Locator({
-        url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+      .then(([Locator]) => {
+        const locator = new Locator({
+          url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+        });
+        return locator.locationToAddress({
+          location: graphic.geometry,
+          locationType: "street"
+        });
+      })
+      .then(res => {
+        if(stopType === 'start') this.startStr = res.address;
+        else if(stopType === 'end') this.endStr = res.address;
+      })
+      .catch(er => {
+        message.error('Error converting point to an address, please retry!')
       });
-      return locator.locationToAddress({
-        location: graphic.geometry,
-        locationType: "street"
-      });
-    })
-    .then(res => {
-      if(stopType === 'start') this.startStr = res.address;
-      else if(stopType === 'end') this.endStr = res.address;
-    });
   }
 
   // don't like this logic, re-write at some point #refactor!
@@ -94,7 +135,7 @@ class SafetyStore extends Store {
   }
 
   generateStdRoute(){
-    loadModules([
+    return loadModules([
       'esri/tasks/RouteTask',
       'esri/tasks/support/RouteParameters',
       'esri/tasks/support/FeatureSet',
@@ -112,7 +153,9 @@ class SafetyStore extends Store {
   
       const routeParams = new RouteParameters({
         stops: new FeatureSet(),
-        outSpatialReference: SpatialReference.WebMercator
+        outSpatialReference: SpatialReference.WebMercator,
+        impedanceAttribute: 'Miles',
+        accumulateAttributes: ['TravelTime']
       });
   
       routeParams.stops.features.push(this.startGraphic);
@@ -121,6 +164,7 @@ class SafetyStore extends Store {
       return routeTask.solve(routeParams)
     })
     .then(data => {
+      console.log('std', data);
       if(this.stdRoute) this.view.graphics.remove(this.stdRoute);
       this.stdRoute = data.routeResults[0].route;
       this.stdRoute.symbol = {
@@ -135,7 +179,8 @@ class SafetyStore extends Store {
         geometry: this.stdRoute.geometry,
         outStatistics: [scoreStatQuery]
       })
-    }).then(res => {
+    })
+    .then(res => {
       if(res.features && res.features.length){
         this.stdTravelScore = res.features[0].attributes['score_sum']
       }
@@ -143,13 +188,16 @@ class SafetyStore extends Store {
   }
 
   generateScoreRoute(){
+
     const pQuery = this.lyrView.queryFeatures({
-      where: "1=1",
+      where: "eventvalue > 0",
       geometry: this.view.extent,
+      spatialRelationship: 'contains',
       orderByFields: ['eventvalue DESC'],
       returnGeometry: true,
       outFields: ['eventvalue', 'OBJECTID']
     });
+
     const pModules = loadModules([
       'esri/tasks/RouteTask',
       'esri/tasks/support/RouteParameters',
@@ -158,7 +206,7 @@ class SafetyStore extends Store {
       "esri/geometry/geometryEngine"
     ], options);
 
-    Promise.all([pQuery, pModules])
+    return Promise.all([pQuery, pModules])
     .then(([
       qres,
       [ RouteTask, RouteParameters, FeatureSet, SpatialReference,geometryEngine]
@@ -170,9 +218,10 @@ class SafetyStore extends Store {
   
       const routeParams = new RouteParameters({
         stops: new FeatureSet(),
-        //polylineBarriers: new FeatureSet(),
         polygonBarriers: new FeatureSet(),
-        outSpatialReference: SpatialReference.WebMercator
+        outSpatialReference: SpatialReference.WebMercator,
+        impedanceAttribute: 'Miles',
+        accumulateAttributes: ['TravelTime']
       });
   
       routeParams.stops.features.push(this.startGraphic);
@@ -181,16 +230,20 @@ class SafetyStore extends Store {
       var scorepolys = qres.features.slice(0,100).map((f,i) => {
         var scorebuffer = {
           geometry: geometryEngine.geodesicBuffer(f.geometry, 15, "meters"),
-          symbol: {type: "simple-fill", color: 'red'}
+          attributes: {
+            Name: f.attributes['ObjectId'],
+            BarrierType: 1,
+            Attr_Miles: f.attributes['eventvalue'] / 2
+          },
         }
         return scorebuffer;  
       });
-      this.view.graphics.addMany(scorepolys);
       routeParams.polygonBarriers.features = scorepolys;
 
       return routeTask.solve(routeParams)
     })
     .then(data => {
+      console.log('score', data);
       if(this.scoreRoute) this.view.graphics.remove(this.scoreRoute);
       this.scoreRoute = data.routeResults[0].route;
       this.scoreRoute.symbol = {
@@ -205,41 +258,53 @@ class SafetyStore extends Store {
         geometry: this.scoreRoute.geometry,
         outStatistics: [scoreStatQuery]
       })
-    }).then(res => {
+    })
+    .then(res => {
       if(res.features && res.features.length){
         this.safetyTravelScore = res.features[0].attributes['score_sum']
       }
     });
   }
 
-   generateRoutes(){
-    
+  // todo refactor to add to map and zoom to the extents then query data
+  generateRoutes(){
+    message.loading('Generating routes!', 0);
     loadModules([
       'esri/tasks/RouteTask',
       'esri/tasks/support/RouteParameters',
       'esri/tasks/support/FeatureSet',
       'esri/geometry/SpatialReference'
     ], options)
-    .then(_ => {
-      this.generateStdRoute();
-      this.generateScoreRoute();
-    });
+    .then(_ => 
+      Promise.all([
+        this.generateStdRoute(),
+        this.generateScoreRoute()
+      ])
+    )
+    .then( _ => {
+      this.view.goTo([this.scoreRoute, this.stdRoute]);
+      message.destroy();
+    })
+    .catch(_ => {
+      message.destroy();
+      message.error('Error generating routes, please retry!');
+    })
 
-   }
+  }
 
-   get safetyScoreDelta(){
-     if(!this.stdTravelScore || !this.safetyTravelScore){
-       return null;
-     }
-     return 100 * ((this.safetyTravelScore - this.stdTravelScore) / this.stdTravelScore);
-   }
-
-   get safetyTimeDelta(){
-    if(!this.stdTravelTime || !this.safetyTravelTime){
+  get safetyScoreDelta(){
+    if(!this.stdTravelScore || !this.safetyTravelScore){
       return null;
     }
-    return 100 * ((this.safetyTravelTime - this.stdTravelTime) / this.stdTravelTime);
+    return 100 * ((this.safetyTravelScore - this.stdTravelScore) / this.stdTravelScore);
   }
+
+  get safetyTimeDelta(){
+  if(!this.stdTravelTime || !this.safetyTravelTime){
+    return null;
+  }
+  return 100 * ((this.safetyTravelTime - this.stdTravelTime) / this.stdTravelTime);
+}
 
 }
 
@@ -260,7 +325,8 @@ decorate(SafetyStore, {
   onCreateComplete: action.bound,
   setAddressFromGeocode: action.bound,
   generateRoutes: action.bound,
-  generateStdRoute: action.bound
+  generateStdRoute: action.bound,
+  clearRouteData: action.bound
 })
 
 export default SafetyStore;
