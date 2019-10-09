@@ -58,6 +58,10 @@ const SafetyApp = observer(class App extends React.Component {
     });
   };
 
+  onSignOutClick = () => {
+    this.props.appState.logout();
+  }
+
   componentDidMount = () => {
 
     const modulePromise = loadModules([
@@ -74,7 +78,7 @@ const SafetyApp = observer(class App extends React.Component {
         const legend = new Legend({view: this.view});
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
-      });
+      })
   }
 
   render() {
@@ -103,7 +107,10 @@ const SafetyApp = observer(class App extends React.Component {
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
+          <Menu.Item key="sign in" onClick={this.onSignOutClick}>
+            <Icon type="logout"/>
+            {this.props.appState.displayName}
+          </Menu.Item>
         </Menu>
       )
       : null;

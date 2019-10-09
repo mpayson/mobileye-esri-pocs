@@ -27,18 +27,21 @@ const OAuth = _ => {
   )
 }
 
-const PrivateRoute = observer(({Component, appState, ...rest}) => (
-  <Route
-    {...rest}
-    render={(props) => (
-      appState.isAuthenticated === true
-        ? <Component appState={appState} {...props}/>
-        : <Redirect to={{
-            pathname: '/',
-            state: {from: props.location}
-          }}/>
-    )}/>
-));
+const PrivateRoute = observer(({Component, appState, ...rest}) => {
+  const isAuth = appState.isAuthenticated; //needed to trigger mobx
+  return (
+    <Route
+      {...rest}
+      render={(props) => (
+        isAuth === true
+          ? <Component appState={appState} {...props}/>
+          : <Redirect to={{
+              pathname: '/',
+              state: {from: props.location}
+            }}/>
+      )}/>
+    )
+});
 
 const Home = observer(class Home extends React.Component{
   

@@ -12,6 +12,7 @@ class AppState {
   constructor(appConfig){
     this.config = appConfig;
     this.session = null;
+    
     const serializedSession = localStorage.getItem(SESSION_ID);
     if(serializedSession !== null && serializedSession !== "undefined"){
       let parsed = JSON.parse(serializedSession);
@@ -31,6 +32,7 @@ class AppState {
   }
 
   login(){
+    // let session
     const redirectUri = `${window.location.origin}${window.location.pathname}${this.config.relativeRedirectUri}`
     UserSession.beginOAuth2({
       clientId: this.config.appId,
@@ -38,6 +40,14 @@ class AppState {
       popup: true
     })
     .then(this._registerSession)
+    // .then(newSession => {
+    //   session = newSession;
+    //   return session.getUser();
+    // })
+    // .then(res => {
+    //   this._registerSession(session);
+    //   console.log(res);
+    // })
     .catch(er => console.log(er));
   }
 
@@ -53,6 +63,7 @@ class AppState {
 
   logout(){
     localStorage.removeItem(SESSION_ID);
+    this.redirectToReferrer = false; // DO NOT REDIRECT TO REFERRER ON LOGOUT
     this.session = null;
   }
 

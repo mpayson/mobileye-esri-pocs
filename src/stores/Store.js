@@ -3,6 +3,12 @@ import { MinMaxFilter, MultiSelectFilter, SelectFilter } from './Filters';
 import { HistogramStore } from './HistogramStore';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
+import { message } from 'antd';
+
+message.config({
+  // top: "calc(100vh - 70px)"
+  top: "75px"
+});
 
 let pUtils;
 
@@ -54,6 +60,9 @@ class Store {
         return p;
       }, new Map());
       this.layerLoaded = true;
+    })
+    .catch(er => {
+      console.log(er);
     });
   }
 

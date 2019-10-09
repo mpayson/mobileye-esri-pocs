@@ -44,13 +44,22 @@ const IndicatorTitle = ({title, value}) => {
 
 const RoutePanel = observer(class RoutePanel extends React.Component{
 
+  alertFading = false;
+
   componentWillUnmount(){
     this.props.store.clearRouteData();
   }
 
   closeAlert = () => {
+    this.alertFading = true;
     this.props.store.clearRouteData();
   }
+
+  afterCloseAlert = () => {
+    this.alertFading = false;
+  }
+
+
 
   render(){
     const store = this.props.store;
@@ -63,7 +72,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
       ? <Icon type='close'/>
       : <Icon component={CreateIcon} />
 
-    const alert = store.safetyTimeDelta && store.safetyTimeDelta > 25
+    const alert = (store.safetyTimeDelta && store.safetyTimeDelta > 25) || this.alertFading
       ? (
         <Alert
         style={{marginBottom: "10px"}}
@@ -71,6 +80,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         description="Who wants to drive this much? Close this alert to reset"
         type="warning"
         onClose={this.closeAlert}
+        afterClose={this.afterCloseAlert}
         closable/>
       )
       : null;
