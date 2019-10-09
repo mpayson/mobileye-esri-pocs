@@ -24,7 +24,7 @@ const IndicatorTitle = ({title, value}) => {
     : ' - - %';
   let spanStyle = {float: 'right'};
   let iconType = 'arrow-down';
-  if(value && value > 0){
+  if(value && value >= 0){
     spanStyle.color = '#f5222d';
     iconType = 'arrow-up';
   } else if (value && value < 0){
@@ -72,8 +72,20 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
       ? <Icon type='close'/>
       : <Icon component={CreateIcon} />
 
-    const alert = (store.safetyTimeDelta && store.safetyTimeDelta > 25) || this.alertFading
-      ? (
+    let alert;
+    if ( (store.safetyScoreDelta && store.safetyScoreDelta > 0) || this.alertFading){
+      alert = (
+        <Alert
+        style={{marginBottom: "10px"}}
+        message="Invalid Results"
+        description="For a POC, we only consider high scoring roads, which can cause poor results in areas with many low scoring roads. Close this alert to reset"
+        type="error"
+        onClose={this.closeAlert}
+        afterClose={this.afterCloseAlert}
+        closable/>
+      )
+    } else if((store.safetyTimeDelta && store.safetyTimeDelta > 25) || this.alertFading){
+      alert = (
         <Alert
         style={{marginBottom: "10px"}}
         message="Unrealistic Results"
@@ -83,7 +95,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         afterClose={this.afterCloseAlert}
         closable/>
       )
-      : null;
+    } 
 
     console.log(store.safetyTimeDelta && store.safetyTimeDelta < 5);
 
