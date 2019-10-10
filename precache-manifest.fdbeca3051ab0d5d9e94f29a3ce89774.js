@@ -1,27 +1,35 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "719abd11e37a51a5231ea5fee80d0401",
+    "revision": "b85d4f9307017972391eb1217e940c0a",
     "url": "/mobileye-esri-pocs/index.html"
   },
   {
-    "revision": "8e0b9629577630e8ffef",
-    "url": "/mobileye-esri-pocs/static/css/2.eabccc13.chunk.css"
+    "revision": "76fd852b28d409018e41",
+    "url": "/mobileye-esri-pocs/static/css/2.3dee358a.chunk.css"
   },
   {
-    "revision": "af7fda694e1d5ba66d8b",
-    "url": "/mobileye-esri-pocs/static/css/main.119bc0cd.chunk.css"
+    "revision": "78e31016f6d82362065c",
+    "url": "/mobileye-esri-pocs/static/css/main.c7e08d95.chunk.css"
   },
   {
-    "revision": "8e0b9629577630e8ffef",
-    "url": "/mobileye-esri-pocs/static/js/2.b9dc4112.chunk.js"
+    "revision": "76fd852b28d409018e41",
+    "url": "/mobileye-esri-pocs/static/js/2.d205a3be.chunk.js"
   },
   {
-    "revision": "af7fda694e1d5ba66d8b",
-    "url": "/mobileye-esri-pocs/static/js/main.945b5403.chunk.js"
+    "revision": "78e31016f6d82362065c",
+    "url": "/mobileye-esri-pocs/static/js/main.3d7a4d6f.chunk.js"
   },
   {
     "revision": "14398fe044dbccccce11",
     "url": "/mobileye-esri-pocs/static/js/runtime~main.a90cb3b3.js"
+  },
+  {
+    "revision": "ef0d592dcb1081c2a01bcbb6fa5388f4",
+    "url": "/mobileye-esri-pocs/static/media/CONSTRUCTION.ef0d592d.png"
+  },
+  {
+    "revision": "b6fff8bb1fe99beb59b43405a5563f5e",
+    "url": "/mobileye-esri-pocs/static/media/DIAMOND.b6fff8bb.png"
   },
   {
     "revision": "5806b9be425fd28057a65ccbda588e6f",
@@ -78,6 +86,22 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "3f1c8a357da32b9843e14033b9213680",
     "url": "/mobileye-esri-pocs/static/media/SIGN_ICON_90.3f1c8a35.png"
+  },
+  {
+    "revision": "db4a18ad068ebc8c40ea6a5d99279d88",
+    "url": "/mobileye-esri-pocs/static/media/TRAFFIC_LIGHTS.db4a18ad.png"
+  },
+  {
+    "revision": "e74360f9aeb0ae7db322c64f10174811",
+    "url": "/mobileye-esri-pocs/static/media/UNRECOGNIZED_CIRCLE.e74360f9.png"
+  },
+  {
+    "revision": "9775fd829b39dfb7123fc7f06cf66ca8",
+    "url": "/mobileye-esri-pocs/static/media/WARNING.9775fd82.png"
+  },
+  {
+    "revision": "817b8f6d520922ebbe6fa625a7e4ff4a",
+    "url": "/mobileye-esri-pocs/static/media/YIELD.817b8f6d.png"
   },
   {
     "revision": "05f48ce5694d1c5accbd25f95645a018",
