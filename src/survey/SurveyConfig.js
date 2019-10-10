@@ -25,6 +25,8 @@ import overheadStructureImage from '../resources/images/HORIZONTAL.png'
 import reflectorImage from '../resources/images/REFLECTORS.png'
 import roadCrossingImage from '../resources/images/CROSSING.png'
 import manholeImage from '../resources/images/MANHOLE_COVER.png'
+import unrecognizedCircleImage from '../resources/images/UNRECOGNIZED_CIRCLE.png'
+import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 
 
 // update to map
@@ -49,7 +51,7 @@ const surveyConfig = {
       },
       {
         type: "size",
-        field: "icons_size",
+        field: "icon_size",
           minDataValue: 0.0,
           maxDataValue: 1.0,
           minSize: 0,
@@ -84,7 +86,10 @@ const surveyConfig = {
         {value: 'REFLECTORS', symbol: {type: "picture-marker", url: reflectorImage}},
         {value: 'CROSSING', symbol: {type: "picture-marker", url: roadCrossingImage}},
         {value: 'MANHOLE_COVER', symbol: {type: "picture-marker", url: manholeImage}},
-        {value: 'DOT1', symbol: {type: "simple-marker",color: "black"}},
+        {value: 'DOT2', symbol: {type: "simple-marker",color: "black"}},
+        {value: 'UNRECOGNIZED_CIRCLE', symbol:  {type: "picture-marker", url: unrecognizedCircleImage}},
+        {value: 'UNRECOGNIZED_RECRANGLE', symbol:  {type: "picture-marker", url: unrecognizedRectImage}}
+
     ]
   }
   },
@@ -98,10 +103,10 @@ const surveyConfig = {
     {name: 'height', withFilter : true, params: {isLogarithmic: false, log: true}},
   ],
   popupTemplate: {
-    title: "{expression/title-expression}",
+    title: "{expression/title-prefix} {system_type} {expression/title_suffix}",
     content: "Type: <b>{specific_type}</b><br>" +
              "Detected at {publish_date} (version {map_version})<br>" +
-             "Size: {height}X{width} m<br>",
+             "Size: {height} X {width} m<br>",
     expressionInfos: [
     {
       name: "size_marker",
@@ -109,10 +114,16 @@ const surveyConfig = {
       expression: "When ($feature.landmark_type == 1, 'Diameter', 'Edge size')"
     },
     {
-      name: "title-expression",
+      name: "title-prefix",
       title: "Title Expression",
-      expression: "When($feature.comparsion_to_prev_map == 2, '<b>Missing<\b> Landmark', $feature.comparsion_to_prev_map == 1, '<b>New<\b> Landmark',  'Landmark information')"
-    }]
+      expression: "When($feature.comparsion_to_prev_map == 2, '<b>Missing</b>', $feature.comparsion_to_prev_map == 1, '<b>New</b>',  '')"
+    },
+    {
+      name: "title-suffix",
+      title: "Title Expression",
+      expression: "When($feature.comparsion_to_prev_map == 2, '', $feature.comparsion_to_prev_map == 1, '',  'information')"
+    }
+]
   },
   viewConfig: { 
     center: [34.938206,31.899727],
