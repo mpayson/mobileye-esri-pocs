@@ -33,8 +33,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
       'esri/widgets/HistogramRangeSlider',
     ], options)
     .then(([HistogramRangeSlider]) => {
-
-
+      const precision = this.store.isLogarithmic ? 4 : 1;
       this.slider = new HistogramRangeSlider({
         bins: this.store.bins,
         min: this.store.lowerBound,
@@ -46,7 +45,7 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
         excludedBarColor: "#bfbfbf",
         rangeType: "between",
         container: this.sliderRef.current,
-        precision: 1
+        precision
       });
       this.slider.labelFormatFunction = this.labelFunction;
 
@@ -61,25 +60,21 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
 
   render(){
 
+    // needed to register these as observable with mobx
+    let min = this.store.min || this.store.lowerBound;
+    let max = this.store.max || this.store.upperBound;
+
     if(this.slider && this.store.loaded){
       this.slider.bins = this.store.bins;
       this.slider.min = this.store.lowerBound;
       this.slider.max = this.store.upperBound;
-      this.slider.values = [
-        this.store.min || this.store.lowerBound,
-        this.store.max || this.store.upperBound
-      ];
+      this.slider.values = [min, max];
     }
 
-    const title = this.store.fieldInfo.alias;
-    
     return(
-      <>
-        <p>{title}</p>
-        <div style={{height: "6rem", width: "10rem"}}>
-          <div ref={this.sliderRef}></div>
-        </div>
-      </>
+      <div style={{height: "6rem", width: "100%"}}>
+        <div ref={this.sliderRef}></div>
+      </div>
     )
   }
 });

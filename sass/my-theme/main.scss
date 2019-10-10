@@ -2,4 +2,62 @@
   Theme: My Theme
 */
 
+// COLOR OVERRRIDES
+// dark theme
+// $font-color: #d1d1d1; // $Calcite_Gray_700 (dark)
+// $background-color: #242424; // $Calcite_Gray_050 (dark)
+// $interactive-font-color: #adadad; // $Calcite_Gray_600 (dark)
+
+// $heading-color: $font-color;
+
+// $button-color: #adadad;
+// $button-color--inverse: $background-color;
+
+// // Selected
+// $border-color--active: $interactive-font-color;
+// $background-color--active: #000000;
+
+// CSS OVERRIDES
+// $include_AreaMeasurement3D: false !default;
+// $include_Attribution: true !default;
+// $include_BasemapGallery: false !default;
+// $include_BasemapToggle: false !default;
+// $include_Bookmarks: false !default;
+// $include_BrowseItems: false !default;
+// $include_ColorPicker: false !default;
+// $include_Compass: false !default;
+// $include_CoordinateConversion: false !default;
+// $include_DatePicker: false !default;
+// $include_Directions: false !default;
+// $include_Expand: false !default;
+// $include_Feature: false !default;
+// $include_FeatureForm: false !default;
+// $include_HorizontalSlider: false !default;
+// $include_LayerList: false !default;
+// $include_Legend: true !default;
+// $include_NavigationToggle: false !default;
+// $include_Print: false !default;
+// $include_DirectLineMeasurement3D: false !default;
+// $include_Popup: true !default;
+// $include_RasterSymbologyEditor: false !default;
+// $include_RendererSlider: false !default;
+// $include_ScaleBar: false !default;
+// $include_Slice: false !default;
+// $include_Spinner: true !default;
+// $include_Tags: false !default;
+// $include_FeatureTemplates: false !default;
+// $include_TimePicker: false !default;
+// $include_Zoom: true !default;
+
 @import "../base/core";
+
+.esri-widget--button,
+.esri-search__input,
+.esri-widget {
+  border-radius: 2px;
+  // background: rgba(255,255,255,0.7);
+}
+
+.esri-legend{
+  max-width: 180px;
+}

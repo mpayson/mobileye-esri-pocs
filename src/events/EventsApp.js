@@ -3,11 +3,10 @@ import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
-import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import LayerPanel from './LayerPanel';
+import FilterPanel from '../components/FilterPanel';
 import Store from '../stores/Store';
 import eventsConfig from './EventsConfig';
 
@@ -18,9 +17,6 @@ const MenuFilterIcon = () => (
 )
 const MenuBookmarkIcon = () => (
   <BookmarkIcon size="18" filled/>
-)
-const MenuRouteFromIcon = () => (
-  <RouteFromIcon size="20" filled/>
 )
 const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>
@@ -38,7 +34,7 @@ const EventsApp = observer(class App extends React.Component {
     super(props, context);
     this.mapViewRef = React.createRef();
     this.sliderRef = React.createRef();
-    this.store = new Store(eventsConfig);
+    this.store = new Store(props.appState, eventsConfig);
   }
 
   onCollapse = collapsed => {
@@ -72,7 +68,7 @@ const EventsApp = observer(class App extends React.Component {
       .then(([[Search, Legend, TimeSlider], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
-        const legend = new Legend({view: this.view});
+        const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
 
         // create a new time slider widget
         // set other properties when the layer view is loaded
@@ -109,13 +105,10 @@ const EventsApp = observer(class App extends React.Component {
     let panel;
     switch (this.state.navKey) {
       case 'Layers':
-        panel = <LayerPanel store={this.store} map={this.map}/>;
+        panel = <FilterPanel store={this.store}/>;
         break;
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;
-        break;
-      case 'Route':
-        panel = <h1>Routing seems like a lot of work</h1>;
         break;
       case 'About':
         panel = <h1>This is a slick app! Thanks Max!</h1>;
@@ -136,14 +129,14 @@ const EventsApp = observer(class App extends React.Component {
     }
 
 
-    const signin = this.store.user
+    const signin = this.props.appState.displayName
       ? (
         <Menu
           theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.store.user}</Menu.Item>
+          <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
         </Menu>
       )
       : null;
@@ -151,7 +144,7 @@ const EventsApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Live Events</h1>
+          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Mobileye City Lab</h1>
           {signin}
         </Header>
         <Layout>
@@ -169,10 +162,6 @@ const EventsApp = observer(class App extends React.Component {
               <Menu.Item key="Bookmarks">
                 <Icon component={MenuBookmarkIcon} />
                 <span>Bookmarks</span>
-              </Menu.Item>
-              <Menu.Item key="Route">
-                <Icon component={MenuRouteFromIcon} />
-                <span>Route</span>
               </Menu.Item>
               <Menu.Item key="About">
                 <Icon component={MenuInformationIcon} />

@@ -9,7 +9,6 @@ const getMinMaxWhere = (field, min, max) => {
   } else if(isMin){
     where = field + " >= " + min;
   }
-  console.log("ORK hmm", where)
   return where;
 }
 

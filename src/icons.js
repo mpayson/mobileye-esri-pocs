@@ -11,6 +11,9 @@ import CheckOutline from "@ant-design/icons/lib/outline/CheckOutline";
 import ArrowUpOutline from "@ant-design/icons/lib/outline/ArrowUpOutline";
 import ArrowDownOutline from "@ant-design/icons/lib/outline/ArrowDownOutline";
 import MinusOutline from "@ant-design/icons/lib/outline/MinusOutline";
+import LoadingOutline from "@ant-design/icons/lib/outline/LoadingOutline";
+import CloseCircleFill from "@ant-design/icons/lib/fill/CloseCircleFill";
+import LogoutOutline from "@ant-design/icons/lib/outline/LogoutOutline";
 
 export {
   RightOutline,
@@ -21,5 +24,8 @@ export {
   DownOutline,
   ArrowUpOutline,
   ArrowDownOutline,
-  MinusOutline
+  MinusOutline,
+  LoadingOutline,
+  CloseCircleFill,
+  LogoutOutline
 }

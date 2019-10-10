@@ -15,18 +15,39 @@ const getMinQuery = (field) => ({
 });
 
 class Filter {
-  constructor(fieldName){
+  constructor(fieldName, params = null){
     this.field = fieldName;
     this.fieldInfo = {};
+    this.caption = (params !== null && "caption" in params)?  params.caption : null;
   }
   load(featureLayer){
-
     if(!featureLayer.loaded){
       throw new Error("Please wait until the layer is loaded");
     }
     this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
   }
+  get alias(){
+    if (this.caption !== null) return this.caption;
+    if(this.fieldInfo) return this.fieldInfo.alias;
+    return null;
+  }
+
+  get where(){
+    return null;
+  }
+  
+  get isActive(){
+    return !!this.where;
+  }
+
 }
+
+decorate(Filter, {
+  fieldInfo: observable,
+  alias: computed,
+  where: computed,
+  isActive: computed
+})
 
 class SelectFilter extends Filter{
   type = 'select';
@@ -34,10 +55,6 @@ class SelectFilter extends Filter{
   options = [];
   selectValue = null;
   domainMap = new Map();
-
-  constructor(fieldName, params){
-    super(fieldName);
-  }
 
   load(featureLayer){
     super.load(featureLayer);
@@ -47,7 +64,6 @@ class SelectFilter extends Filter{
         p.set(cv.code, cv.name);
         return p;
       }, new Map());
-      console.log(domain);
     }
     featureLayer.queryFeatures({
       where: "1=1",
@@ -62,12 +78,15 @@ class SelectFilter extends Filter{
   }
 
   onValueChange(v){
-    console.log("CALLED")
     if(this.selectValue === v){
       this.selectValue = null;
     } else {
       this.selectValue = v;
     }
+  }
+
+  clear(){
+    this.selectValue = null;
   }
 
   get where(){
@@ -82,7 +101,8 @@ decorate(SelectFilter, {
   selectValue: observable,
   load: action.bound,
   where: computed,
-  onValueChange: action.bound
+  onValueChange: action.bound,
+  clear: action.bound
 })
 
 class MultiSelectFilter extends SelectFilter{
@@ -93,6 +113,10 @@ class MultiSelectFilter extends SelectFilter{
   onValueChange(v){
     this.selectValue = v;
   }
+
+  clear(){
+    this.selectValue = [];
+  }
   
   get where(){
     return getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
@@ -102,6 +126,7 @@ class MultiSelectFilter extends SelectFilter{
 
 decorate(MultiSelectFilter, {
   onValueChange: action.bound,
+  clear: action.bound,
   where: computed
 })
 
@@ -167,7 +192,6 @@ class MinMaxFilter extends Filter{
           if (!this.upperBoundSupplied && this.upperBound !== 0)
             this.upperBound = Math.ceil((Math.log(this.upperBound) / Math.log(this.logBase)) * 100) / 100;
         }
-        console.log(`Field: ${this.field}, Min:${this.lowerBound}, Max:${this.upperBound}`);
 
         return getHistogram({
           layer: featureLayer,
@@ -187,19 +211,23 @@ class MinMaxFilter extends Filter{
   onValuesChange(min, max){
     this.min = min;
     this.max = max;
-    //console.log(`${min},${max}`)
+  }
+
+  clear(){
+    this.min = this.lowerBound;
+    this.max = this.upperBound;
   }
 
   get where(){
-    if(this.min === this.lowerBound && this.max === this.upperBound){
-      return null;
+    let where;
+    if(this.min <= this.lowerBound && this.max >= this.upperBound){
+      where = null;
+    } else {
+      let maxWhere = (!this.upperBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.max) : this.max;
+      let minWhere = (!this.lowerBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.min) : this.min;
+      where = getMinMaxWhere(this.field, minWhere, maxWhere);
     }
-
-    let maxWhere = (!this.upperBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.max) : this.max;
-    let minWhere = (!this.lowerBoundSupplied && this.isLogarithmic) ? Math.pow(this.logBase, this.min) : this.min;
-
-    
-    return getMinMaxWhere(this.field, minWhere, maxWhere);
+    return where;
   }
 }
 decorate(MinMaxFilter, {
@@ -209,7 +237,8 @@ decorate(MinMaxFilter, {
   fieldInfo: observable,
   where: computed,
   load: action.bound,
-  onValuesChange: action.bound
+  onValuesChange: action.bound,
+  clear: action.bound
 })
 
 export {SelectFilter, MinMaxFilter, MultiSelectFilter}

@@ -2,10 +2,14 @@ import {decorate, observable, action, computed, autorun} from 'mobx';
 import { MinMaxFilter, MultiSelectFilter, SelectFilter } from './Filters';
 import { HistogramStore } from './HistogramStore';
 import {loadModules} from 'esri-loader';
-import config from '../config/config';
 import options from '../config/esri-loader-options';
+import { message } from 'antd';
 
-const {appId, portalUrl} = config;
+message.config({
+  // top: "calc(100vh - 70px)"
+  top: "75px"
+});
+
 let pUtils;
 
 class Store {
@@ -13,7 +17,8 @@ class Store {
   credential = {};
   aliasMap = null;
 
-  constructor(storeConfig){
+  constructor(appState, storeConfig){
+    this.appState = appState;
     this.layerId = storeConfig.layerItemId;
     this.filters = storeConfig.filters.map(f => {
       switch(f.type){
@@ -55,6 +60,9 @@ class Store {
         return p;
       }, new Map());
       this.layerLoaded = true;
+    })
+    .catch(er => {
+      console.log(er);
     });
   }
 
@@ -88,73 +96,51 @@ class Store {
   }
 
   load(mapViewDiv){
-
-    let M, MV, FL, rjsonUtils;
     
     return loadModules([
       'esri/Map',
       'esri/views/MapView',
       'esri/layers/FeatureLayer',
       'esri/core/promiseUtils',
-      'esri/identity/OAuthInfo',
       'esri/identity/IdentityManager',
       'esri/renderers/support/jsonUtils'
     ], options)
-    .then(([Map, MapView, FeatureLayer, promiseUtils, OAuthInfo, esriId, rendererJsonUtils]) => {
-      // .then(([Map, MapView, FeatureLayer, promiseUtils, rendererJsonUtils]) => {
+    .then(([Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils]) => {
+
+      esriId.registerToken(this.appState.session.toCredential());
+
       pUtils = promiseUtils; 
       this._buildAutoRunEffects();
 
-      M = Map;
-      MV = MapView;
-      FL = FeatureLayer;
-      rjsonUtils = rendererJsonUtils;
-
-      const info = new OAuthInfo({
-        appId
-      });
-      esriId.registerOAuthInfos([info]);
-
-      return esriId.checkSignInStatus(portalUrl)
-        .catch(er => {
-          if(er.name === "identity-manager:not-authenticated"){
-            return esriId.getCredential(portalUrl);
-          }
-        });
-    })
-    .then(credential => {
       let renderer;
-      //console.log(this.renderers, this.rendererField)
       if (this.renderers[this.rendererField]._type === 'jsapi')
         renderer = this.renderers[this.rendererField];
       else
-        renderer = rjsonUtils.fromJSON(this.renderers[this.rendererField]);
-      this.credential = credential;
-      this.user = credential.userId;
-      this.lyr = new FL({
+        renderer = rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
+
+      this.lyr = new FeatureLayer({
         portalItem: {id: this.layerId},
         renderer: renderer,
 
         popupTemplate: this.popupTemplate
       });
-      this.map = new M({
+      this.map = new Map({
         basemap: 'dark-gray-vector',
         layers: [this.lyr]
       });
-      this.view = new MV({
+      this.view = new MapView({
         map: this.map,
         container: mapViewDiv,
-        center: this.viewConfig.center,//[-74.00157, 40.71955],
-        zoom: this.viewConfig.zoom, //12,
-        highlightOptions: {
-          color: "red",
-          haloOpacity: 1,
-          fillOpacity: 1
-        }
+        center: this.viewConfig.center,
+        zoom: this.viewConfig.zoom
       });
       this._loadLayers();
       return this.view;
     });
+  }
+
+  clearFilters(){
+    this.filters.forEach(f => f.clear());
   }
 
   get where(){
@@ -179,6 +165,7 @@ decorate(Store, {
   load: action.bound,
   setRendererField: action.bound,
   _loadLayers: action.bound,
+  clearFilters: action.bound
 });
 
 export default Store;

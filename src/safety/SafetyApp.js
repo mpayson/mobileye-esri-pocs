@@ -38,7 +38,7 @@ const SafetyApp = observer(class App extends React.Component {
   constructor(props, context){
     super(props, context);
     this.mapViewRef = React.createRef();
-    this.store = new SafetyStore(safetyConfig);
+    this.store = new SafetyStore(props.appState, safetyConfig);
   }
 
   onCollapse = collapsed => {
@@ -58,6 +58,10 @@ const SafetyApp = observer(class App extends React.Component {
     });
   };
 
+  onSignOutClick = () => {
+    this.props.appState.logout();
+  }
+
   componentDidMount = () => {
 
     const modulePromise = loadModules([
@@ -74,7 +78,7 @@ const SafetyApp = observer(class App extends React.Component {
         const legend = new Legend({view: this.view});
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
-      });
+      })
   }
 
   render() {
@@ -96,14 +100,17 @@ const SafetyApp = observer(class App extends React.Component {
         panel = null;
     }
 
-    const signin = this.store.user
+    const signin = this.props.appState.displayName
       ? (
         <Menu
           theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.store.user}</Menu.Item>
+          <Menu.Item key="sign in" onClick={this.onSignOutClick}>
+            <Icon type="logout"/>
+            {this.props.appState.displayName}
+          </Menu.Item>
         </Menu>
       )
       : null;
@@ -111,7 +118,7 @@ const SafetyApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Road Safety Score</h1>
+          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Road Risk Lab</h1>
           {signin}
         </Header>
         <Layout>
@@ -126,13 +133,13 @@ const SafetyApp = observer(class App extends React.Component {
                 <Icon component={MenuFilterIcon} />
                 <span>Layers</span>
               </Menu.Item>
-              <Menu.Item key="Bookmarks">
-                <Icon component={MenuBookmarkIcon} />
-                <span>Bookmarks</span>
-              </Menu.Item>
               <Menu.Item key="Route">
                 <Icon component={MenuRouteFromIcon} />
                 <span>Route</span>
+              </Menu.Item>
+              <Menu.Item key="Bookmarks">
+                <Icon component={MenuBookmarkIcon} />
+                <span>Bookmarks</span>
               </Menu.Item>
               <Menu.Item key="About">
                 <Icon component={MenuInformationIcon} />
