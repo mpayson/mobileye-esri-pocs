@@ -12,18 +12,31 @@ import sign110Image from '../resources/images/SIGN_ICON_110.png'
 import sign120Image from '../resources/images/SIGN_ICON_120.png'
 import sign130Image from '../resources/images/SIGN_ICON_130.png'
 import sign140Image from '../resources/images/SIGN_ICON_140.png'
+import circularSignNoSpeedImage from '../resources/images/CIRCULAR_NO_SPEED.png'
+import warningImage from '../resources/images/WARNING.png'
+import constructionImage from '../resources/images/CONSTRUCTION.png'
+import rectangularSignImage from '../resources/images/RECTANGULAR.png'
+import trafficLightImage from '../resources/images/TRAFFIC_LIGHTS.png'
+import diamondImage from '../resources/images/DIAMOND.png'
+import yieldImage from '../resources/images/YIELD.png'
+import roadArrowImage from '../resources/images/ROAD_MARKINGS_ARROWS.png'
+import roadStoplineImage from '../resources/images/ROAD_MARKINGS_STOPLINE.png'
+import overheadStructureImage from '../resources/images/HORIZONTAL.png'
+import reflectorImage from '../resources/images/REFLECTORS.png'
+import roadCrossingImage from '../resources/images/CROSSING.png'
+import manholeImage from '../resources/images/MANHOLE_COVER.png'
 
 
 // update to map
 
 const surveyConfig = {
-  layerItemId: '8560701bf1b44bccb3da5bb876e7f625',
-  initialRendererField: 'signs',
+  layerItemId: '35e5944c57b24c24a061931d1125d9f2',
+  initialRendererField: 'all',
   renderers: {
-    'signs': {
+    'all': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
-      field: "sign_type",
+      field: "icon",
       defaultSymbol: {type: "simple-marker", color: "blue"},
       visualVariables: [{
         type: "opacity",
@@ -36,83 +49,73 @@ const surveyConfig = {
       },
       {
         type: "size",
-        field: "edge_length_or_diameter",
+        field: "icons_size",
           minDataValue: 0.0,
-          maxDataValue: 2.0,
+          maxDataValue: 1.0,
           minSize: 0,
           maxSize: 30
       }],
       uniqueValueInfos: [
-        {value: '0', symbol: {type: "picture-marker", url: sign10Image}},
-        {value: '1', symbol: {type: "picture-marker", url: sign20Image}},
-        {value: '2', symbol: {type: "picture-marker", url: sign30Image}},
-        {value: '3', symbol: {type: "picture-marker", url: sign40Image}},
-        {value: '4', symbol: {type: "picture-marker", url: sign50Image}},
-        {value: '5', symbol: {type: "picture-marker", url: sign60Image}},
-        {value: '6', symbol: {type: "picture-marker", url: sign70Image}},
-        {value: '7', symbol: {type: "picture-marker", url: sign80Image}},
-        {value: '8', symbol: {type: "picture-marker", url: sign90Image}},
-        {value: '9', symbol: {type: "picture-marker", url: sign100Image}},
-        {value: '10', symbol: {type: "picture-marker", url: sign110Image}},
-        {value: '11', symbol: {type: "picture-marker", url: sign120Image}},
-        {value: '12', symbol: {type: "picture-marker", url: sign130Image}},
-        {value: '13', symbol: {type: "picture-marker", url: sign140Image}},
-        {value: '28', symbol: {type: "picture-marker", url: sign10Image}},
-        {value: '29', symbol: {type: "picture-marker", url: sign20Image}},
-        {value: '30', symbol: {type: "picture-marker", url: sign30Image}},
-        {value: '31', symbol: {type: "picture-marker", url: sign40Image}},
-        {value: '32', symbol: {type: "picture-marker", url: sign50Image}},
-        {value: '33', symbol: {type: "picture-marker", url: sign60Image}},
-        {value: '34', symbol: {type: "picture-marker", url: sign70Image}},
-        {value: '35', symbol: {type: "picture-marker", url: sign80Image}},
-        {value: '36', symbol: {type: "picture-marker", url: sign90Image}},
-        {value: '37', symbol: {type: "picture-marker", url: sign100Image}},
-        {value: '38', symbol: {type: "picture-marker", url: sign110Image}},
-        {value: '39', symbol: {type: "picture-marker", url: sign120Image}},
-        {value: '40', symbol: {type: "picture-marker", url: sign130Image}},
-        {value: '41', symbol: {type: "picture-marker", url: sign140Image}}
+        {value: 'sign10', symbol: {type: "picture-marker", url: sign10Image}},
+        {value: 'sign20', symbol: {type: "picture-marker", url: sign20Image}},
+        {value: 'sign30', symbol: {type: "picture-marker", url: sign30Image}},
+        {value: 'sign40', symbol: {type: "picture-marker", url: sign40Image}},
+        {value: 'sign50', symbol: {type: "picture-marker", url: sign50Image}},
+        {value: 'sign60', symbol: {type: "picture-marker", url: sign60Image}},
+        {value: 'sign70', symbol: {type: "picture-marker", url: sign70Image}},
+        {value: 'sign80', symbol: {type: "picture-marker", url: sign80Image}},
+        {value: 'sign90', symbol: {type: "picture-marker", url: sign90Image}},
+        {value: 'sign100', symbol: {type: "picture-marker", url: sign100Image}},
+        {value: 'sign110', symbol: {type: "picture-marker", url: sign110Image}},
+        {value: 'sign120', symbol: {type: "picture-marker", url: sign120Image}},
+        {value: 'sign130', symbol: {type: "picture-marker", url: sign130Image}},
+        {value: 'sign140', symbol: {type: "picture-marker", url: sign140Image}},
+        {value: 'CIRCULAR_NO_SPEED', symbol: {type: "picture-marker", url: circularSignNoSpeedImage}},
+        {value: 'WARNING', symbol: {type: "picture-marker", url: warningImage}},
+        {value: 'CONSTRUCTION', symbol: {type: "picture-marker", url: constructionImage}},
+        {value: 'RECTANGULAR', symbol: {type: "picture-marker", url: rectangularSignImage}},
+        {value: 'TRAFFIC_LIGHTS', symbol: {type: "picture-marker", url: trafficLightImage}},
+        {value: 'DIAMOND', symbol: {type: "picture-marker", url: diamondImage}},
+        {value: 'YIELD', symbol: {type: "picture-marker", url: yieldImage}},
+        {value: 'ROAD_MARKINGS_ARROWS', symbol: {type: "picture-marker", url: roadArrowImage}},
+        {value: 'ROAD_MARKINGS_STOPLINE', symbol: {type: "picture-marker", url: roadStoplineImage}},
+        {value: 'DOT1', symbol: {type: "simple-marker",color: "white"}},
+        {value: 'HORIZONTAL', symbol: {type: "picture-marker", url: overheadStructureImage}},
+        {value: 'REFLECTORS', symbol: {type: "picture-marker", url: reflectorImage}},
+        {value: 'CROSSING', symbol: {type: "picture-marker", url: roadCrossingImage}},
+        {value: 'MANHOLE_COVER', symbol: {type: "picture-marker", url: manholeImage}},
+        {value: 'DOT1', symbol: {type: "simple-marker",color: "black"}},
     ]
   }
   },
   filters: [
-    {name: 'sign_type', type: 'multiselect', params: {}},
+    {name: 'system_type', type: 'multiselect', params: {}},
     {name: 'comparsion_to_prev_map', type: 'multiselect', params: {}},
-    {name: 'landmark_type', type: 'multiselect', params: {}},
     {name: 'map_version', type: 'select', params: {}},
     
   ],
   histograms: [
-    {name: 'display_text', withFilter : true, params: {isLogarithmic: false, log: true, numBins: 14}},
-    {name: 'edge_length_or_diameter', withFilter : true, params: {isLogarithmic: false, log: true}},
+    {name: 'height', withFilter : true, params: {isLogarithmic: false, log: true}},
   ],
   popupTemplate: {
     title: "{expression/title-expression}",
-    content: "Sign type: <b>{sign_type}{expression/speed-units}{expression/landmark_type}</b><br>" +
+    content: "Type: <b>{specific_type}</b><br>" +
              "Detected at {publish_date} (version {map_version})<br>" +
-             "{expression/size_marker}: {edge_length_or_diameter} m<br>",
-    expressionInfos: [{
-          name: "speed-units",
-          title: "Speed units",
-          expression: "When(($feature.sign_type >= 0 && $feature.sign_type <= 13) || ($feature.sign_type >= 28 && $feature.sign_type <= 41), ' KM/h speed limit', '')"
-    } ,
+             "Size: {height}X{width} m<br>",
+    expressionInfos: [
     {
       name: "size_marker",
       title: "Size marker",
       expression: "When ($feature.landmark_type == 1, 'Diameter', 'Edge size')"
     },
     {
-      name: "landmark_type",
-      title: "Landmark type",
-      expression: "When($feature.landmark_type == 2, ' (electronic)', '')"
-    },
-    {
       name: "title-expression",
       title: "Title Expression",
-      expression: "When($feature.edge_length_or_diameter == 2, '<b>Missing<\b> Sign', $feature.edge_length_or_diameter == 1, '<b>New<\b> Sign',  'Sign information')"
+      expression: "When($feature.comparsion_to_prev_map == 2, '<b>Missing<\b> Landmark', $feature.comparsion_to_prev_map == 1, '<b>New<\b> Landmark',  'Landmark information')"
     }]
   },
   viewConfig: { 
-    center: [11.432656,48.194704],
+    center: [34.938206,31.899727],
     zoom: 12
   }
 }
