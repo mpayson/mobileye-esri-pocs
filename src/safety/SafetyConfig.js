@@ -53,8 +53,16 @@ const safetyConfig = {
     {name: 'avarge_speed', type: 'minmax', params: {isLogarithmic: true, log: true}}
   ],
   popupTemplate: {
-    title: "Hello world!",
-    content: "Road safety score: <b>{eventvalue}</b>"
+    title: "Road segment information:",
+    content: "Safety score: <b>{eventvalue}</b><br>" +
+    "Harsh cornering ratio: {harsh_cornering_ratio}<br>" +
+    "Harsh breaking ratio: {harsh_acc_ratio}<br>" +
+    "Pedestrians density: {pedestrians_density}<br>" +
+    "Bicycles density: {bicycles_density}<br>" +
+    "Speeding ratio: {speeding_ratio}<br>" +
+    "Average speed: {avarge_speed}<br>"
+
+
   },
   viewConfig: {
     center: [-74.00157, 40.71955],
