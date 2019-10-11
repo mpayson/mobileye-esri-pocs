@@ -11,7 +11,7 @@ const eventsConfig = {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "eventsubtype",
-      defaultSymbol: {type: "simple-marker", color: "blue"},
+      //defaultSymbol: {type: "simple-marker", color: "blue"},
       uniqueValueInfos: [{
         value: "pedestrians",
         symbol: {
