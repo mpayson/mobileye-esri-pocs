@@ -2,3 +2,27 @@ body {
   overscroll-behavior-y: none;
   overscroll-behavior-x: none;
 }
+
+.esri-widget--button,
+.esri-search__input,
+.esri-widget {
+  border-radius: 2px;
+  background: #f5f5f5e0;
+}
+
+.esri-widget .esri-histogram{
+  background: none;
+}
+
+.esri-histogram-range-slider {
+  background: none;
+}
+
+.esri-legend {
+  max-width: 140px;
+}
+
+.esri-popup {
+  background: white;
+  border-radius: 2px;
+}
