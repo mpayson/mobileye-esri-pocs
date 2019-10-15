@@ -4,7 +4,8 @@ import HistMinMaxSlideFilter from '../components/HistMinMaxSlideFilter';
 import SelectFilter from '../components/SelectFilter';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
 import PanelCard from './PanelCard';
-import { Collapse, Button } from 'antd';
+import { Collapse, Button, Icon, Popover } from 'antd';
+import './FilterPanel.css';
 const { Panel } = Collapse;
 
 const getFilterView = (filter) => {
@@ -23,7 +24,7 @@ const getFilterView = (filter) => {
 
 const customPanelStyle = {
   borderRadius: 4,
-  border: 0,
+  border: 0
 };
 
 const FilterPanel = observer(class FilterPanel extends React.Component{
@@ -57,9 +58,16 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
       const alias = f.isActive
         ? <span style={{color: '#1890ff'}}><b>{f.alias}</b></span>
         : f.alias;
-
+      let header = f.infoText
+        ? <> 
+            <Popover content={f.infoText}>
+              <Icon type="info-circle" style={{marginRight: "3px"}}/>
+            </Popover>
+            {alias}
+          </>
+        : alias;
       return (
-        <Panel header={alias} key={f.field} style={customPanelStyle}>
+        <Panel header={header} key={f.field} style={customPanelStyle} className='minimal-padding'>
           {getFilterView(f)}
         </Panel>
       )
@@ -74,7 +82,7 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
         title="Filters"
         icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
         collapsible={true}>
-          <div style={{display: "inline-block", width: "100%"}}>
+          <div style={{display: "inline-block", width: "100%", marginBottom: "10px"}}>
             <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
             <Button size="small" onClick={this.onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
           </div>

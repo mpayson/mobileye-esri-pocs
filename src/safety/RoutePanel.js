@@ -12,7 +12,7 @@ import {
 import PinIcon from 'calcite-ui-icons-react/PinPlusIcon';
 
 const CreateIcon = () => (
-  <PinIcon size="17"/>
+  <PinIcon filled size="17"/>
 )
 
 const InputGroup = Input.Group;
@@ -110,7 +110,8 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
             {startIcon}
           </Button>
           <Input
-            style={{width: 'calc(100% - 40px)'}}
+            disabled
+            style={{width: 'calc(100% - 40px)', cursor: 'default'}}
             value={store.startStr}>
           </Input>
         </InputGroup>
@@ -123,7 +124,8 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
             {endIcon}
           </Button>
           <Input
-            style={{width: 'calc(100% - 40px)'}}
+            disabled
+            style={{width: 'calc(100% - 40px)', cursor: 'default'}}
             value={store.endStr}>
           </Input>
         </InputGroup>

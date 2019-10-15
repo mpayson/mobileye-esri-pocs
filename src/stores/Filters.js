@@ -18,7 +18,10 @@ class Filter {
   constructor(fieldName, params = null){
     this.field = fieldName;
     this.fieldInfo = {};
-    this.caption = (params !== null && "caption" in params)?  params.caption : null;
+    this.infoText = params && params.info ? params.info : null;
+    console.log('infotext', params);
+    // this.caption = (params !== null && "caption" in params) ? params.caption : null;
+
   }
   load(featureLayer){
     if(!featureLayer.loaded){
@@ -27,7 +30,7 @@ class Filter {
     this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
   }
   get alias(){
-    if (this.caption !== null) return this.caption;
+    // if (this.caption !== null) return this.caption;
     if(this.fieldInfo) return this.fieldInfo.alias;
     return null;
   }
@@ -139,7 +142,7 @@ class MinMaxFilter extends Filter{
   max = null;
 
   constructor(fieldName, params){
-    super(fieldName);
+    super(fieldName, params);
     this.lowerBound = params.lowerBound || null;
     this.upperBound = params.upperBound || null;
     this.upperBoundSupplied = this.upperBound !== null;
