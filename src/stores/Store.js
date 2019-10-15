@@ -48,10 +48,17 @@ class Store {
     this.layerLoaded = false;
     this.viewConfig = storeConfig.viewConfig;
   }
+  // to destroy map view, need to do `view.container = view.map = null;`
+  // should probably include this in the dismount
+  destroy(){
+    if(this.effectHandler) this.effectHandler();
+    if(this.rendererHandler) this.rendererHandler();
+  }
 
   _loadLayers(){
     this.view.whenLayerView(this.lyr)
     .then(lV => {
+      message.destroy();
       this.lyrView = lV;
       this.filters.forEach(f => f.load(this.lyr, this.view));
       this.histograms.forEach(f => f.load(this.lyr, this.view));
@@ -62,6 +69,8 @@ class Store {
       this.layerLoaded = true;
     })
     .catch(er => {
+      message.destroy();
+      message.error('Error loading the layers, does your account have access to the data?', 4);
       console.log(er);
     });
   }
@@ -96,7 +105,7 @@ class Store {
   }
 
   load(mapViewDiv){
-    
+    message.loading('Loading map!', 0);
     return loadModules([
       'esri/Map',
       'esri/views/MapView',
@@ -136,6 +145,10 @@ class Store {
       });
       this._loadLayers();
       return this.view;
+    })
+    .catch(er => {
+      message.destroy();
+      message.error('Error creating the map, please refresh for now');
     });
   }
 

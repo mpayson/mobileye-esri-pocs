@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
+import { Layout, Menu, Drawer, Icon, Row, Col, Tag } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
@@ -75,7 +75,11 @@ const SafetyApp = observer(class App extends React.Component {
         this.view = mapView;
         const search = new Search({view: this.view});
         this.view.ui.add(search, "top-right");
-        const legend = new Legend({view: this.view});
+        const legend = new Legend({
+          view: this.view,
+          layerInfos: [{layer: this.store.lyr, title: null}]
+        });
+        this.view.popup.actions.removeAll();
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
       })
