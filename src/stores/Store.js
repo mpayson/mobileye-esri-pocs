@@ -1,6 +1,5 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
 import { MinMaxFilter, MultiSelectFilter, SelectFilter } from './Filters';
-import { HistogramStore } from './HistogramStore';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import { message } from 'antd';
@@ -34,11 +33,7 @@ class Store {
     });
     this.histograms =  (typeof storeConfig.histograms === 'undefined') ? [] :
       storeConfig.histograms.map(f => {
-        if(f.withFilter) {        
           return new MinMaxFilter(f.name, f.params);
-        } else {
-          return new HistogramStore(f.name, f.params);
-        }
       });
     
     this.renderers = storeConfig.renderers;

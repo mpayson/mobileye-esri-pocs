@@ -90,7 +90,7 @@ const SurveyApp = observer(class App extends React.Component {
         panel = <h1>Woah this are some awesome bookmarks!</h1>;
         break;
       case 'About':
-        panel = <h1>This is a slick app! Thanks Max!</h1>;
+        panel = <h1>This application presents the various assets Mobileye is able to survey and map</h1>;
         break;
       default:
         panel = null;
