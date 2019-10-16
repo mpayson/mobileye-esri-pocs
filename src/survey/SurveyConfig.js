@@ -32,7 +32,7 @@ import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 // update to map
 
 const surveyConfig = {
-  layerItemId: '35e5944c57b24c24a061931d1125d9f2',
+  layerItemId: 'b0fc1aa72fd8469981631f6e8c679c74',
   initialRendererField: 'all',
   renderers: {
     'all': {
