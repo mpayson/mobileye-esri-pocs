@@ -85,10 +85,6 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
         title="Filters"
         icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
         collapsible={true}>
-          <div style={{display: "inline-block", width: "100%", marginBottom: "10px"}}>
-            <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
-            <Button size="small" onClick={this.onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
-          </div>
           <Collapse
             activeKey={this.state.activeKeys}
             bordered={false}
@@ -96,6 +92,10 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
             onChange={this.onAccordionChange}>
             {filterViews}
           </Collapse>
+          <div style={{display: "inline-block", width: "100%", marginTop: "10px"}}>
+            <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
+            <Button size="small" onClick={this.onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
+          </div>
       </PanelCard>
 
     )
