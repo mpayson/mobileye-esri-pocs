@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import { Layout, Menu, Drawer, Icon, Row, Col, Tag } from 'antd';
+import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
@@ -168,7 +168,7 @@ const SafetyApp = observer(class App extends React.Component {
                 mask={false}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
-                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%", overflowY: 'scroll' }}
+                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
               >
                 {panel}
               </Drawer>

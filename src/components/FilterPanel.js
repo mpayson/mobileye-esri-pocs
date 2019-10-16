@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from "mobx-react";
+import MinMaxSlideFilter from './MinMaxSlideFilter';
 import HistMinMaxSlideFilter from '../components/HistMinMaxSlideFilter';
 import SelectFilter from '../components/SelectFilter';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
@@ -12,7 +13,9 @@ const getFilterView = (filter) => {
   const f = filter;
   switch(filter.type){
     case 'minmax':
-      return <HistMinMaxSlideFilter store={f} key={f.field}/>
+      return f.hasHistograms
+        ? <HistMinMaxSlideFilter store={f} key={f.field}/>
+        : <MinMaxSlideFilter store={f} key={f.field} lowerBoundLabel={f.lowerBoundLabel} upperBoundLabel={f.upperBoundLabel}/>
     case 'multiselect':
       return <SelectFilter store={f} key={f.field} mode="multiple"/>
     case 'select':

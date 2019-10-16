@@ -61,8 +61,12 @@ const HistMinMaxSlideFilter = observer(class HistMinMaxSlideFilter extends React
   render(){
 
     // needed to register these as observable with mobx
-    let min = this.store.min || this.store.lowerBound;
-    let max = this.store.max || this.store.upperBound;
+    const min = this.store.min || this.store.min === 0
+      ? this.store.min
+      : this.store.lowerBound;
+    const max = this.store.max || this.store.max === 0
+      ? this.store.max
+      : this.store.upperBound;
 
     if(this.slider && this.store.loaded){
       this.slider.bins = this.store.bins;

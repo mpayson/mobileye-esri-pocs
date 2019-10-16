@@ -28,16 +28,77 @@ const safetyConfig = {
     'speeding_ratio': getRenderer('speeding_ratio'),
     'avarge_speed': getRenderer('avarge_speed')
   },
-  filters: [
-      //lowerBound: 0, upperBound: 100,
-    {name: 'eventvalue', type: 'minmax', params: {isLogarithmic: true, log: true, info: "ipsum"}},
-    {name: 'harsh_cornering_ratio', type: 'minmax', params: {isLogarithmic: true, log: true, info: "ipsum"}},
-    {name: 'harsh_acc_ratio', type: 'minmax', params: {isLogarithmic: true, log: true, info: "ipsum"}},
-    {name: 'pedestrians_density', type: 'minmax', params: {isLogarithmic: true, log: true, info: "ipsum"}},
-    {name: 'bicycles_density', type: 'minmax', params: {isLogarithmic: true, log: true, info: "ipsum"}},
-    {name: 'speeding_ratio', type: 'minmax', params: {isLogarithmic: true, log: true, info: "ipsum"}},
-    {name: 'avarge_speed', type: 'minmax', params: {isLogarithmic: true, log: true, info: "ipsum"}}
-  ],
+  filters: [{
+    name:'eventvalue',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "ipsum"
+    }
+  },{
+    name: 'harsh_cornering_ratio',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "ipsum"
+    }
+  },{
+    name: 'harsh_acc_ratio',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "ipsum"
+    }
+  },{
+    name: 'pedestrians_density',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "ipsum"
+    }
+  },{
+    name: 'bicycles_density',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "ipsum"
+    }
+  },{
+    name: 'speeding_ratio',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "ipsum"
+    }
+  },{
+    name: 'avarge_speed',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "ipsum"
+    }
+  }],
   popupTemplate: {
     title: "Road Segment Information",
     content: [{

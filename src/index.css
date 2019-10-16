@@ -12,11 +12,11 @@ body {
 }
 
 .esri-widget .esri-histogram{
-  background: none;
+  background: none !important;
 }
 
 .esri-histogram-range-slider {
-  background: none;
+  background: none !important;
 }
 
 .esri-legend {
