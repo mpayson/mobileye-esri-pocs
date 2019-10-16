@@ -133,6 +133,7 @@ class Store {
 
         popupTemplate: this.popupTemplate
       });
+
       this.map = new Map({
         basemap: 'dark-gray-vector',
         layers: [this.lyr]

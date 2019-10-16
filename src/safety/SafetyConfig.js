@@ -2,6 +2,7 @@ const getRenderer = (field) => ({
   _type: "jsapi",
   type: "simple",
   symbol: { type: "simple-line", width: "2.5px" },
+  label: "Road segment", 
   visualVariables: [{
     type: "color",
     field,

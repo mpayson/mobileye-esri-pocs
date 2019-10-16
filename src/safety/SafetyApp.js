@@ -77,7 +77,7 @@ const SafetyApp = observer(class App extends React.Component {
         this.view.ui.add(search, "top-right");
         const legend = new Legend({
           view: this.view,
-          layerInfos: [{layer: this.store.lyr, title: null}]
+          layerInfos: [{layer: this.store.lyr, title: "Road safety"}]
         });
         this.view.popup.actions.removeAll();
         this.view.ui.add(legend, "bottom-right");
@@ -160,9 +160,9 @@ const SafetyApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
               <Drawer
-                // title={this.state.navKey}
-                closable={false}
-                // onClose={this.onClose}
+                title={this.state.navKey}
+                closable={true}
+                onClose={this.onClose}
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}

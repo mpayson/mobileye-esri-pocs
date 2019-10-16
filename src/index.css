@@ -5,9 +5,10 @@ body {
 
 .esri-widget--button,
 .esri-search__input,
+.esri-legend,
 .esri-widget {
   border-radius: 2px;
-  background: #f5f5f5e0;
+  background: rgba(245,245,245,0.9) !important;
 }
 
 .esri-widget .esri-histogram{
@@ -19,7 +20,7 @@ body {
 }
 
 .esri-legend {
-  max-width: 140px;
+  max-width: 180px;
 }
 
 .esri-popup {
