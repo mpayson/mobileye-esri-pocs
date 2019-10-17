@@ -34,4 +34,22 @@ const getSelectWhere = (field, value, fieldType) => {
   return where
 }
 
-export {getMinMaxWhere, getMultiSelectWhere, getSelectWhere};
+const getMaxQuery = (field) => ({
+  onStatisticField: field,
+  outStatisticField: `MAX_${field}`,
+  statisticType: 'max'
+})
+
+const getMinQuery = (field) => ({
+  onStatisticField: field,
+  outStatisticField: `MIN_${field}`,
+  statisticType: 'min'
+})
+
+export {
+  getMinMaxWhere,
+  getMultiSelectWhere,
+  getSelectWhere,
+  getMaxQuery,
+  getMinQuery
+};

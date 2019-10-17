@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import MinMaxSlideFilter from './MinMaxSlideFilter';
-import HistMinMaxSlideFilter from '../components/HistMinMaxSlideFilter';
-import SelectFilter from '../components/SelectFilter';
+import MinMaxSlideFilter from './filters/MinMaxSlideFilter';
+import HistMinMaxSlideFilter from './filters/HistMinMaxSlideFilter';
+import SelectFilter from './filters/SelectFilter';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
 import PanelCard from './PanelCard';
 import { Collapse, Button, Icon, Popover } from 'antd';

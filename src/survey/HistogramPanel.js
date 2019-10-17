@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from "mobx-react";
 import { Card } from 'antd';
 import {MinMaxFilter} from "../stores/Filters"
-import HistMinMaxSlideFilter from '../components/HistMinMaxSlideFilter';
+import HistMinMaxSlideFilter from '../components/filters/HistMinMaxSlideFilter';
 
 const HistogramPanel = observer(class HistogramPanel extends React.Component{
 
