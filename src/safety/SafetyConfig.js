@@ -1,4 +1,5 @@
-const getRenderer = (field) => ({
+// for now expect exactly 5 stops that map to the same color ramp
+const getRenderer = (field, stops) => ({
   _type: "jsapi",
   type: "simple",
   symbol: { type: "simple-line", width: "2.5px" },
@@ -7,11 +8,11 @@ const getRenderer = (field) => ({
     type: "color",
     field,
     stops: [
-      { value: 1, color: [44,123,182,255], label: '< 1' },
-      { value: 2.26, color: [171,217,233,255], label: null },
-      { value: 3.5, color: [255,255,191,255], label: '2.5' },
-      { value: 4.9, color: [253,174,97,255], label: null },
-      { value: 6.3, color: [215,25,28,255], label: '> 6.3'},
+      { value: stops[0], color: [44,123,182,255], label: `< ${stops[0]}` },
+      { value: stops[1], color: [171,217,233,255], label: null },
+      { value: stops[2], color: [255,255,191,255], label: `${stops[2]}` },
+      { value: stops[3], color: [253,174,97,255], label: null },
+      { value: stops[4], color: [215,25,28,255], label: `> ${stops[4]}`},
     ]
   }]
 })
@@ -20,13 +21,13 @@ const safetyConfig = {
   layerItemId: '534f26d211154527b31c976ea6b5eafe',
   initialRendererField: 'eventvalue',
   renderers: {
-    'eventvalue': getRenderer('eventvalue'),
-    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio'),
-    'harsh_acc_ratio': getRenderer('harsh_acc_ratio'),
-    'pedestrians_density': getRenderer('pedestrians_density'),
-    'bicycles_density': getRenderer('bicycles_density'),
-    'speeding_ratio': getRenderer('speeding_ratio'),
-    'avarge_speed': getRenderer('avarge_speed')
+    'eventvalue': getRenderer('eventvalue', [1,2.26,3.5,4.9,6.3]),
+    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4]),
+    'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14]),
+    'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2]),
+    'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22]),
+    'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15]),
+    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68])
   },
   filters: [{
     name:'eventvalue',
