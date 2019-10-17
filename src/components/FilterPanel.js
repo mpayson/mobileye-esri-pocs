@@ -92,7 +92,7 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
             onChange={this.onAccordionChange}>
             {filterViews}
           </Collapse>
-          <div style={{display: "inline-block", width: "100%", margin: "10px"}}>
+          <div style={{display: "inline-block", width: "100%", padding: "10px 15px 0px 5px"}}>
             <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
             <Button size="small" onClick={this.onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
           </div>
