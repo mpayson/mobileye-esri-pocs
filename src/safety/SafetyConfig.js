@@ -104,28 +104,56 @@ const safetyConfig = {
     title: "Road Segment Information",
     content: [{
       type: "text",
-      text: "<b>Road Safety Score: {eventvalue}</b>"
+      text: "<b>Road Safety Score: {expression/round_score}</b>",
     }, {
       type: "fields",
       fieldInfos: [{
         fieldName: 'harsh_cornering_ratio',
-        label: 'Harsh cornering ratio'
+        label: 'Harsh cornering ratio',
+        format: {
+          places: 2,
+          digitSeparator: true
+        },
       }, {
         fieldName: 'harsh_acc_ratio',
-        label: "Harsh acceleration ratio"
+        label: "Harsh acceleration ratio",
+        format: {
+          places: 2,
+          digitSeparator: true
+        },
       }, {
         fieldName: 'pedestrians_density',
-        label: "Pedestrians density"
+        label: "Pedestrians density",
+        format: {
+          places: 2,
+          digitSeparator: true
+        },
       }, {
         fieldName: 'bicycles_density',
-        label: 'Bicycles density'
+        label: 'Bicycles density',
+        format: {
+          places: 2,
+          digitSeparator: true
+        },
       }, {
         fieldName: 'speeding_ratio',
-        label: 'Speeding ratio'
+        label: 'Speeding ratio',
+        format: {
+          places: 2,
+          digitSeparator: true
+        },
       }, {
         fieldName: 'avarge_speed',
-        label: 'Average speed'
+        label: 'Average speed',
+        format: {
+          places: 2,
+          digitSeparator: true
+        },
       }]
+    }],
+    expressionInfos: [{
+      name: "round_score",
+      expression: "Round($feature.eventvalue,2)"
     }]
   },
   viewConfig: {
