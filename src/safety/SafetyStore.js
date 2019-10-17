@@ -177,28 +177,28 @@ class SafetyStore extends Store {
       return routeTask.solve(routeParams)
     })
     .then(data => {
-      console.log('std', data);
+      // console.log('std', data);
       
-      const existingGraphic = this.routeResultLyr.source.find(f => f.attributes.oid === 1);
-      if(existingGraphic){
-        this.routeResultLyr.source.remove(existingGraphic);
-      }
+      // const existingGraphic = this.routeResultLyr.source.find(f => f.attributes.oid === 1);
+      // if(existingGraphic){
+      //   this.routeResultLyr.source.remove(existingGraphic);
+      // }
       // const nextRoute = data.routeResults[0].route;
 
-      // if(this.stdRoute) this.view.graphics.remove(this.stdRoute);
-      // this.stdRoute = data.routeResults[0].route;
-      // this.stdRoute.symbol = {
-      //   type: "simple-line",
-      //   color: [94, 43, 255, 1],
-      //   width: 3
-      // };
-      // this.stdTravelTime = this.stdRoute.attributes['Total_TravelTime'];
-      // this.view.graphics.add(this.stdRoute);
-      // return this.lyrView.queryFeatures({
-      //   where: "1=1",
-      //   geometry: this.stdRoute.geometry,
-      //   outStatistics: [scoreStatQuery]
-      // })
+      if(this.stdRoute) this.view.graphics.remove(this.stdRoute);
+      this.stdRoute = data.routeResults[0].route;
+      this.stdRoute.symbol = {
+        type: "simple-line",
+        color: [94, 43, 255, 1],
+        width: 3
+      };
+      this.stdTravelTime = this.stdRoute.attributes['Total_TravelTime'];
+      this.view.graphics.add(this.stdRoute);
+      return this.lyrView.queryFeatures({
+        where: "1=1",
+        geometry: this.stdRoute.geometry,
+        outStatistics: [scoreStatQuery]
+      })
     })
     .then(res => {
       if(res.features && res.features.length){
