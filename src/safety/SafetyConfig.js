@@ -18,7 +18,7 @@ const getRenderer = (field, stops) => ({
 })
 
 const safetyConfig = {
-  layerItemId: '534f26d211154527b31c976ea6b5eafe',
+  layerItemId: 'baf1358ce8d74342af3340f621688e21',
   initialRendererField: 'eventvalue',
   renderers: {
     'eventvalue': getRenderer('eventvalue', [1,2.26,3.5,4.9,6.3]),
