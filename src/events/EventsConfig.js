@@ -4,7 +4,7 @@ import bicycleImage from '../resources/images/ET_BICYCLE.png'
 import pedImage from '../resources/images/ET_PED_ON_HW.png'
 
 const eventsConfig = {
-  layerItemId: 'b6e8773284fe4b6891c7196a57e238b8',
+  layerItemId: 'baf1358ce8d74342af3340f621688e21',
   initialRendererField: 'eventsubtype',
   renderers : {
     'eventsubtype': {
