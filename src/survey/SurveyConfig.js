@@ -1,3 +1,5 @@
+import { getDomainMap } from '../utils/Utils';
+
 import sign10Image from '../resources/images/SIGN_ICON_10.png'
 import sign20Image from '../resources/images/SIGN_ICON_20.png'
 import sign30Image from '../resources/images/SIGN_ICON_30.png'
@@ -97,8 +99,48 @@ const surveyConfig = {
     {name: 'system_type', type: 'multiselect', params: {}},
     {name: 'comparsion_to_prev_map', type: 'multiselect', params: {}},
     {name: 'map_version', type: 'select', params: {}},
-    
   ],
+  charts: [{
+    id: 'system_type_label',
+    type: 'bar',
+    title: 'My Amazing Title',
+    xField: 'system_type_label',
+    yField: 'countOFsystem_type',
+    // see here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
+    // and here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
+    // use "order by" parameter or "resultTransform" to sort
+    queryDefinition: {
+      where: "1=1",
+      outFields: "*",
+      orderByFields: "countOFsystem_type",
+      groupByFieldsForStatistics: "system_type",
+      outStatistics: [{
+        "onStatisticField":"system_type",
+        "outStatisticFieldName":"countOFsystem_type",
+        "statisticType":"count"
+      }]
+    },
+    resultTransform: result => {
+      if(!result || !result.features || result.features.length < 1) return result;
+      const field = result.fields.find(f => f.name === 'system_type');
+      const domainMap = getDomainMap(field.domain);
+      const newFeatures = result.features.map(f => {  
+        const attributes = f.attributes;
+        const fieldValue = f.attributes['system_type'];
+        const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
+        return {
+          attributes: {
+            ...attributes,
+            system_type_label: fieldDomain
+          }
+        }
+      });
+      result.features = newFeatures;
+      return result;
+    }
+  }],
   histograms: [
     {name: 'height', withFilter : true, params: {isLogarithmic: false, log: true}},
   ],

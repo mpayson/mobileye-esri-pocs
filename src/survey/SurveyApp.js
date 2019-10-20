@@ -8,7 +8,9 @@ import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import FilterPanel from '../components/FilterPanel';
+import ChartPanel from '../components/ChartPanel';
 import HistogramPanel from './HistogramPanel';
+import LayerListPanel from '../components/LayerListPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
 
@@ -32,7 +34,7 @@ const SurveyApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: "Layers"
+    navKey: "Histograms"
   };
 
   constructor(props, context){
@@ -84,10 +86,12 @@ const SurveyApp = observer(class App extends React.Component {
         panel = <FilterPanel store={this.store}/>;
         break;
       case 'Histograms':
-        panel = <HistogramPanel store={this.store}/>;
+        // panel = <HistogramPanel store={this.store}/>;
+        panel = <ChartPanel store={this.store}/>
         break;
       case 'Bookmarks':
-        panel = <h1>Woah this are some awesome bookmarks!</h1>;
+        // panel = <LayerListPanel store={this.store}/>;
+        panel = <h1>Hey world</h1>
         break;
       case 'About':
         panel = <h1>This application presents the various assets Mobileye is able to survey and map</h1>;
@@ -155,6 +159,7 @@ const SurveyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
+                width={320}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100%-40px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}

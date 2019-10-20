@@ -15,6 +15,7 @@ import LoadingOutline from "@ant-design/icons/lib/outline/LoadingOutline";
 import CloseCircleFill from "@ant-design/icons/lib/fill/CloseCircleFill";
 import LogoutOutline from "@ant-design/icons/lib/outline/LogoutOutline";
 import InfoCircleOutline from "@ant-design/icons/lib/outline/InfoCircleOutline";
+import EyeOutline from "@ant-design/icons/lib/outline/EyeOutline";
 
 export {
   RightOutline,
@@ -29,5 +30,6 @@ export {
   LoadingOutline,
   CloseCircleFill,
   LogoutOutline,
-  InfoCircleOutline
+  InfoCircleOutline,
+  EyeOutline
 }

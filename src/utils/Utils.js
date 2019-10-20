@@ -1,3 +1,19 @@
+const getDomainMap = (domain) => {
+  if(!domain) return new Map();
+  return domain.codedValues.reduce((p, cv) => {
+    p.set(cv.code, cv.name);
+    return p;
+  }, new Map());
+}
+
+const transformQueryToRechartSeries = (queryResults, xField, yField) => {
+  if(!queryResults || queryResults.features.length < 1) return [];
+  return queryResults.features.map(f => ({
+    [xField]: f.attributes[xField],
+    [yField]: f.attributes[yField]
+  }));
+}
+
 const getMinMaxWhere = (field, min, max) => {
   const isMin = min || min === 0;
   const isMax = max || max === 0;
@@ -51,5 +67,7 @@ export {
   getMultiSelectWhere,
   getSelectWhere,
   getMaxQuery,
-  getMinQuery
+  getMinQuery,
+  getDomainMap,
+  transformQueryToRechartSeries
 };

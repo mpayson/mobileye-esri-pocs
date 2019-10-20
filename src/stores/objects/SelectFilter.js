@@ -1,6 +1,6 @@
 import Filter from './Filter';
 import { decorate, observable, action, computed } from 'mobx';
-import { getSelectWhere } from '../../utils/Utils';
+import { getSelectWhere, getDomainMap } from '../../utils/Utils';
 
 class SelectFilter extends Filter{
   type = 'select';
@@ -13,10 +13,7 @@ class SelectFilter extends Filter{
     super.load(featureLayer);
     const domain = featureLayer.getFieldDomain(this.field);
     if(domain){
-      this.domainMap = domain.codedValues.reduce((p, cv) => {
-        p.set(cv.code, cv.name);
-        return p;
-      }, new Map());
+      this.domainMap = getDomainMap(domain);
     }
     featureLayer.queryFeatures({
       where: "1=1",
@@ -46,6 +43,10 @@ class SelectFilter extends Filter{
     return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
   }
 
+  get optionSet(){
+    return new Set(this.options);
+  }
+
 }
 
 decorate(SelectFilter, {
@@ -55,7 +56,8 @@ decorate(SelectFilter, {
   load: action.bound,
   where: computed,
   onValueChange: action.bound,
-  clear: action.bound
+  clear: action.bound,
+  optionSet: computed
 })
 
 export default SelectFilter;

@@ -9,6 +9,7 @@ import options from '../config/esri-loader-options';
 import FilterPanel from '../components/FilterPanel';
 import Store from '../stores/Store';
 import eventsConfig from './EventsConfig';
+import LayerPanel from './LayerPanel';
 
 const { Header, Content, Sider } = Layout;
 
@@ -105,7 +106,7 @@ const EventsApp = observer(class App extends React.Component {
     let panel;
     switch (this.state.navKey) {
       case 'Layers':
-        panel = <FilterPanel store={this.store}/>;
+        panel = <LayerPanel store={this.store}/>;
         break;
       case 'Bookmarks':
         panel = <h1>Woah this are some awesome bookmarks!</h1>;

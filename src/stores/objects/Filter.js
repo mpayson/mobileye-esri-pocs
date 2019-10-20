@@ -5,7 +5,6 @@ class Filter {
     this.field = fieldName;
     this.fieldInfo = {};
     this.infoText = params && params.info ? params.info : null;
-    console.log('infotext', params);
     // this.caption = (params !== null && "caption" in params) ? params.caption : null;
 
   }

@@ -15,6 +15,7 @@ class Store {
 
   credential = {};
   aliasMap = null;
+  chartResultMap = new Map();
 
   constructor(appState, storeConfig){
     this.appState = appState;
@@ -31,10 +32,11 @@ class Store {
           throw new Error("Unknown filter type!")
       }
     });
-    this.histograms =  (typeof storeConfig.histograms === 'undefined') ? [] :
-      storeConfig.histograms.map(f => {
-          return new MinMaxFilter(f.name, f.params);
-      });
+    this.charts = storeConfig.charts || [];
+    // this.histograms =  (typeof storeConfig.histograms === 'undefined') ? [] :
+    //   storeConfig.histograms.map(f => {
+    //       return new MinMaxFilter(f.name, f.params);
+    //   });
     
     this.renderers = storeConfig.renderers;
     this.rendererOptions = [...Object.keys(this.renderers)];
@@ -50,13 +52,34 @@ class Store {
     if(this.rendererHandler) this.rendererHandler();
   }
 
+  loadFilters(){
+    this.filters.forEach(f => f.load(this.lyr, this.view));
+  }
+
+  // todo could query the client instead of the server
+  // once the layerview has loaded
+  loadCharts(){
+    if(!this.charts || this.charts.length < 1) return;
+    this.charts.forEach(c => {
+      this.lyr.queryFeatures(c.queryDefinition)
+        .then(qRes => {
+          const storedResult = c.resultTransform
+            ? c.resultTransform(qRes)
+            : qRes;
+          console.log(storedResult);
+          this.chartResultMap.set(c.id, storedResult);
+        });
+    });
+  }
+
   _loadLayers(){
     this.view.whenLayerView(this.lyr)
     .then(lV => {
       message.destroy();
       this.lyrView = lV;
-      this.filters.forEach(f => f.load(this.lyr, this.view));
-      this.histograms.forEach(f => f.load(this.lyr, this.view));
+      this.loadFilters();
+      this.loadCharts();
+      // this.histograms.forEach(f => f.load(this.lyr, this.view));
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
@@ -156,10 +179,10 @@ class Store {
     const where = this.filters
       .filter(f => !!f.where)
       .map(f => f.where)
-      .join(' AND ') +
-      this.histograms
-      .filter(f => !!f.where)
-      .map(f => f.where)
+      // .join(' AND ') +
+      // this.histograms
+      // .filter(f => !!f.where)
+      // .map(f => f.where)
       .join(' AND '); 
     return where ? where : "1=1";
   }
@@ -170,10 +193,13 @@ decorate(Store, {
   rendererField: observable,
   layerLoaded: observable,
   aliasMap: observable,
+  chartResultMap: observable.shallow,
   where: computed,
   load: action.bound,
-  setRendererField: action.bound,
   _loadLayers: action.bound,
+  loadFilters: action.bound,
+  loadCharts: action.bound,
+  setRendererField: action.bound,
   clearFilters: action.bound
 });
 
