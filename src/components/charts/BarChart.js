@@ -30,7 +30,6 @@ const MyBarChart = observer(class MyBarChart extends Component {
         }}
         layout="vertical"
       >
-        <Text scaleToFit={true}/>
         <XAxis type="number" tick={{fontSize: 8}}/>
         <YAxis type="category" dataKey={xField} tick={{fontSize: 8}} width={50}/>
         <Bar dataKey={yField} fill="#8884d8" />
