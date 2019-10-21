@@ -90,8 +90,8 @@ const SurveyApp = observer(class App extends React.Component {
         panel = <ChartPanel store={this.store}/>
         break;
       case 'Bookmarks':
-        // panel = <LayerListPanel store={this.store}/>;
-        panel = <h1>Hey world</h1>
+        panel = <LayerListPanel store={this.store}/>;
+        // panel = <h1>Hey world</h1>
         break;
       case 'About':
         panel = <h1>This application presents the various assets Mobileye is able to survey and map</h1>;

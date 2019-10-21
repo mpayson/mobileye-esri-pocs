@@ -20,6 +20,7 @@ class Store {
   constructor(appState, storeConfig){
     this.appState = appState;
     this.layerId = storeConfig.layerItemId;
+    this.mapId = storeConfig.webmapId;
     this.filters = storeConfig.filters.map(f => {
       switch(f.type){
         case 'minmax':
@@ -66,7 +67,6 @@ class Store {
           const storedResult = c.resultTransform
             ? c.resultTransform(qRes)
             : qRes;
-          console.log(storedResult);
           this.chartResultMap.set(c.id, storedResult);
         });
     });
@@ -124,7 +124,9 @@ class Store {
 
   load(mapViewDiv){
     message.loading('Loading map!', 0);
+    let renderer;
     return loadModules([
+      'esri/WebMap',
       'esri/Map',
       'esri/views/MapView',
       'esri/layers/FeatureLayer',
@@ -132,36 +134,51 @@ class Store {
       'esri/identity/IdentityManager',
       'esri/renderers/support/jsonUtils'
     ], options)
-    .then(([Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils]) => {
+    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils]) => {
 
       esriId.registerToken(this.appState.session.toCredential());
 
-      pUtils = promiseUtils; 
+      pUtils = promiseUtils;
       this._buildAutoRunEffects();
 
-      let renderer;
       if (this.renderers[this.rendererField]._type === 'jsapi')
         renderer = this.renderers[this.rendererField];
       else
         renderer = rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
 
-      this.lyr = new FeatureLayer({
-        portalItem: {id: this.layerId},
-        renderer: renderer,
-
-        popupTemplate: this.popupTemplate
-      });
-
-      this.map = new Map({
-        basemap: 'dark-gray-vector',
-        layers: [this.lyr]
-      });
       this.view = new MapView({
-        map: this.map,
         container: mapViewDiv,
         center: this.viewConfig.center,
         zoom: this.viewConfig.zoom
-      });
+      })
+
+      if(this.mapId){
+        this.map = new WebMap({
+          portalItem: {
+            id: this.mapId
+          }
+        });
+        this.view.map = this.map;
+        return this.map.when();
+      } else {
+        const lyr = new FeatureLayer({
+          portalItem: {id: this.layerId}
+        })
+        this.map = new Map({
+          basemap: 'dark-gray-vector',
+          layers: [lyr]
+        });
+        this.view.map = this.map;
+        return Promise.resolve();
+      }
+
+    })
+    .then(_ => {
+      this.lyr = this.map.layers.find(l => 
+        l.portalItem.id === this.layerId
+      );
+      this.lyr.renderer = renderer;
+      this.lyr.popupTemplate = this.popupTemplate;
       this._loadLayers();
       return this.view;
     })
