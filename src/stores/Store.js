@@ -141,10 +141,11 @@ class Store {
       pUtils = promiseUtils;
       this._buildAutoRunEffects();
 
-      if (this.renderers[this.rendererField]._type === 'jsapi')
-        renderer = this.renderers[this.rendererField];
-      else
-        renderer = rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
+      if(this.renderers && this.renderers[this.rendererField]){
+        renderer = this.renderers[this.rendererField]._type === 'jsapi'
+          ? this.renderers[this.rendererField]
+          : rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
+      }
 
       this.view = new MapView({
         container: mapViewDiv,
@@ -177,8 +178,8 @@ class Store {
       this.lyr = this.map.layers.find(l => 
         l.portalItem.id === this.layerId
       );
-      this.lyr.renderer = renderer;
-      this.lyr.popupTemplate = this.popupTemplate;
+      if(renderer) this.lyr.renderer = renderer;
+      if(this.popupTemplate) this.lyr.popupTemplate = this.popupTemplate;
       this._loadLayers();
       return this.view;
     })
