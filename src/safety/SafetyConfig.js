@@ -38,7 +38,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "ipsum"
+      info: "Road risk score based on the variables below."
     }
   },{
     name: 'harsh_cornering_ratio',
@@ -96,16 +96,16 @@ const safetyConfig = {
     params: {
       isLogarithmic: false,
       hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "Average speed of the respective segment. Does not contribute to risk score on its own."
+      lowerBoundLabel: '0',
+      upperBoundLabel: '140',
+      info: "Average speed of the respective segment. (Does not contribute to risk score on its own)."
     }
   }],
   popupTemplate: {
     title: "Road Segment Information",
     content: [{
       type: "text",
-      text: "<b>Road Safety Score: {expression/round_score}</b>",
+      text: "<b>Road risk score: {expression/round_score}</b>",
     }, {
       type: "fields",
       fieldInfos: [{
@@ -138,7 +138,7 @@ const safetyConfig = {
         },
       }, {
         fieldName: 'speeding_ratio',
-        label: 'Speeding ratio',
+        label: 'Speeding',
         format: {
           places: 2,
           digitSeparator: true

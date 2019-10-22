@@ -63,7 +63,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
               onChange={this.onSwitchChange}
               checked={isSwitchChecked}
               style={{float: "left", marginTop: "1px"}}/>
-            <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>Road Safety Score</h3>
+            <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>Road risk score</h3>
           </div>
           <p style={{margin: "10px 0px 5px 0px"}}><Text strong> Toggle Road Risk Score off to explore individual data layers of the overall score</Text></p>
           <Radio.Group
