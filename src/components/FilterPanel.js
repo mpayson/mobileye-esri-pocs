@@ -82,7 +82,7 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
 
     return (
       <PanelCard
-        title="Filters"
+        title="Filter"
         icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
         collapsible={true}>
           <Collapse

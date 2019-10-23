@@ -38,7 +38,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "ipsum"
+      info: "Road risk score based on the variables below."
     }
   },{
     name: 'harsh_cornering_ratio',
@@ -48,7 +48,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "ipsum"
+      info: "Percentage of cars that turn the corner with high G-force."
     }
   },{
     name: 'harsh_acc_ratio',
@@ -58,7 +58,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "ipsum"
+      info: "Percentage of cars that brake harshly in the segment."
     }
   },{
     name: 'pedestrians_density',
@@ -68,7 +68,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "ipsum"
+      info: "Density of pedestrians over the segment."
     }
   },{
     name: 'bicycles_density',
@@ -78,7 +78,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "ipsum"
+      info: "Density of bicycles over the segment."
     }
   },{
     name: 'speeding_ratio',
@@ -88,7 +88,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "ipsum"
+      info: "The percentage of vehicles that drive a standard deviation above the average speed at the segment."
     }
   },{
     name: 'avarge_speed',
@@ -96,28 +96,28 @@ const safetyConfig = {
     params: {
       isLogarithmic: false,
       hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "ipsum"
+      lowerBoundLabel: '0',
+      upperBoundLabel: '140',
+      info: "Average speed of the respective segment. (Does not contribute to risk score on its own)."
     }
   }],
   popupTemplate: {
     title: "Road Segment Information",
     content: [{
       type: "text",
-      text: "<b>Road Safety Score: {expression/round_score}</b>",
+      text: "<b>Road risk score: {expression/round_score}</b>",
     }, {
       type: "fields",
       fieldInfos: [{
         fieldName: 'harsh_cornering_ratio',
-        label: 'Harsh cornering ratio',
+        label: 'Harsh cornering',
         format: {
           places: 2,
           digitSeparator: true
         },
       }, {
         fieldName: 'harsh_acc_ratio',
-        label: "Harsh acceleration ratio",
+        label: "Harsh breaking",
         format: {
           places: 2,
           digitSeparator: true
@@ -138,7 +138,7 @@ const safetyConfig = {
         },
       }, {
         fieldName: 'speeding_ratio',
-        label: 'Speeding ratio',
+        label: 'Speeding',
         format: {
           places: 2,
           digitSeparator: true

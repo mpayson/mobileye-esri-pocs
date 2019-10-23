@@ -77,7 +77,7 @@ const SafetyApp = observer(class App extends React.Component {
         this.view.ui.add(search, "top-right");
         const legend = new Legend({
           view: this.view,
-          layerInfos: [{layer: this.store.lyr, title: "Road safety"}]
+          layerInfos: [{layer: this.store.lyr, title: ""}]
         });
         this.view.popup.actions.removeAll();
         this.view.ui.add(legend, "bottom-right");
@@ -91,8 +91,8 @@ const SafetyApp = observer(class App extends React.Component {
       case 'Layers':
         panel = <LayerPanel store={this.store}/>;
         break;
-      case 'Bookmarks':
-        panel = <h1>Woah this are some awesome bookmarks!</h1>;
+      case 'Saved Locations':
+        panel = <h1>Here you can see interesting locations you saved in the past!</h1>;
         break;
       case 'Route':
         panel = <RoutePanel store={this.store}/>
@@ -141,13 +141,9 @@ const SafetyApp = observer(class App extends React.Component {
                 <Icon component={MenuRouteFromIcon} />
                 <span>Route</span>
               </Menu.Item>
-              <Menu.Item key="Bookmarks">
+              <Menu.Item key="Saved Locations">
                 <Icon component={MenuBookmarkIcon} />
-                <span>Bookmarks</span>
-              </Menu.Item>
-              <Menu.Item key="About">
-                <Icon component={MenuInformationIcon} />
-                <span>About</span>
+                <span>Saved Locations</span>
               </Menu.Item>
             </Menu>
           </Sider>
