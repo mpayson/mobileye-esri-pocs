@@ -64,7 +64,7 @@ const SurveyApp = observer(class App extends React.Component {
 
     const modulePromise = loadModules([
       'esri/widgets/Search',
-      //'esri/widgets/Legend'
+      // 'esri/widgets/Legend'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
@@ -73,8 +73,8 @@ const SurveyApp = observer(class App extends React.Component {
         this.view = mapView;
         const search = new Search({view: this.view});
         this.view.ui.add(search, "top-right");
-        //const legend = new Legend({view: this.view});
-        //this.view.ui.add(legend, "bottom-right");
+        // const legend = new Legend({view: this.view});
+        // this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
       });
   }
@@ -86,7 +86,7 @@ const SurveyApp = observer(class App extends React.Component {
         panel = (
           <div>
             <LayerListPanel store={this.store}/>
-            <FilterPanel store={this.store}/>
+            <FilterPanel store={this.store} defaultActive={true}/>
           </div>
         );
         break;

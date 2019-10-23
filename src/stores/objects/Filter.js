@@ -5,8 +5,8 @@ class Filter {
     this.field = fieldName;
     this.fieldInfo = {};
     this.infoText = params && params.info ? params.info : null;
+    this.isDynamic = params && params.dynamic ? params.dynamic : false;
     // this.caption = (params !== null && "caption" in params) ? params.caption : null;
-
   }
   load(featureLayer){
     if(!featureLayer.loaded){

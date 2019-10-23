@@ -37,8 +37,8 @@ const surveyConfig = {
   
   layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
   //webmapId: '2a9a1368fa224a239afd92376dab0276',
-  // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
-  webmapId: '203fea83e5c041afa0ab9a84536cf9c4',
+  webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
+  // webmapId: '203fea83e5c041afa0ab9a84536cf9c4',
   initialRendererField: 'all',
   renderers: {
     'all': {
@@ -100,9 +100,9 @@ const surveyConfig = {
   }
   },
   filters: [
-    {name: 'system_type', type: 'multiselect', params: {}},
-    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {}},
-    {name: 'map_version', type: 'select', params: {}},
+    {name: 'system_type', type: 'multiselect', params: {dynamic: true}},
+    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true}},
+    {name: 'map_version', type: 'select', params: {dynamic: true}},
   ],
   charts: [{
     id: 'system_type_label',
