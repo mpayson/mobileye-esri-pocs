@@ -33,7 +33,7 @@ const SurveyApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: "Histograms"
+    navKey: "Layers"
   };
 
   constructor(props, context){
@@ -82,14 +82,18 @@ const SurveyApp = observer(class App extends React.Component {
     let panel;
     switch(this.state.navKey){
       case 'Layers':
-        panel = <FilterPanel store={this.store}/>;
+        panel = (
+          <div>
+            <LayerListPanel store={this.store}/>
+            <FilterPanel store={this.store}/>
+          </div>
+        );
         break;
       case 'Histograms':
         panel = <ChartPanel store={this.store}/>
         break;
       case 'Bookmarks':
-        panel = <LayerListPanel store={this.store}/>;
-        // panel = <h1>Hey world</h1>
+        panel = <h1>Hey world</h1>
         break;
       case 'About':
         panel = <h1>This application presents the various assets Mobileye is able to survey and map</h1>;

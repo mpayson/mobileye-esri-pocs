@@ -2,10 +2,8 @@ import React from 'react';
 import { observer } from "mobx-react";
 import BarChart from './charts/BarChart';
 import PanelCard from './PanelCard';
-import { Collapse, Button, Icon, Popover } from 'antd';
 import GraphHistogramIcon from 'calcite-ui-icons-react/GraphHistogramIcon';
 import './FilterPanel.css';
-const { Panel } = Collapse;
 
 const getChartView = (chart, store) => {
   const c = chart;
