@@ -10,6 +10,7 @@ import options from '../config/esri-loader-options';
 import FilterPanel from '../components/FilterPanel';
 import ChartPanel from '../components/ChartPanel';
 import LayerListPanel from '../components/LayerListPanel';
+import BookmarkPanel from '../components/BookmarkPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
 
@@ -33,7 +34,7 @@ const SurveyApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: "Layers"
+    navKey: "Bookmarks"
   };
 
   constructor(props, context){
@@ -93,7 +94,7 @@ const SurveyApp = observer(class App extends React.Component {
         panel = <ChartPanel store={this.store}/>
         break;
       case 'Bookmarks':
-        panel = <h1>Hey world</h1>
+        panel = <BookmarkPanel store={this.store}/>
         break;
       case 'About':
         panel = <h1>This application presents the various assets Mobileye is able to survey and map</h1>;

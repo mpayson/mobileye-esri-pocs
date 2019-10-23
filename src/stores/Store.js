@@ -129,7 +129,6 @@ class Store {
     const isVisible = !layer.visible;
     layer.visible = isVisible;
     this.layerVisibleMap.set(layer.id, isVisible);
-
   }
 
   load(mapViewDiv){
@@ -203,6 +202,12 @@ class Store {
     this.filters.forEach(f => f.clear());
   }
 
+  onBookmarkClick(index){
+    if(!this.view || index >= this.bookmarks.length) return;
+    const bookmark = this.bookmarks[index];
+    this.view.goTo(bookmark.extent);
+  }
+
   get where(){
     const where = this.filters
       .filter(f => !!f.where)
@@ -214,6 +219,12 @@ class Store {
   get layers(){
     if(this.map && this.layerLoaded) {
       return this.map.layers.items.reverse();
+    };
+    return [];
+  }
+  get bookmarks(){
+    if(this.map && this.layerLoaded) {
+      return this.map.bookmarks.items;
     };
     return [];
   }
@@ -229,13 +240,15 @@ decorate(Store, {
   map: observable.ref,
   where: computed,
   layers: computed,
+  bookmarks: computed,
   load: action.bound,
   _loadLayers: action.bound,
   loadFilters: action.bound,
   loadCharts: action.bound,
   setRendererField: action.bound,
   clearFilters: action.bound,
-  toggleLayerVisibility: action.bound
+  toggleLayerVisibility: action.bound,
+  onBookmarkClick: action.bound
 });
 
 export default Store;
