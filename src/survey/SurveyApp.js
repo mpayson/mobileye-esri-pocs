@@ -9,7 +9,6 @@ import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import FilterPanel from '../components/FilterPanel';
 import ChartPanel from '../components/ChartPanel';
-import HistogramPanel from './HistogramPanel';
 import LayerListPanel from '../components/LayerListPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
@@ -86,7 +85,6 @@ const SurveyApp = observer(class App extends React.Component {
         panel = <FilterPanel store={this.store}/>;
         break;
       case 'Histograms':
-        // panel = <HistogramPanel store={this.store}/>;
         panel = <ChartPanel store={this.store}/>
         break;
       case 'Bookmarks':
