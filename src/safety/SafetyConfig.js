@@ -2,8 +2,8 @@
 const getRenderer = (field, stops) => ({
   _type: "jsapi",
   type: "simple",
-  symbol: { type: "simple-line", width: "2.5px" },
-  label: "Road segment", 
+  symbol: { type: "simple-line" ,width: "2.5px"},
+  label: "Road segment",
   visualVariables: [{
     type: "color",
     field,
@@ -105,7 +105,7 @@ const safetyConfig = {
     title: "Road Segment Information",
     content: [{
       type: "text",
-      text: "<b>Road risk score: {expression/round_score}</b>",
+      text: "<b>Road Risk Score: {expression/round_score}</b>",
     }, {
       type: "fields",
       fieldInfos: [{
@@ -117,28 +117,28 @@ const safetyConfig = {
         },
       }, {
         fieldName: 'harsh_acc_ratio',
-        label: "Harsh breaking",
+        label: "Harsh braking",
         format: {
           places: 2,
           digitSeparator: true
         },
       }, {
         fieldName: 'pedestrians_density',
-        label: "Pedestrians density",
+        label: "Average pedestrian volume",
         format: {
           places: 2,
           digitSeparator: true
         },
       }, {
         fieldName: 'bicycles_density',
-        label: 'Bicycles density',
+        label: 'Average cyclist volume',
         format: {
           places: 2,
           digitSeparator: true
         },
       }, {
         fieldName: 'speeding_ratio',
-        label: 'Speeding',
+        label: 'Above average speeds',
         format: {
           places: 2,
           digitSeparator: true
