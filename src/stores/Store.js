@@ -16,6 +16,8 @@ class Store {
   credential = {};
   aliasMap = null;
   chartResultMap = new Map();
+  map = null;
+  layerVisibleMap = new Map();
 
   constructor(appState, storeConfig){
     this.appState = appState;
@@ -34,10 +36,6 @@ class Store {
       }
     });
     this.charts = storeConfig.charts || [];
-    // this.histograms =  (typeof storeConfig.histograms === 'undefined') ? [] :
-    //   storeConfig.histograms.map(f => {
-    //       return new MinMaxFilter(f.name, f.params);
-    //   });
     
     this.renderers = storeConfig.renderers;
     this.rendererOptions = [...Object.keys(this.renderers)];
@@ -79,7 +77,11 @@ class Store {
       this.lyrView = lV;
       this.loadFilters();
       this.loadCharts();
-      // this.histograms.forEach(f => f.load(this.lyr, this.view));
+
+      this.map.layers.forEach(l => {
+        this.layerVisibleMap.set(l.id, l.visible);
+      })
+
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
@@ -120,6 +122,13 @@ class Store {
 
   setRendererField(field){
     this.rendererField = field;
+  }
+
+  toggleLayerVisibility(layer){
+    // console.log(layer);
+    const isVisible = !layer.visible;
+    layer.visible = isVisible;
+    this.layerVisibleMap.set(layer.id, isVisible);
   }
 
   load(mapViewDiv){
@@ -193,16 +202,31 @@ class Store {
     this.filters.forEach(f => f.clear());
   }
 
+  onBookmarkClick(index){
+    if(!this.view || index >= this.bookmarks.length) return;
+    const bookmark = this.bookmarks[index];
+    this.view.goTo(bookmark.extent);
+  }
+
   get where(){
     const where = this.filters
       .filter(f => !!f.where)
       .map(f => f.where)
-      // .join(' AND ') +
-      // this.histograms
-      // .filter(f => !!f.where)
-      // .map(f => f.where)
       .join(' AND '); 
     return where ? where : "1=1";
+  }
+  
+  get layers(){
+    if(this.map && this.layerLoaded) {
+      return this.map.layers.items.reverse();
+    };
+    return [];
+  }
+  get bookmarks(){
+    if(this.map && this.layerLoaded) {
+      return this.map.bookmarks.items;
+    };
+    return [];
   }
 }
 
@@ -211,14 +235,20 @@ decorate(Store, {
   rendererField: observable,
   layerLoaded: observable,
   aliasMap: observable,
+  layerVisibleMap: observable,
   chartResultMap: observable.shallow,
+  map: observable.ref,
   where: computed,
+  layers: computed,
+  bookmarks: computed,
   load: action.bound,
   _loadLayers: action.bound,
   loadFilters: action.bound,
   loadCharts: action.bound,
   setRendererField: action.bound,
-  clearFilters: action.bound
+  clearFilters: action.bound,
+  toggleLayerVisibility: action.bound,
+  onBookmarkClick: action.bound
 });
 
 export default Store;

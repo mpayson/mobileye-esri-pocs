@@ -86,6 +86,7 @@ const SafetyApp = observer(class App extends React.Component {
   }
 
   render() {
+
     let panel;
     switch(this.state.navKey){
       case 'Data Layers':
@@ -159,6 +160,7 @@ const SafetyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
+                width={320}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
