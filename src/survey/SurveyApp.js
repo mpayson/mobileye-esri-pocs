@@ -34,7 +34,7 @@ const SurveyApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: "Bookmarks"
+    navKey: "Layers"
   };
 
   constructor(props, context){
@@ -110,7 +110,10 @@ const SurveyApp = observer(class App extends React.Component {
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
+          <Menu.Item key="sign in" onClick={this.onSignOutClick}>
+            <Icon type="logout"/>
+            {this.props.appState.displayName}
+          </Menu.Item>
         </Menu>
       )
       : null;
@@ -156,16 +159,16 @@ const SurveyApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
               <Drawer
-                // title={this.state.navKey}
-                closable={false}
-                // onClose={this.onClose}
+                title={this.state.navKey}
+                closable={true}
+                onClose={this.onClose}
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
                 width={320}
                 getContainer={false}
-                style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100%-40px)"}}
-                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
+                style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
+                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
               >
                 {panel}
               </Drawer>

@@ -43,7 +43,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       <>
         <PanelCard
           icon={<LayerIcon size="20" style={{position: "relative", top: "4px", left: "0px"}}/>}
-          title="Layers"
+          title="Layer List"
           collapsible={true}
           defaultActive={true}>
           {layerListViews}
