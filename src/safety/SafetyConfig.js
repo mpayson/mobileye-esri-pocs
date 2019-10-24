@@ -1,5 +1,5 @@
 // for now expect exactly 5 stops that map to the same color ramp
-const getRenderer = (field, stops) => ({
+const getRenderer = (field, stops,labels) => ({
   _type: "jsapi",
   type: "simple",
   symbol: { type: "simple-line" ,width: "2.5px"},
@@ -8,11 +8,11 @@ const getRenderer = (field, stops) => ({
     type: "color",
     field,
     stops: [
-      { value: stops[0], color: [44,123,182,255], label: `< ${stops[0]}` },
+      { value: stops[0], color: [44,123,182,255], label: `${labels[0]}` },
       { value: stops[1], color: [171,217,233,255], label: null },
-      { value: stops[2], color: [255,255,191,255], label: `${stops[2]}` },
+      { value: stops[2], color: [255,255,191,255], label: `${labels[1]}` },
       { value: stops[3], color: [253,174,97,255], label: null },
-      { value: stops[4], color: [215,25,28,255], label: `> ${stops[4]}`},
+      { value: stops[4], color: [215,25,28,255], label: `${labels[2]}`},
     ]
   }]
 })
@@ -22,13 +22,13 @@ const safetyConfig = {
   layerItemId: '09faf499d6e6475f92bcbd68e68f8bbd',
   initialRendererField: 'eventvalue',
   renderers: {
-    'eventvalue': getRenderer('eventvalue', [1,2.26,3.5,4.9,6.3]),
-    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4]),
-    'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14]),
-    'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2]),
-    'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22]),
-    'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15]),
-    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68])
+    'eventvalue': getRenderer('eventvalue', [1,2.26,3.5,4.9,6.3],['Low','Medium','High']),
+    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High']),
+    'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14],['Low','Medium','High']),
+    'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High']),
+    'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22],['Low','Medium','High']),
+    'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High']),
+    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70'])
   },
   filters: [{
     name:'eventvalue',
@@ -110,14 +110,14 @@ const safetyConfig = {
       type: "fields",
       fieldInfos: [{
         fieldName: 'harsh_cornering_ratio',
-        label: 'Harsh cornering',
+        label: 'Harsh cornering (%)',
         format: {
           places: 2,
           digitSeparator: true
         },
       }, {
         fieldName: 'harsh_acc_ratio',
-        label: "Harsh braking",
+        label: "Harsh braking (%)",
         format: {
           places: 2,
           digitSeparator: true
@@ -138,14 +138,14 @@ const safetyConfig = {
         },
       }, {
         fieldName: 'speeding_ratio',
-        label: 'Above average speeds',
+        label: 'Above average speeds (%)',
         format: {
           places: 2,
           digitSeparator: true
         },
       }, {
         fieldName: 'avarge_speed',
-        label: 'Average speed',
+        label: 'Average speed (Km/H)',
         format: {
           places: 2,
           digitSeparator: true
