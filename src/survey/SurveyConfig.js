@@ -36,7 +36,6 @@ import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 const surveyConfig = {
   
   layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
-  //webmapId: '2a9a1368fa224a239afd92376dab0276',
   webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
   initialRendererField: 'all',
   renderers: {
