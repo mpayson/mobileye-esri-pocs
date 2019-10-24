@@ -141,9 +141,10 @@ class Store {
       'esri/layers/FeatureLayer',
       'esri/core/promiseUtils',
       'esri/identity/IdentityManager',
-      'esri/renderers/support/jsonUtils'
+      'esri/renderers/support/jsonUtils',
+      'esri/geometry/SpatialReference'
     ], options)
-    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils]) => {
+    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils, SpatialReference]) => {
 
       esriId.registerToken(this.appState.session.toCredential());
 
@@ -159,7 +160,9 @@ class Store {
       this.view = new MapView({
         container: mapViewDiv,
         center: this.viewConfig.center,
-        zoom: this.viewConfig.zoom
+        zoom: this.viewConfig.zoom,
+        //spatialReference: SpatialReference.WGS84
+        //spatialReference: new SpatialReference({ wkid: 4326 })
       })
 
       if(this.mapId){

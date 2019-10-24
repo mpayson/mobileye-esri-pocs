@@ -20,6 +20,7 @@ const getRenderer = (field, stops) => ({
 const safetyConfig = {
   //layerItemId: '534f26d211154527b31c976ea6b5eafe',
   layerItemId: '09faf499d6e6475f92bcbd68e68f8bbd',
+  webmapId: '906b58f399944774a29e05d3d24a939b',
   initialRendererField: 'eventvalue',
   renderers: {
     'eventvalue': getRenderer('eventvalue', [1,2.26,3.5,4.9,6.3]),
