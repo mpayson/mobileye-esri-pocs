@@ -11,6 +11,7 @@ import LayerPanel from './LayerPanel';
 import RoutePanel from './RoutePanel';
 import SafetyStore from './SafetyStore';
 import safetyConfig from './SafetyConfig';
+import BookmarkPanel from '../components/BookmarkPanel';
 
 const { Header, Content, Sider } = Layout;
 
@@ -93,7 +94,7 @@ const SafetyApp = observer(class App extends React.Component {
         panel = <LayerPanel store={this.store}/>;
         break;
       case 'Saved Locations':
-        panel = <h1>Here you can see interesting locations you saved in the past!</h1>;
+        panel = <BookmarkPanel store={this.store}/>
         break;
       case 'Route':
         panel = <RoutePanel store={this.store}/>

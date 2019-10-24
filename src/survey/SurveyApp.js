@@ -93,7 +93,7 @@ const SurveyApp = observer(class App extends React.Component {
       case 'Histograms':
         panel = <ChartPanel store={this.store}/>
         break;
-      case 'Bookmarks':
+      case 'Saved Locations':
         panel = <BookmarkPanel store={this.store}/>
         break;
       case 'About':
@@ -140,9 +140,9 @@ const SurveyApp = observer(class App extends React.Component {
                 <Icon component={MenuHistogramIcon} />
                 <span>Histograms</span>
               </Menu.Item>
-              <Menu.Item key="Bookmarks">
+              <Menu.Item key="Saved Locations">
                 <Icon component={MenuBookmarkIcon} />
-                <span>Bookmarks</span>
+                <span>Saved Locations</span>
               </Menu.Item>
               <Menu.Item key="About">
                 <Icon component={MenuInformationIcon} />
