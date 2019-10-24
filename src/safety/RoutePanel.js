@@ -89,7 +89,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         <Alert
         style={{marginBottom: "10px"}}
         message="Unrealistic Results"
-        description="Who wants to drive this much? Close this alert to reset"
+        description="Time difference is to high."
         type="warning"
         onClose={this.closeAlert}
         afterClose={this.afterCloseAlert}
@@ -148,7 +148,12 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         <Divider/>
         {alert}
         <Card
-          title={<IndicatorTitle title="Travel Time" value={store.safetyTimeDelta}/>}
+          title={<IndicatorTitle title="Travel Risk Score Change" value={store.safetyScoreDelta}/>}
+          size="small"
+          type="inner">
+        </Card>
+        <Card
+          title={<IndicatorTitle title="Travel Time Change" value={store.safetyTimeDelta}/>}
           size="small"
           style={{marginBottom: '15px'}}>
           <Statistic
@@ -166,22 +171,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
             suffix="min"
           />
         </Card>
-        <Card
-          title={<IndicatorTitle title="Travel Safety Score" value={store.safetyScoreDelta}/>}
-          size="small">
-          <Statistic
-            title="Without accounting for risk"
-            value={store.stdTravelScore ? store.stdTravelScore : ' - - '}
-            precision={2}
-            prefix={<Icon type="minus" style={{color: 'rgb(94, 43, 255)'}}/>}
-          />
-          <Statistic
-            title="Accounting for risk"
-            value={store.safetyTravelScore ? store.safetyTravelScore : ' - - '}
-            precision={2}
-            prefix={<Icon type="minus" style={{color: "rgb(227, 69, 143)"}}/>}
-          />
-        </Card>
+
       </>
     ) 
   }
