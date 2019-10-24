@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {observer} from 'mobx-react';
 import {transformQueryToRechartSeries} from '../../utils/Utils';
 import {
-  BarChart, Bar, XAxis, YAxis, Text
+  BarChart, Bar, XAxis, YAxis
 } from 'recharts';
 
 

@@ -34,9 +34,11 @@ import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 // update to map
 
 const surveyConfig = {
-  layerItemId: 'e9b7494a7e1b4aa68409903281877dac',
-  // webmapId: 'f02f0c6b1e2f4b5d82d1f268fa5da767',
-  webmapId: '866a926293964805b32fc8793bc8c2ef',
+  
+  layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
+  //webmapId: '2a9a1368fa224a239afd92376dab0276',
+  webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
+  // webmapId: '203fea83e5c041afa0ab9a84536cf9c4',
   initialRendererField: 'all',
   renderers: {
     'all': {
@@ -98,14 +100,14 @@ const surveyConfig = {
   }
   },
   filters: [
-    {name: 'system_type', type: 'multiselect', params: {}},
-    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {}},
-    {name: 'map_version', type: 'select', params: {}},
+    {name: 'system_type', type: 'multiselect', params: {dynamic: true}},
+    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true}},
+    {name: 'map_version', type: 'select', params: {dynamic: true}},
   ],
   charts: [{
     id: 'system_type_label',
     type: 'bar',
-    title: 'My Amazing Title',
+    title: 'Landmark type',
     xField: 'system_type_label',
     yField: 'countOFsystem_type',
     // see here
@@ -123,7 +125,7 @@ const surveyConfig = {
         "outStatisticFieldName":"countOFsystem_type",
         "statisticType":"count"
       }]
-    },
+      },
     resultTransform: result => {
       if(!result || !result.features || result.features.length < 1) return result;
       const field = result.fields.find(f => f.name === 'system_type');
@@ -142,10 +144,48 @@ const surveyConfig = {
       result.features = newFeatures;
       return result;
     }
-  }],
-  histograms: [
-    {name: 'height', withFilter : true, params: {isLogarithmic: false, log: true}},
-  ],
+  },
+  {
+    id: 'specific_type_label',
+    type: 'bar',
+    title: 'Traffic sign type',
+    xField: 'specific_type_label',
+    yField: 'countOFspecific_type',
+    // see here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
+    // and here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
+    // use "order by" parameter or "resultTransform" to sort
+   queryDefinition: {
+        where: "system_type=0 or system_type=1 or system_type=3 or system_type=5 or system_type=6",
+        outFields: "*",
+        orderByFields: "countOFspecific_type",
+        groupByFieldsForStatistics: "specific_type",
+        outStatistics: [{
+          "onStatisticField":"specific_type",
+          "outStatisticFieldName":"countOFspecific_type",
+          "statisticType":"count"
+      }]
+    },
+    resultTransform: result => {
+      if(!result || !result.features || result.features.length < 1) return result;
+      const field = result.fields.find(f => f.name === 'specific_type');
+      const domainMap = getDomainMap(field.domain);
+      const newFeatures = result.features.map(f => {  
+        const attributes = f.attributes;
+        const fieldValue = f.attributes['specific_type'];
+        const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
+        return {
+          attributes: {
+            ...attributes,
+            specific_type_label: fieldDomain
+          }
+        }
+      });
+      result.features = newFeatures;
+      return result;
+    }
+  }], 
   popupTemplate: {
     title: "{expression/title-prefix} {system_type} {expression/title_suffix}",
     content: "Type: <b>{specific_type}</b><br>" +
@@ -170,8 +210,8 @@ const surveyConfig = {
 ]
   },
   viewConfig: { 
-    center: [34.938206,31.899727],
-    zoom: 12
+    center: [-73.974051, 40.762746],
+    zoom: 16
   }
 }
 

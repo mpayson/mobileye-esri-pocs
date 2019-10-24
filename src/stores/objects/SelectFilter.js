@@ -9,6 +9,13 @@ class SelectFilter extends Filter{
   selectValue = null;
   domainMap = new Map();
 
+  _setFromQueryResults(results){
+    results.features.map(f => 
+      f.attributes[this.field]
+    ).sort();
+    this.loaded = true;
+  }
+
   load(featureLayer){
     super.load(featureLayer);
     const domain = featureLayer.getFieldDomain(this.field);
@@ -19,12 +26,21 @@ class SelectFilter extends Filter{
       where: "1=1",
       returnDistinctValues: true,
       outFields: [this.field]
-    }).then(res => {
-      this.options = res.features.map(f => 
-        f.attributes[this.field]
-      ).sort();
-      this.loaded = true;
-    });
+    }).then(this._setFromQueryResults);
+  }
+
+  // execute client-side query based on what's currently available
+  refresh(featureLayer, featureLayerView, where="1=1"){
+    super.load(featureLayer);
+    const domain = featureLayer.getFieldDomain(this.field);
+    if(domain){
+      this.domainMap = getDomainMap(domain);
+    }
+    featureLayerView.queryFeatures({
+      where,
+      returnDistinctValues: true,
+      outFields: [this.field]
+    }).then(this._setFromQueryResults);
   }
 
   onValueChange(v){
@@ -57,6 +73,7 @@ decorate(SelectFilter, {
   where: computed,
   onValueChange: action.bound,
   clear: action.bound,
+  _setFromQueryResults: action.bound,
   optionSet: computed
 })
 
