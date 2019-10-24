@@ -86,9 +86,10 @@ const SafetyApp = observer(class App extends React.Component {
   }
 
   render() {
+
     let panel;
     switch(this.state.navKey){
-      case 'Layers':
+      case 'Data Layers':
         panel = <LayerPanel store={this.store}/>;
         break;
       case 'Saved Locations':
@@ -96,9 +97,6 @@ const SafetyApp = observer(class App extends React.Component {
         break;
       case 'Route':
         panel = <RoutePanel store={this.store}/>
-        break;
-      case 'About':
-        panel = <h1>This is a slick app! Thanks Max!</h1>;
         break;
       default:
         panel = null;
@@ -122,7 +120,7 @@ const SafetyApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Road Risk Lab</h1>
+          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Road Risk Score</h1>
           {signin}
         </Header>
         <Layout>
@@ -133,9 +131,9 @@ const SafetyApp = observer(class App extends React.Component {
               theme="dark"
               selectedKeys={[this.state.navKey]}
               onClick={this.onSelect}>
-              <Menu.Item key="Layers">
+              <Menu.Item key="Data Layers">
                 <Icon component={MenuFilterIcon} />
-                <span>Layers</span>
+                <span>Data Layers</span>
               </Menu.Item>
               <Menu.Item key="Route">
                 <Icon component={MenuRouteFromIcon} />
@@ -162,6 +160,7 @@ const SafetyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
+                width={320}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}

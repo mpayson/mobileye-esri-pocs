@@ -80,11 +80,14 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
       ? 'Close all'
       : 'Open all';
 
+    const defaultActive = this.props.defaultActive || false;
+
     return (
       <PanelCard
         title="Filter"
         icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
-        collapsible={true}>
+        collapsible={true}
+        defaultActive={defaultActive}>
           <Collapse
             activeKey={this.state.activeKeys}
             bordered={false}
