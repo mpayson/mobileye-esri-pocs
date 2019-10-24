@@ -4,11 +4,6 @@ import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import { message } from 'antd';
 
-message.config({
-  // top: "calc(100vh - 70px)"
-  top: "75px"
-});
-
 let pUtils;
 
 class Store {
@@ -132,6 +127,9 @@ class Store {
   }
 
   load(mapViewDiv){
+    message.config({
+        top: 400,
+    });
     message.loading('Loading data.', 0);
     let renderer;
     return loadModules([
