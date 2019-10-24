@@ -132,7 +132,7 @@ class Store {
   }
 
   load(mapViewDiv){
-    message.loading('Loading map!', 0);
+    message.loading('Loading data.', 0);
     let renderer;
     return loadModules([
       'esri/WebMap',
