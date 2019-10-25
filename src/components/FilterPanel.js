@@ -82,6 +82,9 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
 
     const defaultActive = this.props.defaultActive || false;
 
+    const activeKeys = this.props.activeFilterKeys || this.state.activeKeys;
+    const onAccordionChange = this.props.onFilterAccordionChange || this.onFilterAccordionChange;
+
     return (
       <PanelCard
         title="Filter"
@@ -89,10 +92,10 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
         collapsible={true}
         defaultActive={defaultActive}>
           <Collapse
-            activeKey={this.state.activeKeys}
+            activeKey={activeKeys}
             bordered={false}
             expandIconPosition='right'
-            onChange={this.onAccordionChange}>
+            onChange={onAccordionChange}>
             {filterViews}
           </Collapse>
           <div style={{display: "inline-block", width: "100%", padding: "10px 15px 0px 5px"}}>

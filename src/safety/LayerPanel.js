@@ -20,18 +20,41 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
   nonMainRenderer = 'harsh_cornering_ratio';
 
+  state = {
+    activeKeys: []
+  }
+
+  _updateAccordionForRender = (rendererField) => {
+    if(this.state.activeKeys.includes(rendererField)) return;
+    const nextKeys = this.state.activeKeys.slice();
+    nextKeys.push(rendererField);
+    this.setState({
+      activeKeys: nextKeys
+    })
+  }
+
   onRadioChange = (e) => {
     let renderer = e.target.value;
     this.nonMainRenderer = renderer;
     this.props.store.setRendererField(renderer);
+    this._updateAccordionForRender(renderer);
   }
 
   onSwitchChange = (isChecked) => {
     if(isChecked){
       this.props.store.setRendererField('eventvalue');
+      this._updateAccordionForRender('eventvalue');
     } else {
       this.props.store.setRendererField(this.nonMainRenderer);
+      this._updateAccordionForRender(this.nonMainRenderer);
     }
+  }
+
+  onFilterAccordionClick = (keys) => {
+    this.setState({
+      activeKeys: keys
+    });
+    console.log(keys);
   }
 
   render(){
@@ -73,7 +96,11 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
             {radioOptions}
           </Radio.Group>
         </PanelCard>
-        <FilterPanel store={this.props.store}/>
+        <FilterPanel
+          store={this.props.store}
+          defaultActive={true}
+          activeFilterKeys={this.state.activeKeys}
+          onFilterAccordionChange={this.onFilterAccordionClick}/>
       </>
     )
   }

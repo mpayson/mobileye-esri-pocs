@@ -5,6 +5,10 @@ import options from '../config/esri-loader-options';
 import { message } from 'antd';
 
 let pUtils;
+// can we keep this at the top? I find it intrusive in the middle?
+message.config({
+  top: 75,
+});
 
 class Store {
 
@@ -127,9 +131,6 @@ class Store {
   }
 
   load(mapViewDiv){
-    message.config({
-        top: 400,
-    });
     message.loading('Loading data.', 0);
     let renderer;
     return loadModules([

@@ -3,6 +3,7 @@ body {
   overscroll-behavior-x: none;
 }
 
+/* Esri Overrides */
 .esri-widget--button,
 .esri-search__input,
 .esri-legend,
@@ -26,4 +27,15 @@ body {
 .esri-popup {
   background: white;
   border-radius: 2px;
+}
+
+/* Antd Overrides */
+
+.ant-drawer-left.ant-drawer-open .ant-drawer-content-wrapper{
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.ant-drawer-header {
+  background: #f5f5f5 !important;
 }

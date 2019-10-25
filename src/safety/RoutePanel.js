@@ -150,12 +150,23 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         <Card
           title={<IndicatorTitle title="Travel Risk Score Change" value={store.safetyScoreDelta}/>}
           size="small"
-          type="inner">
+          style={{marginBottom: '15px'}}>
+          {/* <Statistic
+            title="Without accounting for risk"
+            value={store.stdTravelScore ? store.stdTravelScore : ' - - '}
+            precision={2}
+            prefix={<Icon type="minus" style={{color: 'rgb(94, 43, 255)'}}/>}
+          />
+          <Statistic
+            title="Accounting for risk"
+            value={store.safetyTravelScore ? store.safetyTravelScore : ' - - '}
+            precision={2}
+            prefix={<Icon type="minus" style={{color: "rgb(227, 69, 143)"}}/>}
+          /> */}
         </Card>
         <Card
           title={<IndicatorTitle title="Travel Time Change" value={store.safetyTimeDelta}/>}
-          size="small"
-          style={{marginBottom: '15px'}}>
+          size="small">
           <Statistic
             title="Without accounting for risk"
             value={store.stdTravelTime ? store.stdTravelTime : ' - - '}
