@@ -76,20 +76,26 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
       )
     });
 
-    const toggleButtonText = this.state.activeKeys.length > 0
-      ? 'Close all'
-      : 'Open all';
-
     const defaultActive = this.props.defaultActive || false;
 
     const activeKeys = this.props.activeFilterKeys || this.state.activeKeys;
     const onAccordionChange = this.props.onFilterAccordionChange || this.onFilterAccordionChange;
+
+    const panelOpen = this.props.panelOpen === undefined ? undefined : this.props.panelOpen;
+    const onPanelChange = this.props.onPanelChange ? this.props.onPanelChange : undefined;
+    const onToggleClick = this.props.onFilterToggleAllClick ? this.props.onFilterToggleAllClick : this.onToggleClick;
+
+    const toggleButtonText = activeKeys.length > 0
+    ? 'Close all'
+    : 'Open all';
 
     return (
       <PanelCard
         title="Filter"
         icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
         collapsible={true}
+        open={panelOpen}
+        onChange={onPanelChange}
         defaultActive={defaultActive}>
           <Collapse
             activeKey={activeKeys}
@@ -100,7 +106,7 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
           </Collapse>
           <div style={{display: "inline-block", width: "100%", padding: "10px 15px 0px 5px"}}>
             <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
-            <Button size="small" onClick={this.onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
+            <Button size="small" onClick={onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
           </div>
       </PanelCard>
 

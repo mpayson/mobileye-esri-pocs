@@ -21,15 +21,17 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   nonMainRenderer = 'harsh_cornering_ratio';
 
   state = {
-    activeKeys: []
+    filterActiveKeys: [],
+    filterPanelOpen: false
   }
 
   _updateAccordionForRender = (rendererField) => {
-    if(this.state.activeKeys.includes(rendererField)) return;
-    const nextKeys = this.state.activeKeys.slice();
+    if(this.state.filterActiveKeys.includes(rendererField)) return;
+    const nextKeys = this.state.filterActiveKeys.slice();
     nextKeys.push(rendererField);
     this.setState({
-      activeKeys: nextKeys
+      filterActiveKeys: nextKeys,
+      filterPanelOpen: true
     })
   }
 
@@ -52,9 +54,28 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
   onFilterAccordionClick = (keys) => {
     this.setState({
-      activeKeys: keys
+      filterActiveKeys: keys
     });
-    console.log(keys);
+  }
+
+  onFilterToggleAllClick = () => {
+    if(this.state.filterActiveKeys.length > 0){
+      this.setState({
+        filterActiveKeys: []
+      });
+    } else {
+      const keys = this.props.store.filters.map(f => f.field);
+      this.setState({
+        filterActiveKeys: keys
+      })
+    }
+  }
+
+  onFilterPanelChange = () => {
+    const isOpen = !this.state.filterPanelOpen;
+    this.setState({
+      filterPanelOpen: isOpen
+    })
   }
 
   render(){
@@ -98,9 +119,11 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         </PanelCard>
         <FilterPanel
           store={this.props.store}
-          defaultActive={true}
-          activeFilterKeys={this.state.activeKeys}
-          onFilterAccordionChange={this.onFilterAccordionClick}/>
+          panelOpen={this.state.filterPanelOpen}
+          onPanelChange={this.onFilterPanelChange}
+          activeFilterKeys={this.state.filterActiveKeys}
+          onFilterAccordionChange={this.onFilterAccordionClick}
+          onFilterToggleAllClick={this.onFilterToggleAllClick}/>
       </>
     )
   }
