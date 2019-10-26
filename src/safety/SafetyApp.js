@@ -149,8 +149,8 @@ const SafetyApp = observer(class App extends React.Component {
         </Sider>
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
-            <h1 style={{color: "#2b4269", float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
-            <div style={{color: "#2b4269", float: "left"}}> (Data presented from Sep 1st - October 22nd)</div>
+            <h1 style={{float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
+            <div style={{float: "left"}}> (Data presented from Sep 1st - October 22nd)</div>
             {signin}
           </Header>
           <Content>
@@ -168,7 +168,7 @@ const SafetyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
-                width={320}
+                width={340}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", minHeight: "calc(100% - 55px)"}}

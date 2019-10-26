@@ -1,5 +1,10 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
-import { MinMaxFilter, MultiSelectFilter, SelectFilter } from './Filters';
+import {
+  MinMaxFilter,
+  MultiSelectFilter,
+  SelectFilter,
+  QuantileFilter
+} from './Filters';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import { message } from 'antd';
@@ -30,6 +35,8 @@ class Store {
           return new MultiSelectFilter(f.name, f.params);
         case 'select':
           return new SelectFilter(f.name, f.params);
+        case 'quantile':
+          return new QuantileFilter(f.name, f.params);
         default:
           throw new Error("Unknown filter type!")
       }
@@ -42,6 +49,7 @@ class Store {
     this.popupTemplate = storeConfig.popupTemplate;
     this.layerLoaded = false;
     this.viewConfig = storeConfig.viewConfig;
+    this.outFields = storeConfig.outFields;
   }
   // to destroy map view, need to do `view.container = view.map = null;`
   // should probably include this in the dismount
@@ -190,6 +198,7 @@ class Store {
         l.portalItem.id === this.layerId
       );
       if(renderer) this.lyr.renderer = renderer;
+      if(this.outFields) this.lyr.outFields = this.outFields;
       if(this.popupTemplate) this.lyr.popupTemplate = this.popupTemplate;
       this._loadLayers();
       return this.view;

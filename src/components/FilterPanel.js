@@ -17,9 +17,11 @@ const getFilterView = (filter) => {
         ? <HistMinMaxSlideFilter store={f} key={f.field}/>
         : <MinMaxSlideFilter store={f} key={f.field} lowerBoundLabel={f.lowerBoundLabel} upperBoundLabel={f.upperBoundLabel}/>
     case 'multiselect':
-      return <SelectFilter store={f} key={f.field} mode="multiple"/>
+      return <SelectFilter store={f} key={f.field} mode="multiple" style={f.style}/>
     case 'select':
-      return <SelectFilter store={f} key={f.field}/>
+      return <SelectFilter store={f} key={f.field} style={f.style}/>
+    case 'quantile':
+      return <SelectFilter store={f} key={f.field} mode="multiple" style={f.style}/>
     default:
       throw new Error("Unknown filter type!");
   }
@@ -59,12 +61,14 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
     const filters = this.props.store.filters;
     const filterViews = filters.map(f => {
       const alias = f.isActive
-        ? <span style={{color: '#1890ff'}}><b>{f.alias}</b></span>
+        ? <span style={{color: '#00abbc'}}><b>{f.alias}</b></span>
         : f.alias;
       let header = f.infoText
-        ? <> 
-            <Popover content={f.infoText}>
-              <Icon type="info-circle" style={{marginRight: "3px"}}/>
+        ? <>
+            <Popover content={f.infoText} placement="topLeft">
+              <Icon
+                type="info-circle"
+                style={{marginRight: "3px", color: f.isActive ? '#00abbc' : undefined}}/>
             </Popover>
             {alias}
           </>
@@ -79,7 +83,7 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
     const defaultActive = this.props.defaultActive || false;
 
     const activeKeys = this.props.activeFilterKeys || this.state.activeKeys;
-    const onAccordionChange = this.props.onFilterAccordionChange || this.onFilterAccordionChange;
+    const onAccordionChange = this.props.onFilterAccordionChange || this.onAccordionChange;
 
     const panelOpen = this.props.panelOpen === undefined ? undefined : this.props.panelOpen;
     const onPanelChange = this.props.onPanelChange ? this.props.onPanelChange : undefined;
@@ -97,6 +101,10 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
         open={panelOpen}
         onChange={onPanelChange}
         defaultActive={defaultActive}>
+        <div style={{display: "inline-block", width: "100%", padding: "0px 15px 10px 5px"}}>
+          <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
+          <Button size="small" onClick={onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
+        </div>
           <Collapse
             activeKey={activeKeys}
             bordered={false}
@@ -104,10 +112,6 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
             onChange={onAccordionChange}>
             {filterViews}
           </Collapse>
-          <div style={{display: "inline-block", width: "100%", padding: "10px 15px 0px 5px"}}>
-            <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
-            <Button size="small" onClick={onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
-          </div>
       </PanelCard>
 
     )

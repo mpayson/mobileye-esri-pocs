@@ -148,9 +148,11 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         <Divider/>
         {alert}
         <Card
-          title={<IndicatorTitle title="Travel Risk Score Change" value={store.safetyScoreDelta}/>}
           size="small"
           style={{marginBottom: '15px'}}>
+          <span style={{color: "rgba(0, 0, 0, 0.85)", fontWeight: "500", fontSize: "14px"}}>
+            <IndicatorTitle title="Travel Risk Score Change" value={store.safetyScoreDelta}/>
+          </span>
           {/* <Statistic
             title="Without accounting for risk"
             value={store.stdTravelScore ? store.stdTravelScore : ' - - '}

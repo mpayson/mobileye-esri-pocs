@@ -17,13 +17,39 @@ const getRenderer = (field, stops,labels) => ({
   }]
 })
 
+
 const safetyConfig = {
   //layerItemId: '534f26d211154527b31c976ea6b5eafe',
   layerItemId: '09faf499d6e6475f92bcbd68e68f8bbd',
   webmapId: '906b58f399944774a29e05d3d24a939b',
   initialRendererField: 'eventvalue',
   renderers: {
-    'eventvalue': getRenderer('eventvalue', [1,2.26,3.5,4.9,6.3],['Low','Medium','High']),
+    'eventvalue': {
+      _type: "jsapi",
+      type: 'class-breaks',
+      field: 'eventvalue',
+      classBreakInfos: [{
+        minValue: 0,
+        maxValue: 2.499,
+        symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255]},
+        label: "Low"
+      }, {
+        minValue: 2.5,
+        maxValue: 5.6453,
+        symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255]},
+        label: "Average"
+      }, {
+        minValue: 5.6454,
+        maxValue: 12.499,
+        symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255]},
+        label: "High"
+      }, {
+        minValue: 12.5,
+        maxValue: 1000,
+        symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255]},
+        label: "Very High"
+      }]
+    },
     'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High']),
     'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14],['Low','Medium','High']),
     'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High']),
@@ -33,13 +59,31 @@ const safetyConfig = {
   },
   filters: [{
     name:'eventvalue',
-    type: 'minmax',
+    type: 'quantile',
     params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "Road risk score based on the variables below."
+      quantiles: [{
+        min: 0,
+        max: 2.5,
+        // label: "Low (30%)",
+        label: "Low"
+      }, {
+        min: 2.5,
+        max: 5.6453,
+        // label: "Average (40%)",
+        label: "Average"
+      }, {
+        min: 5.6453,
+        max: 12.5,
+        // label: "High (20%)"
+        label: "High"
+      }, {
+        min: 12.5,
+        max: 1000,
+        // label: "Very High (10%)"
+        label: "Very High"
+      }],
+      info: "Road risk score based on the variables below.",
+      style: "buttons"
     }
   },{
     name: 'harsh_cornering_ratio',
@@ -102,6 +146,7 @@ const safetyConfig = {
       info: "Average speed of the respective segment. (Does not contribute to risk score on its own)."
     }
   }],
+  // outFields: ["Shape__Length"],
   popupTemplate: {
     title: "Road Segment Information",
     content: [{
