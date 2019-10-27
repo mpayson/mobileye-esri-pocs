@@ -19,7 +19,7 @@ const getRenderer = (field, stops,labels) => ({
 
 const safetyConfig = {
   //layerItemId: '534f26d211154527b31c976ea6b5eafe',
-  layerItemId: '09faf499d6e6475f92bcbd68e68f8bbd',
+  layerItemId: 'e37cc788804e4303b6e7898481798691',
   webmapId: '906b58f399944774a29e05d3d24a939b',
   // webmapId: '58d18243967d40e9a25db1f02d3652b0',
   initialRendererField: 'eventvalue',
@@ -55,7 +55,9 @@ const safetyConfig = {
     'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High']),
     'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22],['Low','Medium','High']),
     'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High']),
-    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70'])
+    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70']),
+    'pcw': getRenderer('pcw', [0,1.86,3.7,5.56,7.4],['Low','Medium','High']),
+    'fcw': getRenderer('fcw', [0,1.86,3.7,5.56,7.4],['Low','Medium','High'])
   },
   filters: [{
     name:'eventvalue',
@@ -145,11 +147,31 @@ const safetyConfig = {
       upperBoundLabel: '140',
       info: "Average speed of the respective segment. (Does not contribute to risk score on its own)."
     }
+  },{
+    name: 'pcw',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "Passenger collusion warning."
+    }
+  },{
+    name: 'fcw',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "Forward collusion warning"
+    }
   }],
   hasCustomTooltip: true,
   outFields: [
     'eventvalue', 'harsh_cornering_ratio', 'harsh_acc_ratio', 'pedestrians_density',
-    'bicycles_density', 'speeding_ratio', 'avarge_speed'
+    'bicycles_density', 'speeding_ratio', 'avarge_speed','pcw','fcw'
   ], 
   popupTemplate: null,
   //for n
