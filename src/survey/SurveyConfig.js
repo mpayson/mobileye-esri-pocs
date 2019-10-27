@@ -35,15 +35,17 @@ import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 
 const surveyConfig = {
   
-  layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
-  webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
-  // webmapId: '203fea83e5c041afa0ab9a84536cf9c4',
+  // layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
+  // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
+  layerItemId: '5d31985daf4c403ba6786c02a52ea715',
+  webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
   initialRendererField: 'all',
   renderers: {
     'all': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
-      field: "icon",
+      //field: "icon",
+      field: "system_type_group",
       defaultSymbol: {type: "simple-marker", color: "blue"},
       visualVariables: [{
         type: "opacity",
@@ -61,40 +63,47 @@ const surveyConfig = {
           maxDataValue: 1.0,
           minSize: 0,
           maxSize: 30
-      }],
+      }
+      ],
       uniqueValueInfos: [
-        {value: 'sign10', symbol: {type: "picture-marker", url: sign10Image}},
-        {value: 'sign20', symbol: {type: "picture-marker", url: sign20Image}},
-        {value: 'sign30', symbol: {type: "picture-marker", url: sign30Image}},
-        {value: 'sign40', symbol: {type: "picture-marker", url: sign40Image}},
-        {value: 'sign50', symbol: {type: "picture-marker", url: sign50Image}},
-        {value: 'sign60', symbol: {type: "picture-marker", url: sign60Image}},
-        {value: 'sign70', symbol: {type: "picture-marker", url: sign70Image}},
-        {value: 'sign80', symbol: {type: "picture-marker", url: sign80Image}},
-        {value: 'sign90', symbol: {type: "picture-marker", url: sign90Image}},
-        {value: 'sign100', symbol: {type: "picture-marker", url: sign100Image}},
-        {value: 'sign110', symbol: {type: "picture-marker", url: sign110Image}},
-        {value: 'sign120', symbol: {type: "picture-marker", url: sign120Image}},
-        {value: 'sign130', symbol: {type: "picture-marker", url: sign130Image}},
-        {value: 'sign140', symbol: {type: "picture-marker", url: sign140Image}},
-        {value: 'CIRCULAR_NO_SPEED', symbol: {type: "picture-marker", url: circularSignNoSpeedImage}},
-        {value: 'WARNING', symbol: {type: "picture-marker", url: warningImage}},
-        {value: 'CONSTRUCTION', symbol: {type: "picture-marker", url: constructionImage}},
-        {value: 'RECTANGULAR', symbol: {type: "picture-marker", url: rectangularSignImage}},
-        {value: 'TRAFFIC_LIGHTS', symbol: {type: "picture-marker", url: trafficLightImage}},
-        {value: 'DIAMOND', symbol: {type: "picture-marker", url: diamondImage}},
-        {value: 'YIELD', symbol: {type: "picture-marker", url: yieldImage}},
-        {value: 'ROAD_MARKINGS_ARROWS', symbol: {type: "picture-marker", url: roadArrowImage}},
-        {value: 'ROAD_MARKINGS_STOPLINE', symbol: {type: "picture-marker", url: roadStoplineImage}},
-        {value: 'DOT1', symbol: {type: "simple-marker",color: "white"}},
-        {value: 'HORIZONTAL', symbol: {type: "picture-marker", url: overheadStructureImage}},
-        {value: 'REFLECTORS', symbol: {type: "picture-marker", url: reflectorImage}},
-        {value: 'CROSSING', symbol: {type: "picture-marker", url: roadCrossingImage}},
-        {value: 'MANHOLE_COVER', symbol: {type: "picture-marker", url: manholeImage}},
-        {value: 'DOT2', symbol: {type: "simple-marker",color: "black"}},
-        {value: 'UNRECOGNIZED_CIRCLE', symbol:  {type: "picture-marker", url: unrecognizedCircleImage}},
-        {value: 'UNRECOGNIZED_RECRANGLE', symbol:  {type: "picture-marker", url: unrecognizedRectImage}}
-
+        // {value: 'sign10', symbol: {type: "picture-marker", url: sign10Image}},
+        // {value: 'sign20', symbol: {type: "picture-marker", url: sign20Image}},
+        // {value: 'sign30', symbol: {type: "picture-marker", url: sign30Image}},
+        // {value: 'sign40', symbol: {type: "picture-marker", url: sign40Image}},
+        // {value: 'sign50', symbol: {type: "picture-marker", url: sign50Image}},
+        // {value: 'sign60', symbol: {type: "picture-marker", url: sign60Image}},
+        // {value: 'sign70', symbol: {type: "picture-marker", url: sign70Image}},
+        // {value: 'sign80', symbol: {type: "picture-marker", url: sign80Image}},
+        // {value: 'sign90', symbol: {type: "picture-marker", url: sign90Image}},
+        // {value: 'sign100', symbol: {type: "picture-marker", url: sign100Image}},
+        // {value: 'sign110', symbol: {type: "picture-marker", url: sign110Image}},
+        // {value: 'sign120', symbol: {type: "picture-marker", url: sign120Image}},
+        // {value: 'sign130', symbol: {type: "picture-marker", url: sign130Image}},
+        // {value: 'sign140', symbol: {type: "picture-marker", url: sign140Image}},
+        // {value: 'CIRCULAR_NO_SPEED', symbol: {type: "picture-marker", url: circularSignNoSpeedImage}},
+        // {value: 'WARNING', symbol: {type: "picture-marker", url: warningImage}},
+        // {value: 'CONSTRUCTION', symbol: {type: "picture-marker", url: constructionImage}},
+        // {value: 'RECTANGULAR', symbol: {type: "picture-marker", url: rectangularSignImage}},
+        // {value: 'TRAFFIC_LIGHTS', symbol: {type: "picture-marker", url: trafficLightImage}},
+        // {value: 'DIAMOND', symbol: {type: "picture-marker", url: diamondImage}},
+        // {value: 'YIELD', symbol: {type: "picture-marker", url: yieldImage}},
+        // {value: 'ROAD_MARKINGS_ARROWS', symbol: {type: "picture-marker", url: roadArrowImage}},
+        // {value: 'ROAD_MARKINGS_STOPLINE', symbol: {type: "picture-marker", url: roadStoplineImage}},
+        // {value: 'DOT1', symbol: {type: "simple-marker",color: "white"}},
+        // {value: 'HORIZONTAL', symbol: {type: "picture-marker", url: overheadStructureImage}},
+        // {value: 'REFLECTORS', symbol: {type: "picture-marker", url: reflectorImage}},
+        // {value: 'CROSSING', symbol: {type: "picture-marker", url: roadCrossingImage}},
+        // {value: 'MANHOLE_COVER', symbol: {type: "picture-marker", url: manholeImage}},
+        // {value: 'DOT2', symbol: {type: "simple-marker",color: "black"}},
+        // {value: 'UNRECOGNIZED_CIRCLE', symbol:  {type: "picture-marker", url: unrecognizedCircleImage}},
+        // {value: 'UNRECOGNIZED_RECRANGLE', symbol:  {type: "picture-marker", url: unrecognizedRectImage}}
+        
+        
+        {value: 0, symbol: {type: "simple-marker",color: "red"}},
+        {value: 1, symbol: {type: "simple-marker",color: "purple"}},
+        {value: 2, symbol: {type: "simple-marker",color: "blue"}},
+        {value: 3, symbol: {type: "simple-marker",color: "green"}},
+        {value: 4, symbol: {type: "simple-marker",color: "yellow"}},
     ]
   }
   },
@@ -103,10 +112,52 @@ const surveyConfig = {
     {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true}},
     {name: 'map_version', type: 'select', params: {dynamic: true}},
   ],
-  charts: [{
+  charts: [
+  {
+    id: 'system_type_group_label',
+    type: 'bar',
+    title: 'Landmark Type',
+    xField: 'system_type_group_label',
+    yField: 'countOFsystem_type_group',
+    // see here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
+    // and here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
+    // use "order by" parameter or "resultTransform" to sort
+   queryDefinition: {
+        where: "1=1",
+        outFields: "*",
+        orderByFields: "countOFsystem_type_group",
+        groupByFieldsForStatistics: "system_type_group",
+        outStatistics: [{
+          "onStatisticField":"system_type_group",
+          "outStatisticFieldName":"countOFsystem_type_group",
+          "statisticType":"count"
+      }]
+    },
+    resultTransform: result => {
+      if(!result || !result.features || result.features.length < 1) return result;
+      const field = result.fields.find(f => f.name === 'system_type_group');
+      const domainMap = getDomainMap(field.domain);
+      const newFeatures = result.features.map(f => {  
+        const attributes = f.attributes;
+        const fieldValue = f.attributes['system_type_group'];
+        const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
+        return {
+          attributes: {
+            ...attributes,
+            system_type_group_label: fieldDomain
+          }
+        }
+      });
+      result.features = newFeatures;
+      return result;
+    }
+  },
+  {
     id: 'system_type_label',
     type: 'bar',
-    title: 'Landmark type',
+    title: 'Specific Landmark type',
     xField: 'system_type_label',
     yField: 'countOFsystem_type',
     // see here
@@ -143,70 +194,60 @@ const surveyConfig = {
       result.features = newFeatures;
       return result;
     }
-  },
-  {
-    id: 'specific_type_label',
-    type: 'bar',
-    title: 'Traffic sign type',
-    xField: 'specific_type_label',
-    yField: 'countOFspecific_type',
-    // see here
-    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
-    // and here
-    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
-    // use "order by" parameter or "resultTransform" to sort
-   queryDefinition: {
-        where: "system_type=0 or system_type=1 or system_type=3 or system_type=5 or system_type=6",
-        outFields: "*",
-        orderByFields: "countOFspecific_type",
-        groupByFieldsForStatistics: "specific_type",
-        outStatistics: [{
-          "onStatisticField":"specific_type",
-          "outStatisticFieldName":"countOFspecific_type",
-          "statisticType":"count"
-      }]
-    },
-    resultTransform: result => {
-      if(!result || !result.features || result.features.length < 1) return result;
-      const field = result.fields.find(f => f.name === 'specific_type');
-      const domainMap = getDomainMap(field.domain);
-      const newFeatures = result.features.map(f => {  
-        const attributes = f.attributes;
-        const fieldValue = f.attributes['specific_type'];
-        const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
-        return {
-          attributes: {
-            ...attributes,
-            specific_type_label: fieldDomain
-          }
-        }
-      });
-      result.features = newFeatures;
-      return result;
-    }
-  }], 
+  },], 
   popupTemplate: {
-    title: "{expression/title-prefix} {system_type} {expression/title_suffix}",
-    content: "Type: <b>{specific_type}</b><br>" +
+
+    title: "{expression/title-prefix} {expression/type} {expression/title_suffix}",
+    content: [{
+      type: "text",
+      text: "Type: <b>{specific_type}</b> <br>" +
              "Detected at {publish_date} (version {map_version})<br>" +
              "Size: {height} X {width} m<br>",
-    expressionInfos: [
-    {
-      name: "size_marker",
-      title: "Size marker",
-      expression: "When ($feature.landmark_type == 1, 'Diameter', 'Edge size')"
-    },
-    {
-      name: "title-prefix",
-      title: "Title Expression",
-      expression: "When($feature.comparsion_to_prev_map == 2, '<b>Missing</b>', $feature.comparsion_to_prev_map == 1, '<b>New</b>',  '')"
-    },
-    {
-      name: "title-suffix",
-      title: "Title Expression",
-      expression: "When($feature.comparsion_to_prev_map == 2, '', $feature.comparsion_to_prev_map == 1, '',  'information')"
+      expressionInfos: [
+      {
+        name: "type",
+        title: "Type",
+        expression: "When($feature.system_type_group == 0, $feature.traffic_sign_type," +
+                        "$feature.system_type_group == 1, 'Traffic Light'," +
+                        "$feature.system_type_group == 2, $feature.road_marking_type," +
+                        "$feature.system_type_group == 3, $feature.pole_type," +
+                        "$feature.system_type_group == 4, $feature.manhole_type," +
+                        "'')"
+
+      },
+      {
+        name: "title-prefix",
+        title: "Title Prefix",
+        expression: "When($feature.comparsion_to_prev_map == 2, 'Missing', $feature.comparsion_to_prev_map == 1, 'New',  '')"
+      },
+      {
+        name: "title-suffix",
+        title: "Title Suffix",
+        expression: "When(($feature.comparsion_to_prev_map == 2) ||  ($feature.comparsion_to_prev_map == 1), '',  'information')"
+      }
+      ]
     }
-]
+    // {
+    //     // You can set a media element within the popup as well. This
+    //     // can be either an image or a chart. You specify this within
+    //     // the mediaInfos. The following creates a pie chart in addition
+    //     // to two separate images. The chart is also set up to work with
+    //     // related tables. Similar to text elements, media can only be set within the content.
+    //     type: "media", // MediaContentElement
+    //     mediaInfos: [
+    //       {
+    //         title: "<b></b>",
+    //         type: "image",
+    //         caption: "sign icon",
+    //         value: {
+    //           sourceURL:
+    //             "https://www.sunset.com/wp-content/uploads/96006df453533f4c982212b8cc7882f5-800x0-c-default.jpg"
+    //         }
+    //       },
+    //     ]
+    //   },
+    // }
+    ]
   },
   viewConfig: { 
     center: [-73.974051, 40.762746],

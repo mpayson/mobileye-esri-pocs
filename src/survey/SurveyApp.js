@@ -121,7 +121,7 @@ const SurveyApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Sign Survey</h1>
+          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Streets Survey</h1>
           {signin}
         </Header>
         <Layout>
