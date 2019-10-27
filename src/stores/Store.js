@@ -22,6 +22,8 @@ class Store {
   chartResultMap = new Map();
   map = null;
   layerVisibleMap = new Map();
+  tooltipResults = null;
+  bookmarkInfo = null;
 
   constructor(appState, storeConfig){
     this.appState = appState;
@@ -50,12 +52,15 @@ class Store {
     this.layerLoaded = false;
     this.viewConfig = storeConfig.viewConfig;
     this.outFields = storeConfig.outFields;
+    this.hasCustomTooltip = storeConfig.hasCustomTooltip;
+    this.bookmarkInfos = storeConfig.bookmarkInfos;
   }
   // to destroy map view, need to do `view.container = view.map = null;`
   // should probably include this in the dismount
   destroy(){
     if(this.effectHandler) this.effectHandler();
     if(this.rendererHandler) this.rendererHandler();
+    if(this._tooltipListener) this._tooltipListener.remove();
   }
 
   loadFilters(){
@@ -89,6 +94,10 @@ class Store {
         this.layerVisibleMap.set(l.id, l.visible);
       })
 
+      if(this.hasCustomTooltip){
+        this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
+      }
+
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
@@ -104,7 +113,11 @@ class Store {
 
   _buildAutoRunEffects(){
     const onApplyFilter = pUtils.debounce(function(layerView, where){
-      layerView.filter = {where};
+      layerView.filter = {where}
+      // layerView.effect = {
+      //   filter: {where},
+      //   excludedEffect: "grayscale(50%) opacity(30%)"
+      // };
     });
     this.effectHandler = autorun(_ => {
       const where = this.where;
@@ -125,6 +138,34 @@ class Store {
           this.lyr.renderer = rendererJsonUtils.fromJSON(this.renderers[rendererField]);
         });
     })
+  }
+
+  // class to watch for mouse movement
+  // need to figure learn how best to use this debounce function
+  _onMouseMove(evt){
+
+    const handleEvt = pUtils.debounce(function(classRef, event){
+      return classRef.view.hitTest(event)
+        .then(hit => {
+          if(classRef._tooltipHighlight){
+            classRef._tooltipHighlight.remove();
+            classRef._tooltipHighlight = null;
+          }
+          const results = hit.results.filter(r => r.graphic.layer === classRef.lyr);
+          if(results.length){
+            const graphic = results[results.length - 1].graphic;
+            const screenPoint = hit.screenPoint;
+            classRef._tooltipHighlight = classRef.lyrView.highlight(graphic);
+            classRef.tooltipResults = {
+              screenPoint,
+              graphic
+            }
+          } else {
+            classRef.tooltipResults = null;
+          }
+        })
+    })
+    handleEvt(this, evt)
   }
 
   setRendererField(field){
@@ -199,7 +240,7 @@ class Store {
       );
       if(renderer) this.lyr.renderer = renderer;
       if(this.outFields) this.lyr.outFields = this.outFields;
-      if(this.popupTemplate) this.lyr.popupTemplate = this.popupTemplate;
+      if(this.popupTemplate !== undefined) this.lyr.popupTemplate = this.popupTemplate;
       this._loadLayers();
       return this.view;
     })
@@ -213,10 +254,19 @@ class Store {
     this.filters.forEach(f => f.clear());
   }
 
+  //todo, move the GoTo to the view?
   onBookmarkClick(index){
     if(!this.view || index >= this.bookmarks.length) return;
     const bookmark = this.bookmarks[index];
     this.view.goTo(bookmark.extent);
+    if(this.bookmarkInfos){
+      console.log('bookmark setting', bookmark.name)
+      this.bookmarkInfo = this.bookmarkInfos[bookmark.name]
+    }
+  }
+
+  onClearBookmark(){
+    this.bookmarkInfo = null;
   }
 
   get where(){
@@ -248,6 +298,8 @@ decorate(Store, {
   aliasMap: observable,
   layerVisibleMap: observable,
   chartResultMap: observable.shallow,
+  tooltipResults: observable.shallow,
+  bookmarkInfo: observable.ref,
   map: observable.ref,
   where: computed,
   layers: computed,
@@ -259,7 +311,9 @@ decorate(Store, {
   setRendererField: action.bound,
   clearFilters: action.bound,
   toggleLayerVisibility: action.bound,
-  onBookmarkClick: action.bound
+  _onMouseMove: action.bound,
+  onBookmarkClick: action.bound,
+  onClearBookmark: action.bound
 });
 
 export default Store;

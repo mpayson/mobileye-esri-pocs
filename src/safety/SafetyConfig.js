@@ -17,11 +17,11 @@ const getRenderer = (field, stops,labels) => ({
   }]
 })
 
-
 const safetyConfig = {
   //layerItemId: '534f26d211154527b31c976ea6b5eafe',
   layerItemId: '09faf499d6e6475f92bcbd68e68f8bbd',
   webmapId: '906b58f399944774a29e05d3d24a939b',
+  // webmapId: '58d18243967d40e9a25db1f02d3652b0',
   initialRendererField: 'eventvalue',
   renderers: {
     'eventvalue': {
@@ -146,68 +146,87 @@ const safetyConfig = {
       info: "Average speed of the respective segment. (Does not contribute to risk score on its own)."
     }
   }],
-  // outFields: ["Shape__Length"],
-  popupTemplate: {
-    title: "Road Segment Information",
-    content: [{
-      type: "text",
-      text: "<b>Road Risk Score: {expression/round_score}</b>",
-    }, {
-      type: "fields",
-      fieldInfos: [{
-        fieldName: 'harsh_cornering_ratio',
-        label: 'Harsh cornering (%)',
-        format: {
-          places: 2,
-          digitSeparator: true
-        },
-      }, {
-        fieldName: 'harsh_acc_ratio',
-        label: "Harsh braking (%)",
-        format: {
-          places: 2,
-          digitSeparator: true
-        },
-      }, {
-        fieldName: 'pedestrians_density',
-        label: "Average pedestrian volume",
-        format: {
-          places: 2,
-          digitSeparator: true
-        },
-      }, {
-        fieldName: 'bicycles_density',
-        label: 'Average cyclist volume',
-        format: {
-          places: 2,
-          digitSeparator: true
-        },
-      }, {
-        fieldName: 'speeding_ratio',
-        label: 'Above average speeds (%)',
-        format: {
-          places: 2,
-          digitSeparator: true
-        },
-      }, {
-        fieldName: 'avarge_speed',
-        label: 'Average speed (Km/H)',
-        format: {
-          places: 2,
-          digitSeparator: true
-        },
-      }]
-    }],
-    expressionInfos: [{
-      name: "round_score",
-      expression: "Round($feature.eventvalue,2)"
-    }]
-  },
+  hasCustomTooltip: true,
+  outFields: [
+    'eventvalue', 'harsh_cornering_ratio', 'harsh_acc_ratio', 'pedestrians_density',
+    'bicycles_density', 'speeding_ratio', 'avarge_speed'
+  ], 
+  popupTemplate: null,
+  //for n
+  // popupTemplate: {
+  //   title: "Road Segment Information",
+  //   content: [{
+  //     type: "text",
+  //     text: "<b>Road Risk Score: {expression/round_score}</b>",
+  //   }, {
+  //     type: "fields",
+  //     fieldInfos: [{
+  //       fieldName: 'harsh_cornering_ratio',
+  //       label: 'Harsh cornering (%)',
+  //       format: {
+  //         places: 2,
+  //         digitSeparator: true
+  //       },
+  //     }, {
+  //       fieldName: 'harsh_acc_ratio',
+  //       label: "Harsh braking (%)",
+  //       format: {
+  //         places: 2,
+  //         digitSeparator: true
+  //       },
+  //     }, {
+  //       fieldName: 'pedestrians_density',
+  //       label: "Average pedestrian volume",
+  //       format: {
+  //         places: 2,
+  //         digitSeparator: true
+  //       },
+  //     }, {
+  //       fieldName: 'bicycles_density',
+  //       label: 'Average cyclist volume',
+  //       format: {
+  //         places: 2,
+  //         digitSeparator: true
+  //       },
+  //     }, {
+  //       fieldName: 'speeding_ratio',
+  //       label: 'Above average speeds (%)',
+  //       format: {
+  //         places: 2,
+  //         digitSeparator: true
+  //       },
+  //     }, {
+  //       fieldName: 'avarge_speed',
+  //       label: 'Average speed (Km/H)',
+  //       format: {
+  //         places: 2,
+  //         digitSeparator: true
+  //       },
+  //     }]
+  //   }],
+  //   expressionInfos: [{
+  //     name: "round_score",
+  //     expression: "Round($feature.eventvalue,2)"
+  //   }]
+  // },
   viewConfig: {
     center: [-74.00157, 40.71955],
     zoom: 12
+  },
+  bookmarkInfos: {
+    'Willamsburg Bridge': {
+      title: 'Williamsburg Bridge',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+    'Jerusalem': {
+      title: 'Jerusalem',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+    'Manhattan': {
+      title: 'Manhattan',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    }
   }
-
 }
 
 export default safetyConfig;

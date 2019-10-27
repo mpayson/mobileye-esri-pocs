@@ -15,7 +15,8 @@ module.exports = override(
     javascriptEnabled: true,
     modifyVars: { 
       '@primary-color': '#00abbc',
-      '@layout-header-background': '#2b4269'
+      '@layout-header-background': '#2b4269',
+      '@processing-color': '#00abbc'
     },
   }),
   addWebpackAlias({

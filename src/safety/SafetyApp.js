@@ -1,10 +1,9 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
+import { Layout, Menu, Drawer, Icon, Row, Col, Card } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
-import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import LayerPanel from './LayerPanel';
@@ -12,6 +11,7 @@ import RoutePanel from './RoutePanel';
 import SafetyStore from './SafetyStore';
 import safetyConfig from './SafetyConfig';
 import BookmarkPanel from '../components/BookmarkPanel';
+import SafetyTooltip from './SafetyTooltip';
 import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
 const { Header, Content, Sider } = Layout;
@@ -24,9 +24,6 @@ const MenuBookmarkIcon = () => (
 )
 const MenuRouteFromIcon = () => (
   <RouteFromIcon size="20" filled/>
-)
-const MenuInformationIcon = () => (
-  <InformationIcon size="17" filled/>
 )
 
 const SafetyApp = observer(class App extends React.Component {
@@ -52,12 +49,14 @@ const SafetyApp = observer(class App extends React.Component {
       ? null
       : item.key;
     this.setState({navKey});
+    this.store.onClearBookmark();
   }
 
   onClose = () => {
     this.setState({
       navKey: null,
     });
+    this.store.onClearBookmark();
   };
 
   onSignOutClick = () => {
@@ -84,6 +83,7 @@ const SafetyApp = observer(class App extends React.Component {
         this.view.popup.actions.removeAll();
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
+
       })
   }
 
@@ -118,7 +118,30 @@ const SafetyApp = observer(class App extends React.Component {
         </Menu>
       )
       : null;
-
+      
+    const tooltip = this.store.hasCustomTooltip
+      ? <SafetyTooltip store={this.store}/>
+      : null;
+    
+    
+    let bookmarkCard;
+    if(this.store.bookmarkInfo){
+      bookmarkCard = (
+        <Card
+          title={this.store.bookmarkInfo.title}
+          className="antd-esri-widget"
+          style={{
+            position: "absolute",
+            bottom: "30px",
+            width: "400px",
+            left: "50%",
+            marginLeft: "-200px",
+          }}
+          size="small">
+          {this.store.bookmarkInfo.content}
+        </Card>
+      )
+    }
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -161,6 +184,8 @@ const SafetyApp = observer(class App extends React.Component {
               <div
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
+              {tooltip}
+              {bookmarkCard}
               <Drawer
                 title={this.state.navKey}
                 closable={true}
