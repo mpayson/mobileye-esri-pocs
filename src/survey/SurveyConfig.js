@@ -56,14 +56,14 @@ const surveyConfig = {
               {value: '0', opacity: 1}
         ]
       },
-      {
-        type: "size",
-        field: "icon_size",
-          minDataValue: 0.0,
-          maxDataValue: 1.0,
-          minSize: 0,
-          maxSize: 30
-      }
+      // {
+      //   type: "size",
+      //   field: "icon_size",
+      //     minDataValue: 0.0,
+      //     maxDataValue: 1.0,
+      //     minSize: 0,
+      //     maxSize: 30
+      // }
       ],
       uniqueValueInfos: [
         // {value: 'sign10', symbol: {type: "picture-marker", url: sign10Image}},
@@ -196,21 +196,36 @@ const surveyConfig = {
     }
   },], 
   popupTemplate: {
-
-    title: "{expression/title-prefix} {expression/type} {expression/title_suffix}",
+    title: "{expression/title-prefix} {system_type} {expression/title_suffix}",
     content: [{
       type: "text",
-      text: "Type: <b>{specific_type}</b> <br>" +
+      text: "Type: <b>{expression/type-expr}</b> <br>" +
              "Detected at {publish_date} (version {map_version})<br>" +
              "Size: {height} X {width} m<br>",
-      expressionInfos: [
+    },
+    // {
+    //     type: "media", // MediaContentElement
+    //     mediaInfos: [
+    //       {
+    //         title: "",
+    //         type: "image",
+    //         caption: "sign icon",
+    //         value: {
+    //           sourceURL:
+    //             "resources/images/SIGN_ICON_10.png"
+    //         }
+    //       },
+    //     ]
+    //   }],
+    ],
+    expressionInfos: [
       {
-        name: "type",
+        name: "type-expr",
         title: "Type",
         expression: "When($feature.system_type_group == 0, $feature.traffic_sign_type," +
                         "$feature.system_type_group == 1, 'Traffic Light'," +
                         "$feature.system_type_group == 2, $feature.road_marking_type," +
-                        "$feature.system_type_group == 3, $feature.pole_type," +
+//                        "$feature.system_type_group == 3, $feature.pole_type," +
                         "$feature.system_type_group == 4, $feature.manhole_type," +
                         "'')"
 
@@ -225,30 +240,9 @@ const surveyConfig = {
         title: "Title Suffix",
         expression: "When(($feature.comparsion_to_prev_map == 2) ||  ($feature.comparsion_to_prev_map == 1), '',  'information')"
       }
-      ]
-    }
-    // {
-    //     // You can set a media element within the popup as well. This
-    //     // can be either an image or a chart. You specify this within
-    //     // the mediaInfos. The following creates a pie chart in addition
-    //     // to two separate images. The chart is also set up to work with
-    //     // related tables. Similar to text elements, media can only be set within the content.
-    //     type: "media", // MediaContentElement
-    //     mediaInfos: [
-    //       {
-    //         title: "<b></b>",
-    //         type: "image",
-    //         caption: "sign icon",
-    //         value: {
-    //           sourceURL:
-    //             "https://www.sunset.com/wp-content/uploads/96006df453533f4c982212b8cc7882f5-800x0-c-default.jpg"
-    //         }
-    //       },
-    //     ]
-    //   },
-    // }
-    ]
-  },
+    ]},
+    
+  
   viewConfig: { 
     center: [-73.974051, 40.762746],
     zoom: 16
