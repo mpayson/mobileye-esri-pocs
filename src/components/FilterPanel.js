@@ -17,9 +17,11 @@ const getFilterView = (filter) => {
         ? <HistMinMaxSlideFilter store={f} key={f.field}/>
         : <MinMaxSlideFilter store={f} key={f.field} lowerBoundLabel={f.lowerBoundLabel} upperBoundLabel={f.upperBoundLabel}/>
     case 'multiselect':
-      return <SelectFilter store={f} key={f.field} mode="multiple"/>
+      return <SelectFilter store={f} key={f.field} mode="multiple" style={f.style}/>
     case 'select':
-      return <SelectFilter store={f} key={f.field}/>
+      return <SelectFilter store={f} key={f.field} style={f.style}/>
+    case 'quantile':
+      return <SelectFilter store={f} key={f.field} mode="multiple" style={f.style}/>
     default:
       throw new Error("Unknown filter type!");
   }
@@ -59,12 +61,14 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
     const filters = this.props.store.filters;
     const filterViews = filters.map(f => {
       const alias = f.isActive
-        ? <span style={{color: '#1890ff'}}><b>{f.alias}</b></span>
+        ? <span style={{color: '#00abbc'}}><b>{f.alias}</b></span>
         : f.alias;
       let header = f.infoText
-        ? <> 
-            <Popover content={f.infoText}>
-              <Icon type="info-circle" style={{marginRight: "3px"}}/>
+        ? <>
+            <Popover content={f.infoText} placement="topLeft">
+              <Icon
+                type="info-circle"
+                style={{marginRight: "3px", color: f.isActive ? '#00abbc' : undefined}}/>
             </Popover>
             {alias}
           </>
@@ -76,29 +80,38 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
       )
     });
 
-    const toggleButtonText = this.state.activeKeys.length > 0
-      ? 'Close all'
-      : 'Open all';
-
     const defaultActive = this.props.defaultActive || false;
+
+    const activeKeys = this.props.activeFilterKeys || this.state.activeKeys;
+    const onAccordionChange = this.props.onFilterAccordionChange || this.onAccordionChange;
+
+    const panelOpen = this.props.panelOpen === undefined ? undefined : this.props.panelOpen;
+    const onPanelChange = this.props.onPanelChange ? this.props.onPanelChange : undefined;
+    const onToggleClick = this.props.onFilterToggleAllClick ? this.props.onFilterToggleAllClick : this.onToggleClick;
+
+    const toggleButtonText = activeKeys.length > 0
+    ? 'Close all'
+    : 'Open all';
 
     return (
       <PanelCard
         title="Filter"
         icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
         collapsible={true}
+        open={panelOpen}
+        onChange={onPanelChange}
         defaultActive={defaultActive}>
+        <div style={{display: "inline-block", width: "100%", padding: "0px 15px 10px 5px"}}>
+          <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
+          <Button size="small" onClick={onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
+        </div>
           <Collapse
-            activeKey={this.state.activeKeys}
+            activeKey={activeKeys}
             bordered={false}
             expandIconPosition='right'
-            onChange={this.onAccordionChange}>
+            onChange={onAccordionChange}>
             {filterViews}
           </Collapse>
-          <div style={{display: "inline-block", width: "100%", padding: "10px 15px 0px 5px"}}>
-            <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
-            <Button size="small" onClick={this.onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
-          </div>
       </PanelCard>
 
     )

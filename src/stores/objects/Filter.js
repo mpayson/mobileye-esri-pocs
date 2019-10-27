@@ -1,4 +1,4 @@
-import { decorate, observable, computed } from 'mobx';
+import { decorate, observable, computed, action } from 'mobx';
 
 class Filter {
   constructor(fieldName, params = null){
@@ -8,11 +8,16 @@ class Filter {
     this.isDynamic = params && params.dynamic ? params.dynamic : false;
     // this.caption = (params !== null && "caption" in params) ? params.caption : null;
   }
+
+  setFieldInfoFromLayer(featureLayer){
+    this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
+  }
+
   load(featureLayer){
     if(!featureLayer.loaded){
       throw new Error("Please wait until the layer is loaded");
     }
-    this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
+    this.setFieldInfoFromLayer(featureLayer);
   }
   get alias(){
     // if (this.caption !== null) return this.caption;
@@ -34,7 +39,9 @@ decorate(Filter, {
   fieldInfo: observable,
   alias: computed,
   where: computed,
-  isActive: computed
+  isActive: computed,
+  load: action.bound,
+  setFieldInfoFromLayer: action.bound
 })
 
 export default Filter;

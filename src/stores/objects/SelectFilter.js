@@ -9,8 +9,12 @@ class SelectFilter extends Filter{
   selectValue = null;
   domainMap = new Map();
 
+  constructor(fieldName, params=null){
+    super(fieldName, params);
+    this.style = params && params.style ? params.style : 'dropdown';
+  }
   _setFromQueryResults(results){
-    results.features.map(f => 
+    this.options = results.features.map(f => 
       f.attributes[this.field]
     ).sort();
     this.loaded = true;
@@ -63,6 +67,10 @@ class SelectFilter extends Filter{
     return new Set(this.options);
   }
 
+  get displayOptions(){
+    return this.options.slice().sort();
+  }
+
 }
 
 decorate(SelectFilter, {
@@ -74,7 +82,8 @@ decorate(SelectFilter, {
   onValueChange: action.bound,
   clear: action.bound,
   _setFromQueryResults: action.bound,
-  optionSet: computed
+  optionSet: computed,
+  displayOptions: computed
 })
 
 export default SelectFilter;

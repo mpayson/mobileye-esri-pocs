@@ -1,15 +1,19 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
-import { MinMaxFilter, MultiSelectFilter, SelectFilter } from './Filters';
+import {
+  MinMaxFilter,
+  MultiSelectFilter,
+  SelectFilter,
+  QuantileFilter
+} from './Filters';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import { message } from 'antd';
 
-message.config({
-  // top: "calc(100vh - 70px)"
-  top: "75px"
-});
-
 let pUtils;
+// can we keep this at the top? I find it intrusive in the middle?
+message.config({
+  top: 75,
+});
 
 class Store {
 
@@ -18,6 +22,8 @@ class Store {
   chartResultMap = new Map();
   map = null;
   layerVisibleMap = new Map();
+  tooltipResults = null;
+  bookmarkInfo = null;
 
   constructor(appState, storeConfig){
     this.appState = appState;
@@ -31,6 +37,8 @@ class Store {
           return new MultiSelectFilter(f.name, f.params);
         case 'select':
           return new SelectFilter(f.name, f.params);
+        case 'quantile':
+          return new QuantileFilter(f.name, f.params);
         default:
           throw new Error("Unknown filter type!")
       }
@@ -43,12 +51,16 @@ class Store {
     this.popupTemplate = storeConfig.popupTemplate;
     this.layerLoaded = false;
     this.viewConfig = storeConfig.viewConfig;
+    this.outFields = storeConfig.outFields;
+    this.hasCustomTooltip = storeConfig.hasCustomTooltip;
+    this.bookmarkInfos = storeConfig.bookmarkInfos;
   }
   // to destroy map view, need to do `view.container = view.map = null;`
   // should probably include this in the dismount
   destroy(){
     if(this.effectHandler) this.effectHandler();
     if(this.rendererHandler) this.rendererHandler();
+    if(this._tooltipListener) this._tooltipListener.remove();
   }
 
   loadFilters(){
@@ -82,6 +94,10 @@ class Store {
         this.layerVisibleMap.set(l.id, l.visible);
       })
 
+      if(this.hasCustomTooltip){
+        this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
+      }
+
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
         p.set(f.name, f.alias);
         return p;
@@ -97,7 +113,11 @@ class Store {
 
   _buildAutoRunEffects(){
     const onApplyFilter = pUtils.debounce(function(layerView, where){
-      layerView.filter = {where};
+      layerView.filter = {where}
+      // layerView.effect = {
+      //   filter: {where},
+      //   excludedEffect: "grayscale(50%) opacity(30%)"
+      // };
     });
     this.effectHandler = autorun(_ => {
       const where = this.where;
@@ -120,6 +140,34 @@ class Store {
     })
   }
 
+  // class to watch for mouse movement
+  // need to figure learn how best to use this debounce function
+  _onMouseMove(evt){
+
+    const handleEvt = pUtils.debounce(function(classRef, event){
+      return classRef.view.hitTest(event)
+        .then(hit => {
+          if(classRef._tooltipHighlight){
+            classRef._tooltipHighlight.remove();
+            classRef._tooltipHighlight = null;
+          }
+          const results = hit.results.filter(r => r.graphic.layer === classRef.lyr);
+          if(results.length){
+            const graphic = results[results.length - 1].graphic;
+            const screenPoint = hit.screenPoint;
+            classRef._tooltipHighlight = classRef.lyrView.highlight(graphic);
+            classRef.tooltipResults = {
+              screenPoint,
+              graphic
+            }
+          } else {
+            classRef.tooltipResults = null;
+          }
+        })
+    })
+    handleEvt(this, evt)
+  }
+
   setRendererField(field){
     this.rendererField = field;
   }
@@ -132,7 +180,7 @@ class Store {
   }
 
   load(mapViewDiv){
-    message.loading('Loading map!', 0);
+    message.loading('Loading data.', 0);
     let renderer;
     return loadModules([
       'esri/WebMap',
@@ -141,9 +189,10 @@ class Store {
       'esri/layers/FeatureLayer',
       'esri/core/promiseUtils',
       'esri/identity/IdentityManager',
-      'esri/renderers/support/jsonUtils'
+      'esri/renderers/support/jsonUtils',
+      'esri/geometry/SpatialReference'
     ], options)
-    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils]) => {
+    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils, SpatialReference]) => {
 
       esriId.registerToken(this.appState.session.toCredential());
 
@@ -159,7 +208,9 @@ class Store {
       this.view = new MapView({
         container: mapViewDiv,
         center: this.viewConfig.center,
-        zoom: this.viewConfig.zoom
+        zoom: this.viewConfig.zoom,
+        //spatialReference: SpatialReference.WGS84
+        //spatialReference: new SpatialReference({ wkid: 4326 })
       })
 
       if(this.mapId){
@@ -188,7 +239,8 @@ class Store {
         l.portalItem.id === this.layerId
       );
       if(renderer) this.lyr.renderer = renderer;
-      if(this.popupTemplate) this.lyr.popupTemplate = this.popupTemplate;
+      if(this.outFields) this.lyr.outFields = this.outFields;
+      if(this.popupTemplate !== undefined) this.lyr.popupTemplate = this.popupTemplate;
       this._loadLayers();
       return this.view;
     })
@@ -202,10 +254,19 @@ class Store {
     this.filters.forEach(f => f.clear());
   }
 
+  //todo, move the GoTo to the view?
   onBookmarkClick(index){
     if(!this.view || index >= this.bookmarks.length) return;
     const bookmark = this.bookmarks[index];
     this.view.goTo(bookmark.extent);
+    if(this.bookmarkInfos){
+      console.log('bookmark setting', bookmark.name)
+      this.bookmarkInfo = this.bookmarkInfos[bookmark.name]
+    }
+  }
+
+  onClearBookmark(){
+    this.bookmarkInfo = null;
   }
 
   get where(){
@@ -237,6 +298,8 @@ decorate(Store, {
   aliasMap: observable,
   layerVisibleMap: observable,
   chartResultMap: observable.shallow,
+  tooltipResults: observable.shallow,
+  bookmarkInfo: observable.ref,
   map: observable.ref,
   where: computed,
   layers: computed,
@@ -248,7 +311,9 @@ decorate(Store, {
   setRendererField: action.bound,
   clearFilters: action.bound,
   toggleLayerVisibility: action.bound,
-  onBookmarkClick: action.bound
+  _onMouseMove: action.bound,
+  onBookmarkClick: action.bound,
+  onClearBookmark: action.bound
 });
 
 export default Store;

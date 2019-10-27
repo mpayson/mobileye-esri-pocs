@@ -22,7 +22,7 @@ class BookmarkPanelItem extends React.PureComponent {
 const BookmarkPanel = observer(({store}) => {
 
   const bookmarkViews = store.bookmarks.map((b,i) => 
-    <BookmarkPanelItem bookmark={b} id={i} onClick={store.onBookmarkClick}/>
+    <BookmarkPanelItem bookmark={b} id={i} key={b.name} onClick={store.onBookmarkClick}/>
   )
 
   return(

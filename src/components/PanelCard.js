@@ -3,7 +3,7 @@ import { Collapse, Card } from 'antd';
 import './PanelCard.css';
 const { Panel } = Collapse;
 
-const PanelCard = ({title, icon, collapsible, defaultActive, children}) => {
+const PanelCard = ({title, icon, collapsible, defaultActive, children, open, onChange}) => {
 
   const header = icon
     ? <h1 style={{padding: "0px"}}>{icon}<span style={{marginLeft: "10px"}}>{title}</span></h1>
@@ -22,13 +22,21 @@ const PanelCard = ({title, icon, collapsible, defaultActive, children}) => {
     ? ['panel-card']
     : [];
 
+  let props = {
+    bordered: false,
+    expandIconPosition: 'right',
+    className: 'no-padding',
+    defaultActiveKey: defaultActiveKeys
+  }
+  if(open !== undefined && onChange){
+    props.activeKey = open ? ['panel-card'] : [];
+    props.onChange = onChange
+  }
+
   return(
     <Card size="small" style={{marginTop: "10px"}}>
       <Collapse
-        bordered={false}
-        expandIconPosition='right'
-        className='no-padding'
-        defaultActiveKey={defaultActiveKeys}>
+        {...props}>
         <Panel
           header={header}
           style={{border: 0}}

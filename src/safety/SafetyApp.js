@@ -1,16 +1,18 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
+import { Layout, Menu, Drawer, Icon, Row, Col, Card } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
-import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import LayerPanel from './LayerPanel';
 import RoutePanel from './RoutePanel';
 import SafetyStore from './SafetyStore';
 import safetyConfig from './SafetyConfig';
+import BookmarkPanel from '../components/BookmarkPanel';
+import SafetyTooltip from './SafetyTooltip';
+import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
 const { Header, Content, Sider } = Layout;
 
@@ -23,14 +25,11 @@ const MenuBookmarkIcon = () => (
 const MenuRouteFromIcon = () => (
   <RouteFromIcon size="20" filled/>
 )
-const MenuInformationIcon = () => (
-  <InformationIcon size="17" filled/>
-)
 
 const SafetyApp = observer(class App extends React.Component {
 
   state = {
-    collapsed: false,
+    collapsed: true,
     loaded: false,
     navKey: null
   };
@@ -50,12 +49,14 @@ const SafetyApp = observer(class App extends React.Component {
       ? null
       : item.key;
     this.setState({navKey});
+    this.store.onClearBookmark();
   }
 
   onClose = () => {
     this.setState({
       navKey: null,
     });
+    this.store.onClearBookmark();
   };
 
   onSignOutClick = () => {
@@ -82,6 +83,7 @@ const SafetyApp = observer(class App extends React.Component {
         this.view.popup.actions.removeAll();
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
+
       })
   }
 
@@ -93,7 +95,7 @@ const SafetyApp = observer(class App extends React.Component {
         panel = <LayerPanel store={this.store}/>;
         break;
       case 'Saved Locations':
-        panel = <h1>Here you can see interesting locations you saved in the past!</h1>;
+        panel = <BookmarkPanel store={this.store}/>
         break;
       case 'Route':
         panel = <RoutePanel store={this.store}/>
@@ -105,7 +107,7 @@ const SafetyApp = observer(class App extends React.Component {
     const signin = this.props.appState.displayName
       ? (
         <Menu
-          theme="dark"
+          // theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
@@ -116,35 +118,64 @@ const SafetyApp = observer(class App extends React.Component {
         </Menu>
       )
       : null;
-
+      
+    const tooltip = this.store.hasCustomTooltip
+      ? <SafetyTooltip store={this.store}/>
+      : null;
+    
+    
+    let bookmarkCard;
+    if(this.store.bookmarkInfo){
+      bookmarkCard = (
+        <Card
+          title={this.store.bookmarkInfo.title}
+          className="antd-esri-widget"
+          style={{
+            position: "absolute",
+            bottom: "30px",
+            width: "400px",
+            left: "50%",
+            marginLeft: "-200px",
+          }}
+          size="small">
+          {this.store.bookmarkInfo.content}
+        </Card>
+      )
+    }
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Road Risk Score</h1>
-          {signin}
-        </Header>
+        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+          <img
+            src={MobileyeLogo}
+            alt="Mobileye Logo"
+            style={{height: "40px", margin: "12px"}}
+            />
+          <Menu
+            defaultSelectedKeys={['0']}
+            mode="inline"
+            theme="dark"
+            selectedKeys={[this.state.navKey]}
+            onClick={this.onSelect}>
+            <Menu.Item key="Data Layers">
+              <Icon component={MenuFilterIcon} />
+              <span>Data Layers</span>
+            </Menu.Item>
+            <Menu.Item key="Route">
+              <Icon component={MenuRouteFromIcon} />
+              <span>Route</span>
+            </Menu.Item>
+            <Menu.Item key="Saved Locations">
+              <Icon component={MenuBookmarkIcon} />
+              <span>Saved Locations</span>
+            </Menu.Item>
+          </Menu>
+        </Sider>
         <Layout>
-          <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-            <Menu
-              defaultSelectedKeys={['0']}
-              mode="inline"
-              theme="dark"
-              selectedKeys={[this.state.navKey]}
-              onClick={this.onSelect}>
-              <Menu.Item key="Data Layers">
-                <Icon component={MenuFilterIcon} />
-                <span>Data Layers</span>
-              </Menu.Item>
-              <Menu.Item key="Route">
-                <Icon component={MenuRouteFromIcon} />
-                <span>Route</span>
-              </Menu.Item>
-              <Menu.Item key="Saved Locations">
-                <Icon component={MenuBookmarkIcon} />
-                <span>Saved Locations</span>
-              </Menu.Item>
-            </Menu>
-          </Sider>
+          <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
+            <h1 style={{float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
+            <div style={{float: "left"}}> (Data presented from Sep 1st - October 22nd)</div>
+            {signin}
+          </Header>
           <Content>
             <Row>
               <Col
@@ -153,6 +184,8 @@ const SafetyApp = observer(class App extends React.Component {
               <div
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
+              {tooltip}
+              {bookmarkCard}
               <Drawer
                 title={this.state.navKey}
                 closable={true}
@@ -160,10 +193,10 @@ const SafetyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
-                width={320}
+                width={340}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
-                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
+                bodyStyle={{ padding: "10px", background: "#f5f5f5", minHeight: "calc(100% - 55px)"}}
               >
                 {panel}
               </Drawer>

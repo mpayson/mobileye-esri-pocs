@@ -13,7 +13,11 @@ module.exports = override(
   }),
   addLessLoader({
     javascriptEnabled: true,
-    // modifyVars: { '@primary-color': '#1DA57A' },
+    modifyVars: { 
+      '@primary-color': '#00abbc',
+      '@layout-header-background': '#2b4269',
+      '@processing-color': '#00abbc'
+    },
   }),
   addWebpackAlias({
     ['@ant-design/icons/lib/dist$']: path.resolve(__dirname, './src/icons.js')

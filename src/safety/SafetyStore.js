@@ -50,6 +50,7 @@ class SafetyStore extends Store {
               title: "Route Results",
               geometryType: "polyline",
               spatialReference: SpatialReference.WebMercator,
+              //spatialReference: SpatialReference.WGS84,
               objectIdField: 'oid',
               source: []
             })

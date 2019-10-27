@@ -20,18 +20,62 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
   nonMainRenderer = 'harsh_cornering_ratio';
 
+  state = {
+    filterActiveKeys: [],
+    filterPanelOpen: false
+  }
+
+  _updateAccordionForRender = (rendererField) => {
+    if(this.state.filterActiveKeys.includes(rendererField)) return;
+    const nextKeys = this.state.filterActiveKeys.slice();
+    nextKeys.push(rendererField);
+    this.setState({
+      filterActiveKeys: nextKeys,
+      filterPanelOpen: true
+    })
+  }
+
   onRadioChange = (e) => {
     let renderer = e.target.value;
     this.nonMainRenderer = renderer;
     this.props.store.setRendererField(renderer);
+    this._updateAccordionForRender(renderer);
   }
 
   onSwitchChange = (isChecked) => {
     if(isChecked){
       this.props.store.setRendererField('eventvalue');
+      this._updateAccordionForRender('eventvalue');
     } else {
       this.props.store.setRendererField(this.nonMainRenderer);
+      this._updateAccordionForRender(this.nonMainRenderer);
     }
+  }
+
+  onFilterAccordionClick = (keys) => {
+    this.setState({
+      filterActiveKeys: keys
+    });
+  }
+
+  onFilterToggleAllClick = () => {
+    if(this.state.filterActiveKeys.length > 0){
+      this.setState({
+        filterActiveKeys: []
+      });
+    } else {
+      const keys = this.props.store.filters.map(f => f.field);
+      this.setState({
+        filterActiveKeys: keys
+      })
+    }
+  }
+
+  onFilterPanelChange = () => {
+    const isOpen = !this.state.filterPanelOpen;
+    this.setState({
+      filterPanelOpen: isOpen
+    })
   }
 
   render(){
@@ -63,7 +107,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
               onChange={this.onSwitchChange}
               checked={isSwitchChecked}
               style={{float: "left", marginTop: "1px"}}/>
-            <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>Road risk score</h3>
+            <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>Road Risk Score</h3>
           </div>
           <p style={{margin: "10px 0px 5px 0px"}}><Text strong> Toggle Road Risk Score off to explore individual data layers of the overall score</Text></p>
           <Radio.Group
@@ -73,7 +117,13 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
             {radioOptions}
           </Radio.Group>
         </PanelCard>
-        <FilterPanel store={this.props.store}/>
+        <FilterPanel
+          store={this.props.store}
+          panelOpen={this.state.filterPanelOpen}
+          onPanelChange={this.onFilterPanelChange}
+          activeFilterKeys={this.state.filterActiveKeys}
+          onFilterAccordionChange={this.onFilterAccordionClick}
+          onFilterToggleAllClick={this.onFilterToggleAllClick}/>
       </>
     )
   }

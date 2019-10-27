@@ -4,8 +4,8 @@ import bicycleImage from '../resources/images/ET_BICYCLE.png'
 import pedImage from '../resources/images/ET_PED_ON_HW.png'
 
 const eventsConfig = {
-  layerItemId: '09faf499d6e6475f92bcbd68e68f8bbd',
-  //webmapId: '54d46b14f5f74e59a523e0ae46ef8736',
+  layerItemId: 'baf1358ce8d74342af3340f621688e21',
+  webmapId: '54d46b14f5f74e59a523e0ae46ef8736',
   //layerRefreshIntervalMin: 1,
   initialRendererField: 'eventsubtype',
   renderers : {

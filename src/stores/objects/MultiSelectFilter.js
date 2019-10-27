@@ -7,8 +7,20 @@ class MultiSelectFilter extends SelectFilter{
   type = 'multiselect';
   selectValue = [];
 
+  // Used for directly setting the selected value array
   onValueChange(v){
     this.selectValue = v;
+    console.log(v);
+  }
+
+  // Used for setting whether an individual option is selected
+  onValueOptionChange(option){
+    if(!option) return;
+    if(this.selectedOptionSet.has(option)){
+      this.selectValue = this.selectValue.slice().filter(s => s !== option);
+    } else {
+      this.selectValue.push(option);
+    }
   }
 
   clear(){
@@ -20,9 +32,7 @@ class MultiSelectFilter extends SelectFilter{
   }
 
   get selectedOptionSet(){
-    return new Set(this.selectValue.map(v => 
-      this.options[v]
-    ));
+    return new Set(this.selectValue);
   }
 
 };
