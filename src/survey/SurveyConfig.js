@@ -35,10 +35,12 @@ import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 
 const surveyConfig = {
   
-  // layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
-  // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
-  layerItemId: '5d31985daf4c403ba6786c02a52ea715',
-  webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
+  // Production
+  layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
+  webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
+  // Test
+  // layerItemId: '5d31985daf4c403ba6786c02a52ea715',
+  // webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
   initialRendererField: 'all',
   renderers: {
     'all': {
@@ -225,8 +227,8 @@ const surveyConfig = {
         expression: "When($feature.system_type_group == 0, $feature.traffic_sign_type," +
                         "$feature.system_type_group == 1, 'Traffic Light'," +
                         "$feature.system_type_group == 2, $feature.road_marking_type," +
-//                        "$feature.system_type_group == 3, $feature.pole_type," +
-                        "$feature.system_type_group == 4, $feature.manhole_type," +
+                       "$feature.system_type_group == 3, $feature.pole_type," +
+//                        "$feature.system_type_group == 4, $feature.manhole_type," +
                         "'')"
 
       },
