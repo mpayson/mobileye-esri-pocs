@@ -13,7 +13,7 @@ import LayerListPanel from '../components/LayerListPanel';
 import BookmarkPanel from '../components/BookmarkPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
-import GeocenterPanel from '../components/GeoCentersPanel';
+//import GeocenterPanel from '../components/GeoCentersPanel';
 
 const { Header, Content, Sider } = Layout;
 

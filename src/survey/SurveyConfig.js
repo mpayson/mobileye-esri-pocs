@@ -49,12 +49,12 @@ import { getDomainMap } from '../utils/Utils';
 const surveyConfig = {
   
   // Production
-  // layerItemId: '442c06a8034b4aba9232bd61bd36f0f9',
-  // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
+  layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
+  webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
   // Test
   //layerItemId: '5d31985daf4c403ba6786c02a52ea715',
-  layerItemId: '3fd4485bb8ca45bfa90e0e143c2cd7c2',
-  webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
+  // layerItemId: '3fd4485bb8ca45bfa90e0e143c2cd7c2',
+  // webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
   initialRendererField: 'all',
   renderers: {
     'all': {
@@ -264,10 +264,10 @@ const surveyConfig = {
         title: "Title Suffix",
         expression: "When(($feature.comparsion_to_prev_map == 2) ||  ($feature.comparsion_to_prev_map == 1), '',  'information')"
       },
-      {
-        name: "sign-icon",
-        expression: "${sign5Image}"
-      }
+      // {
+      //   name: "sign-icon",
+      //   expression: "${sign5Image}"
+      // }
     ],
   },
   
