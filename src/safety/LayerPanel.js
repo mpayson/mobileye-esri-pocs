@@ -18,7 +18,7 @@ const radioStyle = {
 
 const LayerPanel = observer(class LayerPanel extends React.Component{
 
-  nonMainRenderer = 'harsh_cornering_ratio';
+  nonMainRenderer = 'harsh_acc_ratio';
 
   state = {
     filterActiveKeys: [],

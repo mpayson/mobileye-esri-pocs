@@ -50,14 +50,14 @@ const safetyConfig = {
         label: "Very High"
       }]
     },
-    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High']),
     'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14],['Low','Medium','High']),
+    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High']),
     'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High']),
     'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22],['Low','Medium','High']),
     'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High']),
     'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70']),
-    'pcw': getRenderer('pcw', [0,1.86,3.7,5.56,7.4],['Low','Medium','High']),
-    'fcw': getRenderer('fcw', [0,1.86,3.7,5.56,7.4],['Low','Medium','High'])
+    'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High']),
+    'fcw': getRenderer('fcw', [0,1.35499499,2.66894309,6.03785078,8.2561676],['Low','Medium','High'])
   },
   filters: [{
     name:'eventvalue',
@@ -88,16 +88,6 @@ const safetyConfig = {
       style: "buttons"
     }
   },{
-    name: 'harsh_cornering_ratio',
-    type: 'minmax',
-    params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "Percentage of cars that turn the corner with high G-force."
-    }
-  },{
     name: 'harsh_acc_ratio',
     type: 'minmax',
     params: {
@@ -106,6 +96,16 @@ const safetyConfig = {
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
       info: "Percentage of cars that brake harshly in the segment."
+    }
+  },{
+    name: 'harsh_cornering_ratio',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "Percentage of cars that turn the corner with high G-force."
     }
   },{
     name: 'pedestrians_density',
