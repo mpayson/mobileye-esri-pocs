@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
+import { Layout, Menu, Drawer, Icon, Row, Col , Card} from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import GraphHistogramIcon from 'calcite-ui-icons-react/GraphHistogramIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
@@ -13,6 +13,7 @@ import LayerListPanel from '../components/LayerListPanel';
 import BookmarkPanel from '../components/BookmarkPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
+import GeocenterPanel from '../components/GeoCentersPanel';
 
 const { Header, Content, Sider } = Layout;
 
@@ -118,6 +119,25 @@ const SurveyApp = observer(class App extends React.Component {
       )
       : null;
 
+
+    let bookmarkCard;
+    if(this.store.bookmarkInfo){
+      bookmarkCard = (
+        <Card
+          title={this.store.bookmarkInfo.title}
+          className="antd-esri-widget"
+          style={{
+            position: "absolute",
+            bottom: "30px",
+            width: "400px",
+            left: "50%",
+            marginLeft: "-200px",
+          }}
+          size="small">
+          {this.store.bookmarkInfo.content}
+        </Card>
+      )
+    }
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
@@ -158,6 +178,7 @@ const SurveyApp = observer(class App extends React.Component {
               <div
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
+              {bookmarkCard}
               <Drawer
                 title={this.state.navKey}
                 closable={true}

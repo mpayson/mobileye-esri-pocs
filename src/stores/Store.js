@@ -54,6 +54,7 @@ class Store {
     this.outFields = storeConfig.outFields;
     this.hasCustomTooltip = storeConfig.hasCustomTooltip;
     this.bookmarkInfos = storeConfig.bookmarkInfos;
+    this.geocenters = storeConfig.geocenters ? storeConfig.geocenters : [];
   }
   // to destroy map view, need to do `view.container = view.map = null;`
   // should probably include this in the dismount
@@ -265,6 +266,13 @@ class Store {
     }
   }
 
+  onGeocenterClick(index) {
+    if(!this.view || index >= this.geocenters.length) return;
+    const geocenter = this.geocenters[index];
+    this.view.goTo(geocenter.extent);
+  }
+
+
   onClearBookmark(){
     this.bookmarkInfo = null;
   }
@@ -283,6 +291,7 @@ class Store {
     };
     return [];
   }
+
   get bookmarks(){
     if(this.map && this.layerLoaded) {
       return this.map.bookmarks.items;
