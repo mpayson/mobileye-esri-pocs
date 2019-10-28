@@ -44,17 +44,18 @@ import { getDomainMap } from '../utils/Utils';
 // import manholeImage from '../resources/images/MANHOLE_COVER.png'
 // import unrecognizedCircleImage from '../resources/images/UNRECOGNIZED_CIRCLE.png'
 // import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
-// import NYCImage from '../resources/images/NYC.png'
+import NYCImage from '../resources/images/NYC.png'
+import AtlantaImage from '../resources/images/Atlanta.jpg'
+
 
 const surveyConfig = {
   
   // Production
-  layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
-  webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
+  // layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
+  // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
   // Test
-  //layerItemId: '5d31985daf4c403ba6786c02a52ea715',
-  // layerItemId: '3fd4485bb8ca45bfa90e0e143c2cd7c2',
-  // webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
+  layerItemId: '3fd4485bb8ca45bfa90e0e143c2cd7c2',
+  webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
   initialRendererField: 'all',
   renderers: {
     'all': {
@@ -227,20 +228,19 @@ const surveyConfig = {
              "Detected at {publish_date} (version {map_version})<br>" +
              "Size: {height} X {width} m<br>",
     }, 
-    // {
-    //   type: "media", // MediaContentElement
-    //   mediaInfos: [
-    //     {
-    //       title: "",
-    //       type: "image",
-    //       caption: "sign icon",
-    //       size: 3.0,
-    //       value: {
-    //         sourceURL: "{expression/sign-icon}"
-    //       }
-    //     },
-    //   ]
-    // },
+    {
+      type: "media", // MediaContentElement
+      mediaInfos: [
+        {
+          title: "",
+          type: "image",
+          caption: "sign icon",
+          value: {
+            sourceURL: "{expression/sign-icon}"
+          }
+        },
+      ]
+    },
     ],
     expressionInfos: [
       {
@@ -266,7 +266,7 @@ const surveyConfig = {
       },
       // {
       //   name: "sign-icon",
-      //   expression: "${sign5Image}"
+      //   expression: sign5Image
       // }
     ],
   },
@@ -280,9 +280,18 @@ const surveyConfig = {
 
   geocenters: [{
     'name' : 'NYC',
-    'image' : 'NYCImage',
+    'image' : NYCImage,
     'extent' : {
-                 "xmin":-73.959285,"ymin":40.757012,"xmax":-74.005712,"ymax":40.758693,
+                 "xmin":-8233752.069196624,"ymin":4976855.35232054,"xmax":-8232870.057549805,"ymax":4977349.2071830435,
+                 "spatialReference":{"wkid":102100}
+               }
+  }, 
+  {
+    'name' : 'Atlanta, GA',
+    'image' : AtlantaImage,
+    'extent' : {
+                 "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
+                 ,
                  "spatialReference":{"wkid":102100}
                }
   }],

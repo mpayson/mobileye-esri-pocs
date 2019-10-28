@@ -191,9 +191,10 @@ class Store {
       'esri/core/promiseUtils',
       'esri/identity/IdentityManager',
       'esri/renderers/support/jsonUtils',
-      'esri/geometry/SpatialReference'
+      'esri/geometry/SpatialReference',
+      'esri/geometry/Extent'
     ], options)
-    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils, SpatialReference]) => {
+    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils, SpatialReference, Extent]) => {
 
       esriId.registerToken(this.appState.session.toCredential());
 
@@ -214,6 +215,7 @@ class Store {
         //spatialReference: new SpatialReference({ wkid: 4326 })
       })
 
+      this.geocenters.forEach(gc => gc.extent = new Extent(gc.extent));
       if(this.mapId){
         this.map = new WebMap({
           portalItem: {
@@ -234,6 +236,7 @@ class Store {
         return Promise.resolve();
       }
 
+      
     })
     .then(_ => {
       this.lyr = this.map.layers.find(l => 
@@ -261,7 +264,6 @@ class Store {
     const bookmark = this.bookmarks[index];
     this.view.goTo(bookmark.extent);
     if(this.bookmarkInfos){
-      console.log('bookmark setting', bookmark.name)
       this.bookmarkInfo = this.bookmarkInfos[bookmark.name]
     }
   }
@@ -322,6 +324,7 @@ decorate(Store, {
   toggleLayerVisibility: action.bound,
   _onMouseMove: action.bound,
   onBookmarkClick: action.bound,
+  onGeocenterClick: action.bound,
   onClearBookmark: action.bound
 });
 

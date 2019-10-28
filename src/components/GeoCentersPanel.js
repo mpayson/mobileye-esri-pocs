@@ -12,15 +12,13 @@ class GeocenterPanelItem extends React.PureComponent {
     const gc = this.props.geocenter;
     return(
       <Card style={{marginBottom: "5px"}} key={gc.name} cover={<img alt="example" src={gc.image} />}>
-        <h3 style={{margin: 0, display: "inline-block"}}>{gc.name}</h3>
-        <Button style={{float: "right"}} ghost type="primary" onClick={this.onClick}>Explore</Button>
+        <Button style={{width: "100%"}} ghost type="primary" onClick={this.onClick}>{gc.name}</Button>
       </Card>
     )
   }
 }
 
 const GeocenterPanel = observer(({store}) => {
-  console.log(store.geocenters)
   const geocenterViews = store.geocenters.map((gc,i) => 
     <GeocenterPanelItem geocenter={gc} id={i} key={gc.name} onClick={store.onGeocenterClick}/>
   )

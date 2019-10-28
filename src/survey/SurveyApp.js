@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col , Card} from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
+import GlobeIcon from 'calcite-ui-icons-react/GlobeIcon';
 import GraphHistogramIcon from 'calcite-ui-icons-react/GraphHistogramIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
@@ -9,16 +10,20 @@ import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import FilterPanel from '../components/FilterPanel';
 import ChartPanel from '../components/ChartPanel';
-import LayerListPanel from '../components/LayerListPanel';
+// import LayerListPanel from '../components/LayerListPanel';
 import BookmarkPanel from '../components/BookmarkPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
-//import GeocenterPanel from '../components/GeoCentersPanel';
+import GeocenterPanel from '../components/GeoCentersPanel';
+import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
 const { Header, Content, Sider } = Layout;
 
 const MenuFilterIcon = () => (
   <LayerFilterIcon size="18" filled/>
+)
+const MenuGeocentersIcon = () => (
+  <GlobeIcon size="18" filled/>
 )
 const MenuHistogramIcon = () => (
   <GraphHistogramIcon size="18" filled/>
@@ -35,7 +40,7 @@ const SurveyApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: "Layers"
+    navKey: null
   };
 
   constructor(props, context){
@@ -83,13 +88,11 @@ const SurveyApp = observer(class App extends React.Component {
   render() {
     let panel;
     switch(this.state.navKey){
-      case 'Layers':
-        panel = (
-          <div>
-            <LayerListPanel store={this.store}/>
-            <FilterPanel store={this.store} defaultActive={true}/>
-          </div>
-        );
+      case 'Locations':
+        panel = <GeocenterPanel store={this.store}/>
+        break;
+      case 'Filters':
+        panel = <FilterPanel store={this.store} defaultActive={true}/>
         break;
       case 'Histograms':
         panel = <ChartPanel store={this.store}/>
@@ -107,7 +110,7 @@ const SurveyApp = observer(class App extends React.Component {
     const signin = this.props.appState.displayName
       ? (
         <Menu
-          theme="dark"
+          //theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
@@ -140,36 +143,45 @@ const SurveyApp = observer(class App extends React.Component {
     }
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Streets Survey</h1>
-          {signin}
-        </Header>
+        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+          <img
+            src={MobileyeLogo}
+            alt="Mobileye Logo"
+            style={{height: "40px", margin: "12px"}}
+            />
+          <Menu
+            defaultSelectedKeys={['0']}
+            mode="inline"
+            theme="dark"
+            selectedKeys={[this.state.navKey]}
+            onClick={this.onSelect}>
+            <Menu.Item key="Locations">
+              <Icon component={MenuGeocentersIcon} />
+              <span>Locations</span>
+            </Menu.Item>
+            <Menu.Item key="Filters">
+              <Icon component={MenuFilterIcon} />
+              <span>Filters</span>
+            </Menu.Item>
+            <Menu.Item key="Histograms">
+              <Icon component={MenuHistogramIcon} />
+              <span>Histograms</span>
+            </Menu.Item>
+            <Menu.Item key="Saved Locations">
+              <Icon component={MenuBookmarkIcon} />
+              <span>Saved Locations</span>
+            </Menu.Item>
+            <Menu.Item key="About">
+              <Icon component={MenuInformationIcon} />
+              <span>About</span>
+            </Menu.Item>
+          </Menu>
+        </Sider>
         <Layout>
-          <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-            <Menu
-              defaultSelectedKeys={['0']}
-              mode="inline"
-              theme="dark"
-              selectedKeys={[this.state.navKey]}
-              onClick={this.onSelect}>
-              <Menu.Item key="Layers">
-                <Icon component={MenuFilterIcon} />
-                <span>Layers</span>
-              </Menu.Item>
-              <Menu.Item key="Histograms">
-                <Icon component={MenuHistogramIcon} />
-                <span>Histograms</span>
-              </Menu.Item>
-              <Menu.Item key="Saved Locations">
-                <Icon component={MenuBookmarkIcon} />
-                <span>Saved Locations</span>
-              </Menu.Item>
-              <Menu.Item key="About">
-                <Icon component={MenuInformationIcon} />
-                <span>About</span>
-              </Menu.Item>
-            </Menu>
-          </Sider>
+          <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
+            <h1 style={{float: "left"}}>Streets Survey</h1>
+            {signin}
+          </Header>
           <Content>
             <Row>
               <Col
