@@ -248,13 +248,13 @@ class SafetyStore extends Store {
       routeParams.stops.features.push(this.startGraphic);
       routeParams.stops.features.push(this.endGraphic);
 
-      var scorepolys = qres.features.slice(0,100).map((f,i) => {
+      var scorepolys = qres.features.slice(0,150).map((f,i) => {
         var scorebuffer = {
           geometry: geometryEngine.geodesicBuffer(f.geometry, 15, "meters"),
           attributes: {
             Name: f.attributes['ObjectId'],
             BarrierType: 1,
-            Attr_Miles: f.attributes['eventvalue'] / 2
+            Attr_Miles: f.attributes['eventvalue'] / 4
           },
         }
         return scorebuffer;  
