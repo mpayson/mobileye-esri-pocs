@@ -57,7 +57,7 @@ const safetyConfig = {
     'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High']),
     'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70']),
     'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High']),
-    'fcw': getRenderer('fcw', [0,1.35499499,2.66894309,6.03785078,8.2561676],['Low','Medium','High'])
+     'fcw': getRenderer('fcw', [0,1.35499499,2.66894309,6.03785078,8.2561676],['Low','Medium','High'])
   },
   filters: [{
     name:'eventvalue',
@@ -155,7 +155,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "Passenger collusion warning."
+      info: "Pedestrian and cyclist collision warning (PCW)"
     }
   },{
     name: 'fcw',
@@ -165,7 +165,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "Forward collusion warning"
+      info: "Forward collision warning (FCW)"
     }
   }],
   hasCustomTooltip: true,
