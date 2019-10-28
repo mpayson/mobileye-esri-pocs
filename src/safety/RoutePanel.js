@@ -89,7 +89,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         <Alert
         style={{marginBottom: "10px"}}
         message="Unrealistic Results"
-        description="Time difference is to high."
+        description="Time difference is too high."
         type="warning"
         onClose={this.closeAlert}
         afterClose={this.afterCloseAlert}
