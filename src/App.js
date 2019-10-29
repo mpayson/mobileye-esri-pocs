@@ -4,6 +4,7 @@ import { HashRouter as Router, BrowserRouter, Route, Link, Redirect } from "reac
 import { Row, Col, Card, Layout, Button, Divider } from 'antd';
 import AppState from './stores/AppState';
 import MapImage from './resources/images/map.png';
+import SurveyImage from './resources/images/survey.png';
 import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
@@ -99,7 +100,7 @@ const Home = observer(class Home extends React.Component{
             </Col>
             <Col md={{span: 6}} xl={{span: 4}}>
               <Card
-              cover={<img alt="example" src={MapImage} />}>
+              cover={<img alt="example" src={SurveyImage} />}>
               <Link
                 to="/survey"
                 className={linkClass}

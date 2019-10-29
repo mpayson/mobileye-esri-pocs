@@ -14,7 +14,7 @@ import ChartPanel from '../components/ChartPanel';
 import BookmarkPanel from '../components/BookmarkPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
-import GeocenterPanel from '../components/GeoCentersPanel';
+import LocationsPanel from '../components/LocationsPanel';
 import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
 const { Header, Content, Sider } = Layout;
@@ -22,7 +22,7 @@ const { Header, Content, Sider } = Layout;
 const MenuFilterIcon = () => (
   <LayerFilterIcon size="18" filled/>
 )
-const MenuGeocentersIcon = () => (
+const MenuLocationsIcon = () => (
   <GlobeIcon size="18" filled/>
 )
 const MenuHistogramIcon = () => (
@@ -89,7 +89,7 @@ const SurveyApp = observer(class App extends React.Component {
     let panel;
     switch(this.state.navKey){
       case 'Locations':
-        panel = <GeocenterPanel store={this.store}/>
+        panel = <LocationsPanel store={this.store}/>
         break;
       case 'Filters':
         panel = <FilterPanel store={this.store} defaultActive={true}/>
@@ -156,7 +156,7 @@ const SurveyApp = observer(class App extends React.Component {
             selectedKeys={[this.state.navKey]}
             onClick={this.onSelect}>
             <Menu.Item key="Locations">
-              <Icon component={MenuGeocentersIcon} />
+              <Icon component={MenuLocationsIcon} />
               <span>Locations</span>
             </Menu.Item>
             <Menu.Item key="Filters">

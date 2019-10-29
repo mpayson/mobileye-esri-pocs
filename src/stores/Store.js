@@ -54,7 +54,7 @@ class Store {
     this.outFields = storeConfig.outFields;
     this.hasCustomTooltip = storeConfig.hasCustomTooltip;
     this.bookmarkInfos = storeConfig.bookmarkInfos;
-    this.geocenters = storeConfig.geocenters ? storeConfig.geocenters : [];
+    this.locations = storeConfig.locations ? storeConfig.locations : [];
   }
   // to destroy map view, need to do `view.container = view.map = null;`
   // should probably include this in the dismount
@@ -215,7 +215,7 @@ class Store {
         //spatialReference: new SpatialReference({ wkid: 4326 })
       })
 
-      this.geocenters.forEach(gc => gc.extent = new Extent(gc.extent));
+      this.locations.forEach(l => l.extent = new Extent(l.extent));
       if(this.mapId){
         this.map = new WebMap({
           portalItem: {
@@ -244,6 +244,7 @@ class Store {
       );
       if(renderer) this.lyr.renderer = renderer;
       if(this.outFields) this.lyr.outFields = this.outFields;
+      //console.log(this.popupTemplate)
       if(this.popupTemplate !== undefined) this.lyr.popupTemplate = this.popupTemplate;
       this._loadLayers();
       return this.view;
@@ -268,10 +269,10 @@ class Store {
     }
   }
 
-  onGeocenterClick(index) {
-    if(!this.view || index >= this.geocenters.length) return;
-    const geocenter = this.geocenters[index];
-    this.view.goTo(geocenter.extent);
+  onLocationClick(index) {
+    if(!this.view || index >= this.locations.length) return;
+    const location = this.locations[index];
+    this.view.goTo(location.extent);
   }
 
 
@@ -324,7 +325,7 @@ decorate(Store, {
   toggleLayerVisibility: action.bound,
   _onMouseMove: action.bound,
   onBookmarkClick: action.bound,
-  onGeocenterClick: action.bound,
+  onLocationClick: action.bound,
   onClearBookmark: action.bound
 });
 
