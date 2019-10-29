@@ -59,8 +59,6 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
     this.alertFading = false;
   }
 
-
-
   render(){
     const store = this.props.store;
 
@@ -112,6 +110,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
           <Input
             disabled
             style={{width: 'calc(100% - 40px)', cursor: 'default'}}
+            placeholder="Select a location on the map"
             value={store.startStr}>
           </Input>
         </InputGroup>
@@ -126,6 +125,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
           <Input
             disabled
             style={{width: 'calc(100% - 40px)', cursor: 'default'}}
+            placeholder="Select a location on the map"
             value={store.endStr}>
           </Input>
         </InputGroup>
