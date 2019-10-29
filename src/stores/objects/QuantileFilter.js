@@ -19,17 +19,17 @@ class QuantileFilter extends MultiSelectFilter{
     super.setFieldInfoFromLayer(featureLayer);
     this.loaded = true;
     this.options = this.quantiles.map(q => q.label);
-    this.selectValue = this.options.slice();
+    // this.selectValue = this.options.slice();
     this.labelMap = new Map();
     this.quantiles.forEach(q => this.labelMap.set(q.label, q));
   }
 
-  clear(){
-    this.selectValue = this.options.slice();
-  }
+  // clear(){
+  //   this.selectValue = this.options.slice();
+  // }
 
   get where(){
-    if(this.options.length === this.selectValue.length) return null;
+    // if(this.options.length === this.selectValue.length) return null;
     let min, max;
     for(let i = 0; i < this.selectValue.length; i++){
       const label = this.selectValue[i];

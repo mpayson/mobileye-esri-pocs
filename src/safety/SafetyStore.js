@@ -4,6 +4,11 @@ import options from '../config/esri-loader-options';
 import Store from '../stores/Store';
 import { message } from 'antd';
 
+// number of barriers to account for when routing
+const NUMBER_BARRIERS = 150;
+// added_network_cost = eventvalue / RISK_SCALE_FACTOR 
+const RISK_SCALE_FACTOR = 4;
+
 message.config({
   // top: "calc(100vh - 70px)"
   top: "75px"
@@ -248,13 +253,13 @@ class SafetyStore extends Store {
       routeParams.stops.features.push(this.startGraphic);
       routeParams.stops.features.push(this.endGraphic);
 
-      var scorepolys = qres.features.slice(0,150).map((f,i) => {
+      var scorepolys = qres.features.slice(0,NUMBER_BARRIERS).map((f,i) => {
         var scorebuffer = {
           geometry: geometryEngine.geodesicBuffer(f.geometry, 15, "meters"),
           attributes: {
             Name: f.attributes['ObjectId'],
             BarrierType: 1,
-            Attr_Miles: f.attributes['eventvalue'] / 4
+            Attr_Miles: f.attributes['eventvalue'] / RISK_SCALE_FACTOR
           },
         }
         return scorebuffer;  
