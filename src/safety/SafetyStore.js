@@ -5,9 +5,9 @@ import Store from '../stores/Store';
 import { message } from 'antd';
 
 // number of barriers to account for when routing
-const NUMBER_BARRIERS = 150;
+const NUMBER_BARRIERS = 200;
 // added_network_cost = eventvalue / RISK_SCALE_FACTOR 
-const RISK_SCALE_FACTOR = 4;
+const RISK_SCALE_FACTOR = 3;
 
 message.config({
   // top: "calc(100vh - 70px)"
