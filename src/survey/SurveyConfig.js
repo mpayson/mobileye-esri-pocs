@@ -363,8 +363,8 @@ const surveyConfig = {
   
   viewConfig: { 
     // center: [-73.974051, 40.762746],
-    center: [-84.386330, 33.753746],
-    zoom: 16
+    center: [-122.483311, 37.707744],
+    zoom: 15
   }
 }
 
