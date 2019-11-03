@@ -11,9 +11,9 @@ class BookmarkPanelItem extends React.PureComponent {
   render(){
     const b = this.props.bookmark;
     return(
-      <Card style={{marginBottom: "5px"}} key={b.name}>
-        <h3 style={{margin: 0, display: "inline-block"}}>{b.name}</h3>
-        <Button style={{float: "right"}} ghost type="primary" onClick={this.onClick}>Explore</Button>
+      <Card style={{marginBottom: "3px"}} key={b.name}>
+        <h3 style={{margin: 0, display: "inline-block", marginBottom: "20px"}}>{b.name}</h3>
+        <Button style={{float: "right"}} ghost type="primary" onClick={this.onClick}>Go</Button>
       </Card>
     )
   }

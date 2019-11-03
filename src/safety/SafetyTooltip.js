@@ -36,7 +36,7 @@ const SafetyTooltip = observer(({store}) => {
     position: 'absolute',
     top: isSubsetFields ? `${y - 115}px` :`${y - 405}px`,
     left: `${x - 220/2}px`,
-    width: '220px',
+    width: '280px',
     height: isSubsetFields ? '110px' : '400px',
     overflow: 'auto',
     zIndex: '99',
