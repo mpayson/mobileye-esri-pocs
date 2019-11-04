@@ -152,37 +152,40 @@ class Store {
     this.tooltipResults = null;
   }
 
-  // class to watch for mouse movement
-  // need to figure learn how best to use this debounce function
+  // function to watch for mouse movement
   _onMouseMove(evt){
 
-    const handleEvt = pUtils.debounce(function(classRef, event){
-      return classRef.view.hitTest(event)
-        .then(hit => {
-          if(classRef._tooltipHighlight){
-            classRef._tooltipHighlight.remove();
-            classRef._tooltipHighlight = null;
+    const promise = ( this._tooltipPromise = this.view
+      .hitTest(evt)
+      .then(hit => {
+        if(promise !== this._tooltipPromise){
+          return; // another test was performed
+        }
+        if(this._tooltipHighlight){
+          this._tooltipHighlight.remove();
+          this._tooltipHighlight = null;
+        }
+        const results = hit.results.filter(
+          r => r.graphic.layer === this.lyr
+        );
+        if(results.length){
+          const graphic = results[0].graphic;
+          const screenPoint = hit.screenPoint;
+          this._tooltipHighlight = this.lyrView.highlight(graphic);
+          this.tooltipResults = {
+            screenPoint,
+            graphic
           }
-          const results = hit.results.filter(r => r.graphic.layer === classRef.lyr);
-          if(results.length){
-            console.log("SETTING RESULTS")
-            const graphic = results[results.length - 1].graphic;
-            const screenPoint = hit.screenPoint;
-            classRef._tooltipHighlight = classRef.lyrView.highlight(graphic);
-            classRef.tooltipResults = {
-              screenPoint,
-              graphic
-            }
-          } else {
-            classRef.tooltipResults = null;
-          }
-        })
-    })
-    handleEvt(this, evt)
+        } else {
+          this.tooltipResults = null;
+        }
+      })
+      
+    )
   }
 
   _onMouseLeave(evt){
-    console.log("MOUSE LEAVING")
+    this._tooltipPromise = null;
     this.clearTooltip();
   }
 

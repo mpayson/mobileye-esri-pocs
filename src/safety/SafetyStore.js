@@ -213,8 +213,7 @@ class SafetyStore extends Store {
     });
   }
 
-  generateScoreRoute(){
-
+  generateScoreRoute(pStdRoute){
     const pQuery = this.lyrView.queryFeatures({
       where: "eventvalue > 0",
       geometry: this.view.extent,
@@ -269,7 +268,6 @@ class SafetyStore extends Store {
       return routeTask.solve(routeParams)
     })
     .then(data => {
-      console.log('score', data);
       if(this.scoreRoute) this.view.graphics.remove(this.scoreRoute);
       this.scoreRoute = data.routeResults[0].route;
       this.scoreRoute.symbol = {
@@ -277,18 +275,29 @@ class SafetyStore extends Store {
         color: [227, 69, 143, 1],
         width: 3
       };
-      this.safetyTravelTime = this.scoreRoute.attributes['Total_TravelTime'];
-      this.view.graphics.add(this.scoreRoute);
-      return this.lyrView.queryFeatures({
+      const pQuery = this.lyrView.queryFeatures({
         where: "1=1",
         geometry: this.scoreRoute.geometry,
         outStatistics: [scoreStatQuery]
-      })
+      });
+      return Promise.all([pQuery, pStdRoute])
     })
-    .then(res => {
-      if(res.features && res.features.length){
+    .then(([res, _]) => {
+      const tempScore = res.features && res.features.length
+        ? res.features[0].attributes['score_sum']
+        : null;
+
+      // std values will be defined once the promise resolves
+      // if score gets worse don't show results
+      if(!tempScore || tempScore > this.stdTravelScore){
+        this.scoreRoute.geometry = this.stdRoute.geometry;
+        this.safetyTravelTime = this.stdTravelTime;
+        this.safetyTravelScore = this.stdTravelScore;
+      } else {
+        this.safetyTravelTime = this.scoreRoute.attributes['Total_TravelTime'];
         this.safetyTravelScore = res.features[0].attributes['score_sum']
       }
+      this.view.graphics.add(this.scoreRoute);
     });
   }
 
@@ -301,19 +310,22 @@ class SafetyStore extends Store {
       'esri/tasks/support/FeatureSet',
       'esri/geometry/SpatialReference'
     ], options)
-    .then(_ => 
-      Promise.all([
-        this.generateStdRoute(),
-        this.generateScoreRoute()
+    .then(_ => {
+      const pStdRoute = this.generateStdRoute();
+      return Promise.all([
+        pStdRoute,
+        this.generateScoreRoute(pStdRoute)
       ])
-    )
+    })
+    // defer working with score results in case it adds more time
     .then( _ => {
       this.view.goTo([this.scoreRoute, this.stdRoute]);
       message.destroy();
     })
-    .catch(_ => {
+    .catch( er => {
       message.destroy();
       message.error('Error generating routes, please retry!');
+      console.log(er);
     })
 
   }

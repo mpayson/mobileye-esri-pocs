@@ -95,7 +95,7 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
       )
     } 
 
-    console.log(store.safetyTimeDelta && store.safetyTimeDelta < 5);
+    // console.log(store.safetyTimeDelta && store.safetyTimeDelta < 5);
 
     return(
       <>

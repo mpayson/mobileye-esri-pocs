@@ -12,7 +12,7 @@ class BookmarkPanelItem extends React.PureComponent {
     const b = this.props.bookmark;
     return(
       <Card style={{marginBottom: "3px"}} key={b.name}>
-        <h3 style={{margin: 0, display: "inline-block", marginBottom: "20px"}}>{b.name}</h3>
+        <h3 style={{margin: 0, display: "inline-block", maxWidth: '80%'}}>{b.name}</h3>
         <Button style={{float: "right"}} ghost type="primary" onClick={this.onClick}>Go</Button>
       </Card>
     )
