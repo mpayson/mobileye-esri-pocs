@@ -67,12 +67,13 @@ const SafetyApp = observer(class App extends React.Component {
 
     const modulePromise = loadModules([
       'esri/widgets/Search',
-      'esri/widgets/Legend'
+      'esri/widgets/Legend',
+      'esri/widgets/Home'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend], mapView]) => {
+      .then(([[Search, Legend, Home], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
         this.view.ui.add(search, "top-right");
@@ -83,7 +84,11 @@ const SafetyApp = observer(class App extends React.Component {
         this.view.popup.actions.removeAll();
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
-
+        this.homeWidget = new Home({
+          view: this.view
+        });
+        // adds the home widget to the top left corner of the MapView
+        this.view.ui.add(this.homeWidget, "top-right");
       })
   }
 
