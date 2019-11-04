@@ -34,13 +34,15 @@ const SafetyTooltip = observer(({store}) => {
   const style = {
     display: 'block',
     position: 'absolute',
-    top: isSubsetFields ? `${y - 115}px` :`${y - 405}px`,
-    left: `${x - 220/2}px`,
-    width: '280px',
+    // top: isSubsetFields ? `${y - 115}px` :`${y - 405}px`,
+    // left: `${x - 220/2}px`,
+    top: '15px',
+    right: '15px',
+    width: '260px',
     height: isSubsetFields ? '110px' : '400px',
     overflow: 'auto',
     zIndex: '99',
-    pointerEvents: 'none',
+    pointerEvents: 'none'
   }
   if(!graphic) style.display = 'none';
   const attrs = graphic.attributes;
@@ -56,6 +58,15 @@ const SafetyTooltip = observer(({store}) => {
       ? defaultBool && store.rendererField === f.field
       : defaultBool;
   }).map(f => 
+    // <tr key={f.field}>
+    //   <td style={{height: "20px"}}>{f.alias}</td>
+    //   <td style={{height: "20px"}}>
+    //     <Progress
+    //       percent={Math.round((attrs[f.field]/f.upperBound) * 100)}
+    //       status="normal"
+    //       showInfo={false}/>
+    //   </td>
+    // </tr>
     <div key={f.field}>
       {f.alias}
       <Progress
@@ -67,7 +78,11 @@ const SafetyTooltip = observer(({store}) => {
 
   return (
     <Card className="antd-esri-widget" style={style} size="small" title={`${aM.get('eventvalue')}: ${getQuantileLabel(attrs['eventvalue'])}`}>
-      {infoContent}
+      {/* <table style={{width: "100%", tableLayout: 'fixed'}}>
+      <tbody> */}
+        {infoContent}
+      {/* </tbody>
+      </table> */}
     </Card>
   )
 });

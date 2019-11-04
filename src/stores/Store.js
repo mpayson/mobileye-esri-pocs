@@ -62,6 +62,7 @@ class Store {
     if(this.effectHandler) this.effectHandler();
     if(this.rendererHandler) this.rendererHandler();
     if(this._tooltipListener) this._tooltipListener.remove();
+    if( this._mouseLeaveListener) this._mouseLeaveListener.remove();
   }
 
   loadFilters(){
@@ -97,6 +98,7 @@ class Store {
 
       if(this.hasCustomTooltip){
         this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
+        this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
       }
 
       this.aliasMap = this.lyr.fields.reduce((p, f) => {
@@ -142,6 +144,14 @@ class Store {
     })
   }
 
+  clearTooltip(){
+    if(this._tooltipHighlight){
+      this._tooltipHighlight.remove();
+      this._tooltipHighlight = null;
+    }
+    this.tooltipResults = null;
+  }
+
   // class to watch for mouse movement
   // need to figure learn how best to use this debounce function
   _onMouseMove(evt){
@@ -155,6 +165,7 @@ class Store {
           }
           const results = hit.results.filter(r => r.graphic.layer === classRef.lyr);
           if(results.length){
+            console.log("SETTING RESULTS")
             const graphic = results[results.length - 1].graphic;
             const screenPoint = hit.screenPoint;
             classRef._tooltipHighlight = classRef.lyrView.highlight(graphic);
@@ -168,6 +179,11 @@ class Store {
         })
     })
     handleEvt(this, evt)
+  }
+
+  _onMouseLeave(evt){
+    console.log("MOUSE LEAVING")
+    this.clearTooltip();
   }
 
   setRendererField(field){
@@ -327,7 +343,9 @@ decorate(Store, {
   _onMouseMove: action.bound,
   onBookmarkClick: action.bound,
   onLocationClick: action.bound,
-  onClearBookmark: action.bound
+  onClearBookmark: action.bound,
+  clearTooltip: action.bound,
+  _onMouseLeave: action.bound
 });
 
 export default Store;
