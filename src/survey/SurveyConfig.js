@@ -47,6 +47,10 @@ import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 import dotImage from '../resources/images/dot.png'
 import NYCImage from '../resources/images/NYC.jpg'
 import AtlantaImage from '../resources/images/Atlanta.jpg'
+import SanFranImage from '../resources/images/SanFran.jpg'
+import LondonImage from '../resources/images/London.jpg'
+
+
 
 const icons_exp = "When(" +
 "$feature.icon == 'sign5', '"+`${sign5Image}`+"'," +
@@ -330,6 +334,15 @@ const surveyConfig = {
                }
   }, 
   {
+    'name' : 'San Francisco, CA',
+    'image' : SanFranImage,
+    'extent' : {
+                 "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
+                 ,
+                 "spatialReference":{"wkid":102100}
+               }
+  },
+  {
     'name' : 'Atlanta, GA',
     'image' : AtlantaImage,
     'extent' : {
@@ -337,12 +350,21 @@ const surveyConfig = {
                  ,
                  "spatialReference":{"wkid":102100}
                }
+  },
+  {
+    'name' : 'London',
+    'image' : LondonImage,
+    'extent' : {
+                 "xmin":1920.9291059593083,"ymin":6711129.087432487,"xmax":11284.465070880779,"ymax":6715132.476788918
+                 ,
+                 "spatialReference":{"wkid":102100}
+               }
   }],
   
   viewConfig: { 
     // center: [-73.974051, 40.762746],
-    center: [-84.386330, 33.753746],
-    zoom: 16
+    center: [-122.483311, 37.707744],
+    zoom: 15
   }
 }
 

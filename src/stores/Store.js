@@ -280,6 +280,7 @@ class Store {
   onBookmarkClick(index){
     if(!this.view || index >= this.bookmarks.length) return;
     const bookmark = this.bookmarks[index];
+    //console.log(bookmark.extent);
     this.view.goTo(bookmark.extent);
     if(this.bookmarkInfos){
       this.bookmarkInfo = this.bookmarkInfos[bookmark.name]

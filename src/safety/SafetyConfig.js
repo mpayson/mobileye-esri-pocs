@@ -236,18 +236,34 @@ const safetyConfig = {
     zoom: 12
   },
   bookmarkInfos: {
-    'Willamsburg Bridge': {
-      title: 'Williamsburg Bridge',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    },
-    'Jerusalem': {
-      title: 'Jerusalem',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    'Israel': {
+      title: 'Israel',
+      content: ''
     },
     'Manhattan': {
       title: 'Manhattan',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    }
+      content: ''
+    },
+    'Ed Koch Bridge - Interchange with harsh cornering and braking': {
+      title: 'Ed Koch Bridge',
+      content: 'Ed Koch Bridge - in this interchange we can see harsh breaking and cornering as drivers go off the highway and into narrower and slower city roads.'
+    },
+    'Bay PKWY - Harsh braking between traffic lights': {
+      title: 'Bay PKWY',
+      content: 'Two sections of Bay PKWY have higher rate of harsh breaking then the other sections of the road. This might indicate a need for a change in road marking or road traffic signs.'
+     },
+    '33rd and 6th Harsh breaking': {
+      title: '33rd and 6th',
+      content: 'The middle section of the map shows one section that has extreme harsh breaking. there is a park and a subway exit next to it which might be the cause for the harsh breaking.'
+     },
+    'HW 95 - Harsh Cornering': {
+      title: 'HW 95',
+      content: 'Most highway ramps have high harsh cornering rate, this section has extremely high rate and might require special slow down signage.'
+     },
+    'Canal St - Combination of risk factors': {
+      title: 'Canal st',
+      content: 'The red section shows a combination of risk scores in one location, pedestrians, cyclists, speeding and harsh breaking.'
+     }
   }
 }
 
