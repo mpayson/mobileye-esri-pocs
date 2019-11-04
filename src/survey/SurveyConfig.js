@@ -48,7 +48,8 @@ import dotImage from '../resources/images/dot.png'
 import NYCImage from '../resources/images/NYC.jpg'
 import AtlantaImage from '../resources/images/Atlanta.jpg'
 import SanFranImage from '../resources/images/SanFran.jpg'
-import LondonImage from '../resources/images/London.jpg'
+import HeathrowImage from '../resources/images/Heathrow.jpg'
+import ObaidaImage from '../resources/images/Obaida.jpg'
 
 
 
@@ -343,6 +344,24 @@ const surveyConfig = {
                }
   },
   {
+    'name' : 'Heathrow',
+    'image' : HeathrowImage,
+    'extent' : {
+                 "xmin":-57155.730385611794,"ymin":6702392.397662927,"xmax":-43043.54403848015,"ymax":6710294.075461897
+                 ,
+                 "spatialReference":{"wkid":102100}
+               }
+  },
+  {
+    'name' : 'Obaida (Tokyo)',
+    'image' : ObaidaImage,
+    'extent' : {
+                 "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
+                 ,
+                 "spatialReference":{"wkid":102100}
+               }
+  },
+  {
     'name' : 'Atlanta, GA',
     'image' : AtlantaImage,
     'extent' : {
@@ -350,16 +369,8 @@ const surveyConfig = {
                  ,
                  "spatialReference":{"wkid":102100}
                }
-  },
-  {
-    'name' : 'London',
-    'image' : LondonImage,
-    'extent' : {
-                 "xmin":1920.9291059593083,"ymin":6711129.087432487,"xmax":11284.465070880779,"ymax":6715132.476788918
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
   }],
+  
   
   viewConfig: { 
     // center: [-73.974051, 40.762746],
