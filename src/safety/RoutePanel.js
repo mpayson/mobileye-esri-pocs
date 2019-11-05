@@ -7,9 +7,11 @@ import {
   Statistic,
   Card,
   Divider,
-  Alert
+  Alert,
+  Select
 } from 'antd';
 import PinIcon from 'calcite-ui-icons-react/PinPlusIcon';
+const { Option } = Select;
 
 const CreateIcon = () => (
   <PinIcon filled size="17"/>
@@ -59,6 +61,22 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
     this.alertFading = false;
   }
 
+  onStartSearch = value => {
+    this.props.store.onAddressSearchChange(value, true);
+  }
+
+  onEndSearch = value => {
+    this.props.store.onAddressSearchChange(value, false);
+  }
+
+  onStartChange = value => {
+    this.props.store.onAddressSearchSelect(value, true);
+  }
+
+  onEndChange = value => {
+    this.props.store.onAddressSearchSelect(value, false);
+  }
+
   render(){
     const store = this.props.store;
 
@@ -97,6 +115,14 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
 
     // console.log(store.safetyTimeDelta && store.safetyTimeDelta < 5);
 
+    const startOptions = store.startSearchResults.map(s => 
+      <Option key={s.magicKey}>{s.text}</Option>
+    )
+
+    const endOptions = store.endSearchResults.map(s => 
+      <Option key={s.magicKey}>{s.text}</Option>
+    );
+
     return(
       <>
         <p>Route Start</p>
@@ -107,12 +133,26 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
             disabled={!store.isSketchLoaded}>
             {startIcon}
           </Button>
-          <Input
+          <Select
+            showSearch
+            defaultActiveFirstOption={false}
+            showArrow={false}
+            filterOption={false}
+            notFoundContent={null}
+            placeholder="Select a location or find a place"
+            onSearch={this.onStartSearch}
+            onChange={this.onStartChange}
+            value={store.startStr ? store.startStr : undefined}
+            style={{width: 'calc(100% - 40px)'}}
+            disabled={!store.isSketchLoaded}>
+            {startOptions}
+          </Select>
+          {/* <Input
             disabled
             style={{width: 'calc(100% - 40px)', cursor: 'default'}}
             placeholder="Select a location on the map"
-            value={store.startStr}>
-          </Input>
+            value={store.startStr}> */}
+          {/* </Input> */}
         </InputGroup>
         <p>Route End</p>
         <InputGroup compact style={{marginBottom: "30px"}}>
@@ -122,12 +162,26 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
             disabled={!store.isSketchLoaded}>
             {endIcon}
           </Button>
-          <Input
+          {/* <Input
             disabled
             style={{width: 'calc(100% - 40px)', cursor: 'default'}}
             placeholder="Select a location on the map"
             value={store.endStr}>
-          </Input>
+          </Input> */}
+          <Select
+            showSearch
+            defaultActiveFirstOption={false}
+            showArrow={false}
+            filterOption={false}
+            notFoundContent={null}
+            placeholder="Select a location or find a place"
+            onSearch={this.onEndSearch}
+            onChange={this.onEndChange}
+            value={store.endStr ? store.endStr : undefined}
+            style={{width: 'calc(100% - 40px)'}}
+            disabled={!store.isSketchLoaded}>
+            {endOptions}
+          </Select>
         </InputGroup>
         <Button
           size="large"

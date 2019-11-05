@@ -31,7 +31,7 @@ const SafetyApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: null
+    navKey: 'Route'
   };
 
   constructor(props, context){
@@ -188,7 +188,7 @@ const SafetyApp = observer(class App extends React.Component {
                 style={{height: "calc(100vh - 64px)"}}>
               <div
                 ref={this.mapViewRef}
-                style={{width: "100%", height: "100%"}}/>
+                style={{width: "100%", height: "100%", background: '#373938'}}/>
               {tooltip}
               {bookmarkCard}
               <Drawer
