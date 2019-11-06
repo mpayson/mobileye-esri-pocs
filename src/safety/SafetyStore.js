@@ -196,6 +196,9 @@ class SafetyStore extends Store {
         geometry: res[0].location
       });
       if(isStart){
+        if(this.startGraphic){
+          this.view.graphics.remove(this.startGraphic);
+        }
         this.startStr = address;
         this.startGraphic = graphic;
         this.view.graphics.add(this.startGraphic);
@@ -203,6 +206,9 @@ class SafetyStore extends Store {
           ? this.view.goTo([this.startGraphic, this.endGraphic])
           : this.view.goTo(this.startGraphic);
       } else {
+        if(this.endGraphic){
+          this.view.graphics.remove(this.endGraphic);
+        }
         this.endStr = address;
         this.endGraphic = graphic;
         this.view.graphics.add(this.endGraphic);
