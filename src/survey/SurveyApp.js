@@ -70,18 +70,31 @@ const SurveyApp = observer(class App extends React.Component {
 
     const modulePromise = loadModules([
       'esri/widgets/Search',
-      // 'esri/widgets/Legend'
+      'esri/widgets/Legend',
+      'esri/widgets/Home',
+      'esri/widgets/Expand'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
-    Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend], mapView]) => {
+    Promise.all([modulePromise, loadPromise]) 
+      .then(([[Search, Legend, Home, Expand], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
-        this.view.ui.add(search, "top-right");
-        // const legend = new Legend({view: this.view});
-        // this.view.ui.add(legend, "bottom-right");
+        const searchExpand = new Expand({
+          view: this.view,
+          content: search,
+          expandIconClass: 'esri-icon-search'
+        })
+        this.view.ui.add(searchExpand, "top-right");
+        const legend = new Legend({view: this.view,
+                                   layerInfos: [{layer: this.store.lyr, title: ""}]});
+        this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
+        this.homeWidget = new Home({
+          view: this.view
+        });
+        // adds the home widget to the top left corner of the MapView
+        this.view.ui.add(this.homeWidget, "top-right");
       });
   }
 

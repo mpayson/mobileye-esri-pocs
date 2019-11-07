@@ -116,8 +116,55 @@ const surveyConfig = {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "icon",
-      //field: "system_type_group",
-      defaultSymbol: {type: "simple-marker", color: "blue"},
+      valueExpression: "When($feature.icon == 'sign5', 'speed sign'," +
+                            "$feature.icon == 'sign10', 'speed sign'," +
+                            "$feature.icon == 'sign15', 'speed sign'," +
+                            "$feature.icon == 'sign20', 'speed sign'," +
+                            "$feature.icon == 'sign25', 'speed sign'," +
+                            "$feature.icon == 'sign30', 'speed sign'," +
+                            "$feature.icon == 'sign35', 'speed sign'," +
+                            "$feature.icon == 'sign40', 'speed sign'," +
+                            "$feature.icon == 'sign45', 'speed sign'," +
+                            "$feature.icon == 'sign50', 'speed sign'," +
+                            "$feature.icon == 'sign55', 'speed sign'," +
+                            "$feature.icon == 'sign60', 'speed sign'," +
+                            "$feature.icon == 'sign65', 'speed sign'," +
+                            "$feature.icon == 'sign70', 'speed sign'," +
+                            "$feature.icon == 'sign75', 'speed sign'," +
+                            "$feature.icon == 'sign80', 'speed sign'," +
+                            "$feature.icon == 'sign85', 'speed sign'," +
+                            "$feature.icon == 'sign90', 'speed sign'," +
+                            "$feature.icon == 'sign95', 'speed sign'," +
+                            "$feature.icon == 'sign100', 'speed sign'," +
+                            "$feature.icon == 'sign105', 'speed sign'," +
+                            "$feature.icon == 'sign110', 'speed sign'," +
+                            "$feature.icon == 'sign115', 'speed sign'," +
+                            "$feature.icon == 'sign120', 'speed sign'," +
+                            "$feature.icon == 'sign125', 'speed sign'," +
+                            "$feature.icon == 'sign130', 'speed sign'," +
+                            "$feature.icon == 'sign135', 'speed sign'," +
+                            "$feature.icon == 'sign140', 'speed sign'," +
+                            "$feature.icon == 'sign145', 'speed sign'," +
+                            "$feature.icon == 'CIRCULAR_NO_SPEED', 'non speed sign'," +
+                            "$feature.icon == 'WARNING', 'non speed sign'," +
+                            "$feature.icon == 'CONSTRUCTION', 'non speed sign'," + 
+                            "$feature.icon == 'RECTANGULAR', 'non speed sign'," + 
+                            "$feature.icon == 'TRAFFIC_LIGHTS', 'traffic light'," + 
+                            "$feature.icon == 'DIAMOND', 'non speed sign'," + 
+                            "$feature.icon == 'YIELD', 'non speed sign'," + 
+                            "$feature.icon == 'ROAD_MARKINGS_ARROWS', 'road mark'," + 
+                            "$feature.icon == 'ROAD_MARKINGS_STOPLINE', 'road mark'," + 
+                            "$feature.icon == 'DOT1', 'road mark'," + 
+                            "$feature.icon == 'HORIZONTAL', 'overhead structure'," + 
+                            "$feature.icon == 'REFLECTORS', 'reflector'," + 
+                            "$feature.icon == 'CROSSING', 'road mark'," + 
+                            "$feature.icon == 'MANHOLE_COVER', 'manhole cover'," + 
+                            "$feature.icon == 'DOT2', 'road mark'," + 
+                            "$feature.icon == 'UNRECOGNIZED_CIRCLE', 'unidentified sign'," + 
+                            "$feature.icon == 'UNRECOGNIZED_RECRANGLE', 'unidentified sign'," + 
+                            "'other')",
+      
+      defaultSymbol: {type: "simple-marker", size : 2.0, color: "white"},
       visualVariables: [{
         type: "opacity",
         field: "comparsion_to_prev_map",
@@ -130,52 +177,13 @@ const surveyConfig = {
       
       ],
       uniqueValueInfos: [
-        {value: 'sign5', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign10', symbol: {type: "simple-marker", size:6.0, color: "orange"}},
-        {value: 'sign15', symbol: {type: "simple-marker", size:6.0, color: "orange"}},
-        {value: 'sign20', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign25', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign30', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign35', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign40', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign45', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign50', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign55', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign60', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign65', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign70', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign75', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign80', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign85', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign90', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign95', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign100', symbol: {type: "simple-marker", size:6.0, color: "orange"}},
-        {value: 'sign105', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign110', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign115', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign120', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign125', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign130', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign135', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign140', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign145', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'CIRCULAR_NO_SPEED', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'WARNING', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'CONSTRUCTION', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'RECTANGULAR', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'TRAFFIC_LIGHTS', symbol: {type: "simple-marker", size:6.0, color: "purple"}}, 
-        {value: 'DIAMOND', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'YIELD', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'ROAD_MARKINGS_ARROWS', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'ROAD_MARKINGS_STOPLINE', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'DOT1', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'HORIZONTAL', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'REFLECTORS', symbol: {type: "simple-marker", size:6.0, color: "green"}}, 
-        {value: 'CROSSING', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'MANHOLE_COVER', symbol: {type: "simple-marker", size:6.0, color: "yellow"}}, 
-        {value: 'DOT2', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'UNRECOGNIZED_CIRCLE', symbol: {type: "simple-marker", size:3.0, color: "black"}}, 
-        {value: 'UNRECOGNIZED_RECRANGLE', symbol:  {type: "simple-marker", size:3.0, color: "black"}} 
+        {value: 'speed sign', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
+        {value: 'non speed sign', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
+        {value: 'traffic light', symbol: {type: "simple-marker", size:6.0, color: "purple"}}, 
+        {value: 'road mark', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
+        {value: 'horizontal structure', symbol: {type: "simple-marker", size:6.0, color: "light blue"}}, 
+        {value: 'reflector', symbol: {type: "simple-marker", size:6.0, color: "green"}}, 
+        {value: 'unidentified sign', symbol: {type: "simple-marker", size:3.0, color: "black"}}
         
     ]
   }
