@@ -14,6 +14,16 @@ message.config({
   top: "75px"
 })
 
+const stopSymbol = {
+  type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+  color: "white",
+  size: "10px",  // pixels
+  outline: {  // autocasts as new SimpleLineSymbol()
+    color: [ 0, 0, 0 ],
+    width: 1  // points
+  }
+};
+
 const scoreStatQuery = {
   onStatisticField: 'eventvalue',
   outStatisticFieldName: 'score_sum',
@@ -24,8 +34,12 @@ class SafetyStore extends Store {
   editMode = null;
   startGraphic = null;
   endGraphic = null;
+
+  // TODO refactor to a map instead of individual variables
   startStr = '';
   endStr = '';
+  startSearchResults = [];
+  endSearchResults = [];
   isSketchLoaded = false;
 
   stdRoute = null;
@@ -46,7 +60,8 @@ class SafetyStore extends Store {
           .then(([SketchVM, FeatureLayer, SpatialReference]) => {
             this.sketchVM = new SketchVM({
               view,
-              layer: view.graphics
+              layer: view.graphics,
+              pointSymbol: stopSymbol
             });
             this.sketchListener = this.sketchVM.on("create", this.onCreateComplete);
             this.isSketchLoaded = true;
@@ -89,6 +104,8 @@ class SafetyStore extends Store {
     this.stdTravelScore = null;
     this.safetyTravelTime = null;
     this.safetyTravelScore = null;
+    this.startSearchResults = [];
+    this.endSearchResults = [];
   }
 
   onCreateComplete(evt){
@@ -128,20 +145,97 @@ class SafetyStore extends Store {
       });
   }
 
+  onAddressSearchChange(value, isStart){
+    if(isStart){
+      this.startStr = value;
+    } else {
+      this.endStr = value;
+    }
+    if(!value) {
+      console.log("HERE")
+      if(isStart) this.startSearchResults = [];
+      else this.endSearchResults = [];
+      return;
+    }
+    loadModules(['esri/tasks/Locator'], options)
+      .then(([Locator]) => {
+        const locator = new Locator({
+          url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+        });
+        return locator.suggestLocations({
+          text: value,
+          location: this.view.center
+        });
+      })
+      .then(res => {
+        if(isStart){
+          this.startSearchResults = res;
+        } else {
+          this.endSearchResults = res;
+        }
+      })
+  }
+
+  onAddressSearchSelect(magicKey, isStart){
+    let G;
+    loadModules(['esri/tasks/Locator', 'esri/Graphic'], options)
+    .then(([Locator, Graphic]) => {
+      G = Graphic;
+      const locator = new Locator({
+        url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+      });
+      return locator.addressToLocations({
+        magicKey
+      })
+    })
+    .then(res => {
+      if(!res || res.length < 1) console.log('ERROR GETTING GEOCODE RESULTS');
+      const address = res[0].address;
+      const graphic = new G({
+        symbol: stopSymbol,
+        geometry: res[0].location
+      });
+      if(isStart){
+        this.startStr = address;
+        this.startGraphic = graphic;
+        this.view.graphics.add(this.startGraphic);
+        this.endGraphic 
+          ? this.view.goTo([this.startGraphic, this.endGraphic])
+          : this.view.goTo(this.startGraphic);
+      } else {
+        this.endStr = address;
+        this.endGraphic = graphic;
+        this.view.graphics.add(this.endGraphic);
+        this.startGraphic 
+        ? this.view.goTo([this.startGraphic, this.endGraphic])
+        : this.view.goTo(this.endGraphic);
+      }
+
+    })
+  }
+
+
+
   // don't like this logic, re-write at some point #refactor!
   onCreateClick(e){
+
+    // remove start point
     if(e === 'start' && this.startGraphic){
       this.view.graphics.remove(this.startGraphic);
       this.startGraphic = null;
       this.editMode = e;
       this.startStr = '';
+      this.startSearchResults = [];
     }
+    // remove end graphic
     if(e === 'end' && this.endGraphic){
       this.view.graphics.remove(this.endGraphic);
       this.endGraphic = null;
       this.editMode = e;
       this.endStr = '';
+      this.endSearchResults = [];
     }
+    // cancel current edit mode
     if(this.editMode === e){
       this.editMode = null;
       if(this.sketchVM.state === 'active') {
@@ -352,6 +446,8 @@ decorate(SafetyStore, {
   endGraphic: observable,
   startStr: observable,
   endStr: observable,
+  startSearchResults: observable.ref,
+  endSearchResults: observable.ref,
   isSketchLoaded: observable,
   stdTravelTime: observable,
   safetyTravelTime: observable,
@@ -364,7 +460,8 @@ decorate(SafetyStore, {
   setAddressFromGeocode: action.bound,
   generateRoutes: action.bound,
   generateStdRoute: action.bound,
-  clearRouteData: action.bound
+  clearRouteData: action.bound,
+  onAddressSearchChange: action.bound
 })
 
 export default SafetyStore;

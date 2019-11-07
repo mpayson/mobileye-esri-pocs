@@ -124,7 +124,7 @@ class App extends React.Component{
     super(props, context);
     const relativeRedirectUri = '';
     this.appState = new AppState({...config, relativeRedirectUri});
-    console.log('v 0.0.0.6')
+    console.log('v 0.0.1')
   }
 
   render(){

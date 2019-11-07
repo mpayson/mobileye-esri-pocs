@@ -68,15 +68,25 @@ const SafetyApp = observer(class App extends React.Component {
     const modulePromise = loadModules([
       'esri/widgets/Search',
       'esri/widgets/Legend',
-      'esri/widgets/Home'
+      'esri/widgets/Home',
+      'esri/widgets/Expand'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, Home], mapView]) => {
+      .then(([[Search, Legend, Home, Expand], mapView]) => {
         this.view = mapView;
+
         const search = new Search({view: this.view});
-        this.view.ui.add(search, "top-right");
+      
+        const searchExpand = new Expand({
+          view: this.view,
+          content: search,
+          expandIconClass: 'esri-icon-search'
+        })
+
+        
+        this.view.ui.add(searchExpand, "top-right");
         const legend = new Legend({
           view: this.view,
           layerInfos: [{layer: this.store.lyr, title: ""}]
@@ -188,7 +198,7 @@ const SafetyApp = observer(class App extends React.Component {
                 style={{height: "calc(100vh - 64px)"}}>
               <div
                 ref={this.mapViewRef}
-                style={{width: "100%", height: "100%"}}/>
+                style={{width: "100%", height: "100%", background: '#373938'}}/>
               {tooltip}
               {bookmarkCard}
               <Drawer

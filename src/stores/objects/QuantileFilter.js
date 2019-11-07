@@ -24,9 +24,9 @@ class QuantileFilter extends MultiSelectFilter{
     this.quantiles.forEach(q => this.labelMap.set(q.label, q));
   }
 
-  // clear(){
-  //   this.selectValue = this.options.slice();
-  // }
+  clear(){
+    this.selectValue = [];
+  }
 
   get where(){
     // if(this.options.length === this.selectValue.length) return null;
