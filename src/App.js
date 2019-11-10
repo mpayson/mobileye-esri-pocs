@@ -3,8 +3,10 @@ import { observer } from "mobx-react";
 import { HashRouter as Router, BrowserRouter, Route, Link, Redirect } from "react-router-dom";
 import { Row, Col, Card, Layout, Button, Divider } from 'antd';
 import AppState from './stores/AppState';
-import MapImage from './resources/images/map.png';
+import EventsImage from './resources/images/Events.png';
 import SurveyImage from './resources/images/survey.png';
+import SafetyImage from './resources/images/safety.png';
+import LoginBGImage from './resources/images/LoginBG.png';
 import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
@@ -66,7 +68,7 @@ const Home = observer(class Home extends React.Component{
     const linkClass = "ant-btn ant-btn-primary ant-btn-background-ghost ant-btn-block ant-btn ant-btn-lg";
 
     return(
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ minHeight: '100vh' , backgroundImage: `url(${LoginBGImage})`,backgroundPosition: 'center', backgroundSize: 'cover',  backgroundRepeat: 'no-repeat'}}>
         <Content style={{ padding: '50px 50px'}}>
           <Row type="flex" justify="space-around" align="middle">
             <Col style={{textAlign: 'center'}}>
@@ -78,7 +80,7 @@ const Home = observer(class Home extends React.Component{
             <Col md={{span: 0}} xl={{span: 2}}/>
             <Col md={{span: 6}} xl={{span: 4}}>
               <Card
-              cover={<img alt="example" src={MapImage} />}>
+              cover={<img alt="example" src={SafetyImage} />}>
                 <Link
                   to="/safety"
                   className={linkClass}
@@ -89,7 +91,7 @@ const Home = observer(class Home extends React.Component{
             </Col>
             <Col md={{span: 6}} xl={{span: 4}}>
               <Card
-              cover={<img alt="example" src={MapImage}/>}>
+              cover={<img alt="example" src={EventsImage}/>}>
                 <Link
                   to="/events"
                   className={linkClass}
