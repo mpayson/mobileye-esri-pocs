@@ -44,11 +44,17 @@ import roadCrossingImage from '../resources/images/CROSSING.png'
 import manholeImage from '../resources/images/MANHOLE_COVER.png'
 import unrecognizedCircleImage from '../resources/images/UNRECOGNIZED_CIRCLE.png'
 import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
+import trafficSignDot from '../resources/images/Traffic_Signs.png';
+import TrafficLightDot from '../resources/images/Traffic_Lights_dot.png';
+import roadMarkingDot from '../resources/images/Road_Markings.png';
+import manholeDot from '../resources/images/Manholes.png';
+import polesDot from '../resources/images/Poles.png';
 import dotImage from '../resources/images/dot.png'
 import NYCImage from '../resources/images/NYC.jpg'
 import AtlantaImage from '../resources/images/Atlanta.jpg'
 import SanFranImage from '../resources/images/SanFran.jpg'
-import LondonImage from '../resources/images/London.jpg'
+import HeathrowImage from '../resources/images/Heathrow.jpg'
+import ObaidaImage from '../resources/images/Obaida.jpg'
 
 
 
@@ -114,9 +120,56 @@ const surveyConfig = {
     'all': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
-      field: "icon",
-      //field: "system_type_group",
-      defaultSymbol: {type: "simple-marker", color: "blue"},
+      field: "system_type_group",
+      // valueExpression: "When($feature.icon == 'sign5', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign10', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign15', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign20', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign25', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign30', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign35', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign40', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign45', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign50', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign55', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign60', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign65', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign70', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign75', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign80', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign85', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign90', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign95', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign100', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign105', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign110', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign115', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign120', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign125', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign130', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign135', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign140', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign145', 'Traffic Sign'," +
+      //                       "$feature.icon == 'CIRCULAR_NO_SPEED', 'Traffic Sign'," +
+      //                       "$feature.icon == 'WARNING', 'Traffic Sign'," +
+      //                       "$feature.icon == 'CONSTRUCTION', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'RECTANGULAR', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'TRAFFIC_LIGHTS', 'Traffic Light'," + 
+      //                       "$feature.icon == 'DIAMOND', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'YIELD', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'ROAD_MARKINGS_ARROWS', 'Roadmark'," + 
+      //                       "$feature.icon == 'ROAD_MARKINGS_STOPLINE', 'Roadmark'," + 
+      //                       "$feature.icon == 'DOT1', 'Poles'," + 
+      //                       "$feature.icon == 'HORIZONTAL', 'Roadmark'," + 
+      //                       "$feature.icon == 'REFLECTORS', 'Roadmark'," + 
+      //                       "$feature.icon == 'CROSSING', 'Roadmark'," + 
+      //                       "$feature.icon == 'MANHOLE_COVER','Manhole Cover'," + 
+      //                       "$feature.icon == 'DOT2', 'Roadmark'," + 
+      //                       "$feature.icon == 'UNRECOGNIZED_CIRCLE', 'Unidentfied Sign'," + 
+      //                       "$feature.icon == 'UNRECOGNIZED_RECRANGLE', 'Unidentfied Sign'," + 
+      //                       "'other')",
+      
+      defaultSymbol: {type: "simple-marker", size : 2.0, color: "white"},
       visualVariables: [{
         type: "opacity",
         field: "comparsion_to_prev_map",
@@ -129,53 +182,11 @@ const surveyConfig = {
       
       ],
       uniqueValueInfos: [
-        {value: 'sign5', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign10', symbol: {type: "simple-marker", size:6.0, color: "orange"}},
-        {value: 'sign15', symbol: {type: "simple-marker", size:6.0, color: "orange"}},
-        {value: 'sign20', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign25', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign30', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign35', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign40', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign45', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign50', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign55', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign60', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign65', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign70', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign75', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign80', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign85', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign90', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign95', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign100', symbol: {type: "simple-marker", size:6.0, color: "orange"}},
-        {value: 'sign105', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign110', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign115', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign120', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign125', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign130', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign135', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign140', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'sign145', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'CIRCULAR_NO_SPEED', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'WARNING', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'CONSTRUCTION', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'RECTANGULAR', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'TRAFFIC_LIGHTS', symbol: {type: "simple-marker", size:6.0, color: "purple"}}, 
-        {value: 'DIAMOND', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'YIELD', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'ROAD_MARKINGS_ARROWS', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'ROAD_MARKINGS_STOPLINE', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'DOT1', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'HORIZONTAL', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'REFLECTORS', symbol: {type: "simple-marker", size:6.0, color: "green"}}, 
-        {value: 'CROSSING', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'MANHOLE_COVER', symbol: {type: "simple-marker", size:6.0, color: "yellow"}}, 
-        {value: 'DOT2', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'UNRECOGNIZED_CIRCLE', symbol: {type: "simple-marker", size:3.0, color: "black"}}, 
-        {value: 'UNRECOGNIZED_RECRANGLE', symbol:  {type: "simple-marker", size:3.0, color: "black"}} 
-        
+        {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, size: 6.0}}, 
+        {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, size: 6.0}}, 
+        {value: 2, symbol: {type: "picture-marker", url: roadMarkingDot, size: 6.0}}, 
+        {value: 3, symbol: {type: "picture-marker", url: polesDot, size: 6.0}}, 
+        {value: 4, symbol: {type: "picture-marker", url: manholeDot, size: 6.0}}        
     ]
   }
   },
@@ -343,6 +354,24 @@ const surveyConfig = {
                }
   },
   {
+    'name' : 'Heathrow',
+    'image' : HeathrowImage,
+    'extent' : {
+                 "xmin":-57155.730385611794,"ymin":6702392.397662927,"xmax":-43043.54403848015,"ymax":6710294.075461897
+                 ,
+                 "spatialReference":{"wkid":102100}
+               }
+  },
+  {
+    'name' : 'Obaida (Tokyo)',
+    'image' : ObaidaImage,
+    'extent' : {
+                 "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
+                 ,
+                 "spatialReference":{"wkid":102100}
+               }
+  },
+  {
     'name' : 'Atlanta, GA',
     'image' : AtlantaImage,
     'extent' : {
@@ -350,16 +379,8 @@ const surveyConfig = {
                  ,
                  "spatialReference":{"wkid":102100}
                }
-  },
-  {
-    'name' : 'London',
-    'image' : LondonImage,
-    'extent' : {
-                 "xmin":1920.9291059593083,"ymin":6711129.087432487,"xmax":11284.465070880779,"ymax":6715132.476788918
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
   }],
+  
   
   viewConfig: { 
     // center: [-73.974051, 40.762746],

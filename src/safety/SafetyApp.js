@@ -6,6 +6,7 @@ import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
+import LocationsPanel from '../components/LocationsPanel';
 import LayerPanel from './LayerPanel';
 import RoutePanel from './RoutePanel';
 import SafetyStore from './SafetyStore';
@@ -13,6 +14,7 @@ import safetyConfig from './SafetyConfig';
 import BookmarkPanel from '../components/BookmarkPanel';
 import SafetyTooltip from './SafetyTooltip';
 import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
+import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 
 const { Header, Content, Sider } = Layout;
 
@@ -24,6 +26,9 @@ const MenuBookmarkIcon = () => (
 )
 const MenuRouteFromIcon = () => (
   <RouteFromIcon size="20" filled/>
+)
+const MenuLocationsIcon = () => (
+  <LocationsIcon size="18" filled/>
 )
 
 const SafetyApp = observer(class App extends React.Component {
@@ -115,6 +120,9 @@ const SafetyApp = observer(class App extends React.Component {
       case 'Route':
         panel = <RoutePanel store={this.store}/>
         break;
+      case 'Locations':
+        panel = <LocationsPanel store={this.store}/>
+        break;
       default:
         panel = null;
     }
@@ -174,6 +182,10 @@ const SafetyApp = observer(class App extends React.Component {
             <Menu.Item key="Data Layers">
               <Icon component={MenuFilterIcon} />
               <span>Data Layers</span>
+            </Menu.Item>
+            <Menu.Item key="Locations">
+              <Icon component={MenuLocationsIcon} />
+              <span>Locations</span>
             </Menu.Item>
             <Menu.Item key="Route">
               <Icon component={MenuRouteFromIcon} />
