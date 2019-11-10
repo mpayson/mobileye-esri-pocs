@@ -44,6 +44,11 @@ import roadCrossingImage from '../resources/images/CROSSING.png'
 import manholeImage from '../resources/images/MANHOLE_COVER.png'
 import unrecognizedCircleImage from '../resources/images/UNRECOGNIZED_CIRCLE.png'
 import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
+import trafficSignDot from '../resources/images/Traffic_Signs.png';
+import TrafficLightDot from '../resources/images/Traffic_Lights_dot.png';
+import roadMarkingDot from '../resources/images/Road_Markings.png';
+import manholeDot from '../resources/images/Manholes.png';
+import polesDot from '../resources/images/Poles.png';
 import dotImage from '../resources/images/dot.png'
 import NYCImage from '../resources/images/NYC.jpg'
 import AtlantaImage from '../resources/images/Atlanta.jpg'
@@ -115,54 +120,54 @@ const surveyConfig = {
     'all': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
-      field: "icon",
-      valueExpression: "When($feature.icon == 'sign5', 'Speed Sign'," +
-                            "$feature.icon == 'sign10', 'Speed Sign'," +
-                            "$feature.icon == 'sign15', 'Speed Sign'," +
-                            "$feature.icon == 'sign20', 'Speed Sign'," +
-                            "$feature.icon == 'sign25', 'Speed Sign'," +
-                            "$feature.icon == 'sign30', 'Speed Sign'," +
-                            "$feature.icon == 'sign35', 'Speed Sign'," +
-                            "$feature.icon == 'sign40', 'Speed Sign'," +
-                            "$feature.icon == 'sign45', 'Speed Sign'," +
-                            "$feature.icon == 'sign50', 'Speed Sign'," +
-                            "$feature.icon == 'sign55', 'Speed Sign'," +
-                            "$feature.icon == 'sign60', 'Speed Sign'," +
-                            "$feature.icon == 'sign65', 'Speed Sign'," +
-                            "$feature.icon == 'sign70', 'Speed Sign'," +
-                            "$feature.icon == 'sign75', 'Speed Sign'," +
-                            "$feature.icon == 'sign80', 'Speed Sign'," +
-                            "$feature.icon == 'sign85', 'Speed Sign'," +
-                            "$feature.icon == 'sign90', 'Speed Sign'," +
-                            "$feature.icon == 'sign95', 'Speed Sign'," +
-                            "$feature.icon == 'sign100', 'Speed Sign'," +
-                            "$feature.icon == 'sign105', 'Speed Sign'," +
-                            "$feature.icon == 'sign110', 'Speed Sign'," +
-                            "$feature.icon == 'sign115', 'Speed Sign'," +
-                            "$feature.icon == 'sign120', 'Speed Sign'," +
-                            "$feature.icon == 'sign125', 'Speed Sign'," +
-                            "$feature.icon == 'sign130', 'Speed Sign'," +
-                            "$feature.icon == 'sign135', 'Speed Sign'," +
-                            "$feature.icon == 'sign140', 'Speed Sign'," +
-                            "$feature.icon == 'sign145', 'Speed Sign'," +
-                            "$feature.icon == 'CIRCULAR_NO_SPEED', 'Non-Speed Sign'," +
-                            "$feature.icon == 'WARNING', 'Non-Speed Sign'," +
-                            "$feature.icon == 'CONSTRUCTION', 'Non-Speed Sign'," + 
-                            "$feature.icon == 'RECTANGULAR', 'Non-Speed Sign'," + 
-                            "$feature.icon == 'TRAFFIC_LIGHTS', 'Traffic Light'," + 
-                            "$feature.icon == 'DIAMOND', 'Non-Speed Sign'," + 
-                            "$feature.icon == 'YIELD', 'Non-Speed Sign'," + 
-                            "$feature.icon == 'ROAD_MARKINGS_ARROWS', 'Roadmark'," + 
-                            "$feature.icon == 'ROAD_MARKINGS_STOPLINE', 'Roadmark'," + 
-                            "$feature.icon == 'DOT1', 'Roadmark'," + 
-                            "$feature.icon == 'HORIZONTAL', 'Overhead Structure'," + 
-                            "$feature.icon == 'REFLECTORS', 'Reflector'," + 
-                            "$feature.icon == 'CROSSING', 'Roadmark'," + 
-                            "$feature.icon == 'MANHOLE_COVER','Manhole Cover'," + 
-                            "$feature.icon == 'DOT2', 'Roadmark'," + 
-                            "$feature.icon == 'UNRECOGNIZED_CIRCLE', 'Unidentfied Sign'," + 
-                            "$feature.icon == 'UNRECOGNIZED_RECRANGLE', 'Unidentfied Sign'," + 
-                            "'other')",
+      field: "system_type_group",
+      // valueExpression: "When($feature.icon == 'sign5', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign10', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign15', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign20', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign25', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign30', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign35', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign40', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign45', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign50', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign55', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign60', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign65', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign70', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign75', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign80', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign85', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign90', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign95', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign100', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign105', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign110', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign115', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign120', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign125', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign130', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign135', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign140', 'Traffic Sign'," +
+      //                       "$feature.icon == 'sign145', 'Traffic Sign'," +
+      //                       "$feature.icon == 'CIRCULAR_NO_SPEED', 'Traffic Sign'," +
+      //                       "$feature.icon == 'WARNING', 'Traffic Sign'," +
+      //                       "$feature.icon == 'CONSTRUCTION', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'RECTANGULAR', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'TRAFFIC_LIGHTS', 'Traffic Light'," + 
+      //                       "$feature.icon == 'DIAMOND', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'YIELD', 'Traffic Sign'," + 
+      //                       "$feature.icon == 'ROAD_MARKINGS_ARROWS', 'Roadmark'," + 
+      //                       "$feature.icon == 'ROAD_MARKINGS_STOPLINE', 'Roadmark'," + 
+      //                       "$feature.icon == 'DOT1', 'Poles'," + 
+      //                       "$feature.icon == 'HORIZONTAL', 'Roadmark'," + 
+      //                       "$feature.icon == 'REFLECTORS', 'Roadmark'," + 
+      //                       "$feature.icon == 'CROSSING', 'Roadmark'," + 
+      //                       "$feature.icon == 'MANHOLE_COVER','Manhole Cover'," + 
+      //                       "$feature.icon == 'DOT2', 'Roadmark'," + 
+      //                       "$feature.icon == 'UNRECOGNIZED_CIRCLE', 'Unidentfied Sign'," + 
+      //                       "$feature.icon == 'UNRECOGNIZED_RECRANGLE', 'Unidentfied Sign'," + 
+      //                       "'other')",
       
       defaultSymbol: {type: "simple-marker", size : 2.0, color: "white"},
       visualVariables: [{
@@ -177,14 +182,11 @@ const surveyConfig = {
       
       ],
       uniqueValueInfos: [
-        {value: 'Speed Sign', symbol: {type: "simple-marker", size:6.0, color: "orange"}}, 
-        {value: 'Non-Speed Sign', symbol: {type: "simple-marker", size:6.0, color: "red"}}, 
-        {value: 'Traffic Light', symbol: {type: "simple-marker", size:6.0, color: "purple"}}, 
-        {value: 'Roadmark', symbol: {type: "simple-marker", size:6.0, color: "blue"}}, 
-        {value: 'Overhead Structure', symbol: {type: "simple-marker", size:6.0, color: "light blue"}}, 
-        {value: 'Reflector', symbol: {type: "simple-marker", size:6.0, color: "green"}}, 
-        {value: 'Unidentfied Sign', symbol: {type: "simple-marker", size:3.0, color: "black"}}
-        
+        {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, size: 6.0}}, 
+        {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, size: 6.0}}, 
+        {value: 2, symbol: {type: "picture-marker", url: roadMarkingDot, size: 6.0}}, 
+        {value: 3, symbol: {type: "picture-marker", url: polesDot, size: 6.0}}, 
+        {value: 4, symbol: {type: "picture-marker", url: manholeDot, size: 6.0}}        
     ]
   }
   },
