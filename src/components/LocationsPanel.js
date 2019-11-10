@@ -12,7 +12,7 @@ class LocationsPanelItem extends React.PureComponent {
     const l = this.props.location;
     return(
       <Card style={{marginBottom: "5px"}} key={l.name} cover={<img alt="example" src={l.image} />}>
-        <Button style={{width: "100%"}} ghost type="primary" onClick={this.onClick}>Go to {l.name}</Button>
+        <Button style={{width: "100%"}} ghost type="primary" onClick={this.onClick}>Explore {l.name}</Button>
       </Card>
     )
   }
