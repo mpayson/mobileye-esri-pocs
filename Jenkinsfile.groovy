@@ -63,9 +63,12 @@ slaveHandler.basicMe { label ->
             sh "git clone https://github.com/mpayson/mobileye-esri-pocs.git ."
         }
 
+        stage("aws authentication") {
+            awsAuth.awsLogin(credentialsId)
+
+        }
+
         stage('Build Docker') {
-            sh "ls -l"
-            sh "${repoName}"
             EcrActions.ecrDockerBuild(repoName,tagName)
             EcrActions.ecrDockerBuild(repoName, envName)
 
@@ -78,7 +81,7 @@ slaveHandler.basicMe { label ->
         }
 
         stage('Push Docker to ECR') {
-            EcrActions.ecrLogin(region)
+            //EcrActions.ecrLogin(region)
             EcrActions.ecrDockerPush(repoName,tagName)
             EcrActions.ecrDockerPush(repoName, envName)
 
