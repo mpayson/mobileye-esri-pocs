@@ -57,7 +57,7 @@ slaveHandler.basicMe { label ->
 
         stage('SCM') {
             step([$class: 'WsCleanup'])
-            git clone https://github.com/mpayson/mobileye-esri-pocs.git
+            sh "git clone https://github.com/mpayson/mobileye-esri-pocs.git"
         }
 
         stage('Build Docker') {
