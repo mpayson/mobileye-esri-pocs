@@ -51,6 +51,7 @@ def bucket_url_upload = "s3://${tls_bucket_name}"
 def resource_name = repoName.replace("-", "")
 boolean mark_as_rc = false
 Map releaseData = [release: false, releaseCandidate: false]
+def chartLocalPath = repoName
 
 
 try{
@@ -81,7 +82,7 @@ slaveHandler.basicMe { label ->
         }
 
         stage('Push Docker to ECR') {
-            //EcrActions.ecrLogin(region)
+            EcrActions.ecrLogin()
             EcrActions.ecrDockerPush(repoName,tagName)
             EcrActions.ecrDockerPush(repoName, envName)
 

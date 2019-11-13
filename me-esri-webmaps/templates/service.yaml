@@ -1,0 +1,22 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app_name: {{ .Chart.Name }}
+    app_version: {{ .Values.image.tag | quote }}
+    helm_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  ports:
+  - name: http-port-{{ .Chart.Name }}
+    port: {{ .Values.ports.targetPort }}
+    targetPort: {{ .Values.ports.targetPort }}
+{{- if .Values.nodePorts.useFixed }}
+    nodePort: {{.Values.nodePorts.product.http }}
+{{- end }}
+
+{{- if .Values.expose }}
+  type: NodePort
+{{- end }}
+  selector:
+    app_name: {{ .Chart.Name }}

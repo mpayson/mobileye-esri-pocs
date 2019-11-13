@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  revisionHistoryLimit: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app_name: {{ .Chart.Name }}
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        app_name: {{ .Chart.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        image: {{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        ports:
+        - containerPort: {{ .Values.ports.targetPort }}
+{{- if .Values.checkReady }}
+        readinessProbe:
+          failureThreshold: {{ .Values.failureThreshold }}
+          initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+          periodSeconds: {{ .Values.periodSeconds }}
+          httpGet:
+            path: {{ .Values.readyPath }}
+            port: {{ .Values.ports.targetPort  }}
+        livenessProbe:
+          initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+          periodSeconds: {{ .Values.periodSeconds }}
+          httpGet:
+            path: {{ .Values.healthzPath }}
+            port: {{ .Values.ports.targetPort  }}
+{{- end }}
+        env:
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Chart.Name }}-config
+              key: aws_default_region
+#          value: "us-west-2"
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Chart.Name }}-config
+              key: environment
+
+#          value: "ci"
