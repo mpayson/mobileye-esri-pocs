@@ -22,15 +22,17 @@
 
 
 # base image
-FROM node
+FROM node:slim
 
 # set working directory
 
-WORKDIR /app
-COPY ./ /app
 RUN apt update
 RUN apt install -y git
-RUN npm -dd install
+RUN npm install
+
+WORKDIR /app
+COPY ./ /app
+
 EXPOSE 3000
 
 # start app

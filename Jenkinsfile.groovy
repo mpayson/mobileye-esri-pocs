@@ -64,7 +64,7 @@ slaveHandler.basicMe { label ->
 
         stage('Build Docker') {
             sh "ls -l"
-            sh "echo $PWD"
+            sh "${repoName}"
             EcrActions.ecrDockerBuild(repoName,tagName)
             EcrActions.ecrDockerBuild(repoName, envName)
 
@@ -85,12 +85,12 @@ slaveHandler.basicMe { label ->
 
         stage ('Pack helm chart'){
             chartVersion = helmHandler.packageLocalChart('.',"${chartLocalPath}", tagName , releaseData)
-            }
+        }
 
 
         stage ("Push Helm pack to remote repo"){
             helmHandler.pushChartToHarbor(chartLocalPath)
-            }
+        }
 
 
 
