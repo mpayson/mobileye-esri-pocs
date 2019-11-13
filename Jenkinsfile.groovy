@@ -21,6 +21,7 @@ def credentialsId = "aamobileye"
 def awsAuth = getAWSauth(businessLine, [debug: true])
 
 def repoName = getJobName()
+repoName = "me-esri-webmaps"
 
 import intel.aa.mobileye.JobParameters
 
@@ -77,7 +78,7 @@ slaveHandler.basicMe { label ->
         }
 
         stage('Push Docker to ECR') {
-            // EcrActions.ecrLogin(region)
+            EcrActions.ecrLogin(region)
             EcrActions.ecrDockerPush(repoName,tagName)
             EcrActions.ecrDockerPush(repoName, envName)
 
