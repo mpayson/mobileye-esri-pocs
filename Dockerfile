@@ -5,7 +5,8 @@ FROM node:alpine
 RUN apk add git
 WORKDIR /app
 COPY ./ /app
-
+ENV HTTPS_PROXY=$https_proxy
+ENV HTTP_PROXY=$http_proxy
 # add `/app/node_modules/.bin` to $PATH
 #ENV PATH /app/node_modules/.bin:$PATH
 

@@ -11,6 +11,8 @@ def mailingList = 'ido.karavany@intel.com'
 
 def envName = "ci"
 def branch = "${getJenkinsfileBranchName()}"
+def buildNumber = env.BUILD_NUMBER
+def tagName = envName + "-" + buildNumber
 
 def businessLine = "mobileye"
 def credentialsId = "aamobileye"
@@ -57,10 +59,12 @@ slaveHandler.basicMe { label ->
 
         stage('SCM') {
             step([$class: 'WsCleanup'])
-            sh "git clone https://github.com/mpayson/mobileye-esri-pocs.git"
+            sh "git clone https://github.com/mpayson/mobileye-esri-pocs.git ."
         }
 
         stage('Build Docker') {
+            sh "ls -l"
+            sh "echo $PWD"
             EcrActions.ecrDockerBuild(repoName,tagName)
             EcrActions.ecrDockerBuild(repoName, envName)
 
