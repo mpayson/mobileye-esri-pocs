@@ -105,6 +105,16 @@ slaveHandler.basicMe { label ->
             awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}")
 
         }
+
+
+        stage("Build And Deploy CloudFormation to AWS") {
+            cfnHandler.cfnBuildAndDeploy("${pipelineBucket.getBucketName()}")
+
+            if ("${currentBuild.result}" == "UNSTABLE") {
+                failPipe("Deployment failed")
+            }
+        }
+
         if ( "${branch}" == "master123") {
             stage("Upload ${repoName} to tls artifacts bucket") {
                 new_template_file = cfnHandler.getOutputFile()

@@ -1,0 +1,281 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: "EKS Service ALB"
+
+Parameters:
+
+  EnvironmentName:
+    Type: String
+    Default: "ci"
+
+  ServiceName:
+    Type: String
+    Default: "me-esri-webmaps"
+
+  Version:
+    Type: String
+    Default: "1"
+
+  Branch:
+    Type: String
+    Default: "master"
+
+  BuildType:
+    Type: String
+    Default: local
+
+  ServicePort:
+    Type: Number
+    Default: 31925
+
+  LoadBalancerSchema:
+    Type: String
+    Default: "internet-facing"
+    AllowedValues:
+      - "internet-facing"
+      - "internal"
+
+  LoadBalancerPort:
+    Type: Number
+    Default: 80
+
+  LoadBalancerLatencySeconds:
+    Description: LoadBalancer latency threshold, in seconds
+    Type: Number
+    Default: 30
+    MinValue: 1
+    ConstraintDescription: Must be at least one second
+
+  LoadBalancerRoute53TTL:
+    Type: Number
+    Default: 300
+
+  HealthCheckPath:
+    Type: String
+    Description: The path for the Application Load Balancer health check
+    Default: /health_check
+    MinLength: 1
+    MaxLength: 255
+    ConstraintDescription: Value must be between 1 and 255 characters
+
+  openPortsInEKS:
+    Type: String
+    Default: "true"
+
+
+Conditions:
+  openPortsInEKSCondition: !Equals [!Ref openPortsInEKS, "true"]
+  
+  ProdSetUp:
+    Fn::Equals:
+    - Ref: EnvironmentName
+    - prod
+  
+  tlsBuildCondition: 
+    Fn::Equals:
+      - Ref: BuildType
+      - "tls"
+
+Resources:
+
+  #----------- Load Balancer -------------
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId:
+        Fn::If:
+        - ProdSetUp
+        - Fn::ImportValue:  mobileye-vpc-prod-VpcId
+        - Fn::ImportValue:  mobileye-vpc-preprod-VpcId
+      GroupName: !Sub "${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-sg"
+      GroupDescription: !Sub "${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-sg"
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: !Ref LoadBalancerPort
+        ToPort: !Ref LoadBalancerPort
+        IpProtocol: tcp
+      SecurityGroupEgress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: -1
+        IpProtocol: '-1'
+        ToPort: -1
+      Tags:
+      - Key: "Env"
+        Value: !Sub "${EnvironmentName}"
+      - Key: "Version"
+        Value: !Sub "${Version}"
+      - Key: "Name"
+        Value: !Sub "${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-sg"
+
+  ALBLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub "${EnvironmentName}-${BuildType}-${Branch}-me-esri-lb"
+      Scheme: !Ref LoadBalancerSchema
+      Subnets:
+        Fn::If:
+        - ProdSetUp
+        - - Fn::ImportValue:
+              Fn::Sub: mobileye-vpc-prod-PublicSubnetId1
+          - Fn::ImportValue:
+              Fn::Sub: mobileye-vpc-prod-PublicSubnetId2
+        - - Fn::ImportValue:
+              Fn::Sub: mobileye-vpc-preprod-PublicSubnetId1
+          - Fn::ImportValue:
+              Fn::Sub: mobileye-vpc-preprod-PublicSubnetId2
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+#      LoadBalancerAttributes:
+#        - Key: "access_logs.s3.enabled"
+#          Value: true
+#        - Key: "access_logs.s3.bucket"
+#          Value:
+#            Fn::ImportValue: !Sub "${EnvironmentName}-s3-bucket-name"
+#        - Key: "access_logs.s3.prefix"
+#          Value: !Sub "access-logs/${ServiceName}"
+      Tags:
+      - Key: "Env"
+        Value: !Sub "${EnvironmentName}"
+      - Key: "Name"
+        Value: !Sub "${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb"
+
+
+  ALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${EnvironmentName}-${BuildType}-${Branch}-me-esri-tg"
+      VpcId:
+        Fn::If:
+        - ProdSetUp
+        - Fn::ImportValue:  mobileye-vpc-prod-VpcId
+        - Fn::ImportValue:  mobileye-vpc-preprod-VpcId
+      Port: !Ref ServicePort
+      Protocol: HTTP
+      Matcher:
+        HttpCode: 200
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: !Ref HealthCheckPath
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      TargetGroupAttributes:
+      - Key: deregistration_delay.timeout_seconds
+        Value: 300
+      TargetType: instance
+      Tags:
+        - Key: "Env"
+          Value: !Sub "${EnvironmentName}"
+        - Key: "Name"
+          Value: !Sub "${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-tg"
+    DependsOn: ALBLoadBalancer
+
+
+  ALBLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALBLoadBalancer
+      Port: "80"
+      Protocol: "HTTP"
+#      Certificates:
+#        - CertificateArn:
+#            Fn::ImportValue: !Sub "${EnvironmentName}-internal-certificate-arn"
+      DefaultActions:
+        - Type: "forward"
+          TargetGroupArn: !Ref ALBTargetGroup
+    DependsOn:
+      - ALBTargetGroup
+      - ALBLoadBalancer
+
+  LoadBalancerRoute53Record:
+    Type: AWS::Route53::RecordSet
+    Condition: tlsBuildCondition
+    Properties:
+      HostedZoneId:
+        Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-hosted-zone-id"
+      Name:
+        !Sub
+          - "webmaps-${EnvironmentName}.${ZoneName}."
+          - EnvironmentName: !Ref EnvironmentName
+            ZoneName:
+              Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-domain-name"
+      Type: "CNAME"
+      ResourceRecords:
+        - !GetAtt [ALBLoadBalancer, DNSName]
+      TTL: !Ref LoadBalancerRoute53TTL
+
+
+  EKSNodesGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Condition: openPortsInEKSCondition
+    Properties:
+      Description: "EKS Nodes Security Group Ingress"
+      GroupId:
+        Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-eks-nodes-security-group-id"
+      SourceSecurityGroupId: !GetAtt LoadBalancerSecurityGroup.GroupId
+      FromPort: "31925"
+      ToPort: "31925"
+      IpProtocol: "tcp"
+
+
+#  LoadBlalancerSecurityGroupEgress:
+#    Type: AWS::EC2::SecurityGroupEgress
+#    Properties:
+#      Description: "Load balancer security group ingress"
+#      GroupId: !Ref LoadBalancerSecurityGroup
+#      DestinationSecurityGroupId: !Ref FargateServiceSecurityGroup
+#      FromPort: !Ref ServicePort
+#      ToPort: !Ref ServicePort
+#      IpProtocol: "tcp"
+
+
+  ALBWaitHandle:
+    DependsOn: ALBLoadBalancerListener
+    Type: "AWS::CloudFormation::WaitConditionHandle"
+
+  TargetGroupAttachment:
+    Type: Custom::AttachTargetGroupsToAutoScalingGroup
+    Properties:
+      ServiceToken:
+        Fn::ImportValue: !Sub "${EnvironmentName}-attach-load-balancer-target-groups-lambda-arn"
+      AutoScalingGroupName:
+        Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-eks-nodes-auto-scaling-group-name"
+      TargetGroupARNs:
+        - !Ref ALBTargetGroup
+
+Outputs:
+
+  LoadBalancerSecurityGroupId:
+    Value: !Ref LoadBalancerSecurityGroup
+    Export:
+      Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-sg-id"
+
+  LoadBalancerArn:
+    Value: !Ref ALBLoadBalancer
+    Export:
+      Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-arn"
+
+  LoadBalancerFullName:
+    Value: ALBLoadBalancer.LoadBalancerFullName
+    Export:
+      Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-full-name"
+
+  LoadBalancerTargetGroupArn:
+    Value: !Ref ALBTargetGroup
+    Export:
+      Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-tg-arn"
+
+  LoadBalancerTargetGroupFullName:
+    Value: !GetAtt ALBTargetGroup.TargetGroupFullName
+    Export:
+      Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-tg-full-name"
+
+  LoadBalancerListenerArn:
+    Value: !Ref ALBLoadBalancerListener
+    Export:
+      Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-listener-arn"
+
+#  LoadBalancerRoute53RecordDomainName:
+#    Value: !Ref LoadBalancerRoute53Record
+#    Export:
+#      Name: !Sub "${EnvironmentName}-${Branch}-${ServiceName}-lb-domain-name"
