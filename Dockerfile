@@ -27,7 +27,7 @@ FROM node
 # set working directory
 
 ENV HTTPS_PROXY=http://proxy-chain.intel.com:912
-ENV HTTP_PROXY=$http://proxy-chain.intel.com:911
+ENV HTTP_PROXY=http://proxy-chain.intel.com:911
 ENV HTTPS_PROXY=http://proxy-chain.intel.com:912
 ENV HTTP_PROXY=http://proxy-chain.intel.com:911
 
