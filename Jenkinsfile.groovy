@@ -101,7 +101,7 @@ slaveHandler.basicMe { label ->
 
         stage("Deploy ${chartLocalPath}  in  ${envName} environment ") {
 
-            EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}-cluster"])
+            EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
             awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}")
 
         }

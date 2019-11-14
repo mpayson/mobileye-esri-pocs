@@ -28,10 +28,11 @@ FROM node:slim
 
 RUN apt update
 RUN apt install -y git
-RUN npm install
 
 WORKDIR /app
 COPY ./ /app
+
+RUN npm install
 
 EXPOSE 3000
 
