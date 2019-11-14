@@ -22,7 +22,7 @@
 
 
 # base image
-FROM node:slim
+FROM node
 
 # set working directory
 
