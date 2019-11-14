@@ -17,7 +17,7 @@ ports:
 checkReady: true
 readyPath: "/readiness"
 healthzPath: "/healthz"
-initialDelaySeconds: 5
+initialDelaySeconds: 90
 periodSeconds: 3
 failureThreshold: 30
 

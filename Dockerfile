@@ -37,7 +37,7 @@ RUN apt install -y git
 WORKDIR /app
 COPY ./ /app
 
-RUN npm -dd install
+RUN npm install
 
 EXPOSE 3000
 
