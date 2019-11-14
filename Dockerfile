@@ -26,13 +26,18 @@ FROM node
 
 # set working directory
 
+ENV HTTPS_PROXY=http://proxy-chain.intel.com:912
+ENV HTTP_PROXY=$http://proxy-chain.intel.com:911
+ENV HTTPS_PROXY=http://proxy-chain.intel.com:912
+ENV HTTP_PROXY=http://proxy-chain.intel.com:911
+
 RUN apt update
 RUN apt install -y git
 
 WORKDIR /app
 COPY ./ /app
 
-RUN npm install
+RUN npm -dd install
 
 EXPOSE 3000
 
