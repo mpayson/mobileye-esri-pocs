@@ -26,8 +26,8 @@ FROM node
 
 # set working directory
 
-ENV HTTPS_PROXY=http://proxy-chain.intel.com:912
-ENV HTTP_PROXY=http://proxy-chain.intel.com:911
+ENV https_proxy=http://proxy-chain.intel.com:912
+ENV http_proxy=http://proxy-chain.intel.com:911
 ENV HTTPS_PROXY=http://proxy-chain.intel.com:912
 ENV HTTP_PROXY=http://proxy-chain.intel.com:911
 
@@ -38,6 +38,11 @@ WORKDIR /app
 COPY ./ /app
 
 RUN npm install
+
+ENV https_proxy=
+ENV http_proxy=
+ENV HTTPS_PROXY=
+ENV HTTP_PROXY=
 
 EXPOSE 3000
 

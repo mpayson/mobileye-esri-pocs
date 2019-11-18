@@ -31,6 +31,20 @@ const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
 )
 
+function humanize(number) {
+    if(number % 100 >= 11 && number % 100 <= 13)
+        return number + "th";
+
+    switch(number % 10) {
+        case 1: return number + "st";
+        case 2: return number + "nd";
+        case 3: return number + "rd";
+    }
+
+    return number + "th";
+}
+
+
 const SafetyApp = observer(class App extends React.Component {
 
   state = {
@@ -43,6 +57,10 @@ const SafetyApp = observer(class App extends React.Component {
     super(props, context);
     this.mapViewRef = React.createRef();
     this.store = new SafetyStore(props.appState, safetyConfig);
+    var months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var today = new Date();
+
+    this.today_str = months[today.getMonth()] + humanize(today.getDate());
   }
 
   onCollapse = collapsed => {
@@ -200,7 +218,7 @@ const SafetyApp = observer(class App extends React.Component {
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
             <h1 style={{float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
-            <div style={{float: "left"}}> (Data presented from Sep 1st - October 22nd)</div>
+            <div style={{float: "left"}}> (Data presented from Sep 1st - {this.today_str})</div>
             {signin}
           </Header>
           <Content>
