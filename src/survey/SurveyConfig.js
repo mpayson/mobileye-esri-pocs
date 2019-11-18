@@ -50,13 +50,13 @@ import roadMarkingDot from '../resources/images/Road_Markings.png';
 import manholeDot from '../resources/images/Manholes.png';
 import polesDot from '../resources/images/Poles.png';
 import dotImage from '../resources/images/dot.png';
-import NYCImage from '../resources/images/NYC.jpg';
+// import NYCImage from '../resources/images/NYC.jpg';
 import LAImage from '../resources/images/LA.jpg';
-import AtlantaImage from '../resources/images/Atlanta.jpg'
+// import AtlantaImage from '../resources/images/Atlanta.jpg'
 import SanFranImage from '../resources/images/SanFran.jpg'
 import HeathrowImage from '../resources/images/Heathrow.jpg'
-import ObaidaImage from '../resources/images/Obaida.jpg'
-
+// import ObaidaImage from '../resources/images/Obaida.jpg'
+import BarcelonaImage from '../resources/images/Barcelona.jpg'
 
 const trafficSignType2speed = {
                '0': '10', '1': '20', '2': '30', '3': '40', '4': '50', '5': '60',
@@ -170,11 +170,11 @@ const surveyConfig = {
       // },
       //],
       uniqueValueInfos: [
-        {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, width: "6px", height: "6px"}}, 
-        {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, width: "6px", height: "6px"}}, 
-        {value: 2, symbol: {type: "picture-marker", url: roadMarkingDot, width: "6px", height: "6px"}}, 
-        {value: 3, symbol: {type: "picture-marker", url: polesDot, width: "6px", height: "6px"}}, 
-        {value: 4, symbol: {type: "picture-marker", url: manholeDot, width: "6px", height: "6px"}}        
+        {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, width: "10px", height: "10px"}}, 
+        {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, width: "10px", height: "10px"}}, 
+        {value: 2, symbol: {type: "picture-marker", url: roadMarkingDot, width: "10px", height: "10px"}}, 
+        {value: 3, symbol: {type: "picture-marker", url: polesDot, width: "10px", height: "10px"}}, 
+        {value: 4, symbol: {type: "picture-marker", url: manholeDot, width: "10px", height: "10px"}}        
       ],
   }
   },
@@ -325,7 +325,21 @@ const surveyConfig = {
   },
 
   locations: [
-  {
+    {
+    'name' : 'Barcelona',
+    'image' : BarcelonaImage,
+    'extent' : {
+      'ymax' : 41.432012, 
+      'xmin' : 2.055583,
+      'ymin' : 41.370578, 
+      'xmax' : 2.252006,
+      'spatialReference' : {
+        'wkid' : 4326
+      }
+    }
+  },
+  
+    {
     'name' : 'Los Angeles',
     'image' : LAImage,
     'extent' : {
@@ -364,15 +378,15 @@ const surveyConfig = {
                  "spatialReference":{"wkid":102100}
                }
   },
-  {
-    'name' : 'Obaida (Tokyo)',
-    'image' : ObaidaImage,
-    'extent' : {
-                 "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
-  },
+  // {
+  //   'name' : 'Obaida (Tokyo)',
+  //   'image' : ObaidaImage,
+  //   'extent' : {
+  //                "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
+  //                ,
+  //                "spatialReference":{"wkid":102100}
+  //              }
+  // },
   // {
   //   'name' : 'Atlanta, GA',
   //   'image' : AtlantaImage,
