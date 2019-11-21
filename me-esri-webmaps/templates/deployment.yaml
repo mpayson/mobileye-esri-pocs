@@ -54,6 +54,6 @@ spec:
               key: environment
         - name: WEBMAP_ID
           valueFrom:
-              configMapKeyRef:
+            configMapKeyRef:
               name: {{ .Chart.Name }}-config
               key: webmap_id
