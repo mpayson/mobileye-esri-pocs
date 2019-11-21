@@ -102,7 +102,8 @@ slaveHandler.basicMe { label ->
         stage("Deploy ${chartLocalPath}  in  ${envName} environment ") {
 
             // get relevant web map id
-            sh "pip3 install --no-deps -r esri_tools/requirements.txt"
+            sh "pip3 install arcgis==1.6.1 --no-deps ; pip3 install --no-deps -r esri_tools/requirements.txt; python3 -c 'from esri_tools.esri_tools import get_webmap_id' "
+
             webmapId = sh(script: 'python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"${envName}\\"))"',returnStdout: true).trim()
             sh "echo ${webmapId}"
             EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
