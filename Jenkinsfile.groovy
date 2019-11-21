@@ -106,7 +106,7 @@ slaveHandler.basicMe { label ->
             webmapId = sh(script: 'python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\"safety-map\"))"',returnStdout: true).trim()
             sh "echo ${webmapId}"
             EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
-            awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}")
+            awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName} --set webmapId=${webmapId}")
 
         }
 

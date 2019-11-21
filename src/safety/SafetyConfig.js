@@ -28,6 +28,7 @@ if (process.env.WEBMAP_ID){
     webmapIdEnv = process.env.WEBMAP_ID;
 }
 
+
 const safetyConfig = {
   //layerItemId: '534f26d211154527b31c976ea6b5eafe',
   //layerItemId: 'e37cc788804e4303b6e7898481798691',
