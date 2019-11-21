@@ -141,7 +141,9 @@ const groupTypeIconsExp = Object.keys(groupType2image).map(system_type =>
 const icons_exp = "When(" + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
 
 
-console.log(icons_exp)
+if (!process.env.WEBMAP_ID){
+    process.env.WEBMAP_ID = 'aabc5fa9e96045eaa0968702fd33e6d9'
+}
 
 const surveyConfig = {
   
@@ -149,8 +151,8 @@ const surveyConfig = {
   // layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
   // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
   // Test
-  layerItemId: '8454a5c3867b4133aeedfd00352272e2',
-  webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
+  //layerItemId: '8454a5c3867b4133aeedfd00352272e2',
+  webmapId: process.env.WEBMAP_ID,
   initialRendererField: 'all',
   renderers: {
     'all': {
