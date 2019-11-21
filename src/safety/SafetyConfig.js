@@ -22,12 +22,20 @@ const getRenderer = (field, stops,labels) => ({
   }]
 })
 
+var webmapIdEnv = 'c54f0d3d4555429fa8e4a4250ed12164';
+
+if (process.env.WEBMAP_ID){
+    webmapIdEnv = process.env.WEBMAP_ID;
+}
+
 const safetyConfig = {
   //layerItemId: '534f26d211154527b31c976ea6b5eafe',
-  layerItemId: 'e37cc788804e4303b6e7898481798691',
+  //layerItemId: 'e37cc788804e4303b6e7898481798691',
   // webmapId: '906b58f399944774a29e05d3d24a939b',
   // updating for now to vector, it's cleaner
-  webmapId: 'c54f0d3d4555429fa8e4a4250ed12164',
+  webmapId: webmapIdEnv,
+  //webmapId: 'c54f0d3d4555429fa8e4a4250ed12164',
+
   // webmapId: '58d18243967d40e9a25db1f02d3652b0',
   initialRendererField: 'eventvalue',
   renderers: {
