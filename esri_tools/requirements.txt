@@ -1,1 +1,1 @@
-arcgis==1.6.1 --install-option="--no-deps"
+arcgis==1.6.1

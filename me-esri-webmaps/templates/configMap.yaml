@@ -5,3 +5,4 @@ metadata:
 data:
   environment: {{ .Values.global.environment }}
   aws_default_region: {{ .Values.global.aws_default_region }}
+  webmap_id: {{ .Values.webmapId }}
