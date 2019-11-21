@@ -2,9 +2,7 @@ import os
 from arcgis.gis import GIS
 import sys
 
-environment = os.environ.get("ENV")
-
-def get_webmap_id(map_postfix):
+def get_webmap_id(map_postfix,environment):
     username = 'dynrem.generic'
     password = 'Dynr3mG3neric'
     gis = GIS(username=username, password=password)
