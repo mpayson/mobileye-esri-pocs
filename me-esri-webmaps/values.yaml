@@ -15,8 +15,8 @@ image:
 ports:
   targetPort: 3000
 checkReady: true
-readyPath: "/readiness"
-healthzPath: "/healthz"
+readyPath: "/"
+healthzPath: "/"
 initialDelaySeconds: 90
 periodSeconds: 3
 failureThreshold: 30
