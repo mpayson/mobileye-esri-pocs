@@ -49,6 +49,7 @@ import TrafficLightDot from '../resources/images/Traffic_Lights_dot.png';
 import roadMarkingDot from '../resources/images/Road_Markings.png';
 import manholeDot from '../resources/images/Manholes.png';
 import polesDot from '../resources/images/Poles.png';
+import otherDot from '../resources/images/Other.png';
 import dotImage from '../resources/images/dot.png';
 // import NYCImage from '../resources/images/NYC.jpg';
 import LAImage from '../resources/images/LA.jpg';
@@ -104,7 +105,8 @@ const speed2image = {
           '50' : `${sign50USImage}`,
           '60' : `${sign60USImage}`,
           '70' : `${sign70USImage}`,
-          '80' : `${sign80USImage}`}
+          '80' : `${sign80USImage}`,
+        }
 };
 const groupType2image = {
     '0' : `${circularSignNoSpeedImage}`,
@@ -124,23 +126,23 @@ const groupType2image = {
 
 const speedSignIconsExp = ['Europe', 'US'].map(region => 
   Object.keys(trafficSignType2speed).filter(signType => 
-    //trafficSignType2speed[signType] in speed2image[region]
-    signType == '0'
+    trafficSignType2speed[signType] in speed2image[region]
   ).map(signType => 
-     "(($feature.system_type_group==0)" +
+     "(($feature.system_type_group==0 || $feature.system_type_group==3)" +
      " && ($feature.traffic_sign_type == "+signType+")" + 
-            " && ($feature.region == '"+region+"')), " + 
-            speed2image[region][trafficSignType2speed[signType]]   
-)
+            " && ($feature.region == '"+region+"')), '" + 
+            speed2image[region][trafficSignType2speed[signType]]+"'").join() 
 ).join()
+
 
 const groupTypeIconsExp = Object.keys(groupType2image).map(system_type => 
   "($feature.system_type == " + system_type + "), '"+groupType2image[system_type]+"'"
 ).join()
-//const icons_exp = "When(" + speedSignIconsExp + ", " + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
-const icons_exp = "When(" + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
 
+const icons_exp = "When(" + speedSignIconsExp + ", " + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
+//const icons_exp = "When(" + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
 
+console.log(icons_exp)
 
 const surveyConfig = {
   
@@ -157,17 +159,7 @@ const surveyConfig = {
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "system_type_group",
       
-      defaultSymbol: {type: "simple-marker", size : 2.0, color: "white"},
-      // visualVariables: [{
-      //   type: "opacity",
-      //   field: "comparsion_to_prev_map",
-      //   stops: [
-      //         {value: '2', opacity: 0.3},
-      //         {value: '1', opacity: 1},
-      //         {value: '0', opacity: 1}
-      //   ]
-      // },
-      //],
+      defaultSymbol: {type: "picture-marker", url: otherDot, width: "10px", height: "10px"},
       uniqueValueInfos: [
         {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, width: "10px", height: "10px"}}, 
         {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, width: "10px", height: "10px"}}, 
