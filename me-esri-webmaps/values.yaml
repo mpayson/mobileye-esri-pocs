@@ -1,0 +1,44 @@
+# Default values for me-map-service
+# Declare variables to be passed into your templates.
+global:
+  environment: "ci"
+  aws_default_region: "eu-west-1"
+
+## image configuration
+image:
+  repository: 747203990113.dkr.ecr.eu-west-1.amazonaws.com
+  name: me-esri-webmaps
+  tag: TBD
+  pullPolicy: Always
+
+## checking pods status
+ports:
+  targetPort: 3000
+checkReady: true
+readyPath: "/"
+healthzPath: "/"
+initialDelaySeconds: 90
+periodSeconds: 3
+failureThreshold: 30
+webmapId: "aabc5fa9e96045eaa0968702fd33e6d9"
+
+### how many replica for application
+replicas: 3
+
+## exposing service out-side
+expose: true
+nodePorts:
+  useFixed: true
+  product:
+   http: 31925
+
+## resources allocation
+#resources:
+#  limits:
+#    memory: 900Mi
+#    cpu: 1030m
+#  requests:
+#    memory: 50Mi
+#    cpu: 150m
+
+

@@ -1,34 +1,36 @@
 import { getDomainMap } from '../utils/Utils';
 
-import sign5Image from '../resources/images/SIGN_ICON_5.png'
-import sign10Image from '../resources/images/SIGN_ICON_10.png'
-import sign15Image from '../resources/images/SIGN_ICON_15.png'
-import sign20Image from '../resources/images/SIGN_ICON_20.png'
-import sign25Image from '../resources/images/SIGN_ICON_25.png'
-import sign30Image from '../resources/images/SIGN_ICON_30.png'
-import sign35Image from '../resources/images/SIGN_ICON_35.png'
-import sign40Image from '../resources/images/SIGN_ICON_40.png'
-import sign45Image from '../resources/images/SIGN_ICON_45.png'
-import sign50Image from '../resources/images/SIGN_ICON_50.png'
-import sign55Image from '../resources/images/SIGN_ICON_55.png'
-import sign60Image from '../resources/images/SIGN_ICON_60.png'
-import sign65Image from '../resources/images/SIGN_ICON_65.png'
-import sign70Image from '../resources/images/SIGN_ICON_70.png'
-import sign75Image from '../resources/images/SIGN_ICON_75.png'
-import sign80Image from '../resources/images/SIGN_ICON_80.png'
-import sign85Image from '../resources/images/SIGN_ICON_85.png'
-import sign90Image from '../resources/images/SIGN_ICON_90.png'
-import sign95Image from '../resources/images/SIGN_ICON_95.png'
-import sign100Image from '../resources/images/SIGN_ICON_100.png'
-import sign105Image from '../resources/images/SIGN_ICON_105.png'
-import sign110Image from '../resources/images/SIGN_ICON_110.png'
-import sign115Image from '../resources/images/SIGN_ICON_115.png'
-import sign120Image from '../resources/images/SIGN_ICON_120.png'
-import sign125Image from '../resources/images/SIGN_ICON_125.png'
-import sign130Image from '../resources/images/SIGN_ICON_130.png'
-import sign135Image from '../resources/images/SIGN_ICON_135.png'
-import sign140Image from '../resources/images/SIGN_ICON_140.png'
-import sign145Image from '../resources/images/SIGN_ICON_145.png'
+import sign5USImage from '../resources/images/speedlimit_5_us.png'
+import sign10USImage from '../resources/images/speedlimit_10_us.png'
+import sign15USImage from '../resources/images/speedlimit_15_us.png'
+import sign20USImage from '../resources/images/speedlimit_20_us.png'
+import sign25USImage from '../resources/images/speedlimit_25_us.png'
+import sign30USImage from '../resources/images/speedlimit_30_us.png'
+import sign35USImage from '../resources/images/speedlimit_35_us.png'
+import sign40USImage from '../resources/images/speedlimit_40_us.png'
+import sign45USImage from '../resources/images/speedlimit_45_us.png'
+import sign50USImage from '../resources/images/speedlimit_50_us.png'
+import sign55USImage from '../resources/images/speedlimit_55_us.png'
+import sign60USImage from '../resources/images/speedlimit_60_us.png'
+import sign65USImage from '../resources/images/speedlimit_65_us.png'
+import sign70USImage from '../resources/images/speedlimit_70_us.png'
+import sign75USImage from '../resources/images/speedlimit_75_us.png'
+import sign80USImage from '../resources/images/speedlimit_80_us.png'
+import sign85USImage from '../resources/images/speedlimit_85_us.png'
+import sign10EruopeImage from '../resources/images/speedlimit_10_europe.png'
+import sign20EruopeImage from '../resources/images/speedlimit_20_europe.png'
+import sign30EruopeImage from '../resources/images/speedlimit_30_europe.png'
+import sign40EruopeImage from '../resources/images/speedlimit_40_europe.png'
+import sign50EruopeImage from '../resources/images/speedlimit_50_europe.png'
+import sign60EruopeImage from '../resources/images/speedlimit_60_europe.png'
+import sign70EruopeImage from '../resources/images/speedlimit_70_europe.png'
+import sign80EruopeImage from '../resources/images/speedlimit_80_europe.png'
+import sign90EruopeImage from '../resources/images/speedlimit_90_europe.png'
+import sign100EruopeImage from '../resources/images/speedlimit_100_europe.png'
+import sign110EruopeImage from '../resources/images/speedlimit_110_europe.png'
+import sign120EruopeImage from '../resources/images/speedlimit_120_europe.png'
+import sign130EruopeImage from '../resources/images/speedlimit_130_europe.png'
+import sign140EruopeImage from '../resources/images/speedlimit_140_europe.png'
 import circularSignNoSpeedImage from '../resources/images/CIRCULAR_NO_SPEED.png'
 import warningImage from '../resources/images/WARNING.png'
 import constructionImage from '../resources/images/CONSTRUCTION.png'
@@ -42,158 +44,143 @@ import overheadStructureImage from '../resources/images/HORIZONTAL.png'
 import reflectorImage from '../resources/images/REFLECTORS.png'
 import roadCrossingImage from '../resources/images/CROSSING.png'
 import manholeImage from '../resources/images/MANHOLE_COVER.png'
-import unrecognizedCircleImage from '../resources/images/UNRECOGNIZED_CIRCLE.png'
-import unrecognizedRectImage from '../resources/images/UNRECOGNIZED_RECT.png'
 import trafficSignDot from '../resources/images/Traffic_Signs.png';
 import TrafficLightDot from '../resources/images/Traffic_Lights_dot.png';
 import roadMarkingDot from '../resources/images/Road_Markings.png';
 import manholeDot from '../resources/images/Manholes.png';
 import polesDot from '../resources/images/Poles.png';
-import dotImage from '../resources/images/dot.png'
-import NYCImage from '../resources/images/NYC.jpg'
-import AtlantaImage from '../resources/images/Atlanta.jpg'
+import dotImage from '../resources/images/dot.png';
+// import NYCImage from '../resources/images/NYC.jpg';
+import LAImage from '../resources/images/LA.jpg';
+// import AtlantaImage from '../resources/images/Atlanta.jpg'
 import SanFranImage from '../resources/images/SanFran.jpg'
 import HeathrowImage from '../resources/images/Heathrow.jpg'
-import ObaidaImage from '../resources/images/Obaida.jpg'
+// import ObaidaImage from '../resources/images/Obaida.jpg'
+import BarcelonaImage from '../resources/images/Barcelona.jpg'
+
+const trafficSignType2speed = {
+               '0': '10', '1': '20', '2': '30', '3': '40', '4': '50', '5': '60',
+               '6': '70', '7': '80', '8': '90', '9': '100', '10': '110',
+               '11': '120', '12': '130', '13': '140',
+               '28': '10', '29': '20', '30': '30', '31': '40', '32': '50', 
+               '33': '60', '34': '70', '35': '80', '36': '90', '37': '100',
+               '38': '110', '39': '120', '40': '130',
+               '100' : '5', '101' : '15', '102': '25', '103': '35', '104': '45',
+               '105': '55', '106': '65', '107': '75', '108': '85', '109': '95',
+               '110': '105', '111': '115', '112': '125', '113': '135', '114': '145',
+               '115': '5', '116': '15', '117': '25', '118': '35', '119': '45', '120': '55',
+               '121': '65', '122': '75', '123': '85', '124': '95', '125': '105',
+               '126': '115', '127': '125', '128': '135', '129': '145',
+};
+
+const speed2image = {
+  'Europe' : {'10' : `${sign10EruopeImage}`,
+              '20'  : `${sign20EruopeImage}`,
+              '30'  : `${sign30EruopeImage}`,
+              '40'  : `${sign40EruopeImage}`,
+              '50'  : `${sign50EruopeImage}`,
+              '60'  : `${sign60EruopeImage}`,
+              '70'  : `${sign70EruopeImage}`,
+              '80'  : `${sign80EruopeImage}`,
+              '90'  : `${sign90EruopeImage}`,
+              '100'  : `${sign100EruopeImage}`,
+              '110'  : `${sign110EruopeImage}`,
+              '120'  : `${sign120EruopeImage}`,
+              '130'  : `${sign130EruopeImage}`,
+              '140'  : `${sign140EruopeImage}`},
+  'US' : {'5' : `${sign5USImage}`,
+          '15' : `${sign15USImage}`,
+          '25' : `${sign25USImage}`,
+          '35' : `${sign35USImage}`,
+          '45' : `${sign45USImage}`,
+          '55' : `${sign55USImage}`,
+          '65' : `${sign65USImage}`,
+          '75' : `${sign75USImage}`,
+          '85' : `${sign85USImage}`,
+          '10' : `${sign10USImage}`,
+          '20' : `${sign20USImage}`,
+          '30' : `${sign30USImage}`,
+          '40' : `${sign40USImage}`,
+          '50' : `${sign50USImage}`,
+          '60' : `${sign60USImage}`,
+          '70' : `${sign70USImage}`,
+          '80' : `${sign80USImage}`}
+};
+const groupType2image = {
+    '0' : `${circularSignNoSpeedImage}`,
+    '1' : `${warningImage}`,
+    '2' : `${constructionImage}`,
+    '3' : `${rectangularSignImage}`,
+    '4' : `${trafficLightImage}`,
+    '5': `${diamondImage}`,
+    '6' : `${yieldImage}`,
+    '7' : `${roadArrowImage}`,
+    '8' : `${roadStoplineImage}`,
+    '10' : `${overheadStructureImage}`,
+    '11' : `${reflectorImage}`,
+    '12' : `${roadCrossingImage}`,
+    '13' : `${manholeImage}`
+} ;
+
+const speedSignIconsExp = ['Europe', 'US'].map(region => 
+  Object.keys(trafficSignType2speed).filter(signType => 
+    //trafficSignType2speed[signType] in speed2image[region]
+    signType == '0'
+  ).map(signType => 
+     "(($feature.system_type_group==0)" +
+     " && ($feature.traffic_sign_type == "+signType+")" + 
+            " && ($feature.region == '"+region+"')), " + 
+            speed2image[region][trafficSignType2speed[signType]]   
+)
+).join()
+
+const groupTypeIconsExp = Object.keys(groupType2image).map(system_type => 
+  "($feature.system_type == " + system_type + "), '"+groupType2image[system_type]+"'"
+).join()
+//const icons_exp = "When(" + speedSignIconsExp + ", " + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
+const icons_exp = "When(" + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
 
 
-
-const icons_exp = "When(" +
-"$feature.icon == 'sign5', '"+`${sign5Image}`+"'," +
-"$feature.icon == 'sign10', '"+`${sign10Image}`+"'," +
-"$feature.icon == 'sign15', '"+`${sign15Image}`+"'," +
-"$feature.icon == 'sign20', '"+`${sign20Image}`+"'," +
-"$feature.icon == 'sign25', '"+`${sign25Image}`+"'," +
-"$feature.icon == 'sign30', '"+`${sign30Image}`+"'," +
-"$feature.icon == 'sign35', '"+`${sign35Image}`+"'," +
-"$feature.icon == 'sign40', '"+`${sign40Image}`+"'," +
-"$feature.icon == 'sign45', '"+`${sign45Image}`+"'," +
-"$feature.icon == 'sign50', '"+`${sign50Image}`+"'," +
-"$feature.icon == 'sign55', '"+`${sign55Image}`+"'," +
-"$feature.icon == 'sign60', '"+`${sign60Image}`+"'," +
-"$feature.icon == 'sign65', '"+`${sign65Image}`+"'," +
-"$feature.icon == 'sign70', '"+`${sign70Image}`+"'," +
-"$feature.icon == 'sign75', '"+`${sign75Image}`+"'," +
-"$feature.icon == 'sign80', '"+`${sign80Image}`+"'," +
-"$feature.icon == 'sign85', '"+`${sign85Image}`+"'," +
-"$feature.icon == 'sign90', '"+`${sign90Image}`+"'," +
-"$feature.icon == 'sign95', '"+`${sign95Image}`+"'," +
-"$feature.icon == 'sign100', '"+`${sign100Image}`+"'," +
-"$feature.icon == 'sign105', '"+`${sign105Image}`+"'," +
-"$feature.icon == 'sign110', '"+`${sign110Image}`+"'," +
-"$feature.icon == 'sign115', '"+`${sign115Image}`+"'," +
-"$feature.icon == 'sign120', '"+`${sign120Image}`+"'," +
-"$feature.icon == 'sign125', '"+`${sign125Image}`+"'," +
-"$feature.icon == 'sign130', '"+`${sign130Image}`+"'," +
-"$feature.icon == 'sign135', '"+`${sign135Image}`+"'," +
-"$feature.icon == 'sign140', '"+`${sign140Image}`+"'," +
-"$feature.icon == 'sign145', '"+`${sign145Image}`+"'," +
-"$feature.icon == 'CIRCULAR_NO_SPEED', '"+`${circularSignNoSpeedImage}`+"'," +
-"$feature.icon == 'WARNING', '"+`${warningImage}`+"'," +
-"$feature.icon == 'CONSTRUCTION', '"+`${constructionImage}`+"'," +
-"$feature.icon == 'RECTANGULAR', '"+`${rectangularSignImage}`+"'," +
-"$feature.icon == 'TRAFFIC_LIGHTS', '"+`${trafficLightImage}`+"'," +
-"$feature.icon == 'DIAMOND', '"+`${diamondImage}`+"'," +
-"$feature.icon == 'YIELD', '"+`${yieldImage}`+"'," +
-"$feature.icon == 'ROAD_MARKINGS_ARROWS', '"+`${roadArrowImage}`+"'," +
-"$feature.icon == 'ROAD_MARKINGS_STOPLINE', '"+`${roadStoplineImage}`+"'," +
-"$feature.icon == 'DOT1', '"+`${dotImage}` + "'," +
-"$feature.icon == 'HORIZONTAL', '"+`${overheadStructureImage}`+"'," +
-"$feature.icon == 'REFLECTORS', '"+`${reflectorImage}`+"'," +
-"$feature.icon == 'CROSSING', '"+`${roadCrossingImage}`+"'," +
-"$feature.icon == 'MANHOLE_COVER', '"+`${manholeImage}`+"'," +
-"$feature.icon == 'DOT2', '"+`${dotImage}` + "'," +
-"$feature.icon == 'UNRECOGNIZED_CIRCLE', '"+`${unrecognizedCircleImage}`+"'," +
-"$feature.icon == 'UNRECOGNIZED_RECRANGLE', '"+`${unrecognizedRectImage}` + "'," +
-"'"+`${dotImage}`+"')";
 
 const surveyConfig = {
   
   // Production
-  layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
-  webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
+  // layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
+  // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
   // Test
-  // layerItemId: '3fd4485bb8ca45bfa90e0e143c2cd7c2',
-  // webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
+  layerItemId: '8454a5c3867b4133aeedfd00352272e2',
+  webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
   initialRendererField: 'all',
   renderers: {
     'all': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "system_type_group",
-      // valueExpression: "When($feature.icon == 'sign5', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign10', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign15', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign20', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign25', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign30', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign35', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign40', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign45', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign50', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign55', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign60', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign65', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign70', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign75', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign80', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign85', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign90', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign95', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign100', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign105', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign110', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign115', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign120', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign125', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign130', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign135', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign140', 'Traffic Sign'," +
-      //                       "$feature.icon == 'sign145', 'Traffic Sign'," +
-      //                       "$feature.icon == 'CIRCULAR_NO_SPEED', 'Traffic Sign'," +
-      //                       "$feature.icon == 'WARNING', 'Traffic Sign'," +
-      //                       "$feature.icon == 'CONSTRUCTION', 'Traffic Sign'," + 
-      //                       "$feature.icon == 'RECTANGULAR', 'Traffic Sign'," + 
-      //                       "$feature.icon == 'TRAFFIC_LIGHTS', 'Traffic Light'," + 
-      //                       "$feature.icon == 'DIAMOND', 'Traffic Sign'," + 
-      //                       "$feature.icon == 'YIELD', 'Traffic Sign'," + 
-      //                       "$feature.icon == 'ROAD_MARKINGS_ARROWS', 'Roadmark'," + 
-      //                       "$feature.icon == 'ROAD_MARKINGS_STOPLINE', 'Roadmark'," + 
-      //                       "$feature.icon == 'DOT1', 'Poles'," + 
-      //                       "$feature.icon == 'HORIZONTAL', 'Roadmark'," + 
-      //                       "$feature.icon == 'REFLECTORS', 'Roadmark'," + 
-      //                       "$feature.icon == 'CROSSING', 'Roadmark'," + 
-      //                       "$feature.icon == 'MANHOLE_COVER','Manhole Cover'," + 
-      //                       "$feature.icon == 'DOT2', 'Roadmark'," + 
-      //                       "$feature.icon == 'UNRECOGNIZED_CIRCLE', 'Unidentfied Sign'," + 
-      //                       "$feature.icon == 'UNRECOGNIZED_RECRANGLE', 'Unidentfied Sign'," + 
-      //                       "'other')",
       
       defaultSymbol: {type: "simple-marker", size : 2.0, color: "white"},
-      visualVariables: [{
-        type: "opacity",
-        field: "comparsion_to_prev_map",
-        stops: [
-              {value: '2', opacity: 0.3},
-              {value: '1', opacity: 1},
-              {value: '0', opacity: 1}
-        ]
-      },
-      
-      ],
+      // visualVariables: [{
+      //   type: "opacity",
+      //   field: "comparsion_to_prev_map",
+      //   stops: [
+      //         {value: '2', opacity: 0.3},
+      //         {value: '1', opacity: 1},
+      //         {value: '0', opacity: 1}
+      //   ]
+      // },
+      //],
       uniqueValueInfos: [
-        {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, size: 6.0}}, 
-        {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, size: 6.0}}, 
-        {value: 2, symbol: {type: "picture-marker", url: roadMarkingDot, size: 6.0}}, 
-        {value: 3, symbol: {type: "picture-marker", url: polesDot, size: 6.0}}, 
-        {value: 4, symbol: {type: "picture-marker", url: manholeDot, size: 6.0}}        
-    ]
+        {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, width: "10px", height: "10px"}}, 
+        {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, width: "10px", height: "10px"}}, 
+        {value: 2, symbol: {type: "picture-marker", url: roadMarkingDot, width: "10px", height: "10px"}}, 
+        {value: 3, symbol: {type: "picture-marker", url: polesDot, width: "10px", height: "10px"}}, 
+        {value: 4, symbol: {type: "picture-marker", url: manholeDot, width: "10px", height: "10px"}}        
+      ],
   }
   },
   filters: [
     {name: 'system_type', type: 'multiselect', params: {dynamic: true}},
     {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true}},
-    {name: 'map_version', type: 'select', params: {dynamic: true}},
+    {name: 'identified', type: 'select', params: {dynamic: true}},
   ],
   charts: [
   {
@@ -336,14 +323,42 @@ const surveyConfig = {
     },
   },
 
-  locations: [{
-    'name' : 'New York City',
-    'image' : NYCImage,
+  locations: [
+    {
+    'name' : 'Barcelona',
+    'image' : BarcelonaImage,
     'extent' : {
-                 "xmin":-8233752.069196624,"ymin":4976855.35232054,"xmax":-8232870.057549805,"ymax":4977349.2071830435,
-                 "spatialReference":{"wkid":102100}
-               }
-  }, 
+      'ymax' : 41.432012, 
+      'xmin' : 2.055583,
+      'ymin' : 41.370578, 
+      'xmax' : 2.252006,
+      'spatialReference' : {
+        'wkid' : 4326
+      }
+    }
+  },
+  
+    {
+    'name' : 'Los Angeles',
+    'image' : LAImage,
+    'extent' : {
+      'ymax' : 34.062122, 
+      'xmin' : -118.275700,
+      'ymin' : 34.030624, 
+      'xmax' : -118.214838,
+      'spatialReference' : {
+        'wkid' : 4326
+      }
+    }
+  },
+  //   {
+  //   'name' : 'New York City',
+  //   'image' : NYCImage,
+  //   'extent' : {
+  //                "xmin":-8233752.069196624,"ymin":4976855.35232054,"xmax":-8232870.057549805,"ymax":4977349.2071830435,
+  //                "spatialReference":{"wkid":102100}
+  //              }
+  // }, 
   {
     'name' : 'San Francisco, CA',
     'image' : SanFranImage,
@@ -362,24 +377,25 @@ const surveyConfig = {
                  "spatialReference":{"wkid":102100}
                }
   },
-  {
-    'name' : 'Obaida (Tokyo)',
-    'image' : ObaidaImage,
-    'extent' : {
-                 "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
-  },
-  {
-    'name' : 'Atlanta, GA',
-    'image' : AtlantaImage,
-    'extent' : {
-                 "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
-  }],
+  // {
+  //   'name' : 'Obaida (Tokyo)',
+  //   'image' : ObaidaImage,
+  //   'extent' : {
+  //                "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
+  //                ,
+  //                "spatialReference":{"wkid":102100}
+  //              }
+  // },
+  // {
+  //   'name' : 'Atlanta, GA',
+  //   'image' : AtlantaImage,
+  //   'extent' : {
+  //                "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
+  //                ,
+  //                "spatialReference":{"wkid":102100}
+  //              }
+  // }
+],
   
   
   viewConfig: { 

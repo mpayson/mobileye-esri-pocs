@@ -87,7 +87,7 @@ const SurveyApp = observer(class App extends React.Component {
         })
         this.view.ui.add(searchExpand, "top-right");
         const legend = new Legend({view: this.view,
-                                   layerInfos: [{layer: this.store.lyr, title: ""}]});
+                                   layerInfos: [{layer: this.store.lyr, title: "Landmark Type"}]});
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
         this.homeWidget = new Home({

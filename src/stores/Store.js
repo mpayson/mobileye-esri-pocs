@@ -27,8 +27,9 @@ class Store {
 
   constructor(appState, storeConfig){
     this.appState = appState;
-    this.layerId = storeConfig.layerItemId;
+    //this.layerId = storeConfig.layerItemId;
     this.mapId = storeConfig.webmapId;
+    console.log(storeConfig.webmapId)
     this.filters = storeConfig.filters.map(f => {
       switch(f.type){
         case 'minmax':
@@ -259,9 +260,11 @@ class Store {
       
     })
     .then(_ => {
-      this.lyr = this.map.layers.find(l => 
-        l.portalItem.id === this.layerId
-      );
+      //console.log(this.map.layers.getItemAt(0))
+      //this.lyr = this.map.layers.find(l =>
+      //  l.portalItem.id === this.layerId
+      //);
+      this.lyr = this.map.layers.getItemAt(0);
       if(renderer) this.lyr.renderer = renderer;
       if(this.outFields) this.lyr.outFields = this.outFields;
       //console.log(this.popupTemplate)
