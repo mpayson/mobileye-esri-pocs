@@ -369,15 +369,15 @@ const surveyConfig = {
                  "spatialReference":{"wkid":102100}
                }
   },
-  // {
-  //   'name' : 'Obaida (Tokyo)',
-  //   'image' : ObaidaImage,
-  //   'extent' : {
-  //                "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
-  //                ,
-  //                "spatialReference":{"wkid":102100}
-  //              }
-  // },
+  {
+    'name' : 'Obaida (Tokyo)',
+    'image' : ObaidaImage,
+    'extent' : {
+                 "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
+                 ,
+                 "spatialReference":{"wkid":102100}
+               }
+  },
   // {
   //   'name' : 'Atlanta, GA',
   //   'image' : AtlantaImage,
