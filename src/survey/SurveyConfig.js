@@ -56,7 +56,7 @@ import LAImage from '../resources/images/LA.jpg';
 // import AtlantaImage from '../resources/images/Atlanta.jpg'
 import SanFranImage from '../resources/images/SanFran.jpg'
 import HeathrowImage from '../resources/images/Heathrow.jpg'
-// import ObaidaImage from '../resources/images/Obaida.jpg'
+import ObaidaImage from '../resources/images/Obaida.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
 
 const trafficSignType2speed = {
