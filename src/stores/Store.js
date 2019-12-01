@@ -24,6 +24,8 @@ class Store {
   layerVisibleMap = new Map();
   tooltipResults = null;
   bookmarkInfo = null;
+  autoplay = false;
+  bookmarkIndex = -1;
 
   constructor(appState, storeConfig){
     this.appState = appState;
@@ -293,12 +295,31 @@ class Store {
     }
   }
 
+  startAutoplayBookmarks(){
+    this.autoplay = true;
+
+    this.bookmarkIndex = this.bookmarkIndex + 1 < this.bookmarks.length
+      ? this.bookmarkIndex + 1
+      : 0;
+
+    this.onBookmarkClick(this.bookmarkIndex);
+    this.bookmarkAutoplayId = setTimeout(this.startAutoplayBookmarks, 30000);
+  }
+
+  stopAutoplayBookmarks(){
+    this.autoplay = false;
+    this.bookmarkIndex = 0;
+    if(this.bookmarkAutoplayId) {
+      clearTimeout(this.bookmarkAutoplayId);
+      this.bookmarkAutoplayId = null;
+    }
+  }
+
   onLocationClick(index) {
     if(!this.view || index >= this.locations.length) return;
     const location = this.locations[index];
     this.view.goTo(location.extent);
   }
-
 
   onClearBookmark(){
     this.bookmarkInfo = null;
@@ -333,6 +354,7 @@ decorate(Store, {
   layerLoaded: observable,
   aliasMap: observable,
   layerVisibleMap: observable,
+  autoplay: observable,
   chartResultMap: observable.shallow,
   tooltipResults: observable.shallow,
   bookmarkInfo: observable.ref,
@@ -352,7 +374,9 @@ decorate(Store, {
   onLocationClick: action.bound,
   onClearBookmark: action.bound,
   clearTooltip: action.bound,
-  _onMouseLeave: action.bound
+  _onMouseLeave: action.bound,
+  startAutoplayBookmarks: action.bound,
+  stopAutoplayBookmarks: action.bound
 });
 
 export default Store;

@@ -11,7 +11,7 @@ class AppState {
 
   constructor(appConfig){
     this.config = appConfig;
-    this.session = null;
+    this.session = null
     
     const serializedSession = localStorage.getItem(SESSION_ID);
     if(serializedSession !== null && serializedSession !== "undefined"){

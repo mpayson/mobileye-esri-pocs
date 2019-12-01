@@ -1,6 +1,8 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import { Card, Button } from 'antd';
+import { Card, Button, Divider } from 'antd';
+
+
 
 class BookmarkPanelItem extends React.PureComponent {
 
@@ -19,18 +21,45 @@ class BookmarkPanelItem extends React.PureComponent {
   }
 }
 
-const BookmarkPanel = observer(({store}) => {
+const BookmarkPanel = observer(class BookmarkPanel extends React.Component {
 
-  const bookmarkViews = store.bookmarks.map((b,i) => 
-    <BookmarkPanelItem bookmark={b} id={i} key={b.name} onClick={store.onBookmarkClick}/>
-  )
+  constructor(props, context){
+    super(props, context);
+    this.onAutoplayClick = this.onAutoplayClick.bind(this);
+  }
 
-  return(
-    <>
-      {bookmarkViews}
-    </>
-  )
+  componentWillUnmount(){
+    this.props.store.stopAutoplayBookmarks();
+  }
+
+  onAutoplayClick(){
+    const store = this.props.store;
+    if(store.autoplay){
+      this.props.store.stopAutoplayBookmarks();
+    } else {
+      this.props.store.startAutoplayBookmarks();
+    }
+  }
+
+  render(){
+    const store = this.props.store;
+
+    const bookmarkViews = store.bookmarks.map((b,i) => 
+      <BookmarkPanelItem bookmark={b} id={i} key={b.name} onClick={store.onBookmarkClick}/>
+    )
+
+    const icon = store.autoplay ? "pause" : "caret-right";
+
+    return(
+      <>
+        {bookmarkViews}
+        <Divider/>
+        <Button block type="primary" icon={icon} onClick={this.onAutoplayClick}/>
+      </>
+    )
+  }
 });
+
 
 export default BookmarkPanel;
 
