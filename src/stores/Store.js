@@ -66,6 +66,10 @@ class Store {
     if(this.rendererHandler) this.rendererHandler();
     if(this._tooltipListener) this._tooltipListener.remove();
     if( this._mouseLeaveListener) this._mouseLeaveListener.remove();
+    if(this.bookmarkAutoplayId) {
+      clearTimeout(this.bookmarkAutoplayId);
+      this.bookmarkAutoplayId = null;
+    }
   }
 
   loadFilters(){
