@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import { Layout, Menu, Drawer, Icon, Row, Col, Card } from 'antd';
+import { Layout, Menu, Drawer, Icon, Row, Col, Card, Button } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import RouteFromIcon from 'calcite-ui-icons-react/RouteFromIcon';
@@ -72,18 +72,33 @@ const SafetyApp = observer(class App extends React.Component {
       ? null
       : item.key;
     this.setState({navKey});
-    this.store.onClearBookmark();
+    if(!this.store.autoplay) this.store.clearBookmark();
   }
 
   onClose = () => {
     this.setState({
       navKey: null,
     });
-    this.store.onClearBookmark();
+    if(!this.store.autoplay) this.store.clearBookmark();
   };
 
   onSignOutClick = () => {
     this.props.appState.logout();
+  }
+
+  componentWillUnmount(){
+    this.store.destroy();
+    // this is throwing errors, need to figure out why
+    // for now memory leak when switching apps but shouldn't be big issue
+    // if(this.view){
+    //   this.view.container = null;
+    //   delete this.view;
+    // }
+  }
+
+  clearBookmark = () => {
+    this.store.clearBookmark();
+    if(this.store.autoplay) this.store.stopAutoplayBookmarks();
   }
 
   componentDidMount = () => {
@@ -108,7 +123,6 @@ const SafetyApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         })
 
-        
         this.view.ui.add(searchExpand, "top-right");
         const legend = new Legend({
           view: this.view,
@@ -178,7 +192,9 @@ const SafetyApp = observer(class App extends React.Component {
             left: "50%",
             marginLeft: "-200px",
           }}
-          size="small">
+          size="small"
+          extra={<Button type="link" onClick={this.clearBookmark}>X</Button>}
+          >
           {this.store.bookmarkInfo.content}
         </Card>
       )
