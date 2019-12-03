@@ -28,9 +28,9 @@ const BookmarkPanel = observer(class BookmarkPanel extends React.Component {
     this.onAutoplayClick = this.onAutoplayClick.bind(this);
   }
 
-  componentWillUnmount(){
-    this.props.store.stopAutoplayBookmarks();
-  }
+  // componentWillUnmount(){
+  //   this.props.store.stopAutoplayBookmarks();
+  // }
 
   onAutoplayClick(){
     const store = this.props.store;
