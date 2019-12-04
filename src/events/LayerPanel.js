@@ -6,6 +6,7 @@ import {
 import FilterPanel from '../components/FilterPanel';
 import PanelCard from '../components/PanelCard';
 import LayerIcon from 'calcite-ui-icons-react/LayerIcon';
+import SelectFilter from '../components/filters/SelectFilter';
 
 const { Text } = Typography;
 
@@ -20,29 +21,41 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   render(){
 
     let domainMap = this.eventFilter.domainMap;
-    let eventOptions = this.eventFilter.options.map(o => {
-      let text = domainMap.has(o) ? domainMap.get(o) : o;
-      return (
-        <div key={o} style={{margin: "5px 0px 0px 10px"}}>
-          <Switch
-            size="small"
-            style={{float: "left", marginTop: "4px"}}/>
-          <Text style={{margin: "0px 0px 0px 5px"}}>{text}</Text>
-        </div>
-      )
+
+    // let eventOptions = this.eventFilter.options.map(o => {
+    //   let text = domainMap.has(o) ? domainMap.get(o) : o;
+    //   return (
+    //     <div key={o} style={{margin: "5px 0px 0px 10px"}}>
+    //       <Switch
+    //         size="small"
+    //         style={{float: "left", marginTop: "4px"}}/>
+    //       <Text style={{margin: "0px 0px 0px 5px"}}>{text}</Text>
+    //     </div>
+    //   )
+    // })
+
+    const eventOptions = this.props.store.filters.map(f => {
+      switch(f.type){
+        case 'multiselect':
+          return <SelectFilter store={f} key={f.field} mode="multiple"/>
+        case 'select':
+          return <SelectFilter store={f} key={f.field}/>
+        default:
+          throw new Error("Unknown filter type!");
+      }
     })
 
     return (
       <>
         <PanelCard
           icon={<LayerIcon size="20" style={{position: "relative", top: "4px", left: "0px"}}/>}
-          title="Data"
+          title="Layer Selection"
           collapsible={true}
           defaultActive={true}>
           <Switch
             onChange={this.onSwitchChange}
             style={{float: "left", marginTop: "1px"}}/>
-          <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>Road Safety Score</h3>
+          <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>Event type:</h3>
           {eventOptions}
         </PanelCard>
       </>

@@ -22,7 +22,8 @@ const getRenderer = (field, stops,labels) => ({
   }]
 })
 
-var webmapIdEnv = 'c54f0d3d4555429fa8e4a4250ed12164';
+//var webmapIdEnv = 'c54f0d3d4555429fa8e4a4250ed12164';
+var webmapIdEnv = '906b58f399944774a29e05d3d24a939b';
 
 if (process.env.WEBMAP_ID){
     webmapIdEnv = process.env.WEBMAP_ID;

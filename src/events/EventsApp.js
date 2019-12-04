@@ -4,12 +4,16 @@ import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
+import LocationsPanel from '../components/LocationsPanel';
+
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import FilterPanel from '../components/FilterPanel';
 import Store from '../stores/Store';
 import eventsConfig from './EventsConfig';
 import LayerPanel from './LayerPanel';
+import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
+import BookmarkPanel from "../components/BookmarkPanel";
 
 const { Header, Content, Sider } = Layout;
 
@@ -21,6 +25,9 @@ const MenuBookmarkIcon = () => (
 )
 const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>
+)
+const MenuLocationsIcon = () => (
+  <LocationsIcon size="18" filled/>
 )
 
 const EventsApp = observer(class App extends React.Component {
@@ -60,15 +67,22 @@ const EventsApp = observer(class App extends React.Component {
     const modulePromise = loadModules([
       'esri/widgets/Search',
       'esri/widgets/Legend',
-      'esri/widgets/TimeSlider'
-
+      'esri/widgets/TimeSlider',
+      'esri/widgets/Expand'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, TimeSlider], mapView]) => {
+      .then(([[Search, Legend, TimeSlider, Expand], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
+
+        const searchExpand = new Expand({
+          view: this.view,
+          content: search,
+          expandIconClass: 'esri-icon-search'
+        })
+
         const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
 
         // create a new time slider widget
@@ -96,7 +110,7 @@ const EventsApp = observer(class App extends React.Component {
         this.timeSlider = timeSlider;
         //timeSlider.values = [new Date(2019, 1, 1), new Date(2020, 1, 1)];
         this.view.ui.add(timeSlider, "top-right");
-        this.view.ui.add(search, "top-right");
+        this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
       });
@@ -109,7 +123,10 @@ const EventsApp = observer(class App extends React.Component {
         panel = <LayerPanel store={this.store}/>;
         break;
       case 'Bookmarks':
-        panel = <h1>Woah this are some awesome bookmarks!</h1>;
+        panel = <BookmarkPanel store={this.store}/>
+        break;
+      case 'Locations':
+        panel = <LocationsPanel store={this.store}/>
         break;
       case 'About':
         panel = <h1>This is a slick app! Thanks Max!</h1>;
@@ -163,6 +180,10 @@ const EventsApp = observer(class App extends React.Component {
               <Menu.Item key="Bookmarks">
                 <Icon component={MenuBookmarkIcon} />
                 <span>Bookmarks</span>
+              </Menu.Item>
+              <Menu.Item key="Locations">
+                <Icon component={MenuLocationsIcon} />
+                <span>Locations</span>
               </Menu.Item>
               <Menu.Item key="About">
                 <Icon component={MenuInformationIcon} />
