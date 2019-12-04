@@ -66,6 +66,10 @@ class Store {
     if(this.rendererHandler) this.rendererHandler();
     if(this._tooltipListener) this._tooltipListener.remove();
     if( this._mouseLeaveListener) this._mouseLeaveListener.remove();
+    if(this.bookmarkAutoplayId) {
+      clearTimeout(this.bookmarkAutoplayId);
+      this.bookmarkAutoplayId = null;
+    }
   }
 
   loadFilters(){
@@ -321,7 +325,7 @@ class Store {
     this.view.goTo(location.extent);
   }
 
-  onClearBookmark(){
+  clearBookmark(){
     this.bookmarkInfo = null;
   }
 
@@ -372,7 +376,7 @@ decorate(Store, {
   _onMouseMove: action.bound,
   onBookmarkClick: action.bound,
   onLocationClick: action.bound,
-  onClearBookmark: action.bound,
+  clearBookmark: action.bound,
   clearTooltip: action.bound,
   _onMouseLeave: action.bound,
   startAutoplayBookmarks: action.bound,
