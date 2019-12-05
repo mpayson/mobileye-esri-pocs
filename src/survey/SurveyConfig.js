@@ -170,7 +170,7 @@ const surveyConfig = {
   }
   },
   filters: [
-    {name: 'system_type', type: 'multiselect', params: {dynamic: true}},
+    {name: 'system_type', type: 'multiselect', params: {dynamic: true,mode:'multiple'}},
     {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true}},
     {name: 'identified', type: 'select', params: {dynamic: true}},
   ],

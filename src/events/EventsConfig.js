@@ -38,7 +38,7 @@ const eventsConfig = {
   filters: [
 //    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 20, log: true}},
 //    {name: 'eventtype', type: 'multiselect'},
-    {name: 'eventsubtype', type: 'multiselect', params: {dynamic: true}},
+    {name: 'eventsubtype', type: 'multiselect', params: {mode:'multiple-radios'}},
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],

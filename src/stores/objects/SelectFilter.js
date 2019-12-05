@@ -8,10 +8,12 @@ class SelectFilter extends Filter{
   options = [];
   selectValue = null;
   domainMap = new Map();
+  mode = ''
 
   constructor(fieldName, params=null){
     super(fieldName, params);
     this.style = params && params.style ? params.style : 'dropdown';
+    this.mode = params && params.mode ? params.mode : '';
   }
   _setFromQueryResults(results){
     this.options = results.features.map(f => 

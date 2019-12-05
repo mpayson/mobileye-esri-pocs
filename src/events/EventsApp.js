@@ -8,7 +8,6 @@ import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import FilterPanel from '../components/FilterPanel';
 import Store from '../stores/Store';
 import eventsConfig from './EventsConfig';
 import LayerPanel from './LayerPanel';

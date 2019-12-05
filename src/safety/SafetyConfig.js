@@ -1,5 +1,5 @@
 import NYCImage from '../resources/images/NYC.jpg'
-import AtlantaImage from '../resources/images/Atlanta.jpg'
+//import AtlantaImage from '../resources/images/Atlanta.jpg'
 import TokyoImage from '../resources/images/Tokyo.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
 

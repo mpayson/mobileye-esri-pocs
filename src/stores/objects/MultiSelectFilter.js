@@ -10,7 +10,6 @@ class MultiSelectFilter extends SelectFilter{
   // Used for directly setting the selected value array
   onValueChange(v){
     this.selectValue = v;
-    console.log(v);
   }
 
   // Used for setting whether an individual option is selected

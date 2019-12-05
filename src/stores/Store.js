@@ -112,7 +112,6 @@ class Store {
         p.set(f.name, f.alias);
         return p;
       }, new Map());
-      console.log(this.aliasMap);
       this.layerLoaded = true;
     })
     .catch(er => {
