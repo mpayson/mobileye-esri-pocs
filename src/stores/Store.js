@@ -57,7 +57,7 @@ class Store {
     this.outFields = storeConfig.outFields;
     this.hasCustomTooltip = storeConfig.hasCustomTooltip;
     this.bookmarkInfos = storeConfig.bookmarkInfos;
-    this.locations = storeConfig.locations ? storeConfig.locations : [];
+    this.locationsByArea = storeConfig.locationsByArea ? storeConfig.locationsByArea : [];
   }
   // to destroy map view, need to do `view.container = view.map = null;`
   // should probably include this in the dismount
@@ -242,7 +242,10 @@ class Store {
         //spatialReference: new SpatialReference({ wkid: 4326 })
       })
 
-      this.locations.forEach(l => l.extent = new Extent(l.extent));
+      this.locationsByArea.forEach(l => 
+        l.locations.forEach(loc => 
+          loc.extent = new Extent(loc.extent))
+      );
       if(this.mapId){
         this.map = new WebMap({
           portalItem: {
@@ -319,9 +322,10 @@ class Store {
     }
   }
 
-  onLocationClick(index) {
-    if(!this.view || index >= this.locations.length) return;
-    const location = this.locations[index];
+  onLocationClick(areaIndex, index) {
+    
+    if(!this.view || areaIndex >= this.locationsByArea.length || index >= this.locationsByArea[areaIndex].locations.length) return;
+    const location = this.locationsByArea[areaIndex].locations[index];
     this.view.goTo(location.extent);
   }
 

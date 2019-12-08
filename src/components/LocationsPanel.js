@@ -1,11 +1,12 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import { Card, Button } from 'antd';
+import { Card, Button, Collapse } from 'antd';
+const {Panel} = Collapse;
 
 class LocationsPanelItem extends React.PureComponent {
 
   onClick = () => {
-    this.props.onClick(this.props.id);
+    this.props.onClick(this.props.areaIndex, this.props.id);
   }
 
   render(){
@@ -18,15 +19,26 @@ class LocationsPanelItem extends React.PureComponent {
   }
 }
 
-const LocationPanel = observer(({store}) => {
-  const locationViews = store.locations.map((l,i) => 
-    <LocationsPanelItem location={l} id={i} key={l.name} onClick={store.onLocationClick}/>
-  )
+const areaView = (store, areaIndex, areaLocations) => { 
+  console.log(areaLocations);
+  return (
+    areaLocations.map((l,i) => 
+      <LocationsPanelItem location={l} areaIndex={areaIndex} id={i} key={l.name} onClick={store.onLocationClick}/>
+    )
+  )};
 
+const LocationPanel = observer(({store}) => {
+  
   return(
-    <>
-      {locationViews}
-    </>
+    <Collapse defaultActiveKey={[]}>
+      {store.locationsByArea.map((l, i) => {
+        return (
+        <Panel key={l.areaName} header={l.areaName}>
+          {areaView(store, i, l.locations)}
+        </Panel>
+      )})
+      }
+    </Collapse>
   )
 });
 
