@@ -51,13 +51,18 @@ import manholeDot from '../resources/images/Manholes.png';
 import polesDot from '../resources/images/Poles.png';
 import otherDot from '../resources/images/Other.png';
 import dotImage from '../resources/images/dot.png';
-// import NYCImage from '../resources/images/NYC.jpg';
+import NYCImage from '../resources/images/NYC.jpg';
 import LAImage from '../resources/images/LA.jpg';
-// import AtlantaImage from '../resources/images/Atlanta.jpg'
+import AtlantaImage from '../resources/images/Atlanta.jpg'
 import SanFranImage from '../resources/images/SanFran.jpg'
 import HeathrowImage from '../resources/images/Heathrow.jpg'
 import ObaidaImage from '../resources/images/Obaida.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
+import FrankfurtImage from "../resources/images/frankfurt-am-main.jpg"
+import MunichImage from "../resources/images/Munich.jpg"
+import BerlinImage from "../resources/images/Berlin.jpg"
+import HamburgImage from "../resources/images/hamburg.jpg"
+import HanoverImage from "../resources/images/hanover.jpg"
 
 const trafficSignType2speed = {
                '0': '10', '1': '20', '2': '30', '3': '40', '4': '50', '5': '60',
@@ -146,10 +151,9 @@ console.log(icons_exp)
 
 const surveyConfig = {
   
-  // Production
   // layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
   // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
-  // Test
+  
   layerItemId: '8454a5c3867b4133aeedfd00352272e2',
   webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
   initialRendererField: 'all',
@@ -314,82 +318,166 @@ const surveyConfig = {
         content: 'The most beutiful traffic light in all of NYC.'
     },
   },
+  locationsByArea: [
+    { areaName : 'Germany',
+      locations : [
+        {
+          'name' : 'Frankfurt',
+          'image' : FrankfurtImage,
+          'extent' : {
+            'ymax' : 50.123851, 
+            'xmin' : 8.656489,
+            'ymin' : 50.104365, 
+            'xmax' : 8.720233,
+            'spatialReference' : {
+              'wkid' : 4326
+            }
+          }
+        },
+        {
+          'name' : 'Munich',
+          'image' : MunichImage,
+          'extent' : {
+            'ymax' :  48.227980, 
+            'xmin' : 11.268866,
+            'ymin' : 48.065403, 
+            'xmax' : 11.790256,
+            'spatialReference' : {
+              'wkid' : 4326
+            }
+          }
+        },
+        {
+          'name' : 'Berlin',
+          'image' : BerlinImage,
+          'extent' : {
+            'ymax' : 52.555150, 
+            'xmin' : 13.281972,
+            'ymin' : 52.480311, 
+            'xmax' : 13.544110,
+            'spatialReference' : {
+              'wkid' : 4326
+            }
+          }
+        },
+        // {
+        //   'name' : 'Hamburg',
+        //   'image' : HamburgImage,
+        //   'extent' : {
+        //     'ymax' : 53.569513, 
+        //     'xmin' : 9.935844,
+        //     'ymin' : 53.538964, 
+        //     'xmax' : 10.046473,
+        //     'spatialReference' : {
+        //       'wkid' : 4326
+        //     }
+        //   }
+        // },
+        {
+          'name' : 'Hanover',
+          'image' : HanoverImage,
+          'extent' : {
+            'ymax' : 52.403986, 
+            'xmin' : 9.613037,
+            'ymin' : 52.341588, 
+            'xmax' : 9.834076,
+            'spatialReference' : {
+              'wkid' : 4326
+            }
+          }
+        },
+      ]},
+      { areaName: "Other Europe",
+      locations: [
+                      {
+                      'name' : 'Barcelona',
+                      'image' : BarcelonaImage,
+                      'extent' : {
+                        'ymax' : 41.432012, 
+                        'xmin' : 2.055583,
+                        'ymin' : 41.370578, 
+                        'xmax' : 2.252006,
+                        'spatialReference' : {
+                          'wkid' : 4326
+                        }
+                      }
+                    },
+                    {
+                      'name' : 'Heathrow',
+                      'image' : HeathrowImage,
+                      'extent' : {
+                                   "xmin":-57155.730385611794,"ymin":6702392.397662927,"xmax":-43043.54403848015,"ymax":6710294.075461897
+                                   ,
+                                   "spatialReference":{"wkid":102100}
+                                 }
+                    },
+                  ]
+    },
+    {areaName : 'USA',
+     locations : [
+                      {
+                        'name' : 'New York City',
+                        'image' : NYCImage,
+                        'extent' : {
+                                      "xmin":-8233752.069196624,
+                                      "ymin":4976855.35232054,
+                                      "xmax":-8232870.057549805,
+                                      "ymax":4977349.2071830435,
+                                      "spatialReference" : { 
+                                        "wkid":102100
+                                      }
+                                    }
+                      },
+                      {
+                        'name' : 'Los Angeles',
+                        'image' : LAImage,
+                        'extent' : {
+                          'ymax' : 34.062122, 
+                          'xmin' : -118.275700,
+                          'ymin' : 34.030624, 
+                          'xmax' : -118.214838,
+                          'spatialReference' : {
+                            'wkid' : 4326
+                          }
+                        }
+                      },
+                      {
+                        'name' : 'San Francisco, CA',
+                        'image' : SanFranImage,
+                        'extent' : {
+                                    "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
+                                    ,
+                                    "spatialReference":{"wkid":102100}
+                                  }
+                      },
+                      {
+                        'name' : 'Atlanta, GA',
+                        'image' : AtlantaImage,
+                        'extent' : {
+                                    "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
+                                    ,
+                                    "spatialReference":{"wkid":102100}
+                                  }
+                      }
+                    ]
+      },
+      {
+        areaName : 'Japan',
+        locations : [
+                        {
+                          'name' : 'Obaida (Tokyo)',
+                          'image' : ObaidaImage,
+                          'extent' : {
+                                      "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
+                                      ,
+                                      "spatialReference":{"wkid":102100}
+                                    }
+                        },
+        ]
+      }
 
-  locations: [
-    {
-    'name' : 'Barcelona',
-    'image' : BarcelonaImage,
-    'extent' : {
-      'ymax' : 41.432012, 
-      'xmin' : 2.055583,
-      'ymin' : 41.370578, 
-      'xmax' : 2.252006,
-      'spatialReference' : {
-        'wkid' : 4326
-      }
-    }
-  },
-  
-    {
-    'name' : 'Los Angeles',
-    'image' : LAImage,
-    'extent' : {
-      'ymax' : 34.062122, 
-      'xmin' : -118.275700,
-      'ymin' : 34.030624, 
-      'xmax' : -118.214838,
-      'spatialReference' : {
-        'wkid' : 4326
-      }
-    }
-  },
-  //   {
-  //   'name' : 'New York City',
-  //   'image' : NYCImage,
-  //   'extent' : {
-  //                "xmin":-8233752.069196624,"ymin":4976855.35232054,"xmax":-8232870.057549805,"ymax":4977349.2071830435,
-  //                "spatialReference":{"wkid":102100}
-  //              }
-  // }, 
-  {
-    'name' : 'San Francisco, CA',
-    'image' : SanFranImage,
-    'extent' : {
-                 "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
-  },
-  {
-    'name' : 'Heathrow',
-    'image' : HeathrowImage,
-    'extent' : {
-                 "xmin":-57155.730385611794,"ymin":6702392.397662927,"xmax":-43043.54403848015,"ymax":6710294.075461897
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
-  },
-  {
-    'name' : 'Obaida (Tokyo)',
-    'image' : ObaidaImage,
-    'extent' : {
-                 "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
-                 ,
-                 "spatialReference":{"wkid":102100}
-               }
-  },
-  // {
-  //   'name' : 'Atlanta, GA',
-  //   'image' : AtlantaImage,
-  //   'extent' : {
-  //                "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
-  //                ,
-  //                "spatialReference":{"wkid":102100}
-  //              }
-  // }
-],
-  
-  
+  ],
+   
   viewConfig: { 
     // center: [-73.974051, 40.762746],
     center: [-122.483311, 37.707744],

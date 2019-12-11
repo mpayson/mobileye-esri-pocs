@@ -282,29 +282,37 @@ const safetyConfig = {
       content: 'The red section shows a combination of risk scores in one location, pedestrians, cyclists, speeding and harsh breaking.'
      }
   },
+  locationsByArea: [
+      { areaName : 'Americas',
+        locations: [{
+        'name' : 'New York City',
+        'image' : NYCImage,
+        'extent' : {
+                    "xmin":-74.243003,"ymin":40.60381,"xmax":-73.795653,"ymax":40.828901,
+                    "spatialReference":{"wkid":4326}
+                  }
+      }]},
+  { areaName : 'Europe',
     locations: [{
-    'name' : 'New York City',
-    'image' : NYCImage,
-    'extent' : {
-                 "xmin":-74.243003,"ymin":40.60381,"xmax":-73.795653,"ymax":40.828901,
-                 "spatialReference":{"wkid":4326}
-               }
-  },
-  {
-    'name' : 'Barcelona',
-    'image' : BarcelonaImage,
-    'extent' : {
-                 "xmin":1.990109,"ymin":41.32895,"xmax":2.356434,"ymax":41.468276,
-                 "spatialReference":{"wkid":4326}
-               }
-  },
-  {
+                  'name' : 'Barcelona',
+                  'image' : BarcelonaImage,
+                  'extent' : {
+                              "xmin":1.990109,"ymin":41.32895,"xmax":2.356434,"ymax":41.468276,
+                              "spatialReference":{"wkid":4326}
+                            }
+                },
+              ]
+            },
+  { areaName : 'APAC',
+    locations: [{           
     'name' : 'Tokyo',
     'image' : TokyoImage,
     'extent' : {
                  "xmin":15537201.84,"ymin":4246841.30,"xmax":15583828.48,"ymax":4290869.07,
                  "spatialReference":{"wkid":102100}
                }
-  }]
+    }]
+  }
+  ]
 }
 export default safetyConfig;
