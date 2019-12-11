@@ -9,7 +9,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
   constructor(props, context){
     super(props, context);
-    this.eventFilter = props.store.filters.find(f => f.field === 'eventsubtype');
+    this.eventFilter = props.store.filters.find(f => f.field === 'eventType');
   }
 
   render(){

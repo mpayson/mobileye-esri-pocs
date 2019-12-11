@@ -9,28 +9,47 @@ import TokyoImage from "../resources/images/Tokyo.jpg";
 const eventsConfig = {
   //layerItemId: 'baf1358ce8d74342af3340f621688e21',
   //webmapId: '54d46b14f5f74e59a523e0ae46ef8736',
-  webmapId: '56edb4effdea4908bf5721fc5f32a08b',
+  webmapId: '37f6876be7dc4d7e8166c3ef0df0c3aa',
   //layerRefreshIntervalMin: 1,
-  initialRendererField: 'eventsubtype',
+  initialRendererField: 'eventType',
   renderers : {
-    'eventsubtype': {
+    'eventType': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
-      field: "eventsubtype",
+      field: "eventType",
       //defaultSymbol: {type: "simple-marker", color: "blue"},
-      uniqueValueInfos: [{
-        value: "pedestrians",
+      uniqueValueInfos: [
+      // {
+      //   value: "pedestrians",
+      //   symbol: {
+      //     type: "picture-marker",
+      //     url: pedImage
+      //   }
+      // }, {
+      //   value: "bicycles",
+      //   symbol: {
+      //     type: "picture-marker",
+      //     url: bicycleImage
+      //   }
+      // },
+
+      {
+        value: "ET_PHYSICAL_OBJECT",
         symbol: {
           type: "picture-marker",
           url: pedImage
         }
-      }, {
-        value: "bicycles",
+      },
+      {
+        value: "ET_CONSTRUCTION_AREA",
         symbol: {
-          type: "picture-marker",
-          url: bicycleImage
+          type: "simple-line",
+          width: "8.5px",
+          color: [253,174,97,255]
+
         }
       }
+
       ]
     }
   }
@@ -38,7 +57,7 @@ const eventsConfig = {
   filters: [
 //    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 20, log: true}},
 //    {name: 'eventtype', type: 'multiselect'},
-    {name: 'eventsubtype', type: 'multiselect', params: {mode:'multiple-radios'}},
+    {name: 'eventType', type: 'multiselect', params: {mode:'multiple-radios'}},
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
@@ -50,7 +69,8 @@ const eventsConfig = {
         "Event timestamp: {eventtimestamp}"
   },
   viewConfig: {
-    center: [-74.00157, 40.71955],
+    //center: [-74.00157, 40.71955],
+    center: [128.608705, 35.862483],
     zoom: 12
   },
   locations: [{
