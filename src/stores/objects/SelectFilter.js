@@ -16,23 +16,29 @@ class SelectFilter extends Filter{
     this.mode = params && params.mode ? params.mode : '';
   }
   _setFromQueryResults(results){
-    this.options = results.features.map(f => 
-      f.attributes[this.field]
-    ).sort();
-    this.loaded = true;
+    results.features.forEach(f => { 
+      if (this.options.indexOf(f.attributes[this.field]) === -1)
+        this.options.push(f.attributes[this.field]);
+    }
+    );
+    //this.options = this.options.slice().sort()
+  this.loaded = true;
   }
 
-  load(featureLayer){
+  load(featureLayer, map = null){
     super.load(featureLayer);
+    const layers = map ? map.layers : [featureLayer];
+    layers.forEach(layer => {
+      layer.queryFeatures({
+        where: "1=1",
+        returnDistinctValues: true,
+        outFields: [this.field]
+      }).then(this._setFromQueryResults);  
+    })
     const domain = featureLayer.getFieldDomain(this.field);
     if(domain){
       this.domainMap = getDomainMap(domain);
     }
-    featureLayer.queryFeatures({
-      where: "1=1",
-      returnDistinctValues: true,
-      outFields: [this.field]
-    }).then(this._setFromQueryResults);
   }
 
   // execute client-side query based on what's currently available

@@ -41,7 +41,6 @@ class QuantileFilter extends MultiSelectFilter{
         ? q.max
         : max;
     }
-    console.log(min, max);
     return getMinMaxWhere(this.field, min, max);
   }
 

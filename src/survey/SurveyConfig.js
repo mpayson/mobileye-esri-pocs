@@ -147,8 +147,6 @@ const groupTypeIconsExp = Object.keys(groupType2image).map(system_type =>
 const icons_exp = "When(" + speedSignIconsExp + ", " + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
 //const icons_exp = "When(" + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
 
-console.log(icons_exp)
-
 const surveyConfig = {
   
   // layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',

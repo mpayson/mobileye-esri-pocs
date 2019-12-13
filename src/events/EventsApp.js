@@ -92,7 +92,19 @@ const EventsApp = observer(class App extends React.Component {
           container: "timeSlider",
           mode: "time-window",
           view: this.view,
-          loop: false
+          loop: false,
+          // values: [
+          //   new Date(2019, 12, 12), // Initialize the current time for the beginning of the fullTimeExtent.
+
+          //   new Date(2019, 12, 10),
+          // ],        
+          stops: {
+            interval: {
+              value: 1,
+              unit: "days"
+            }
+          }
+
 
         });
 
@@ -140,9 +152,11 @@ const EventsApp = observer(class App extends React.Component {
 
       // set up time slider properties
       this.timeSlider.fullTimeExtent = fullTimeExtent;
-      // this.timeSlider.stops = {
-      //   interval: this.store.lyr.timeInfo.interval
-      // };
+      var today = new Date();
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate()-1);
+
+      this.timeSlider.values = [yesterday, today]
     }
 
 
