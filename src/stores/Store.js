@@ -54,6 +54,7 @@ class Store {
     this.rendererOptions = [...Object.keys(this.renderers)];
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
+    this.defaultRenderersList = storeConfig.defaultRenderersList;
     this.layerLoaded = false;
     this.viewConfig = storeConfig.viewConfig;
     this.outFields = storeConfig.outFields;
@@ -105,18 +106,25 @@ class Store {
       });
   }
 
+  
   _loadLayers(){
+    this.mapLayers = this.map.layers;
+    //this.map.layers.getItemAt(0).renderer = this.renderers[this.rendererField];
+    
+    // this.map.layers.getItemAt(0).renderer = this.renderers["average_speed"];
+    // this.map.layers.getItemAt(1).renderer = this.renderers["pedestrian_density"];
+    // this.map.layers.getItemAt(2).renderer = this.renderers["bicycles_density"];
+
     this.layerViewsMap = new Map();
     var initialLayerSetup = true; 
     const layers = this.mapId ? this.map.layers : [this.lyr];
-
     layers.forEach(layer => {
       this.view.whenLayerView(layer)
       .then(lV => {
         message.destroy();
         this.layerViewsMap.set(layer.id,lV);
-        this._updateRendererFields(layer);
-
+        if (!this.defaultRenderersList)
+          this._updateRendererFields(layer);
         if(this.popupTemplate !== undefined) layer.popupTemplate = this.popupTemplate;
 
         this.aliasMap = layer.fields.reduce((p, f) => {
@@ -145,6 +153,13 @@ class Store {
 
 
     })
+    if (this.defaultRenderersList){
+      this.map.layers.forEach((value,key)=>{
+        this.map.layers.getItemAt(key).renderer = this.renderers[this.defaultRenderersList[key]]
+
+      })
+    }
+
     if(this.hasCustomTooltip){
       this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
       this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
@@ -165,16 +180,19 @@ class Store {
     this.effectHandler = autorun(_ => {
       const where = this.where;
       if(this.layerViewsMap && onApplyFilter){
+        console.log("filtering:" + where);
         onApplyFilter(this.layerViewsMap, where);
       }
     });
     this.rendererHandler = autorun(_ => {
-      
-      const layers = this.mapId ? this.map.layers : [this.lyr];
+      if ((this.map && this.map.layers.length > 0) || this.lyr){
+        const layers = this.mapid ? this.map.layers : [this.lyr];
 
-      layers.forEach(layer => {
-        this._updateRendererFields(layer);
-      });
+        layers.forEach(layer => {
+          console.log("updating")
+          this._updateRendererFields(layer);
+        });
+      }
     })
   }
 
@@ -271,7 +289,6 @@ class Store {
           }
         });
         this.view.map = this.map;
-        this.mapLayers = this.map.layers;
 
         return this.map.when();
       } else {
