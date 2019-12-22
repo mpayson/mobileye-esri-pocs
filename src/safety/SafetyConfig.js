@@ -263,23 +263,23 @@ const safetyConfig = {
     },
     'Ed Koch Bridge - Interchange with harsh cornering and braking': {
       title: 'Ed Koch Bridge',
-      content: 'Ed Koch Bridge - in this interchange we can see harsh breaking and cornering as drivers go off the highway and into narrower and slower city roads.'
+      content: 'Ed Koch Bridge - in this interchange we can see harsh braking and cornering as drivers exit the highway enter into narrower and slower city roads.'
     },
-    'Bay PKWY - Harsh braking between traffic lights': {
-      title: 'Bay PKWY',
-      content: 'Two sections of Bay PKWY have higher rate of harsh breaking then the other sections of the road. This might indicate a need for a change in road marking or road traffic signs.'
+    'Bay Pkwy - Harsh braking between traffic lights': {
+      title: 'Bay Pkwy',
+      content: 'Two sections of the Bay Parkway have a higher rate of harsh braking when compared to  other sections of the road. This might indicate a need to change the road markings or traffic signs.'
      },
-    '33rd and 6th Harsh breaking': {
+    '33rd and 6th Harsh braking': {
       title: '33rd and 6th',
-      content: 'The middle section of the map shows one section that has extreme harsh breaking. there is a park and a subway exit next to it which might be the cause for the harsh breaking.'
+      content: 'The middle section of the map shows one section that has a very high rate of harsh braking. There is a park and a subway exit near this section, which might be connected to these harsh braking incidents.'
      },
-    'HW 95 - Harsh Cornering': {
+    'HW 95 - Harsh cornering': {
       title: 'HW 95',
-      content: 'Most highway ramps have high harsh cornering rate, this section has extremely high rate and might require special slow down signage.'
+      content: 'Most highway ramps have high harsh cornering rate, this section has extremely high rate and might require special signage to ensure drivers slow down.'
      },
     'Canal St - Combination of risk factors': {
-      title: 'Canal st',
-      content: 'The red section shows a combination of risk scores in one location, pedestrians, cyclists, speeding and harsh breaking.'
+      title: 'Canal St',
+      content: 'The red section shows a concentration of alerts in one location, pedestrians, cyclists, speeding and harsh braking.'
      }
   },
   locationsByArea: [
