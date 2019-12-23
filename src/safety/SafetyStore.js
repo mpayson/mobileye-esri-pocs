@@ -152,7 +152,6 @@ class SafetyStore extends Store {
       this.endStr = value;
     }
     if(!value) {
-      console.log("HERE")
       if(isStart) this.startSearchResults = [];
       else this.endSearchResults = [];
       return;

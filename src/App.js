@@ -10,6 +10,8 @@ import LoginBGImage from './resources/images/LoginBG.png';
 import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
+import HumanMobilityApp from './human_mobility/HumanMobilityApp';
+
 import {
   UserSession
 } from "@esri/arcgis-rest-auth";
@@ -155,6 +157,11 @@ class App extends React.Component{
           path="/survey"
           appState={this.appState}
           Component={SurveyApp}/>
+        <PrivateRoute
+          path="/mobility"
+          appState={this.appState}
+          Component={HumanMobilityApp}/>
+
       </Router>
     )
   }

@@ -9,7 +9,7 @@ import LocationsPanel from '../components/LocationsPanel';
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import Store from '../stores/Store';
-import eventsConfig from './EventsConfig';
+import humanMobilityConfig from './HumanMobilityConfig';
 import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
@@ -29,7 +29,7 @@ const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
 )
 
-const EventsApp = observer(class App extends React.Component {
+const HumanMobilityApp = observer(class App extends React.Component {
 
   state = {
     collapsed: true,
@@ -41,7 +41,7 @@ const EventsApp = observer(class App extends React.Component {
     super(props, context);
     this.mapViewRef = React.createRef();
     this.sliderRef = React.createRef();
-    this.store = new Store(props.appState, eventsConfig);
+    this.store = new Store(props.appState, humanMobilityConfig);
   }
 
   onCollapse = collapsed => {
@@ -66,13 +66,13 @@ const EventsApp = observer(class App extends React.Component {
     const modulePromise = loadModules([
       'esri/widgets/Search',
       'esri/widgets/Legend',
-      'esri/widgets/TimeSlider',
-      'esri/widgets/Expand'
+      'esri/widgets/Expand',
+      "esri/widgets/Slider"
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, TimeSlider, Expand], mapView]) => {
+      .then(([[Search, Legend, Expand, Slider], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
 
@@ -80,50 +80,37 @@ const EventsApp = observer(class App extends React.Component {
           view: this.view,
           content: search,
           expandIconClass: 'esri-icon-search'
-        })
-
-        const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
-
-        // create a new time slider widget
-        // set other properties when the layer view is loaded
-        // by default timeSlider.mode is "time-window" - shows
-        // data falls within time range
-        const timeSlider = new TimeSlider({
-          container: "timeSlider",
-          mode: "time-window",
-          view: this.view,
-          loop: false,
-          // values: [
-          //   new Date(2019, 12, 12), // Initialize the current time for the beginning of the fullTimeExtent.
-
-          //   new Date(2019, 12, 10),
-          // ],        
-          stops: {
-            interval: {
-              value: 1,
-              unit: "days"
-            }
-          }
-
-
         });
 
-        // const timeSlider = new TimeSlider({
-        //   container: "timeSlider",
-        //   playRate: 50,
-        //   stops: {
-        //     interval: {
-        //       value: 1,
-        //       unit: "hours"
-        //     }
-        //   }
-        // });
-        this.timeSlider = timeSlider;
-        //timeSlider.values = [new Date(2019, 1, 1), new Date(2020, 1, 1)];
-        this.view.ui.add(timeSlider, "top-right");
+        const slider = new Slider({
+          
+          labelsVisible: true,
+          labelInputsEnabled: false,
+          rangeLabelsVisible: true,
+          rangeLabelInputsEnabled: false,
+          layout: "horizontal",  // vertical
+          min: 0,
+          max: 23,
+          values: [3, 5],
+          precision: 1,
+          tickConfigs: [{
+            mode: "count",
+            values: 24,
+            labelsVisible: true
+          }],
+          steps: 1,
+          container: "sliderDiv"
+        });
+      
+        
+        const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
+        //this.view.ui.add(slider, "bottom-right");
+
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
+
         this.view.ui.move("zoom", "top-right");
+
       });
   }
 
@@ -148,15 +135,7 @@ const EventsApp = observer(class App extends React.Component {
 
     // Init Time Slider
     if (this.store.layerLoaded){
-      const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
-
       // set up time slider properties
-      this.timeSlider.fullTimeExtent = fullTimeExtent;
-      var today = new Date();
-      var yesterday = new Date();
-      yesterday.setDate(yesterday.getDate()-1);
-
-      this.timeSlider.values = [yesterday, today]
     }
 
 
@@ -237,4 +216,4 @@ const EventsApp = observer(class App extends React.Component {
   }
 });
 
-export default EventsApp;
+export default HumanMobilityApp;

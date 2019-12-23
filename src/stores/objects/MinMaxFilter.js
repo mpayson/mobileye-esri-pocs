@@ -14,7 +14,10 @@ class MinMaxFilter extends Filter{
 
   constructor(fieldName, params){
     super(fieldName, params);
-    this.lowerBound = params.lowerBound || null;
+    if (params.lowerBound === 0)
+      this.lowerBound = 0;
+    else
+      this.lowerBound = params.lowerBound || null;
     this.upperBound = params.upperBound || null;
     this.upperBoundSupplied = this.upperBound !== null;
     this.lowerBoundSupplied = this.lowerBound !== null;
@@ -24,6 +27,12 @@ class MinMaxFilter extends Filter{
     this.hasHistograms = params.hasHistograms || false;
     this.upperBoundLabel = params.upperBoundLabel || null;
     this.lowerBoundLabel = params.lowerBoundLabel || null;
+    this.step = params.step || null;
+    this.marks = params.marks || null;
+    this.min = params.min || null;
+    this.max = params.max || null;
+    
+
   }
 
   _setBoundsFromQueryResult([rawMin, rawMax]){

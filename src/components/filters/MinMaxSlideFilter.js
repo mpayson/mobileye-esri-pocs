@@ -43,13 +43,17 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
       ? this.props.upperBoundLabel
       : this.store.upperBound.toString();
 
-    const marks = {
+    var marks = {
       [this.store.lowerBound]: lowerMark,
       [this.store.upperBound]: upperMark
     }
-
+    if (this.store.marks)
+      marks = this.store.marks;
     // 100 step values to 2 point precision (eg Math.round(trueStep * 100) / 100)
-    const step = Math.round(this.store.upperBound - this.store.lowerBound) / 100;
+    var step = Math.round(this.store.upperBound - this.store.lowerBound) / 100;
+
+    if (this.store.step)
+      step = this.store.step;
 
     return(
       <Slider

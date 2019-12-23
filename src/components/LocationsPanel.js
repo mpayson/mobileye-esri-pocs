@@ -20,7 +20,6 @@ class LocationsPanelItem extends React.PureComponent {
 }
 
 const areaView = (store, areaIndex, areaLocations) => { 
-  console.log(areaLocations);
   return (
     areaLocations.map((l,i) => 
       <LocationsPanelItem location={l} areaIndex={areaIndex} id={i} key={l.name} onClick={store.onLocationClick}/>

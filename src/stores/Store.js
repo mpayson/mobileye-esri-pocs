@@ -26,6 +26,8 @@ class Store {
   bookmarkInfo = null;
   autoplay = false;
   bookmarkIndex = -1;
+  layerViewsMap = null;
+  mapLayers = null;
 
   constructor(appState, storeConfig){
     this.appState = appState;
@@ -52,6 +54,7 @@ class Store {
     this.rendererOptions = [...Object.keys(this.renderers)];
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
+    this.defaultRenderersList = storeConfig.defaultRenderersList;
     this.layerLoaded = false;
     this.viewConfig = storeConfig.viewConfig;
     this.outFields = storeConfig.outFields;
@@ -73,7 +76,7 @@ class Store {
   }
 
   loadFilters(){
-    this.filters.forEach(f => f.load(this.lyr, this.view));
+    this.filters.forEach(f => f.load(this.lyr, this.map, this.view));
   }
 
   // todo could query the client instead of the server
@@ -91,63 +94,105 @@ class Store {
     });
   }
 
+  _updateRendererFields(layer){
+    const renderer = this.renderers[this.rendererField];
+    if(renderer._type === 'jsapi'){
+      layer.renderer = renderer;
+    }
+    else
+      loadModules(['esri/renderers/support/jsonUtils'], options)
+      .then(([rendererJsonUtils]) => {
+          layer.renderer = rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
+      });
+  }
+
+  
   _loadLayers(){
-    this.view.whenLayerView(this.lyr)
-    .then(lV => {
-      message.destroy();
-      this.lyrView = lV;
-      this.loadFilters();
-      this.loadCharts();
+    this.mapLayers = this.map.layers;
+    //this.map.layers.getItemAt(0).renderer = this.renderers[this.rendererField];
+    
+    // this.map.layers.getItemAt(0).renderer = this.renderers["average_speed"];
+    // this.map.layers.getItemAt(1).renderer = this.renderers["pedestrian_density"];
+    // this.map.layers.getItemAt(2).renderer = this.renderers["bicycles_density"];
 
-      this.map.layers.forEach(l => {
-        this.layerVisibleMap.set(l.id, l.visible);
-      })
+    this.layerViewsMap = new Map();
+    var initialLayerSetup = true; 
+    const layers = this.mapId ? this.map.layers : [this.lyr];
+    layers.forEach(layer => {
+      this.view.whenLayerView(layer)
+      .then(lV => {
+        message.destroy();
+        this.layerViewsMap.set(layer.id,lV);
+        if (!this.defaultRenderersList)
+          this._updateRendererFields(layer);
+        if(this.popupTemplate !== undefined) layer.popupTemplate = this.popupTemplate;
 
-      if(this.hasCustomTooltip){
-        this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
-        this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
-      }
+        this.aliasMap = layer.fields.reduce((p, f) => {
+          p.set(f.name, f.alias);
+          return p;
+        }, new Map());
 
-      this.aliasMap = this.lyr.fields.reduce((p, f) => {
-        p.set(f.name, f.alias);
-        return p;
-      }, new Map());
-      console.log(this.aliasMap);
-      this.layerLoaded = true;
+        if (initialLayerSetup){
+
+          this.loadFilters();
+          this.loadCharts();
+
+          this.layerLoaded = true;
+          initialLayerSetup = false;
+        }
+  
+  
+       }
+      )
+      .catch(er => {
+        message.destroy();
+        message.error('Error loading the layers, does your account have access to the data?', 4);
+        console.log(er);
+      });
+
+
+
     })
-    .catch(er => {
-      message.destroy();
-      message.error('Error loading the layers, does your account have access to the data?', 4);
-      console.log(er);
-    });
+    if (this.defaultRenderersList){
+      this.map.layers.forEach((value,key)=>{
+        this.map.layers.getItemAt(key).renderer = this.renderers[this.defaultRenderersList[key]]
+
+      })
+    }
+
+    if(this.hasCustomTooltip){
+      this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
+      this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
+    }
+
+
+
+
   }
 
   _buildAutoRunEffects(){
-    const onApplyFilter = pUtils.debounce(function(layerView, where){
-      layerView.filter = {where}
-      // layerView.effect = {
-      //   filter: {where},
-      //   excludedEffect: "grayscale(50%) opacity(30%)"
-      // };
+    const onApplyFilter = pUtils.debounce(function(layerViewsMap, where){
+      layerViewsMap.forEach((layerView) => {
+        layerView.filter = {where: where};
+      })
+
     });
     this.effectHandler = autorun(_ => {
       const where = this.where;
-      if(this.lyrView && onApplyFilter){
-        onApplyFilter(this.lyrView, where);
+      if(this.layerViewsMap && onApplyFilter){
+        console.log("filtering:" + where);
+        onApplyFilter(this.layerViewsMap, where);
       }
     });
     this.rendererHandler = autorun(_ => {
-      const rendererField = this.rendererField;
-      if(!this.lyr) return;
-      const renderer = this.renderers[rendererField];
-      if(renderer._type === 'jsapi') {
-        this.lyr.renderer = renderer;
-        return;
-      } 
-      loadModules(['esri/renderers/support/jsonUtils'], options)
-        .then(([rendererJsonUtils]) => {
-          this.lyr.renderer = rendererJsonUtils.fromJSON(this.renderers[rendererField]);
+      if ((this.map && this.map.layers.length > 0) || this.lyr){
+        const layers = this.mapid ? this.map.layers : [this.lyr];
+
+        layers.forEach(layer => {
+          console.log("updating")
+          this._updateRendererFields(layer);
         });
+      }
     })
   }
 
@@ -178,7 +223,7 @@ class Store {
         if(results.length){
           const graphic = results[0].graphic;
           const screenPoint = hit.screenPoint;
-          this._tooltipHighlight = this.lyrView.highlight(graphic);
+          this._tooltipHighlight = this.layerViewsMap.get(this.lyr.id).highlight(graphic);
           this.tooltipResults = {
             screenPoint,
             graphic
@@ -201,7 +246,6 @@ class Store {
   }
 
   toggleLayerVisibility(layer){
-    // console.log(layer);
     const isVisible = !layer.visible;
     layer.visible = isVisible;
     this.layerVisibleMap.set(layer.id, isVisible);
@@ -228,18 +272,10 @@ class Store {
       pUtils = promiseUtils;
       this._buildAutoRunEffects();
 
-      if(this.renderers && this.renderers[this.rendererField]){
-        renderer = this.renderers[this.rendererField]._type === 'jsapi'
-          ? this.renderers[this.rendererField]
-          : rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
-      }
-
       this.view = new MapView({
         container: mapViewDiv,
         center: this.viewConfig.center,
         zoom: this.viewConfig.zoom,
-        //spatialReference: SpatialReference.WGS84
-        //spatialReference: new SpatialReference({ wkid: 4326 })
       })
 
       this.locationsByArea.forEach(l => 
@@ -253,6 +289,7 @@ class Store {
           }
         });
         this.view.map = this.map;
+
         return this.map.when();
       } else {
         const lyr = new FeatureLayer({
@@ -269,15 +306,9 @@ class Store {
       
     })
     .then(_ => {
-      //console.log(this.map.layers.getItemAt(0))
-      //this.lyr = this.map.layers.find(l =>
-      //  l.portalItem.id === this.layerId
-      //);
       this.lyr = this.map.layers.getItemAt(0);
-      if(renderer) this.lyr.renderer = renderer;
+      //if(renderer) this.lyr.renderer = renderer;
       if(this.outFields) this.lyr.outFields = this.outFields;
-      //console.log(this.popupTemplate)
-      if(this.popupTemplate !== undefined) this.lyr.popupTemplate = this.popupTemplate;
       this._loadLayers();
       return this.view;
     })
@@ -295,7 +326,6 @@ class Store {
   onBookmarkClick(index){
     if(!this.view || index >= this.bookmarks.length) return;
     const bookmark = this.bookmarks[index];
-    //console.log(bookmark.extent);
     this.view.goTo(bookmark.extent);
     if(this.bookmarkInfos){
       this.bookmarkInfo = this.bookmarkInfos[bookmark.name]
@@ -368,10 +398,12 @@ decorate(Store, {
   tooltipResults: observable.shallow,
   bookmarkInfo: observable.ref,
   map: observable.ref,
+  mapLayers: observable.ref,
   where: computed,
   layers: computed,
   bookmarks: computed,
   load: action.bound,
+  _updateRendererFields: action.bound,
   _loadLayers: action.bound,
   loadFilters: action.bound,
   loadCharts: action.bound,

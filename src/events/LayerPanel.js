@@ -1,26 +1,20 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import {
-  Switch,
-  Typography } from 'antd';
-import FilterPanel from '../components/FilterPanel';
 import PanelCard from '../components/PanelCard';
 import LayerIcon from 'calcite-ui-icons-react/LayerIcon';
 import SelectFilter from '../components/filters/SelectFilter';
-
-const { Text } = Typography;
 
 
 const LayerPanel = observer(class LayerPanel extends React.Component{
 
   constructor(props, context){
     super(props, context);
-    this.eventFilter = props.store.filters.find(f => f.field === 'eventsubtype');
+    this.eventFilter = props.store.filters.find(f => f.field === 'eventType');
   }
 
   render(){
 
-    let domainMap = this.eventFilter.domainMap;
+    //let domainMap = this.eventFilter.domainMap;
 
     // let eventOptions = this.eventFilter.options.map(o => {
     //   let text = domainMap.has(o) ? domainMap.get(o) : o;
@@ -36,8 +30,9 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
     const eventOptions = this.props.store.filters.map(f => {
       switch(f.type){
+
         case 'multiselect':
-          return <SelectFilter store={f} key={f.field} mode="multiple"/>
+          return <SelectFilter store={f} mode={f.mode} key={f.field} id={f.field}/>
         case 'select':
           return <SelectFilter store={f} key={f.field}/>
         default:
@@ -52,10 +47,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           title="Layer Selection"
           collapsible={true}
           defaultActive={true}>
-          <Switch
-            onChange={this.onSwitchChange}
-            style={{float: "left", marginTop: "1px"}}/>
-          <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>Event type:</h3>
+          <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Event type:</h3>
           {eventOptions}
         </PanelCard>
       </>

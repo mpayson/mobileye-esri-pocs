@@ -27,7 +27,7 @@ const SafetyTooltip = observer(({store}) => {
     graphic,
     screenPoint
   } = store.tooltipResults;
-  const {x,y} = screenPoint;
+  //const {x,y} = screenPoint;
 
   const isSubsetFields = store.rendererField && store.rendererField !== 'eventvalue';
 

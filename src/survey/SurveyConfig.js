@@ -171,13 +171,14 @@ const surveyConfig = {
   }
   },
   filters: [
-    {name: 'traffic_sign_type', type: 'multiselect', params: {dynamic: true, subset_query: "system_type_group=0"}},
-    {name: 'tfl_type', type: 'multiselect', params: {dynamic: true, subset_query: "system_type_group=1"}},
-    {name: 'road_marking_type', type: 'multiselect', params: {dynamic: true, subset_query: "system_type_group=2"}},
-    {name: 'pole_type', type: 'multiselect', params: {dynamic: true, subset_query: "system_type_group=3"}},
-    {name: 'manhole_type', type: 'multiselect', params: {dynamic: true, subset_query: "system_type_group=4"}},
-    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true}},
-    {name: 'system_type_group', type: 'multiselect', params: {dynamic: true}}
+
+    {name: 'traffic_sign_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=0"}},
+    {name: 'tfl_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=1"}},
+    {name: 'road_marking_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=2"}},
+    {name: 'pole_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=3"}},
+    {name: 'manhole_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=4"}},
+    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true, mode:'multiple'}},
+    {name: 'system_type_group', type: 'multiselect', params: {dynamic: true, mode:'multiple'}}
   ],
   charts: [
   {
