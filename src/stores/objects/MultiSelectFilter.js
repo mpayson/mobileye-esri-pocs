@@ -10,7 +10,7 @@ class MultiSelectFilter extends SelectFilter{
   // Used for directly setting the selected value array
   onValueChange(v){
     this.selectValue = v;
-    console.log(v);
+    
   }
 
   // Used for setting whether an individual option is selected
@@ -28,7 +28,14 @@ class MultiSelectFilter extends SelectFilter{
   }
   
   get where(){
-    return getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
+    let t = getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
+    if (t === null) {
+      return null;
+    }
+    if (this.subset_query !== "1=1") {
+      return "(" + t + " OR NOT ("+this.subset_query+"))";
+    }
+    return t;
   }
 
   get selectedOptionSet(){

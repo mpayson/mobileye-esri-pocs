@@ -337,7 +337,8 @@ class Store {
     const where = this.filters
       .filter(f => !!f.where)
       .map(f => f.where)
-      .join(' AND '); 
+      .join(' AND ');
+    console.log(where) 
     return where ? where : "1=1";
   }
   

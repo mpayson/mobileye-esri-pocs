@@ -12,6 +12,7 @@ class SelectFilter extends Filter{
   constructor(fieldName, params=null){
     super(fieldName, params);
     this.style = params && params.style ? params.style : 'dropdown';
+    this.subset_query =  params && params.subset_query ? params.subset_query : '1=1';
   }
   _setFromQueryResults(results){
     this.options = results.features.map(f => 
@@ -27,14 +28,14 @@ class SelectFilter extends Filter{
       this.domainMap = getDomainMap(domain);
     }
     featureLayer.queryFeatures({
-      where: "1=1",
+      where: this.subset_query,
       returnDistinctValues: true,
       outFields: [this.field]
     }).then(this._setFromQueryResults);
   }
 
   // execute client-side query based on what's currently available
-  refresh(featureLayer, featureLayerView, where="1=1"){
+  refresh(featureLayer, featureLayerView, where=this.subset_query){
     super.load(featureLayer);
     const domain = featureLayer.getFieldDomain(this.field);
     if(domain){
@@ -60,7 +61,7 @@ class SelectFilter extends Filter{
   }
 
   get where(){
-    return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
+    return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type)
   }
 
   get optionSet(){
