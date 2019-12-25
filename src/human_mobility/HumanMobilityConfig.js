@@ -4,7 +4,10 @@ import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 
-var webmapIdEnv = '0fa7af7958504e2380da22f2c6df6d02';
+//var webmapIdEnv = '0fa7af7958504e2380da22f2c6df6d02';
+var webmapIdEnv = '3753b5bcbce7434398023cb7f74fd454';
+
+
 
 if (process.env.WEBMAP_ID){
     webmapIdEnv = process.env.WEBMAP_ID;
@@ -103,7 +106,7 @@ const humanMobilityConfig = {
     zoom: 12
   },
   locationsByArea: [
-    { areaName : 'Americas',
+    { areaName : 'North America',
       locations: [{
       'name' : 'New York City',
       'image' : NYCImage,

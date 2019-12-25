@@ -112,7 +112,7 @@ const safetyConfig = {
       hasHistograms: false,
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
-      info: "Percentage of cars that brake harshly in the segment."
+      info: "Percentage of cars that brake harshly in the segment.",
     }
   },{
     name: 'harsh_cornering_ratio',
@@ -283,7 +283,7 @@ const safetyConfig = {
      }
   },
   locationsByArea: [
-      { areaName : 'Americas',
+      { areaName : 'North America',
         locations: [{
         'name' : 'New York City',
         'image' : NYCImage,
