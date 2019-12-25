@@ -27,7 +27,14 @@ class MultiSelectFilter extends SelectFilter{
   }
   
   get where(){
-    return getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
+    let t = getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
+    if (t === null) {
+      return null;
+    }
+    if (this.subset_query !== "1=1") {
+      return "(" + t + " OR NOT ("+this.subset_query+"))";
+    }
+    return t;
   }
 
   get selectedOptionSet(){
