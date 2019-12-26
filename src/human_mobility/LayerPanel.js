@@ -79,8 +79,11 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   componentDidUpdate(prevProps) {
+    //this.state.selectedDaysRadio = "Weekdays";
+    //this._onDaysRadioClick({target:{value:"Weekdays"}});
     // Typical usage (don't forget to compare props):
     if (this.props.store.mapLayers && this.props.store.mapLayers.length > 0 && !this.state.layersListLoaded) {
+      this._onDaysRadioClick({target:{value:"Weekdays"}});
       this.props.store.mapLayers.items.forEach((layer, index) => {
         if (index !== 0)
           layer.visible = false;
@@ -130,7 +133,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     this.days.forEach((value,key) => {
       radios.push(        <Radio value={key} key={key} style={radioStyle}>{key}</Radio>        )
     });
-
 
     daysOptions = (
     <Radio.Group onChange={this._onDaysRadioClick} value={this.state.selectedDaysRadio}>

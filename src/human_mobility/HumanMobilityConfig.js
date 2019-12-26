@@ -43,6 +43,8 @@ const humanMobilityConfig = {
   webmapId: webmapIdEnv,
   //layerRefreshIntervalMin: 1,
   defaultRenderersList: {0:'average_speed',1:'pedestrian_density',2:'bicycles_density'},
+  baselineWhereConditionList: {0:' and average_speed > 0',1:' and pedestrian_density > 0',2:' and bicycles_density > 0'},
+
   initialRendererField: 'average_speed',
   renderers : {
     'average_speed': {
@@ -82,7 +84,7 @@ const humanMobilityConfig = {
           marks : {
             0:'0',3:'3',6:'6',9:'9',12:'12',15:'15',18:'18',21:'21',24:'24'
           },
-        step: 1, min:2, max:4}},
+        step: 1, min:7, max:8}},
 
   ],
   popupTemplate: {

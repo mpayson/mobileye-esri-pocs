@@ -55,12 +55,15 @@ class Store {
     this.rendererField = storeConfig.initialRendererField;
     this.popupTemplate = storeConfig.popupTemplate;
     this.defaultRenderersList = storeConfig.defaultRenderersList;
+    this.baselineWhereConditionList = storeConfig.baselineWhereConditionList;
+
     this.layerLoaded = false;
     this.viewConfig = storeConfig.viewConfig;
     this.outFields = storeConfig.outFields;
     this.hasCustomTooltip = storeConfig.hasCustomTooltip;
     this.bookmarkInfos = storeConfig.bookmarkInfos;
     this.locationsByArea = storeConfig.locationsByArea ? storeConfig.locationsByArea : [];
+    this.hasCustomTooltip = storeConfig.hasCustomTooltip;
   }
   // to destroy map view, need to do `view.container = view.map = null;`
   // should probably include this in the dismount
@@ -131,7 +134,7 @@ class Store {
           p.set(f.name, f.alias);
           return p;
         }, new Map());
-
+        lV.filter = {where: this.where}
         if (initialLayerSetup){
 
           this.loadFilters();
@@ -171,9 +174,18 @@ class Store {
   }
 
   _buildAutoRunEffects(){
-    const onApplyFilter = pUtils.debounce(function(layerViewsMap, where){
+    const onApplyFilter = pUtils.debounce(function(layerViewsMap, where, baselineWhereConditionList){
+      var index = 0;
       layerViewsMap.forEach((layerView) => {
-        layerView.filter = {where: where};
+        var whereCondition = where;
+        if (baselineWhereConditionList) {
+          whereCondition = whereCondition + baselineWhereConditionList[index];
+          console.log(layerView.layer.renderer.field);
+          console.log(whereCondition);
+
+        }
+        layerView.filter = {where: whereCondition};
+        index++;
       })
 
     });
@@ -181,7 +193,7 @@ class Store {
       const where = this.where;
       if(this.layerViewsMap && onApplyFilter){
         console.log("filtering:" + where);
-        onApplyFilter(this.layerViewsMap, where);
+        onApplyFilter(this.layerViewsMap, where, this.baselineWhereConditionList);
       }
     });
     this.rendererHandler = autorun(_ => {
