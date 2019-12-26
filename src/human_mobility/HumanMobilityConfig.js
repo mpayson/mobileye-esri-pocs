@@ -87,20 +87,13 @@ const humanMobilityConfig = {
         step: 1, min:7, max:8}},
 
   ],
-  popupTemplate: {
-    title: "Event information:",
-    content: "Project: <b>{project}</b><br>" +
-        "Year: {agg_year}<br>" +
-
-        "Month: {agg_month}<br>" +
-        "Day of week: {day_of_week}<br>" +
-        "Hour: {agg_hour}<br>" +
-        "Segment Id: {segment_id}<br>" +
-
-        "Average speed: {average_speed}<br>" +
-        "Pedestrians density: {pedestrian_density}<br>" +
-        "Bicycle density: {bicycles_density}<br>" 
-  },
+  hasCustomTooltip: true,
+  popupTemplate: null,
+  layers : [
+    {name:"average_speed", title:"Average speed" , postText:"Km/H"},
+    {name:"pedestrian_density", title:"Pedestrian density", postText:""},
+    {name:"bicycles_density", title:"Bicycle density", postText:""}
+  ],
   viewConfig: {
     //center: [-74.00157, 40.71955],
     //center: [128.608705, 35.862483],
