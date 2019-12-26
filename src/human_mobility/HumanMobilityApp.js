@@ -3,13 +3,14 @@ import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
-import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import Store from '../stores/Store';
 import humanMobilityConfig from './HumanMobilityConfig';
+import HumanMobilityTooltip from './HumanMobilityTooltip';
+
 import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
@@ -21,9 +22,6 @@ const MenuFilterIcon = () => (
 )
 const MenuBookmarkIcon = () => (
   <BookmarkIcon size="18" filled/>
-)
-const MenuInformationIcon = () => (
-  <InformationIcon size="17" filled/>
 )
 const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
@@ -108,7 +106,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
 
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
-
         this.view.ui.move("zoom", "top-right");
 
       });
@@ -146,6 +143,10 @@ const HumanMobilityApp = observer(class App extends React.Component {
           <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
         </Menu>
       )
+      : null;
+
+    const tooltip = this.store.hasCustomTooltip
+      ? <HumanMobilityTooltip store={this.store}/>
       : null;
 
     return (
@@ -187,6 +188,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
               <div
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
+              {tooltip}
               <Drawer
                 // title={this.state.navKey}
                 closable={false}
