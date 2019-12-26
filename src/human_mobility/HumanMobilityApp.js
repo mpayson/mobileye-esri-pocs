@@ -126,9 +126,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
       case 'Locations':
         panel = <LocationsPanel store={this.store}/>
         break;
-      case 'About':
-        panel = <h1>This is a slick app! Thanks Max!</h1>;
-        break;
       default:
         panel = null;
     }
@@ -176,10 +173,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
               <Menu.Item key="Locations">
                 <Icon component={MenuLocationsIcon} />
                 <span>Locations</span>
-              </Menu.Item>
-              <Menu.Item key="About">
-                <Icon component={MenuInformationIcon} />
-                <span>About</span>
               </Menu.Item>
             </Menu>
           </Sider>
