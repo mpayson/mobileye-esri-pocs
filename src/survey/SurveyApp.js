@@ -6,8 +6,11 @@ import GlobeIcon from 'calcite-ui-icons-react/GlobeIcon';
 import GraphHistogramIcon from 'calcite-ui-icons-react/GraphHistogramIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
-import {loadModules} from 'esri-loader';
-import options from '../config/esri-loader-options';
+import {
+  addSearchWidget,
+  addHomeWidget,
+  addLegendWidget
+} from '../services/MapService';
 import FilterPanel from '../components/FilterPanel';
 import ChartPanel from '../components/ChartPanel';
 // import LayerListPanel from '../components/LayerListPanel';
@@ -68,34 +71,15 @@ const SurveyApp = observer(class App extends React.Component {
 
   componentDidMount = () => {
 
-    const modulePromise = loadModules([
-      'esri/widgets/Search',
-      'esri/widgets/Legend',
-      'esri/widgets/Home',
-      'esri/widgets/Expand'
-    ], options);
-    const loadPromise = this.store.load(this.mapViewRef.current);
-
-    Promise.all([modulePromise, loadPromise]) 
-      .then(([[Search, Legend, Home, Expand], mapView]) => {
+    this.store.load(this.mapViewRef.current)
+      .then(mapView => {
         this.view = mapView;
-        const search = new Search({view: this.view});
-        const searchExpand = new Expand({
-          view: this.view,
-          content: search,
-          expandIconClass: 'esri-icon-search'
-        })
-        this.view.ui.add(searchExpand, "top-right");
-        const legend = new Legend({view: this.view,
-                                   layerInfos: [{layer: this.store.lyr, title: "Landmark Type"}]});
-        this.view.ui.add(legend, "bottom-right");
-        this.view.ui.move("zoom", "top-right");
-        this.homeWidget = new Home({
-          view: this.view
+        addSearchWidget(this.view, 'top-right', 0, true);
+        addLegendWidget(this.view, 'bottom-right', {
+          layerInfos: [{layer: this.store.lyr, title: "Landmark Type"}]
         });
-        // adds the home widget to the top left corner of the MapView
-        this.view.ui.add(this.homeWidget, "top-right");
-      });
+        addHomeWidget(this.view, 'top-right');
+      })
   }
 
   render() {

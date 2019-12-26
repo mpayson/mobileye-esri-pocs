@@ -5,15 +5,15 @@ import {
   SelectFilter,
   QuantileFilter
 } from './Filters';
-import {loadModules} from 'esri-loader';
-import options from '../config/esri-loader-options';
-import { message } from 'antd';
-
-let pUtils;
-// can we keep this at the top? I find it intrusive in the middle?
-message.config({
-  top: 75,
-});
+import {
+  registerSession,
+  loadMap,
+  loadWebMap,
+  jsonToRenderer,
+  debounce,
+  jsonToExtent,
+  layerFromId
+} from '../services/MapService';
 
 class Store {
 
@@ -98,12 +98,9 @@ class Store {
     const renderer = this.renderers[this.rendererField];
     if(renderer._type === 'jsapi'){
       layer.renderer = renderer;
+    } else {
+      layer.renderer = jsonToRenderer(this.renderers[this.rendererField]);
     }
-    else
-      loadModules(['esri/renderers/support/jsonUtils'], options)
-      .then(([rendererJsonUtils]) => {
-          layer.renderer = rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
-      });
   }
 
   
@@ -121,7 +118,7 @@ class Store {
     layers.forEach(layer => {
       this.view.whenLayerView(layer)
       .then(lV => {
-        message.destroy();
+        this.appState.clearMessage();
         this.layerViewsMap.set(layer.id,lV);
         if (!this.defaultRenderersList)
           this._updateRendererFields(layer);
@@ -144,11 +141,11 @@ class Store {
   
        }
       )
-      .catch(er => {
-        message.destroy();
-        message.error('Error loading the layers, does your account have access to the data?', 4);
-        console.log(er);
-      });
+      .catch(er => 
+        this.appState.onError(er,
+          'Error loading the layers, does your account have access to the data?'
+        )
+      );
 
 
 
@@ -165,13 +162,10 @@ class Store {
       this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
     }
 
-
-
-
   }
 
   _buildAutoRunEffects(){
-    const onApplyFilter = pUtils.debounce(function(layerViewsMap, where){
+    const onApplyFilter = debounce(function(layerViewsMap, where){
       layerViewsMap.forEach((layerView) => {
         layerView.filter = {where: where};
       })
@@ -251,71 +245,43 @@ class Store {
     this.layerVisibleMap.set(layer.id, isVisible);
   }
 
-  load(mapViewDiv){
-    message.loading('Loading data.', 0);
-    let renderer;
-    return loadModules([
-      'esri/WebMap',
-      'esri/Map',
-      'esri/views/MapView',
-      'esri/layers/FeatureLayer',
-      'esri/core/promiseUtils',
-      'esri/identity/IdentityManager',
-      'esri/renderers/support/jsonUtils',
-      'esri/geometry/SpatialReference',
-      'esri/geometry/Extent'
-    ], options)
-    .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils, SpatialReference, Extent]) => {
+  async load(mapViewDiv){
+    this.appState.loadingMessage('Loading data.');
+    
+    await registerSession(this.appState.session);
+    this._buildAutoRunEffects();
 
-      esriId.registerToken(this.appState.session.toCredential());
+    this.locationsByArea.forEach(l => 
+      l.locations.forEach(loc => 
+        loc.extent = jsonToExtent(loc.extent)
+      )
+    );
 
-      pUtils = promiseUtils;
-      this._buildAutoRunEffects();
-
-      this.view = new MapView({
-        container: mapViewDiv,
-        center: this.viewConfig.center,
-        zoom: this.viewConfig.zoom,
-      })
-
-      this.locationsByArea.forEach(l => 
-        l.locations.forEach(loc => 
-          loc.extent = new Extent(loc.extent))
-      );
-      if(this.mapId){
-        this.map = new WebMap({
-          portalItem: {
-            id: this.mapId
-          }
-        });
-        this.view.map = this.map;
-
-        return this.map.when();
-      } else {
-        const lyr = new FeatureLayer({
-          portalItem: {id: this.layerId}
-        })
-        this.map = new Map({
-          basemap: 'dark-gray-vector',
-          layers: [lyr]
-        });
-        this.view.map = this.map;
-        return Promise.resolve();
+    if(this.mapId){
+      try {
+        this.view = loadWebMap(mapViewDiv, this.mapId, this.viewConfig);
+        this.map = this.view.map;
+        await this.map.when(); // need to wait to get layer info
+      } catch(e){
+        this.appState.onError(e, 'Could not load the webmap, does the webmap item exist?')
       }
+    } else {
+      try{
+        const lyr = layerFromId(this.layerId);
+        const mapOptions = {basemap: 'dark-gray-vector'}
+        this.view = loadMap(mapViewDiv, mapOptions, this.viewConfig);
+        this.map = this.view.map;
+        this.map.add(lyr);
+      } catch(e) {
+        this.appState.onError(e, 'Could not load the map, does the layer item exist?')
+      }
+    }
 
-      
-    })
-    .then(_ => {
-      this.lyr = this.map.layers.getItemAt(0);
-      //if(renderer) this.lyr.renderer = renderer;
-      if(this.outFields) this.lyr.outFields = this.outFields;
-      this._loadLayers();
-      return this.view;
-    })
-    .catch(er => {
-      message.destroy();
-      message.error('Error creating the map, please refresh for now');
-    });
+    this.lyr = this.map.layers.getItemAt(0);
+    if(this.outFields) this.lyr.outFields = this.outFields;
+    this._loadLayers();
+
+    return this.view;
   }
 
   clearFilters(){

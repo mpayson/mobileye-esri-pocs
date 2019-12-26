@@ -2,7 +2,12 @@ import {decorate, observable, action, computed} from 'mobx';
 import {
   UserSession
 } from "@esri/arcgis-rest-auth";
+import { message } from 'antd';
+message.config({
+  top: 75,
+});
 
+const isProd = process && process.env.NODE_ENV === 'production';
 const SESSION_ID = '__MOBILEYE_ESRI_POCS__';
 
 class AppState {
@@ -65,6 +70,25 @@ class AppState {
     localStorage.removeItem(SESSION_ID);
     this.redirectToReferrer = false; // DO NOT REDIRECT TO REFERRER ON LOGOUT
     this.session = null;
+  }
+
+  onError(error, errorMsg, display=true){
+    if(!isProd){
+      console.log(errorMsg, error);
+      console.trace();
+    }
+    if(!display) return;
+    this.clearMessage();
+    message.error(errorMsg, 4);
+  }
+
+  loadingMessage(messageText, duration=0){
+    this.clearMessage();
+    message.loading(messageText, duration);
+  }
+
+  clearMessage(){
+    message.destroy();
   }
 
 }

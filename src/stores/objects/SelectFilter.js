@@ -15,7 +15,7 @@ class SelectFilter extends Filter{
     this.style = params && params.style ? params.style : 'dropdown';
     this.subset_query =  params && params.subset_query ? params.subset_query : '1=1';
     this.mode = params && params.mode ? params.mode : '';
-  }
+  } 
   _setFromQueryResults(results){
     results.features.forEach(f => { 
       if (this.options.indexOf(f.attributes[this.field]) === -1)
