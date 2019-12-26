@@ -5,7 +5,7 @@ import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 
 //var webmapIdEnv = '0fa7af7958504e2380da22f2c6df6d02';
-var webmapIdEnv = '3753b5bcbce7434398023cb7f74fd454';
+var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
 
 
 
@@ -77,7 +77,7 @@ const humanMobilityConfig = {
   ,
   filters: [
     {name: 'day_of_week', type: 'multiselect'},
-    {name: 'hour', type: 'minmax', 
+    {name: 'agg_hour', type: 'minmax',
           params:{'lowerBoundLabel':0, 'upperBoundLabel':24, 'lowerBound':0, 'upperBound':24, 'numBins':23,
           marks : {
             0:'0',3:'3',6:'6',9:'9',12:'12',15:'15',18:'18',21:'21',24:'24'
@@ -88,11 +88,11 @@ const humanMobilityConfig = {
   popupTemplate: {
     title: "Event information:",
     content: "Project: <b>{project}</b><br>" +
-        "Year: {year}<br>" +
+        "Year: {agg_year}<br>" +
 
-        "Month: {month}<br>" +
+        "Month: {agg_month}<br>" +
         "Day of week: {day_of_week}<br>" +
-        "Hour: {hour}<br>" +
+        "Hour: {agg_hour}<br>" +
         "Segment Id: {segment_id}<br>" +
 
         "Average speed: {average_speed}<br>" +

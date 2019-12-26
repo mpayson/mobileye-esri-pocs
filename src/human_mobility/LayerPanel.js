@@ -139,7 +139,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       </Radio.Group>
     )
     
-    this.hourFilter = this.props.store.filters.find(f => f.field === 'hour');
+    this.hourFilter = this.props.store.filters.find(f => f.field === 'agg_hour');
     const hoursSlider = (<MinMaxSlideFilter store={this.hourFilter} key={this.hourFilter.field} lowerBoundLabel={this.hourFilter.lowerBoundLabel} upperBoundLabel={this.hourFilter.upperBoundLabel}/>)
 
 
