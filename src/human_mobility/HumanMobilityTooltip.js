@@ -30,7 +30,7 @@ const HumanMobilityTooltip = observer(({store}) => {
 
   const infoContent = humanMobilityConfig.layers.map(f =>
         <Col key={f.name} span={12}>
-          <Statistic title={f.title} value={Math.round(attrs[f.name]) +" " +f.postText}/>
+          <Statistic title={f.title} value={Math.round(attrs[f.name])} suffix={f.postText}/>
         </Col>
   )
 

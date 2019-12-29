@@ -90,26 +90,12 @@ const humanMobilityConfig = {
 
   ],
   hasCustomTooltip: true,
-  //popupTemplate: null,
-  // popupTemplate: {
-  //   title: "Event information:",
-  //   content: "Project: <b>{project}</b><br>" +
-  //       "Year: {year}<br>" +
-  //
-  //       "Month: {agg_month}<br>" +
-  //       "Day of week: {day_of_week}<br>" +
-  //       "Hour: {agg_hour}<br>" +
-  //       "Segment Id: {segment_id}<br>" +
-  //
-  //       "Average speed: {average_speed}<br>" +
-  //       "Pedestrians density: {pedestrian_density}<br>" +
-  //       "Bicycle density: {bicycles_density}<br>"
-  // },
 
   layers : [
     {id: 0, outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed" , postText:"Km/H"},
-    {id: 1, outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Pedestrian density", postText:""},
-    {id: 2, outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Bicycle density", postText:""}
+    {id: 1, outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Pedestrian density"},
+    {id: 2, outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Bicycle density"},
+    {id: 3, outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed_count", title:"Number of rides"}
   ],
 
   onMouseOutStatistics:

@@ -34,6 +34,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
     collapsed: true,
     loaded: false,
     navKey: "Layers"
+
   };
 
   constructor(props, context){
@@ -82,7 +83,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
         });
 
         const slider = new Slider({
-          
           labelsVisible: true,
           labelInputsEnabled: false,
           rangeLabelsVisible: true,
@@ -219,13 +219,21 @@ const HumanMobilityApp = observer(class App extends React.Component {
               {tooltip}
 
               <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Hours of day:`}>
+                 <Row gutter={16}>
+                 <Col span={3}>
                 <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary">
                   <Icon type="left" />
                 </Button>
+                </Col>
+                <Col span={18}>
+                {hoursSlider}
+                </Col>
+                <Col span={3}>
                 <Button id="backwards" onClick={this._onHoursForwardButtonClick} type="primary">
                   <Icon type="right" />
                 </Button>
-                {hoursSlider}
+                </Col>
+                </Row>
               </Card>
 
               <Drawer
