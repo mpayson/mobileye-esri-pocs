@@ -28,7 +28,7 @@ const HumanMobilityTooltip = observer(({store}) => {
   if(!graphic) style.display = 'none';
   const attrs = queryResults[0].attributes;
 
-  const infoContent = humanMobilityConfig.layers.map(f =>
+  const infoContent = humanMobilityConfig.layers.filter(layer => layer.type !== "static").map(f =>
         <Col key={f.name} span={12}>
           <Statistic title={f.title} value={Math.round(attrs[f.name]) +" " +f.postText}/>
         </Col>

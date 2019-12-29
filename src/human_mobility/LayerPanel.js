@@ -18,11 +18,11 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     selectedDaysRadio: null,
   }
 
-  layerDetail = new Map([
-    [0,{'name':"average_speed", 'title':'Average Speed'}],
-    [1,{'name':"pedestrian_density", 'title':'Pedestrians Density'}],
-    [2,{'name':"bicycles_density", 'title':'Bicycles Density'}],
-  ])
+  // layerDetail = new Map([
+  //   [0,{'name':"average_speed", 'title':'Average Speed'}],
+  //   [1,{'name':"pedestrian_density", 'title':'Pedestrians Density'}],
+  //   [2,{'name':"bicycles_density", 'title':'Bicycles Density'}],
+  // ])
 
   days = new Map([['Weekend',[5,6]],['Weekdays',[0,1,2,3,4]],['Monday',[0]],['Tuesday',[1]],['Wednesday',[2]]
   ,['Thursday',[3]],['Friday',[4]],['Saturday',[5]],['Sunday',[6]]]);
@@ -48,14 +48,12 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         nextKeys.push(switchId);
         
         let layerIndexClicked = 0;
-        this.layerDetail.forEach((value,index)=>{
+        this.props.store.layersConfig.forEach((value,index)=>{
           if (value.name === switchId){
             layerIndexClicked = index;
           }
 
         });
-        console.log(layerIndexClicked)
-
         this.props.store.mapLayers.getItemAt(layerIndexClicked).visible = true;
       }
     }
@@ -63,7 +61,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       if (this.state.layersActiveKeys.includes(switchId)) {
         nextKeys.splice(nextKeys.indexOf(switchId), 1);
         let layerIndexClicked = 0;
-        this.layerDetail.forEach((value,index)=>{
+        this.props.store.layersConfig.forEach((value,index)=>{
           if (value.name === switchId)
             layerIndexClicked = index;
 
@@ -74,8 +72,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     this.setState({
       layersActiveKeys: nextKeys,
     })
-    console.log(nextKeys)
-
   }
 
   componentDidUpdate(prevProps) {
@@ -84,18 +80,23 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     // Typical usage (don't forget to compare props):
     if (this.props.store.mapLayers && this.props.store.mapLayers.length > 0 && !this.state.layersListLoaded) {
       this._onDaysRadioClick({target:{value:"Weekdays"}});
+      var nextKeys = this.state.layersActiveKeys.slice();
       this.props.store.mapLayers.items.forEach((layer, index) => {
-        if (index !== 0)
+        const layerConfig = this.props.store._getLayerConigById(index);
+        if (!["average_speed","bicycles_lanes"].includes(layerConfig.name))
           layer.visible = false;
         else{
-          var nextKeys = this.state.layersActiveKeys.slice();
-          nextKeys.push(this.layerDetail.get(index).name);
-          this.setState({
-            layersActiveKeys: nextKeys,
-            layersListLoaded: true
-          })      
+          nextKeys.push(layerConfig.name);
         }
       });
+      console.log(nextKeys);
+      if (nextKeys.length > 0) {
+        this.setState({
+          layersActiveKeys: nextKeys,
+          layersListLoaded: true
+        })
+      }
+
     }
   }
 
@@ -105,8 +106,8 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     if (this.props.store.mapLayers && this.props.store.mapLayers.length > 0) {
   
       layers = this.props.store.mapLayers.map((layer, index) => {
-        let label = this.layerDetail.get(index).title;
-        const name = this.layerDetail.get(index).name
+        let label = this.props.store._getLayerConigById(index).title;
+        const name = this.props.store._getLayerConigById(index).name
         return (
           <div key={name}>
             <Switch

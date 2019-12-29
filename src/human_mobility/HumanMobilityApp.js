@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button, Slider} from 'antd';
+import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button} from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
@@ -71,7 +71,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, Expand, Slider], mapView]) => {
+      .then(([[Search, Legend, Expand], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
 
@@ -81,27 +81,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         });
 
-        const slider = new Slider({
-          
-          labelsVisible: true,
-          labelInputsEnabled: false,
-          rangeLabelsVisible: true,
-          rangeLabelInputsEnabled: false,
-          layout: "horizontal",  // vertical
-          min: 0,
-          max: 23,
-          values: [3, 5],
-          precision: 1,
-          tickConfigs: [{
-            mode: "count",
-            values: 24,
-            labelsVisible: true
-          }],
-          steps: 1,
-          container: "sliderDiv"
-        });
-      
-        
         const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
         //this.view.ui.add(slider, "bottom-right");
 

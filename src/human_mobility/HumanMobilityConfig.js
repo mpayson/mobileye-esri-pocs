@@ -107,9 +107,11 @@ const humanMobilityConfig = {
   // },
 
   layers : [
-    {id: 0, outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed" , postText:"Km/H"},
-    {id: 1, outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Pedestrian density", postText:""},
-    {id: 2, outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Bicycle density", postText:""}
+    {id: 0, type: "static", defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bicycle lanes"},
+    {id: 1, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed" , postText:"Km/H"},
+    {id: 2, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Pedestrian density", postText:""},
+    {id: 3, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Bicycle density", postText:""},
+
   ],
 
   onMouseOutStatistics:
