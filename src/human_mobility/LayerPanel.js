@@ -106,8 +106,10 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     if (this.props.store.mapLayers && this.props.store.mapLayers.length > 0) {
   
       layers = this.props.store.mapLayers.map((layer, index) => {
-        let label = this.props.store._getLayerConigById(index).title;
-        const name = this.props.store._getLayerConigById(index).name
+       let label = this.props.store._getLayerConigById(index).title;
+       const name = this.props.store._getLayerConigById(index).name;
+       const showFilter = this.props.store._getLayerConigById(index).showFilter;
+        if(showFilter){
         return (
           <div key={name}>
             <Switch
@@ -120,6 +122,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           
           </div>
         )
+        }
       }).items;
     }
 
