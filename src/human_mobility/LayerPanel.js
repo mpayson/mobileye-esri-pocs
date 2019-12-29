@@ -63,7 +63,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       this.dayOfWeekFilter.onValueChange('Weekdays');
       var nextKeys = this.state.layersActiveKeys.slice();
       this.props.store.mapLayers.items.forEach((layer, index) => {
-        const layerConfig = this.props.store._getLayerConigById(index);
+        const layerConfig = this.props.store._getLayerConfigById(index);
         if (!["average_speed","bicycles_lanes"].includes(layerConfig.name))
           layer.visible = false;
         else{
@@ -87,9 +87,9 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     if (this.props.store.mapLayers && this.props.store.mapLayers.length > 0) {
   
       layers = this.props.store.mapLayers.map((layer, index) => {
-       let label = this.props.store._getLayerConigById(index).title;
-       const name = this.props.store._getLayerConigById(index).name;
-       const showFilter = this.props.store._getLayerConigById(index).showFilter;
+       let label = this.props.store._getLayerConfigById(index).title;
+       const name = this.props.store._getLayerConfigById(index).name;
+       const showFilter = this.props.store._getLayerConfigById(index).showFilter;
         if(showFilter){
         return (
           <div key={name}>

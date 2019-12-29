@@ -1,10 +1,5 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
-import {
-    MinMaxFilter,
-    MultiSelectFilter,
-    SelectFilter,
-    QuantileFilter
-} from './Filters';
+import createFilterFromConfig from './Filters';
 import {
   loadMap,
   loadWebMap,
@@ -14,7 +9,6 @@ import {
   layerFromId,
   debounce
 } from '../services/MapService';
-import DayOfWeekFilter from './objects/DayOfWeekFilter';
 
 class Store {
 
@@ -35,22 +29,7 @@ class Store {
         //this.layerId = storeConfig.layerItemId;
         this.mapId = storeConfig.webmapId;
         console.log(storeConfig.webmapId)
-        this.filters = storeConfig.filters.map(f => {
-            switch (f.type) {
-                case 'minmax':
-                    return new MinMaxFilter(f.name, f.params)
-                case 'multiselect':
-                    return new MultiSelectFilter(f.name, f.params);
-                case 'select':
-                    return new SelectFilter(f.name, f.params);
-                case 'quantile':
-                    return new QuantileFilter(f.name, f.params);
-                case 'dayofweek':
-                  return new DayOfWeekFilter(f.name, f.params);
-                default:
-                    throw new Error("Unknown filter type!")
-            }
-        });
+        this.filters = storeConfig.filters.map(createFilterFromConfig);
         this.charts = storeConfig.charts || [];
 
         this.renderers = storeConfig.renderers;
@@ -84,7 +63,7 @@ class Store {
     loadFilters() {
         var layers = null;//this.lyr;
         if (this.layersConfig) {
-            layers = this.map.layers.filter((layer,index) => this._getLayerConigById(index).type !== "static");
+            layers = this.map.layers.filter((layer,index) => this._getLayerConfigById(index).type !== "static");
         }
         this.filters.forEach(f => f.load(this.lyr, layers, this.view));
     }
@@ -104,7 +83,7 @@ class Store {
         });
     }
 
-    _getLayerConigById(id){
+    _getLayerConfigById(id){
         var layer;
         for (layer of this.layersConfig){
             if (layer.id === id)
@@ -115,7 +94,7 @@ class Store {
     _updateRendererFields(layer,key) {
         var renderer;
         if (key) {
-          renderer = this.renderers[this._getLayerConigById(key).defaultRendererField];
+          renderer = this.renderers[this._getLayerConfigById(key).defaultRendererField];
         }
         else
           renderer = this.renderers[this.rendererField];
@@ -131,7 +110,7 @@ class Store {
     _loadLayers() {
         this.mapLayers = this.map.layers;
         this.mapsLayersIdsList = this.layersConfig ? this.map.layers.map((layer,index) => {
-            if (this._getLayerConigById(index).type !== "static")
+            if (this._getLayerConfigById(index).type !== "static")
                 return layer.id;
         }
         ) : [this.lyr.id];
@@ -143,7 +122,7 @@ class Store {
                 .then(lV => {
                         this.appState.clearMessage();
                         if (this.layersConfig) {
-                            const layerConfig = this._getLayerConigById(key);
+                            const layerConfig = this._getLayerConfigById(key);
                             if (layerConfig.type !== "static") {
                                 this._updateRendererFields(layer, key);
                                 this.layerViewsMap.set(layer.id, lV);
@@ -403,19 +382,17 @@ class Store {
     }
 
     get layers() {
-        if (this.map && this.layerLoaded) {
-            return this.map.layers.items.reverse();
-        }
-        ;
-        return [];
+      if (this.map && this.layerLoaded) {
+        return this.map.layers.items.reverse();
+      }
+      return [];
     }
 
     get bookmarks() {
-        if (this.map && this.layerLoaded) {
-            return this.map.bookmarks.items;
-        }
-        ;
-        return [];
+      if (this.map && this.layerLoaded) {
+        return this.map.bookmarks.items;
+      }
+      return [];
     }
 }
 
