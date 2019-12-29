@@ -3,39 +3,20 @@ import { observer } from "mobx-react";
 import PanelCard from '../components/PanelCard';
 import LayerIcon from 'calcite-ui-icons-react/LayerIcon';
 import MinMaxSlideFilter from '../components/filters/MinMaxSlideFilter';
-import {Switch, Radio} from "antd";
+import {getFilterView} from '../components/FilterPanel';
+import {Switch} from "antd";
 
 
 const LayerPanel = observer(class LayerPanel extends React.Component{
 
-  // constructor(props, context){
-  //   super(props, context);
-  // }
+  constructor(props, context){
+    super(props, context);
+    this.dayOfWeekFilter = props.store.filters.find(f => f.field === 'day_of_week');
+  }
 
   state = {
     layersActiveKeys: [],
     layersListLoaded: false,
-    selectedDaysRadio: null,
-  }
-
-  // layerDetail = new Map([
-  //   [0,{'name':"average_speed", 'title':'Average Speed'}],
-  //   [1,{'name':"pedestrian_density", 'title':'Pedestrians Density'}],
-  //   [2,{'name':"bicycles_density", 'title':'Bicycles Density'}],
-  // ])
-
-  days = new Map([['Weekend',[5,6]],['Weekdays',[0,1,2,3,4]],['Monday',[0]],['Tuesday',[1]],['Wednesday',[2]]
-  ,['Thursday',[3]],['Friday',[4]],['Saturday',[5]],['Sunday',[6]]]);
-
-
-  _onDaysRadioClick = (event) => {
-    console.log('radio checked', event.target.value);
-    this.setState({
-      selectedDaysRadio: event.target.value,
-    });
-    this.dayOfWeekFilter = this.props.store.filters.find(f => f.field === 'day_of_week');
-    const newValues = this.days.get(event.target.value);
-    this.dayOfWeekFilter.onValueChange(newValues);
   }
 
 
@@ -79,7 +60,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     //this._onDaysRadioClick({target:{value:"Weekdays"}});
     // Typical usage (don't forget to compare props):
     if (this.props.store.mapLayers && this.props.store.mapLayers.length > 0 && !this.state.layersListLoaded) {
-      this._onDaysRadioClick({target:{value:"Weekdays"}});
+      this.dayOfWeekFilter.onValueChange('Weekdays');
       var nextKeys = this.state.layersActiveKeys.slice();
       this.props.store.mapLayers.items.forEach((layer, index) => {
         const layerConfig = this.props.store._getLayerConigById(index);
@@ -126,29 +107,8 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       }).items;
     }
 
-    const radioStyle = {
-      display: 'block',
-      height: '30px',
-      lineHeight: '30px',
-    };
-
-    let daysOptions;
-    let radios = []
-    this.days.forEach((value,key) => {
-      radios.push(        <Radio value={key} key={key} style={radioStyle}>{key}</Radio>        )
-    });
-
-    daysOptions = (
-    <Radio.Group onChange={this._onDaysRadioClick} value={this.state.selectedDaysRadio}>
-
-    {radios}
-      </Radio.Group>
-    )
-    
     this.hourFilter = this.props.store.filters.find(f => f.field === 'agg_hour');
     const hoursSlider = (<MinMaxSlideFilter store={this.hourFilter} key={this.hourFilter.field} lowerBoundLabel={this.hourFilter.lowerBoundLabel} upperBoundLabel={this.hourFilter.upperBoundLabel}/>)
-
-
     return (
       <>
         <PanelCard
@@ -159,7 +119,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           {layers}
           <br/>
           <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Days of week:</h3>
-          {daysOptions}
+            {getFilterView(this.dayOfWeekFilter)}
           <br/>
         </PanelCard>
       </>

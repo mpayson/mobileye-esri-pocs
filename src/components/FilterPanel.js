@@ -22,6 +22,8 @@ const getFilterView = (filter) => {
       return <SelectFilter store={f} key={f.field} style={f.style}/>
     case 'quantile':
       return <SelectFilter store={f} key={f.field} mode="multiple" style={f.style}/>
+    case 'dayofweek':
+      return <SelectFilter store={f} key={f.field} style={f.style}/>
     default:
       throw new Error("Unknown filter type!");
   }
@@ -120,3 +122,4 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
 });
 
 export default FilterPanel;
+export {getFilterView}
