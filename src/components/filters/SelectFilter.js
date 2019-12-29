@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import {Select, Button, Switch} from 'antd';
+import {Select, Button, Switch, Radio} from 'antd';
 const { Option } = Select;
 const ButtonGroup = Button.Group;
-
+const RadioGroup = Radio.Group;
 
 const DropdownSelectFilter = observer(({store, mode}) => {
   const children = store.displayOptions.map(o => {
@@ -21,65 +21,38 @@ const DropdownSelectFilter = observer(({store, mode}) => {
         placeholder="Please select"
         onSelect={mode === "multiple" ? null : store.onValueChange}
         onChange={mode === "multiple" ? store.onValueChange : null}
-        value={store.selectValue}
-      >
+        value={store.selectValue}>
         {children}
       </Select>
     </div>
   )
-})
+});
 
-const RadioButtonsSelectFilter = observer(class RadioButtonsSelectFilter extends React.Component{
-
-  state = {
-    filterActiveKeys: [],
-  }
-
-  _onRadioButtonClick = (checked, event, id) => {
-    const radioId = event.target.id;
-    let nextKeys = null;
-    nextKeys = this.state.filterActiveKeys.slice();
-    if (checked) {
-      if (!this.state.filterActiveKeys.includes(radioId)){
-        nextKeys.push(radioId);
-      }
-    }
-    else {
-      if (this.state.filterActiveKeys.includes(radioId)) {
-        nextKeys.splice(nextKeys.indexOf(radioId), 1);
-      }
-    }
-    this.setState({
-      filterActiveKeys: nextKeys,
-    })
-
-    this.props.store.onValueChange(nextKeys);
+const ToggleMultiSelectFilter = observer(class ToggleMultiSelectFilter extends React.Component{
+  _onToggle = (checked, event) => {
+    const id = event.target.id;
+    this.props.store.onValueOptionChange(id);
   }
 
   render() {
-
-    const children = this.props.store.displayOptions.map(o => {
-      let label = o;
-      if (this.props.store.domainMap.has(o)) {
-        label = this.props.store.domainMap.get(o);
-      }
+    const store = this.props.store;
+    return store.displayOptions.map(o => {
+      let label = store.domainMap.has(o)
+        ? store.domainMap.get(o)
+        : o;
       return (
         <div key={o}>
           <Switch
               id={o}
-              onChange={this._onRadioButtonClick}
-              checked={this.state.filterActiveKeys.includes(o)}
+              onChange={this._onToggle}
+              checked={store.selectedOptionSet.has(o)}
               style={{float: "left", marginTop: "1px"}}/>
           <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>{label}</h3>
         </div>
       )
-    })
-
-    return (
-      children
-    )
+    });
   }
-})
+});
 
 const BtnMultiSelectFilter = observer(class BtnMultiSelectFilter extends React.Component{
 
@@ -121,11 +94,54 @@ const BtnMultiSelectFilter = observer(class BtnMultiSelectFilter extends React.C
 
 });
 
+const RadioSelectFilter = observer(class RadioSelectFilter extends React.Component{
+  _onRadioClick = e => {
+    const id = e.target.value;
+    this.props.store.onValueChange(id);
+  }
+  render(){
+    const radioStyle = {
+      display: 'block',
+      height: '30px',
+      lineHeight: '30px',
+    }
+    const store = this.props.store;
+    let radios = store.displayOptions.map(o => {
+      let label = store.domainMap.has(o)
+        ? store.domainMap.get(o)
+        : o;
+      return (
+        <Radio value={o} key={o} style={radioStyle}>{label}</Radio>
+      )
+    })
+    return(
+      <RadioGroup onChange={this._onRadioClick} value={store.selectValue}>
+        {radios}
+      </RadioGroup>
+    )
+  }
+});
 
 const SelectFilter = observer( ({store, mode, id}) => {
-  if(mode === 'multiple-radios') return <RadioButtonsSelectFilter store={store}/>;
-  if(mode !== '')  return <DropdownSelectFilter store={store} mode={mode}/>;
-  return <BtnMultiSelectFilter store={store}/>
+  switch(store.style){
+    case 'toggle':
+      if(mode !== 'multiple'){
+        throw new Error("Toggle filter style is only available for multiple selection mode")
+      }
+      return <ToggleMultiSelectFilter store={store}/>
+    case 'button':
+      if(mode !== 'multiple'){
+        throw new Error("Button filter style is only available for multiple selection mode")
+      }
+      return <BtnMultiSelectFilter store={store}/>
+    case 'radio':
+      if(mode === 'mulitple'){
+        throw new Error("Radio filter style is only available for single selection mode")
+      }
+      return <RadioSelectFilter store={store}/>
+    default:
+      return <DropdownSelectFilter store={store} mode={mode}/>;
+  }
 })
 
 export default SelectFilter;

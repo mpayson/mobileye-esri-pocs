@@ -14,6 +14,7 @@ import {
   layerFromId,
   debounce
 } from '../services/MapService';
+import DayOfWeekFilter from './objects/DayOfWeekFilter';
 
 class Store {
 
@@ -44,6 +45,8 @@ class Store {
                     return new SelectFilter(f.name, f.params);
                 case 'quantile':
                     return new QuantileFilter(f.name, f.params);
+                case 'dayofweek':
+                  return new DayOfWeekFilter(f.name, f.params);
                 default:
                     throw new Error("Unknown filter type!")
             }

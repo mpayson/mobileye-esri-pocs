@@ -78,7 +78,7 @@ const humanMobilityConfig = {
   }
   ,
   filters: [
-    {name: 'day_of_week', type: 'multiselect'},
+    {name: 'day_of_week', type: 'dayofweek', params: {style: 'radio'}},
     {name: 'agg_hour', type: 'minmax',
           params:{'lowerBoundLabel':0, 'upperBoundLabel':24, 'lowerBound':0, 'upperBound':24, 'numBins':23,
           marks : {

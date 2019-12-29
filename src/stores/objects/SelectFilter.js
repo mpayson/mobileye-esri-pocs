@@ -80,6 +80,10 @@ class SelectFilter extends Filter{
     return new Set(this.options);
   }
 
+  // returns the options in order for displaying
+  // it does not return the human readable version, for this
+  // use the domain map to get a label
+  // TODO update naming
   get displayOptions(){
     return this.options.slice().sort();
   }

@@ -102,7 +102,7 @@ const safetyConfig = {
         label: "Very High"
       }],
       info: "Road risk score based on the variables below.",
-      style: "buttons"
+      style: "button"
     }
   },{
     name: 'harsh_acc_ratio',
