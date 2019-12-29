@@ -1,12 +1,15 @@
 import { decorate, observable, computed, action } from 'mobx';
 
+// A base filter object class. Filter objects define the logic
+// to build filter where clauses from UI interactions
+
 class Filter {
+  fieldInfo = {};
+
   constructor(fieldName, params = null){
     this.field = fieldName;
-    this.fieldInfo = {};
-    this.infoText = params && params.info ? params.info : null;
+    this.manualInfoText = params && params.info ? params.info : null;
     this.isDynamic = params && params.dynamic ? params.dynamic : false;
-    // this.caption = (params !== null && "caption" in params) ? params.caption : null;
   }
 
   setFieldInfoFromLayer(featureLayer){
@@ -19,10 +22,21 @@ class Filter {
     }
     this.setFieldInfoFromLayer(featureLayer);
   }
+
+  // defaults to returning the alias, or end-user name, for field
+  // otherwise just returns field name
   get alias(){
-    // if (this.caption !== null) return this.caption;
-    if(this.fieldInfo) return this.fieldInfo.alias;
-    return null;
+    return this.fieldInfo && this.fieldInfo.alias
+      ? this.fieldInfo.alias
+      : this.field;
+  }
+
+  // defaults to metadata in the feature layer field description
+  // https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-support-Field.html#description
+  get infoText(){
+    return this.fieldInfo && this.fieldInfo.description
+      ? this.fieldInfo.description
+      : this.manualInfoText;
   }
 
   get where(){
@@ -36,8 +50,9 @@ class Filter {
 }
 
 decorate(Filter, {
-  fieldInfo: observable,
+  fieldInfo: observable.ref,
   alias: computed,
+  infoText: computed,
   where: computed,
   isActive: computed,
   load: action.bound,

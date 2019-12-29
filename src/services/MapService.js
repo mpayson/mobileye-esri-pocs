@@ -27,7 +27,8 @@ let
     // utils
     _wU,
     _pU, 
-    _jsonUtils;
+    _jsonUtils,
+    _getHistogram;
 
 // utility for preloading necessary modules
 export function preloadAllModules(){
@@ -53,7 +54,8 @@ export function preloadAllModules(){
     // utils
     'esri/core/watchUtils',
     'esri/core/promiseUtils',
-    'esri/renderers/support/jsonUtils'
+    'esri/renderers/support/jsonUtils',
+    // 'esri/renderers/smartMapping/statistics/histogram'
   ], loaderOptions)
   .then(([
     esriId,
@@ -71,7 +73,8 @@ export function preloadAllModules(){
     Graphic,
     wU,
     pU,
-    jsonUtils
+    jsonUtils,
+    // histogram
   ]) => {
     _esriId = esriId;
 
@@ -96,6 +99,7 @@ export function preloadAllModules(){
     _wU = wU;
     _pU = pU;
     _jsonUtils = jsonUtils;
+    // _getHistogram = histogram;
 
   });
   return _pModules;
@@ -330,6 +334,12 @@ export function whenTrue(object, property, handler){
 export function debounce(asyncFunction){
   _moduleCheck(_pU, "You must register an authenticated session before using debounce util")
   return _pU.debounce(asyncFunction);
+}
+
+export function getHistogram(options){
+  throw new Error("Not currently loading the histogram module, uncomment above to load");
+  // _moduleCheck(_getHistogram, "You must register an authenticated session before using histogram util");
+  // return _getHistogram({...options})
 }
 
 function _moduleCheck(module, errorMsg){

@@ -318,11 +318,13 @@ class Store {
     }
   }
 
+
   onLocationClick(areaIndex, index) {
     
     if(!this.view || areaIndex >= this.locationsByArea.length || index >= this.locationsByArea[areaIndex].locations.length) return;
     const location = this.locationsByArea[areaIndex].locations[index];
     this.view.goTo(location.extent);
+
   }
 
   clearBookmark(){
