@@ -79,7 +79,11 @@ class Store {
     }
 
     loadFilters() {
-        this.filters.forEach(f => f.load(this.lyr, this.map, this.view));
+        var layers = null;//this.lyr;
+        if (this.layersConfig) {
+            layers = this.map.layers.filter((layer,index) => this._getLayerConigById(index).type !== "static");
+        }
+        this.filters.forEach(f => f.load(this.lyr, layers, this.view));
     }
 
     // todo could query the client instead of the server
@@ -100,15 +104,16 @@ class Store {
     _getLayerConigById(id){
         var layer;
         for (layer of this.layersConfig){
-            if (layer.id == id)
+            if (layer.id === id)
                 return layer;
         }
     }
 
     _updateRendererFields(layer,key) {
         var renderer;
-        if (key)
+        if (key) {
             renderer = this.renderers[this._getLayerConigById(key).defaultRendererField];
+        }
         else
             renderer = this.renderers[this.rendererField];
 
@@ -124,7 +129,11 @@ class Store {
 
     _loadLayers() {
         this.mapLayers = this.map.layers;
-        this.mapsLayersIdsList = this.mapId ? this.map.layers.map(layer => layer.id) : [this.lyr.id];
+        this.mapsLayersIdsList = this.layersConfig ? this.map.layers.map((layer,index) => {
+            if (this._getLayerConigById(index).type !== "static")
+                return layer.id;
+        }
+        ) : [this.lyr.id];
         this.layerViewsMap = new Map();
         var initialLayerSetup = true;
         const layers = this.mapId ? this.map.layers : [this.lyr];
@@ -132,18 +141,22 @@ class Store {
             this.view.whenLayerView(layer)
                 .then(lV => {
                         message.destroy();
-                        this.layerViewsMap.set(layer.id, lV);
                         if (this.layersConfig) {
-                            this._updateRendererFields(layer, key);
                             const layerConfig = this._getLayerConigById(key);
+                            if (layerConfig.type !== "static") {
+                                this._updateRendererFields(layer, key);
+                                this.layerViewsMap.set(layer.id, lV);
+                            }
                             layer.outFields = layerConfig.outFields;
                             if (layerConfig.baselineWhereCondition)
                                 lV.filter = {where: this.where + layerConfig.baselineWhereCondition};
 
                         }
-                        else
+                        else {
                             this._updateRendererFields(layer);
+                            this.layerViewsMap.set(layer.id, lV);
 
+                        }
                         if (this.popupTemplate !== undefined) layer.popupTemplate = this.popupTemplate;
 
                         this.aliasMap = layer.fields.reduce((p, f) => {
@@ -183,15 +196,15 @@ class Store {
 
     _buildAutoRunEffects() {
         const onApplyFilter = pUtils.debounce(function (layerViewsMap, where, layersConfig) {
-            var index = 0;
+            var index = 1;
             layerViewsMap.forEach((layerView) => {
                 var whereCondition = where;
                 if (layersConfig) {
 
                     var layerConfigTemp;
                     var layerConfig;
-                    for (layerConfigTemp of layersConfig){
-                        if (layerConfigTemp.id == index) {
+                    for (layerConfigTemp of layersConfig.filter(layer=>layer.type!="static")){
+                        if (layerConfigTemp.id === index) {
                             layerConfig = layerConfigTemp;
                             break;
                         }
@@ -214,6 +227,7 @@ class Store {
             if ((this.map && this.map.layers.length > 0) || this.lyr) {
                 const layers = this.mapId ? this.map.layers : [this.lyr];
                 layers.forEach((layer,key) => {
+                    console.log("updating");
                     if (this.layersConfig)
                         this._updateRendererFields(layer,key);
                     else
@@ -300,7 +314,6 @@ class Store {
 
     load(mapViewDiv) {
         message.loading('Loading data.', 0);
-        let renderer;
         return loadModules([
             'esri/WebMap',
             'esri/Map',

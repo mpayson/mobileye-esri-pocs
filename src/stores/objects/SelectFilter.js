@@ -26,19 +26,23 @@ class SelectFilter extends Filter{
   this.loaded = true;
   }
 
-  load(featureLayer, map = null){
-    super.load(featureLayer);
-    const layers = map ? map.layers : [featureLayer];
-    layers.forEach(layer => {
-      layer.queryFeatures({
-        where: this.subset_query,
-        returnDistinctValues: true,
-        outFields: [this.field]
-      }).then(this._setFromQueryResults);  
-    })
-    const domain = featureLayer.getFieldDomain(this.field);
-    if(domain){
-      this.domainMap = getDomainMap(domain);
+  load(featureLayer, layers = null){
+    if (!layers)
+      super.load(featureLayer);
+    if (layers)
+      layers.forEach(layer => {
+        layer.queryFeatures({
+          where: this.subset_query,
+          returnDistinctValues: true,
+          outFields: [this.field]
+        }).then(this._setFromQueryResults);
+      })
+    else{
+      const domain = featureLayer.getFieldDomain(this.field);
+      if(domain){
+        this.domainMap = getDomainMap(domain);
+
+      }
     }
   }
 
