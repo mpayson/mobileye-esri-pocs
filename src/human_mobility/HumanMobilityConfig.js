@@ -7,8 +7,6 @@ import TokyoImage from "../resources/images/Tokyo.jpg";
 //var webmapIdEnv = '0fa7af7958504e2380da22f2c6df6d02';
 var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
 
-
-
 if (process.env.WEBMAP_ID){
     webmapIdEnv = process.env.WEBMAP_ID;
 }
