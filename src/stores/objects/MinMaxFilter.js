@@ -1,7 +1,8 @@
 import Filter from './Filter';
 import { decorate, observable, action, computed } from 'mobx';
-import {loadModules} from 'esri-loader';
-import options from '../../config/esri-loader-options';
+import {
+  getHistogram
+} from '../../services/MapService';
 import {getMinQuery, getMaxQuery, getMinMaxWhere } from '../../utils/Utils';
 
 class MinMaxFilter extends Filter{
@@ -49,20 +50,16 @@ class MinMaxFilter extends Filter{
   }
 
   _setHistogramBins(featureLayer, view){
-    return loadModules([
-      'esri/renderers/smartMapping/statistics/histogram'
-    ], options)
-    .then(([getHistogram]) => 
-      getHistogram({
-        layer: featureLayer,
-        field: this.field,
-        numBins: this.numBins,
-        minValue: this.lowerBound,
-        maxValue: this.upperBound,
-        valueExpression: this.isLogarithmic ? `IIf($feature.${this.field} != 0,Log($feature.${this.field}) / Log(${this.logBase}),0)` : `$feature.${this.field}`,
-        view
-      })
-    ).then(histRes => {
+    getHistogram({
+      layer: featureLayer,
+      field: this.field,
+      numBins: this.numBins,
+      minValue: this.lowerBound,
+      maxValue: this.upperBound,
+      valueExpression: this.isLogarithmic ? `IIf($feature.${this.field} != 0,Log($feature.${this.field}) / Log(${this.logBase}),0)` : `$feature.${this.field}`,
+      view
+    })
+    .then(histRes => {
       this.bins = histRes.bins;
     })
   };
