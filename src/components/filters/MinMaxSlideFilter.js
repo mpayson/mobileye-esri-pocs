@@ -66,7 +66,7 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
         onChange={this.onChange}
         disabled={!this.store.loaded}
         step={step}
-        tooltipVisible={false}
+        tooltipVisible={this.store.tooltipVisible}
       />
     )
   }

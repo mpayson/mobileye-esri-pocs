@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
+import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button, Slider} from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
@@ -14,6 +14,7 @@ import HumanMobilityTooltip from './HumanMobilityTooltip';
 import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
+import MinMaxSlideFilter from "../components/filters/MinMaxSlideFilter";
 
 const { Header, Content, Sider } = Layout;
 
@@ -111,6 +112,20 @@ const HumanMobilityApp = observer(class App extends React.Component {
       });
   }
 
+  _onHoursForwardButtonClick = (event) => {
+    if (this.hourFilter.max !== 24) {
+      this.hourFilter.max = this.hourFilter.max + this.hourFilter.step;
+      this.hourFilter.min = this.hourFilter.min + this.hourFilter.step;
+    }
+  }
+
+  _onHoursBackwardsButtonClick = (event) => {
+    if (this.hourFilter.min !== 0) {
+      this.hourFilter.min = this.hourFilter.min - this.hourFilter.step;
+      this.hourFilter.max = this.hourFilter.max - this.hourFilter.step;
+    }
+  }
+
   render() {
     let panel;
     switch (this.state.navKey) {
@@ -148,6 +163,19 @@ const HumanMobilityApp = observer(class App extends React.Component {
     const tooltip = this.store.hasCustomTooltip
       ? <HumanMobilityTooltip store={this.store}/>
       : null;
+
+    this.hourFilter = this.store.filters.find(f => f.field === 'agg_hour');
+    const hoursSlider = <MinMaxSlideFilter store={this.hourFilter} key={this.hourFilter.field} lowerBoundLabel={this.hourFilter.lowerBoundLabel} upperBoundLabel={this.hourFilter.upperBoundLabel}/>
+    const hoursSliderStyle = {
+      display: 'block',
+      position: 'absolute',
+      top: '620px',
+      right: '520px',
+      width: '600px',
+      height: 'auto',
+      overflow: 'auto',
+      zIndex: '99',
+    }
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
@@ -189,6 +217,17 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
               {tooltip}
+
+              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Hours of day:`}>
+                <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary">
+                  <Icon type="left" />
+                </Button>
+                <Button id="backwards" onClick={this._onHoursForwardButtonClick} type="primary">
+                  <Icon type="right" />
+                </Button>
+                {hoursSlider}
+              </Card>
+
               <Drawer
                 // title={this.state.navKey}
                 closable={false}

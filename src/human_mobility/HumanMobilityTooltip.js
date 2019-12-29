@@ -10,7 +10,8 @@ const HumanMobilityTooltip = observer(({store}) => {
     return null;
   }
   const {
-    graphic
+    graphic,
+    queryResults
   } = store.tooltipResults;
 
   const style = {
@@ -25,10 +26,10 @@ const HumanMobilityTooltip = observer(({store}) => {
     pointerEvents: 'none'
   }
   if(!graphic) style.display = 'none';
-  const attrs = graphic.attributes;
+  const attrs = queryResults[0].attributes;
 
   const infoContent = humanMobilityConfig.layers.map(f =>
-        <Col span={12}>
+        <Col key={f.name} span={12}>
           <Statistic title={f.title} value={Math.round(attrs[f.name]) +" " +f.postText}/>
         </Col>
   )

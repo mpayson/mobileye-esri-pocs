@@ -157,10 +157,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Days of week:</h3>
           {daysOptions}
           <br/>
-          <br/>
-          <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Hours:</h3>
-          <br/>
-          {hoursSlider}
         </PanelCard>
       </>
     )

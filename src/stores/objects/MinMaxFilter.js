@@ -31,7 +31,8 @@ class MinMaxFilter extends Filter{
     this.marks = params.marks || null;
     this.min = params.min || null;
     this.max = params.max || null;
-    
+    this.tooltipVisible = params.tooltipVisible || false;
+
 
   }
 

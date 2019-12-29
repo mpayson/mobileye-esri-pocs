@@ -39,11 +39,13 @@ const getClassBreakRenderer = (field,stops,labels,colors) => ({
       label: [3]
     }]
 })
+
+const defaultLayerOutFields = ['average_speed','pedestrian_density','bicycles_density', 'agg_hour', 'day_of_week', 'segment_id'];
+
+
 const humanMobilityConfig = {
   webmapId: webmapIdEnv,
   //layerRefreshIntervalMin: 1,
-  defaultRenderersList: {0:'average_speed',1:'pedestrian_density',2:'bicycles_density'},
-  baselineWhereConditionList: {0:' and average_speed > 0',1:' and pedestrian_density > 0',2:' and bicycles_density > 0'},
 
   initialRendererField: 'average_speed',
   renderers : {
@@ -84,15 +86,64 @@ const humanMobilityConfig = {
           marks : {
             0:'0',3:'3',6:'6',9:'9',12:'12',15:'15',18:'18',21:'21',24:'24'
           },
-        step: 1, min:7, max:8}},
+        step: 1, min:7, max:8, tooltipVisible:true}},
 
   ],
   hasCustomTooltip: true,
-  popupTemplate: null,
+  //popupTemplate: null,
+  popupTemplate: {
+    title: "Event information:",
+    content: "Project: <b>{project}</b><br>" +
+        "Year: {year}<br>" +
+
+        "Month: {agg_month}<br>" +
+        "Day of week: {day_of_week}<br>" +
+        "Hour: {agg_hour}<br>" +
+        "Segment Id: {segment_id}<br>" +
+
+        "Average speed: {average_speed}<br>" +
+        "Pedestrians density: {pedestrian_density}<br>" +
+        "Bicycle density: {bicycles_density}<br>"
+  },
+
   layers : [
-    {name:"average_speed", title:"Average speed" , postText:"Km/H"},
-    {name:"pedestrian_density", title:"Pedestrian density", postText:""},
-    {name:"bicycles_density", title:"Bicycle density", postText:""}
+    {id: 0, outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed" , postText:"Km/H"},
+    {id: 1, outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Pedestrian density", postText:""},
+    {id: 2, outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Bicycle density", postText:""}
+  ],
+
+  onMouseOutStatistics:
+  [
+    {
+      onStatisticField: 'average_speed',
+      outStatisticFieldName: 'average_speed',
+      statisticType: 'avg'
+    },
+    {
+      onStatisticField: 'average_speed',
+      outStatisticFieldName: 'average_speed_count',
+      statisticType: 'count'
+    },
+                                    {
+      onStatisticField: 'pedestrian_density',
+      outStatisticFieldName: 'pedestrian_density',
+      statisticType: 'avg'
+    },
+    {
+      onStatisticField: 'pedestrian_density',
+      outStatisticFieldName: 'pedestrian_density_count',
+      statisticType: 'count'
+    },
+    {
+      onStatisticField: 'bicycles_density',
+      outStatisticFieldName: 'bicycles_density',
+      statisticType: 'avg'
+    },
+    {
+      onStatisticField: 'bicycles_density',
+      outStatisticFieldName: 'bicycles_density_count',
+      statisticType: 'count'
+    },
   ],
   viewConfig: {
     //center: [-74.00157, 40.71955],
