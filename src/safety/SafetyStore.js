@@ -299,7 +299,7 @@ class SafetyStore extends Store {
       };
       this.stdTravelTime = this.stdRoute.attributes['Total_TravelTime'];
       this.view.graphics.add(this.stdRoute);
-      return this.lyrView.queryFeatures({
+      return this.layerViewsMap.get(this.lyr.id).queryFeatures({
         where: "1=1",
         geometry: this.stdRoute.geometry,
         outStatistics: [scoreStatQuery]
@@ -313,7 +313,7 @@ class SafetyStore extends Store {
   }
 
   generateScoreRoute(pStdRoute){
-    const pQuery = this.lyrView.queryFeatures({
+    const pQuery = this.layerViewsMap.get(this.lyr.id).queryFeatures({
       where: "eventvalue > 0",
       geometry: this.view.extent,
       spatialRelationship: 'contains',
@@ -374,7 +374,7 @@ class SafetyStore extends Store {
         color: [227, 69, 143, 1],
         width: 3
       };
-      const pQuery = this.lyrView.queryFeatures({
+      const pQuery = this.layerViewsMap.get(this.lyr.id).queryFeatures({
         where: "1=1",
         geometry: this.scoreRoute.geometry,
         outStatistics: [scoreStatQuery]
