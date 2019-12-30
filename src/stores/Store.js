@@ -1,17 +1,11 @@
 import {decorate, observable, action, computed, autorun} from 'mobx';
+import createFilterFromConfig from './Filters';
 import {
-    MinMaxFilter,
-    MultiSelectFilter,
-    SelectFilter,
-    QuantileFilter
-} from './Filters';
-import {
-    loadWebMap, loadMap, jsonToRenderer, registerSession, jsonToExtent, layerFromId
+    loadWebMap, loadMap, jsonToRenderer, 
+    registerSession, jsonToExtent, layerFromId, debounce
 } from '../services/MapService';
-
 import {message} from 'antd';
 
-let pUtils;
 // can we keep this at the top? I find it intrusive in the middle?
 message.config({
     top: 75,
@@ -36,20 +30,7 @@ class Store {
         //this.layerId = storeConfig.layerItemId;
         this.mapId = storeConfig.webmapId;
         console.log(storeConfig.webmapId)
-        this.filters = storeConfig.filters.map(f => {
-            switch (f.type) {
-                case 'minmax':
-                    return new MinMaxFilter(f.name, f.params)
-                case 'multiselect':
-                    return new MultiSelectFilter(f.name, f.params);
-                case 'select':
-                    return new SelectFilter(f.name, f.params);
-                case 'quantile':
-                    return new QuantileFilter(f.name, f.params);
-                default:
-                    throw new Error("Unknown filter type!")
-            }
-        });
+        this.filters = storeConfig.filters.map(createFilterFromConfig);
         this.charts = storeConfig.charts || [];
 
         this.renderers = storeConfig.renderers;
@@ -83,7 +64,7 @@ class Store {
     }
 
     loadFilters() {
-        var layers = null;//this.lyr;
+        var layers = null; //this.lyr;
         if (this.layersConfig) {
             layers = this.map.layers.filter((layer,index) => this._getLayerConigById(index).type !== "static");
         }
@@ -197,7 +178,7 @@ class Store {
     }
 
     _buildAutoRunEffects() {
-        const onApplyFilter = pUtils.debounce(function (layerViewsMap, where, layersConfig,liveLayersStartIndex) {
+        const onApplyFilter = debounce(function (layerViewsMap, where, layersConfig,liveLayersStartIndex) {
             var index = (liveLayersStartIndex) ? liveLayersStartIndex : 0;
             layerViewsMap.forEach((layerView) => {
                 var staticLayer = false;
@@ -324,6 +305,7 @@ class Store {
         message.loading('Loading data.', 0);
 
         await registerSession(this.appState.session);
+        this._buildAutoRunEffects();
 
         this.locationsByArea.forEach(l => 
             l.locations.forEach(loc => 

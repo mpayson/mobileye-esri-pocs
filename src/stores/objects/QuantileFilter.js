@@ -30,18 +30,13 @@ class QuantileFilter extends MultiSelectFilter{
 
   get where(){
     // if(this.options.length === this.selectValue.length) return null;
-    let min, max;
-    for(let i = 0; i < this.selectValue.length; i++){
-      const label = this.selectValue[i];
+    if(!this.selectValue || this.selectValue.length < 1) return null;
+
+    const wheres = this.selectValue.map(label => {
       const q = this.labelMap.get(label);
-      min = (q.min !== undefined && (min === undefined || q.min < min))
-        ? q.min
-        : min;
-      max = (q.max !== undefined && (max === undefined || q.max > max))
-        ? q.max
-        : max;
-    }
-    return getMinMaxWhere(this.field, min, max);
+      return getMinMaxWhere(this.field, q.min, q.max);
+    })
+    return `(${wheres.join(' OR ')})`;
   }
 
   get displayOptions(){
