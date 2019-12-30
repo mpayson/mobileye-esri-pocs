@@ -17,7 +17,7 @@ class SelectFilter extends Filter{
     this.mode = params && params.mode ? params.mode : '';
   }
   _setFromQueryResults(results){
-    results.features.forEach(f => { 
+    results.features.forEach(f => {
       if (this.options.indexOf(f.attributes[this.field]) === -1)
         this.options.push(f.attributes[this.field]);
     }
@@ -27,8 +27,9 @@ class SelectFilter extends Filter{
   }
 
   load(featureLayer, layers = null){
-    if (!layers)
+    if (!layers) {
       super.load(featureLayer);
+    }
     if (layers)
       layers.forEach(layer => {
         layer.queryFeatures({
@@ -41,8 +42,12 @@ class SelectFilter extends Filter{
       const domain = featureLayer.getFieldDomain(this.field);
       if(domain){
         this.domainMap = getDomainMap(domain);
-
       }
+      featureLayer.queryFeatures({
+          where: this.subset_query,
+          returnDistinctValues: true,
+          outFields: [this.field]
+        }).then(this._setFromQueryResults);
     }
   }
 
