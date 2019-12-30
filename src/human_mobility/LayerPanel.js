@@ -83,7 +83,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       var nextKeys = this.state.layersActiveKeys.slice();
       this.props.store.mapLayers.items.forEach((layer, index) => {
         const layerConfig = this.props.store._getLayerConigById(index);
-        if (!["average_speed","bicycles_lanes","bus_stops"].includes(layerConfig.name))
+        if (!this.props.store.defaultVisibleLayersList.includes(layerConfig.id))
           layer.visible = false;
         else{
           nextKeys.push(layerConfig.name);

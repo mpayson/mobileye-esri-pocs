@@ -63,6 +63,8 @@ class Store {
         this.bookmarkInfos = storeConfig.bookmarkInfos;
         this.locationsByArea = storeConfig.locationsByArea ? storeConfig.locationsByArea : [];
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
+        this.liveLayersStartIndex = storeConfig.liveLayersStartIndex;
+        this.defaultVisibleLayersList = storeConfig.defaultVisibleLayersList;
     }
 
     // to destroy map view, need to do `view.container = view.map = null;`
@@ -195,23 +197,29 @@ class Store {
     }
 
     _buildAutoRunEffects() {
-        const onApplyFilter = pUtils.debounce(function (layerViewsMap, where, layersConfig) {
-            var index = 2;
+        const onApplyFilter = pUtils.debounce(function (layerViewsMap, where, layersConfig,liveLayersStartIndex) {
+            var index = (liveLayersStartIndex) ? liveLayersStartIndex : 0;
             layerViewsMap.forEach((layerView) => {
+                var staticLayer = false;
                 var whereCondition = where;
                 if (layersConfig) {
 
                     var layerConfigTemp;
                     var layerConfig;
-                    for (layerConfigTemp of layersConfig.filter(layer=>layer.type!="static")){
+                    for (layerConfigTemp of layersConfig){
                         if (layerConfigTemp.id === index) {
+                            if (layerConfigTemp.type === "static") {
+                                staticLayer = true;
+                            }
                             layerConfig = layerConfigTemp;
                             break;
                         }
                     }
                     whereCondition = whereCondition + layerConfig.baselineWhereCondition;
                 }
-                layerView.filter = {where: whereCondition};
+                if (!staticLayer) {
+                    layerView.filter = {where: whereCondition};
+                }
                 index++;
             })
 
@@ -219,7 +227,7 @@ class Store {
         this.effectHandler = autorun(_ => {
             const where = this.where;
             if (this.layerViewsMap && onApplyFilter) {
-                onApplyFilter(this.layerViewsMap, where, this.layersConfig);
+                onApplyFilter(this.layerViewsMap, where, this.layersConfig, this.liveLayersStartIndex);
             }
         });
         this.rendererHandler = autorun(_ => {

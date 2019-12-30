@@ -98,6 +98,9 @@ const humanMobilityConfig = {
     {id: 4, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Bicycle density", postText:"Per ride", showFilter:true}
    ],
 
+  liveLayersStartIndex: 2,
+  defaultVisibleLayersList: [0,1,2],
+
   onMouseOutStatistics:
   [
     {
