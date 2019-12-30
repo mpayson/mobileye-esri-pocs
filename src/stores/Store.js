@@ -130,19 +130,17 @@ class Store {
         const config = this.layersConfig.find(c => 
             c.id === collectionIndex
         );
-				if(!config) return;
-				
+		if(!config) return;
 
         if(config.title) layer.title = config.title;
-        // if(config.name) layer.id = config.name;
-        // if(config.baselineWhereCondition) 
-        //     layer.definitionExpression = config.baselineWhereCondition;
-        // if(config.outFields) layer.outFields = config.outFields;
+        if(config.name) layer.id = config.name;
+        if(config.baselineWhereCondition) 
+            layer.definitionExpression = config.baselineWhereCondition;
+        if(config.outFields) layer.outFields = config.outFields;
         // Port static logic
         if(config.defaultRenderer && config.type !== 'static'){
-					layer.renderer = this._formatRenderer(config.defaultRenderer);
-					// console.log(config.defaultRenderer);
-				}
+            layer.renderer = this._formatRenderer(config.defaultRenderer);
+        }
     }
 
     _initLayerDataStructures(layer, collectionIndex){
