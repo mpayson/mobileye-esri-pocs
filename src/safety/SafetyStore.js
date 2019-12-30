@@ -1,8 +1,16 @@
 import {decorate, observable, action } from 'mobx';
-import {loadModules} from 'esri-loader';
-import options from '../config/esri-loader-options';
 import Store from '../stores/Store';
 import { message } from 'antd';
+import { 
+  createSketchVM,
+  locationToAddress,
+  suggestLocations,
+  magicKeyToLocation,
+  jsonToGraphic,
+  generateRoute,
+  buffer,
+  featuresIntoFeatureSet
+} from '../services/MapService';
 
 // number of barriers to account for when routing
 const NUMBER_BARRIERS = 200;
@@ -49,35 +57,15 @@ class SafetyStore extends Store {
   safetyTravelTime = null;
   safetyTravelScore = null;
 
-  load(mapViewDiv){
-    return super.load(mapViewDiv)
-      .then(view => {
-        loadModules([
-          'esri/widgets/Sketch/SketchViewModel',
-          'esri/layers/FeatureLayer',
-          'esri/geometry/SpatialReference'
-        ], options)
-          .then(([SketchVM, FeatureLayer, SpatialReference]) => {
-            this.sketchVM = new SketchVM({
-              view,
-              layer: view.graphics,
-              pointSymbol: stopSymbol
-            });
-            this.sketchListener = this.sketchVM.on("create", this.onCreateComplete);
-            this.isSketchLoaded = true;
-
-            this.routeResultLyr = new FeatureLayer({
-              title: "Route Results",
-              geometryType: "polyline",
-              spatialReference: SpatialReference.WebMercator,
-              //spatialReference: SpatialReference.WGS84,
-              objectIdField: 'oid',
-              source: []
-            })
-            this.map.add(this.routeResultLyr);
-          });
-        return view;
-      })
+  async load(mapViewDiv){
+    const view = await super.load(mapViewDiv);
+    this.sketchVM = await createSketchVM(view, {
+      layer: view.graphics,
+      pointSymbol: stopSymbol
+    });
+    this.sketchListener = this.sketchVM.on("create", this.onCreateComplete);
+    this.isSketchLoaded = true;
+    return view;
   }
 
   clearRouteData(){
@@ -124,28 +112,19 @@ class SafetyStore extends Store {
     }
   }
 
-  setAddressFromGeocode(stopType, graphic){
-
-    loadModules(['esri/tasks/Locator'], options)
-      .then(([Locator]) => {
-        const locator = new Locator({
-          url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
-        });
-        return locator.locationToAddress({
-          location: graphic.geometry,
-          locationType: "street"
-        });
-      })
-      .then(res => {
-        if(stopType === 'start') this.startStr = res.address;
-        else if(stopType === 'end') this.endStr = res.address;
-      })
-      .catch(er => {
-        message.error('Error converting point to an address, please retry!')
-      });
+  async setAddressFromGeocode(stopType, graphic){
+    let result;
+    try {
+      result = await locationToAddress(graphic.geometry);
+    } catch(e){
+      this.appState.onError(e, 'Could not convert point to address, please retry!', false);
+    }
+    if(!result) return;
+    if(stopType === 'start') this.startStr = result.address;
+    else if(stopType === 'end') this.endStr = result.address;
   }
 
-  onAddressSearchChange(value, isStart){
+  async onAddressSearchChange(value, isStart){
     if(isStart){
       this.startStr = value;
     } else {
@@ -156,74 +135,56 @@ class SafetyStore extends Store {
       else this.endSearchResults = [];
       return;
     }
-    loadModules(['esri/tasks/Locator'], options)
-      .then(([Locator]) => {
-        const locator = new Locator({
-          url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
-        });
-        return locator.suggestLocations({
-          text: value,
-          location: this.view.center
-        });
-      })
-      .then(res => {
-        if(isStart){
-          this.startSearchResults = res;
-        } else {
-          this.endSearchResults = res;
-        }
-      })
+    let searchResults;
+    try {
+      searchResults = await suggestLocations(value, this.view.center);
+    } catch(e){
+      this.appState.onError(e, 'Error looking for suggestions, please keep typing.');
+    }
+    if(!searchResults) return;
+    if(isStart) this.startSearchResults = searchResults;
+    else this.endSearchResults = searchResults;
   }
 
-  onAddressSearchSelect(magicKey, isStart){
-    let G;
-    loadModules(['esri/tasks/Locator', 'esri/Graphic'], options)
-    .then(([Locator, Graphic]) => {
-      G = Graphic;
-      const locator = new Locator({
-        url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
-      });
-      return locator.addressToLocations({
-        magicKey
-      })
-    })
-    .then(res => {
-      if(!res || res.length < 1) console.log('ERROR GETTING GEOCODE RESULTS');
-      const address = res[0].address;
-      const graphic = new G({
-        symbol: stopSymbol,
-        geometry: res[0].location
-      });
-      if(isStart){
-        if(this.startGraphic){
-          this.view.graphics.remove(this.startGraphic);
-        }
-        this.startStr = address;
-        this.startGraphic = graphic;
-        this.view.graphics.add(this.startGraphic);
-        this.endGraphic 
-          ? this.view.goTo([this.startGraphic, this.endGraphic])
-          : this.view.goTo(this.startGraphic);
-      } else {
-        if(this.endGraphic){
-          this.view.graphics.remove(this.endGraphic);
-        }
-        this.endStr = address;
-        this.endGraphic = graphic;
-        this.view.graphics.add(this.endGraphic);
-        this.startGraphic 
-        ? this.view.goTo([this.startGraphic, this.endGraphic])
-        : this.view.goTo(this.endGraphic);
-      }
+  async onAddressSearchSelect(magicKey, isStart){
+    
+    const res = await magicKeyToLocation(magicKey);
+    if(!res || res.length < 1) this.appState.onError(null, 'Error getting the result');
+    const address = res[0].address;
 
-    })
+    const graphic = jsonToGraphic(
+      {geometry: res[0].location},
+      {symbol: stopSymbol}
+    )
+
+    if(isStart){
+      if(this.startGraphic){
+        this.view.graphics.remove(this.startGraphic);
+      }
+      this.startStr = address;
+      this.startGraphic = graphic;
+      this.view.graphics.add(this.startGraphic);
+      this.endGraphic 
+        ? this.view.goTo([this.startGraphic, this.endGraphic])
+        : this.view.goTo(this.startGraphic);
+    } else {
+      if(this.endGraphic){
+        this.view.graphics.remove(this.endGraphic);
+      }
+      this.endStr = address;
+      this.endGraphic = graphic;
+      this.view.graphics.add(this.endGraphic);
+      this.startGraphic 
+      ? this.view.goTo([this.startGraphic, this.endGraphic])
+      : this.view.goTo(this.endGraphic);
+    }
+    
   }
 
 
 
   // don't like this logic, re-write at some point #refactor!
   onCreateClick(e){
-
     // remove start point
     if(e === 'start' && this.startGraphic){
       this.view.graphics.remove(this.startGraphic);
@@ -253,43 +214,11 @@ class SafetyStore extends Store {
   }
 
   generateStdRoute(){
-    return loadModules([
-      'esri/tasks/RouteTask',
-      'esri/tasks/support/RouteParameters',
-      'esri/tasks/support/FeatureSet',
-      'esri/geometry/SpatialReference'
-    ], options)
-    .then(([
-      RouteTask,
-      RouteParameters,
-      FeatureSet,
-      SpatialReference
-    ]) => {
-      const routeTask = new RouteTask({
-        url: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve"
-      });
-  
-      const routeParams = new RouteParameters({
-        stops: new FeatureSet(),
-        outSpatialReference: SpatialReference.WebMercator,
-        impedanceAttribute: 'Miles',
-        accumulateAttributes: ['TravelTime']
-      });
-  
-      routeParams.stops.features.push(this.startGraphic);
-      routeParams.stops.features.push(this.endGraphic);
-  
-      return routeTask.solve(routeParams)
+    return generateRoute(this.startGraphic, this.endGraphic, {
+      impedanceAttribute: 'Miles',
+      accumulateAttributes: ['TravelTime']
     })
     .then(data => {
-      // console.log('std', data);
-      
-      // const existingGraphic = this.routeResultLyr.source.find(f => f.attributes.oid === 1);
-      // if(existingGraphic){
-      //   this.routeResultLyr.source.remove(existingGraphic);
-      // }
-      // const nextRoute = data.routeResults[0].route;
-
       if(this.stdRoute) this.view.graphics.remove(this.stdRoute);
       this.stdRoute = data.routeResults[0].route;
       this.stdRoute.symbol = {
@@ -313,58 +242,31 @@ class SafetyStore extends Store {
   }
 
   generateScoreRoute(pStdRoute){
-    const pQuery = this.layerViewsMap.get(this.lyr.id).queryFeatures({
+    
+    
+    return this.layerViewsMap.get(this.lyr.id).queryFeatures({
       where: "eventvalue > 0",
       geometry: this.view.extent,
       spatialRelationship: 'contains',
       orderByFields: ['eventvalue DESC'],
       returnGeometry: true,
       outFields: ['eventvalue', 'OBJECTID']
-    });
-
-    const pModules = loadModules([
-      'esri/tasks/RouteTask',
-      'esri/tasks/support/RouteParameters',
-      'esri/tasks/support/FeatureSet',
-      'esri/geometry/SpatialReference',
-      "esri/geometry/geometryEngine"
-    ], options);
-
-    return Promise.all([pQuery, pModules])
-    .then(([
-      qres,
-      [ RouteTask, RouteParameters, FeatureSet, SpatialReference,geometryEngine]
-    ]) => {
-
-      const routeTask = new RouteTask({
-        url: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve"
-      });
-  
-      const routeParams = new RouteParameters({
-        stops: new FeatureSet(),
-        polygonBarriers: new FeatureSet(),
-        outSpatialReference: SpatialReference.WebMercator,
+    })
+    .then(qres => {
+      const scorePolys = qres.features.slice(0, NUMBER_BARRIERS).map(f => ({
+        geometry: buffer(f.geometry, 15, 'meters'),
+        attributes: {
+          Name: f.attributes['ObjectId'],
+          BarrierType: 1,
+          Attr_Miles: f.attributes['eventvalue'] / RISK_SCALE_FACTOR
+        }
+      }));
+      const scorePolyFS = featuresIntoFeatureSet(scorePolys);
+      return generateRoute(this.startGraphic, this.endGraphic, {
+        polygonBarriers: scorePolyFS,
         impedanceAttribute: 'Miles',
         accumulateAttributes: ['TravelTime']
       });
-  
-      routeParams.stops.features.push(this.startGraphic);
-      routeParams.stops.features.push(this.endGraphic);
-
-      var scorepolys = qres.features.slice(0,NUMBER_BARRIERS).map((f,i) => {
-        var scorebuffer = {
-          geometry: geometryEngine.geodesicBuffer(f.geometry, 15, "meters"),
-          attributes: {
-            Name: f.attributes['ObjectId'],
-            BarrierType: 1,
-            Attr_Miles: f.attributes['eventvalue'] / RISK_SCALE_FACTOR
-          },
-        }
-        return scorebuffer;  
-      });
-      routeParams.polygonBarriers.features = scorepolys;
-
-      return routeTask.solve(routeParams)
     })
     .then(data => {
       if(this.scoreRoute) this.view.graphics.remove(this.scoreRoute);
@@ -379,7 +281,7 @@ class SafetyStore extends Store {
         geometry: this.scoreRoute.geometry,
         outStatistics: [scoreStatQuery]
       });
-      return Promise.all([pQuery, pStdRoute])
+      return Promise.all([pQuery, pStdRoute]);
     })
     .then(([res, _]) => {
       const tempScore = res.features && res.features.length
@@ -403,28 +305,19 @@ class SafetyStore extends Store {
   // todo refactor to add to map and zoom to the extents then query data
   generateRoutes(){
     message.loading('Generating routes!', 0);
-    loadModules([
-      'esri/tasks/RouteTask',
-      'esri/tasks/support/RouteParameters',
-      'esri/tasks/support/FeatureSet',
-      'esri/geometry/SpatialReference'
-    ], options)
-    .then(_ => {
-      const pStdRoute = this.generateStdRoute();
-      return Promise.all([
-        pStdRoute,
-        this.generateScoreRoute(pStdRoute)
-      ])
-    })
+
+    const pStdRoute = this.generateStdRoute();
+    Promise.all([
+      pStdRoute,
+      this.generateScoreRoute(pStdRoute)
+    ])
     // defer working with score results in case it adds more time
     .then( _ => {
       this.view.goTo([this.scoreRoute, this.stdRoute]);
       message.destroy();
     })
     .catch( er => {
-      message.destroy();
-      message.error('Error generating routes, please retry!');
-      console.log(er);
+      this.appState.onError(er, 'Error generating routes, please retry!');
     })
 
   }
