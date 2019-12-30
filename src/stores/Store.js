@@ -196,7 +196,7 @@ class Store {
 
     _buildAutoRunEffects() {
         const onApplyFilter = pUtils.debounce(function (layerViewsMap, where, layersConfig) {
-            var index = 1;
+            var index = 2;
             layerViewsMap.forEach((layerView) => {
                 var whereCondition = where;
                 if (layersConfig) {
