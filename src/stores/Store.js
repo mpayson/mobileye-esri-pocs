@@ -145,31 +145,31 @@ class Store {
 
     _initLayerDataStructures(layer, collectionIndex){
         // sets observable visibility map for layer list
-				this.setLayerVisibility(layer, layer.visible);
-				
-				return this.view.whenLayerView(layer)
-					.then(lV => {
-						// backwards compatible one-layer pattern
-						if(collectionIndex === 0) {
-							this.lyrView = lV;
-							this.aliasMap = layer.fields.reduce((p,f) => {
-									p.set(f.name, f.alias);
-									return p;
-							}, new Map());
-						}
-						// multiple layers pattern
-						this.layerViewsMap.set(layer.id, lV);
-					})
-					.catch(er => console.log(er))
+        this.setLayerVisibility(layer, layer.visible);
+        
+        return this.view.whenLayerView(layer)
+            .then(lV => {
+                // backwards compatible one-layer pattern
+                if(collectionIndex === 0) {
+                    this.lyrView = lV;
+                    this.aliasMap = layer.fields.reduce((p,f) => {
+                            p.set(f.name, f.alias);
+                            return p;
+                    }, new Map());
+                }
+                // multiple layers pattern
+                this.layerViewsMap.set(layer.id, lV);
+            })
+            .catch(er => console.log(er))
     }
 
     async _loadLayers() {
-			// backwards compatible one-layer pattern
-			this.lyr = this.map.layers.getItemAt(0);
+        // backwards compatible one-layer pattern
+        this.lyr = this.map.layers.getItemAt(0);
 
-			this.map.layers.items.forEach(this._applyInitialLayerOverrides);
-			const pLyrs = this.map.layers.items.map(this._initLayerDataStructures);
-			return Promise.all(pLyrs);
+        this.map.layers.items.forEach(this._applyInitialLayerOverrides);
+        const pLyrs = this.map.layers.items.map(this._initLayerDataStructures);
+        return Promise.all(pLyrs);
     }
 
     _buildAutoRunEffects() {
@@ -227,50 +227,50 @@ class Store {
     // function to watch for mouse movement
     _onMouseMove(evt) {
         const promise = (this._tooltipPromise = this.view
-                .hitTest(evt)
-                .then(hit => {
+            .hitTest(evt)
+            .then(hit => {
 
-                    if (promise !== this._tooltipPromise) {
-                        return; // another test was performed
-                    }
-                    if (this._tooltipHighlight) {
-                        this._tooltipHighlight.remove();
-                        this._tooltipHighlight = null;
-                    }
+                if (promise !== this._tooltipPromise) {
+                    return; // another test was performed
+                }
+                if (this._tooltipHighlight) {
+                    this._tooltipHighlight.remove();
+                    this._tooltipHighlight = null;
+                }
 
-                    const results = hit.results.filter(r => 
-                        this.interactiveLayerIdSet.has(r.graphic.layer.id)
-                    );
-
-
-                    if (results.length) {
-                        var new_geometry = results[0].graphic.geometry;
-                        new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
-                        new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
-                        this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
-                            where: this.where,
-                            geometry: results[0].graphic.geometry,
-                            returnGeometry: true,
-                            spatialRelationship: "contains",
-                            outStatistics: this.onMouseOutStatistics
-                        }).then(queryFeaturesResults => {
-                            const graphic = results[0].graphic;
-                            const screenPoint = hit.screenPoint;
-                            this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
-                            const queryResults = queryFeaturesResults.features;
-                            this.tooltipResults = {
-                                screenPoint,
-                                graphic,
-                                queryResults
-                            }
-
-                        });
+                const results = hit.results.filter(r => 
+                    this.interactiveLayerIdSet.has(r.graphic.layer.id)
+                );
 
 
-                    } else {
-                        this.tooltipResults = null;
-                    }
-                })
+                if (results.length) {
+                    var new_geometry = results[0].graphic.geometry;
+                    new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
+                    new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
+                    this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
+                        where: this.where,
+                        geometry: results[0].graphic.geometry,
+                        returnGeometry: true,
+                        spatialRelationship: "contains",
+                        outStatistics: this.onMouseOutStatistics
+                    }).then(queryFeaturesResults => {
+                        const graphic = results[0].graphic;
+                        const screenPoint = hit.screenPoint;
+                        this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
+                        const queryResults = queryFeaturesResults.features;
+                        this.tooltipResults = {
+                            screenPoint,
+                            graphic,
+                            queryResults
+                        }
+
+                    });
+
+
+                } else {
+                    this.tooltipResults = null;
+                }
+            })
 
         )
     }
@@ -326,12 +326,12 @@ class Store {
         }
       }
 
-			// keep this going in the background
-			this._loadLayers()
-				.then(_ => {
-					this.loadFilters();
-					this.loadCharts();
-				})
+        // keep this going in the background
+        this._loadLayers()
+            .then(_ => {
+                this.loadFilters();
+                this.loadCharts();
+            })
 
       if (this.hasCustomTooltip) {
         this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
