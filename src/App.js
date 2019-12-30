@@ -47,10 +47,6 @@ const PrivateRoute = observer(({Component, appState, ...rest}) => {
 });
 
 const Home = observer(class Home extends React.Component{
-  
-  componentDidMount(){
-    loadScript(options);
-  }
 
   render(){
     let appState = this.props.appState;

@@ -5,8 +5,10 @@ import {
     SelectFilter,
     QuantileFilter
 } from './Filters';
-import {loadModules} from 'esri-loader';
-import options from '../config/esri-loader-options';
+import {
+    loadWebMap, loadMap, jsonToRenderer, registerSession, jsonToExtent, layerFromId
+} from '../services/MapService';
+
 import {message} from 'antd';
 
 let pUtils;
@@ -121,11 +123,9 @@ class Store {
 
         if (renderer._type === 'jsapi') {
             layer.renderer = renderer;
-        } else
-            loadModules(['esri/renderers/support/jsonUtils'], options)
-                .then(([rendererJsonUtils]) => {
-                    layer.renderer = rendererJsonUtils.fromJSON(this.renderers[this.rendererField]);
-                });
+        } else {
+            layer.renderer = jsonToRenderer(this.renderers[this.rendererField])
+        }
     }
 
 
@@ -320,70 +320,42 @@ class Store {
         this.layerVisibleMap.set(layer.id, isVisible);
     }
 
-    load(mapViewDiv) {
+    async load(mapViewDiv) {
         message.loading('Loading data.', 0);
-        return loadModules([
-            'esri/WebMap',
-            'esri/Map',
-            'esri/views/MapView',
-            'esri/layers/FeatureLayer',
-            'esri/core/promiseUtils',
-            'esri/identity/IdentityManager',
-            'esri/renderers/support/jsonUtils',
-            'esri/geometry/SpatialReference',
-            'esri/geometry/Extent'
-        ], options)
-            .then(([WebMap, Map, MapView, FeatureLayer, promiseUtils, esriId, rendererJsonUtils, SpatialReference, Extent]) => {
 
-                esriId.registerToken(this.appState.session.toCredential());
+        await registerSession(this.appState.session);
 
-                pUtils = promiseUtils;
-                this._buildAutoRunEffects();
+        this.locationsByArea.forEach(l => 
+            l.locations.forEach(loc => 
+                loc.extent = jsonToExtent(loc.extent)
+            )   
+        );
+        
+        if(this.mapId){ // web map logic
+            try{
+                this.view = loadWebMap(mapViewDiv, this.mapId, this.viewConfig);
+                this.map = this.view.map;
+                await this.map.when();
+            } catch (e){
+                this.appState.onError(e, 'Could not load the webmap, does the webmap item exist?');
+            }
+        } else { // backwards compatible layer logic
+            try{
+                const lyr = layerFromId(this.layerId);
+                const mapOptions = {basemap: 'dark-gray-vector'};
+                this.view = loadMap(mapViewDiv, mapOptions, this.viewConfig);
+                this.map = this.view.map;
+                this.map.add(lyr);
+            } catch(e){
+                this.appState.onError(e, 'Could not load the map, does the layer item exist?');
+            }
+        }
 
-                this.view = new MapView({
-                    container: mapViewDiv,
-                    center: this.viewConfig.center,
-                    zoom: this.viewConfig.zoom,
-                })
-
-                this.locationsByArea.forEach(l =>
-                    l.locations.forEach(loc =>
-                        loc.extent = new Extent(loc.extent))
-                );
-                if (this.mapId) {
-                    this.map = new WebMap({
-                        portalItem: {
-                            id: this.mapId
-                        }
-                    });
-                    this.view.map = this.map;
-
-                    return this.map.when();
-                } else {
-                    const lyr = new FeatureLayer({
-                        portalItem: {id: this.layerId}
-                    })
-                    this.map = new Map({
-                        basemap: 'dark-gray-vector',
-                        layers: [lyr]
-                    });
-                    this.view.map = this.map;
-                    return Promise.resolve();
-                }
-
-
-            })
-            .then(_ => {
-                this.lyr = this.map.layers.getItemAt(0);
-                //if(renderer) this.lyr.renderer = renderer;
-                if (this.outFields) this.lyr.outFields = this.outFields;
-                this._loadLayers();
-                return this.view;
-            })
-            .catch(er => {
-                message.destroy();
-                message.error('Error creating the map, please refresh for now');
-            });
+        this.lyr = this.map.layers.getItemAt(0);
+        //if(renderer) this.lyr.renderer = renderer;
+        if (this.outFields) this.lyr.outFields = this.outFields;
+        this._loadLayers();
+        return this.view;
     }
 
     clearFilters() {

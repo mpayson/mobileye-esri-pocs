@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {preloadAllModules} from './services/MapService';
+
+// A map will be opened, so let's be aggressive about it.
+preloadAllModules();
  
 ReactDOM.render(
     <App />,
