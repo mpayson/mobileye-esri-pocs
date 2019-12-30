@@ -22,7 +22,7 @@ class Store {
     autoplay = false;
     bookmarkIndex = -1;
     layerViewsMap = null;
-    mapLayers = null;
+    mapLoaded = false;
 
     constructor(appState, storeConfig) {
         this.appState = appState;
@@ -106,9 +106,9 @@ class Store {
         }
     }
 
-
+    // TODO override layer title if there's a hardcoded title
+    // suggest doing this in the webmap with no overrides
     _loadLayers() {
-        this.mapLayers = this.map.layers;
         this.mapsLayersIdsList = this.layersConfig ? this.map.layers.map((layer,index) => {
             if (this._getLayerConfigById(index).type !== "static")
                 return layer.id;
@@ -118,6 +118,9 @@ class Store {
         var initialLayerSetup = true;
         const layers = this.mapId ? this.map.layers : [this.lyr];
         layers.forEach((layer, key) => {
+          const layerConfig = this._getLayerConfigById(key);
+          layer.title = layerConfig.title;
+          this.setLayerVisibility(layer, layer.visible);
             this.view.whenLayerView(layer)
                 .then(lV => {
                         this.appState.clearMessage();
@@ -161,15 +164,12 @@ class Store {
                   this.appState.onError(er, 'Error loading the layers, does your account have access to the data?');
                 });
 
-
         })
 
         if (this.hasCustomTooltip) {
             this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
             this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
         }
-
-
     }
 
     _buildAutoRunEffects() {
@@ -286,6 +286,10 @@ class Store {
 
     toggleLayerVisibility(layer) {
       const isVisible = !layer.visible;
+      this.setLayerVisibility(layer, isVisible);
+    }
+
+    setLayerVisibility(layer, isVisible){
       layer.visible = isVisible;
       this.layerVisibleMap.set(layer.id, isVisible);
     }
@@ -323,7 +327,11 @@ class Store {
       }
       this.lyr = this.map.layers.getItemAt(0);
       if (this.outFields) this.lyr.outFields = this.outFields;
+
       this._loadLayers();
+
+      // placement of this is important, affects calculated values that get run when set
+      this.mapLoaded = true;
       return this.view;
 
     }
@@ -382,10 +390,22 @@ class Store {
     }
 
     get layers() {
-      if (this.map && this.layerLoaded) {
-        return this.map.layers.items.reverse();
+
+      if (this.map && this.mapLoaded) {
+        // WARNING, previously used reverse but this is mutable
+        return this.map.layers.items;
       }
       return [];
+    }
+
+    get interactiveLayers(){
+      return this.layers.filter((layer, index) => {
+        const config = this._getLayerConfigById(index);
+        if(config && config.showFilter === false){
+          return false;
+        }
+        return true;
+      });
     }
 
     get bookmarks() {
@@ -407,9 +427,10 @@ decorate(Store, {
     tooltipResults: observable.shallow,
     bookmarkInfo: observable.ref,
     map: observable.ref,
-    mapLayers: observable.ref,
+    mapLoaded: observable,
     where: computed,
     layers: computed,
+    interactiveLayers: computed,
     bookmarks: computed,
     load: action.bound,
     _updateRendererFields: action.bound,
@@ -419,6 +440,7 @@ decorate(Store, {
     setRendererField: action.bound,
     clearFilters: action.bound,
     toggleLayerVisibility: action.bound,
+    setLayerVisibility: action.bound,
     _onMouseMove: action.bound,
     onBookmarkClick: action.bound,
     onLocationClick: action.bound,

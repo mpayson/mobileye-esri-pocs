@@ -7,7 +7,7 @@ import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import Store from '../stores/Store';
+import Store from './HumanMobilityStore';
 import humanMobilityConfig from './HumanMobilityConfig';
 import HumanMobilityTooltip from './HumanMobilityTooltip';
 
@@ -80,8 +80,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
           content: search,
           expandIconClass: 'esri-icon-search'
         });
-
-        const layerInfos = this.store.mapLayers.map((layer, index) => ({layer:layer, title: ""}));
+        const layerInfos = this.store.layers.map((layer, index) => ({layer:layer, title: ""}));
         const legend = new Legend({view: this.view, layerInfos: layerInfos});
         //this.view.ui.add(slider, "bottom-right");
 
