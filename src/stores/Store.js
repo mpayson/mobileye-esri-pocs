@@ -115,7 +115,6 @@ class Store {
 
     // TODO: go off of Layer ID not collection index since mutable
     _applyInitialLayerOverrides(layer, collectionIndex){
-       
         // backwards compatible one-layer pattern
         if(collectionIndex === 0){
             if(this.outFields) layer.outFields = this.outFields; // used if client-side functionality that requires fields
@@ -131,16 +130,19 @@ class Store {
         const config = this.layersConfig.find(c => 
             c.id === collectionIndex
         );
-        if(!config) return;
+				if(!config) return;
+				
 
         if(config.title) layer.title = config.title;
-        if(config.name) layer.id = config.name;
-        if(config.baselineWhereCondition) 
-            layer.definitionExpression = config.baselineWhereCondition;
-        if(config.outFields) layer.outFields = config.outFields;
+        // if(config.name) layer.id = config.name;
+        // if(config.baselineWhereCondition) 
+        //     layer.definitionExpression = config.baselineWhereCondition;
+        // if(config.outFields) layer.outFields = config.outFields;
         // Port static logic
-        if(config.defaultRenderer && config.type !== 'static')
-            layer.renderer = this._formatRenderer(config.defaultRenderer);
+        if(config.defaultRenderer && config.type !== 'static'){
+					layer.renderer = this._formatRenderer(config.defaultRenderer);
+					// console.log(config.defaultRenderer);
+				}
     }
 
     _initLayerDataStructures(layer, collectionIndex){
@@ -167,7 +169,7 @@ class Store {
 			// backwards compatible one-layer pattern
 			this.lyr = this.map.layers.getItemAt(0);
 
-			this.map.layers.forEach(this._applyInitialLayerOverrides);
+			this.map.layers.items.forEach(this._applyInitialLayerOverrides);
 			const pLyrs = this.map.layers.items.map(this._initLayerDataStructures);
 			return Promise.all(pLyrs);
     }
@@ -327,11 +329,11 @@ class Store {
       }
 
 			// keep this going in the background
-			// this._loadLayers()
-			// 	.then(_ => {
-			// 		this.loadFilters();
-			// 		this.loadCharts();
-			// 	})
+			this._loadLayers()
+				.then(_ => {
+					this.loadFilters();
+					this.loadCharts();
+				})
 
       if (this.hasCustomTooltip) {
         this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);

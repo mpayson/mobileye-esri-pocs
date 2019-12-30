@@ -90,8 +90,8 @@ const humanMobilityConfig = {
   layers : [
     {id: 0, type: "static", name:"bicycles_lanes", title:"Bicycle lanes", showFilter:false},
     {id: 1, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "average_speed > 0", defaultRenderer: renderers['average_speed'], name:"average_speed", title:"Average speed" , postText:"Km/H", showFilter:true},
-    {id: 2, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "pedestrian_density > 0", defaultRendererField: renderers['pedestrian_density'], name:"pedestrian_density", title:"Pedestrian density", postText:"Per ride", showFilter:true},
-    {id: 3, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "bicycles_density > 0", defaultRendererField: renderers['bicycles_density'], name:"bicycles_density", title:"Bicycle density", postText:"Per ride", showFilter:true},
+    {id: 2, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "pedestrian_density > 0", defaultRenderer: renderers['pedestrian_density'], name:"pedestrian_density", title:"Pedestrian density", postText:"Per ride", showFilter:true},
+    {id: 3, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "bicycles_density > 0", defaultRenderer: renderers['bicycles_density'], name:"bicycles_density", title:"Bicycle density", postText:"Per ride", showFilter:true},
     {id: 4, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "average_speed > 0", name:"average_speed_count", title:"Number of rides" , postText:"Rides", showFilter:false},
    ],
 
