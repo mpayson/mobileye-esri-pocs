@@ -21,7 +21,7 @@ class Store {
     bookmarkInfo = null;
     autoplay = false;
     bookmarkIndex = -1;
-    layerViewsMap = null;
+    layerViewsMap = new Map();
     mapLoaded = false;
 
     constructor(appState, storeConfig) {
@@ -63,7 +63,7 @@ class Store {
     loadFilters() {
         var layers = null;//this.lyr;
         if (this.layersConfig) {
-            layers = this.map.layers.filter((layer,index) => this._getLayerConfigById(index).type !== "static");
+            layers = this.map.layers.filter((layer,index) => this._getLayerConfigByInitialIndex(index).type !== "static");
         }
         this.filters.forEach(f => f.load(this.lyr, layers, this.view));
     }
@@ -83,19 +83,16 @@ class Store {
         });
     }
 
-    _getLayerConfigById(id){
-        var layer;
-        if(!this.layersConfig) return null;
-        for (layer of this.layersConfig){
-            if (layer.id === id)
-                return layer;
-        }
+    _formatRenderer(renderer){
+        return renderer._type === 'jsapi'
+            ? renderer
+            : jsonToRenderer(renderer);
     }
 
     _updateRendererFields(layer,key) {
         var renderer;
         if (key) {
-          renderer = this.renderers[this._getLayerConfigById(key).defaultRendererField];
+          renderer = this.renderers[this._getLayerConfigByInitialIndex(key).defaultRendererField];
         }
         else
           renderer = this.renderers[this.rendererField];
@@ -107,70 +104,72 @@ class Store {
         }
     }
 
-    // TODO override layer title if there's a hardcoded title
-    // suggest doing this in the webmap with no overrides
-    _loadLayers() {
-        this.mapsLayersIdsList = this.layersConfig ? this.map.layers.map((layer,index) => {
-            if (this._getLayerConfigById(index).type !== "static")
-                return layer.id;
+    _getLayerConfigByInitialIndex(index){
+        var layer;
+        if(!this.layersConfig) return null;
+        for (layer of this.layersConfig){
+            if (layer.id === index)
+                return layer;
         }
-        ) : [this.lyr.id];
-        this.layerViewsMap = new Map();
-        var initialLayerSetup = true;
-        const layers = this.mapId ? this.map.layers : [this.lyr];
-        layers.forEach((layer, key) => {
-          const layerConfig = this._getLayerConfigById(key);
-          if(layerConfig && layerConfig.title) layer.title = layerConfig.title;
-          this.setLayerVisibility(layer, layer.visible);
-            this.view.whenLayerView(layer)
-                .then(lV => {
-                        this.appState.clearMessage();
-                        if (this.layersConfig) {
-                            const layerConfig = this._getLayerConfigById(key);
-                            if (layerConfig.type !== "static") {
-                                this._updateRendererFields(layer, key);
-                                this.layerViewsMap.set(layer.id, lV);
-                            }
-                            layer.outFields = layerConfig.outFields;
-                            if (layerConfig.baselineWhereCondition)
-                                lV.filter = {where: this.where + layerConfig.baselineWhereCondition};
+    }
 
-                        }
-                        else {
-                            this._updateRendererFields(layer);
-                            this.layerViewsMap.set(layer.id, lV);
-
-                        }
-                        if (this.popupTemplate !== undefined) layer.popupTemplate = this.popupTemplate;
-
-                        this.aliasMap = layer.fields.reduce((p, f) => {
-                            p.set(f.name, f.alias);
-                            return p;
-                        }, new Map());
-
-
-                        if (initialLayerSetup) {
-
-                            this.loadFilters();
-                            this.loadCharts();
-
-                            this.layerLoaded = true;
-                            initialLayerSetup = false;
-                        }
-
-
-                    }
-                )
-                .catch(er => {
-                  this.appState.onError(er, 'Error loading the layers, does your account have access to the data?');
-                });
-
-        })
-
-        if (this.hasCustomTooltip) {
-            this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
-            this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
+    // TODO: go off of Layer ID not collection index since mutable
+    _applyInitialLayerOverrides(layer, collectionIndex){
+       
+        // backwards compatible one-layer pattern
+        if(collectionIndex === 0){
+            if(this.outFields) layer.outFields = this.outFields; // used if client-side functionality that requires fields
+            if(this.rendererField) // used if need there are many renderer options for layer not in webmap
+                layer.renderer = this._formatRenderer(this.renderers[this.rendererField]);
+            if(this.popupTemplate) // used if need to override popup from webmap
+                layer.popupTemplate = this.popupTemplate;
         }
+
+        // new layers config pattern
+        // TODO these can all be saved in the webmap
+        if(!this.layersConfig) return;
+        const config = this.layersConfig.find(c => 
+            c.id === collectionIndex
+        );
+        if(!config) return;
+
+        if(config.title) layer.title = config.title;
+        if(config.name) layer.id = config.name;
+        if(config.baselineWhereCondition) 
+            layer.definitionExpression = config.baselineWhereCondition;
+        if(config.outFields) layer.outFields = config.outFields;
+        // Port static logic
+        if(config.defaultRenderer && config.type !== 'static')
+            layer.renderer = this._formatRenderer(config.defaultRenderer);
+    }
+
+    _initLayerDataStructures(layer, collectionIndex){
+        // sets observable visibility map for layer list
+				this.setLayerVisibility(layer, layer.visible);
+				
+				return this.view.whenLayerView(layer)
+					.then(lV => {
+						// backwards compatible one-layer pattern
+						if(collectionIndex === 0) {
+							this.lyrView = lV;
+							this.aliasMap = layer.fields.reduce((p,f) => {
+									p.set(f.name, f.alias);
+									return p;
+							}, new Map());
+						}
+						// multiple layers pattern
+						this.layerViewsMap.set(layer.id, lV);
+					})
+					.catch(er => console.log(er))
+    }
+
+    async _loadLayers() {
+			// backwards compatible one-layer pattern
+			this.lyr = this.map.layers.getItemAt(0);
+
+			this.map.layers.forEach(this._applyInitialLayerOverrides);
+			const pLyrs = this.map.layers.items.map(this._initLayerDataStructures);
+			return Promise.all(pLyrs);
     }
 
     _buildAutoRunEffects() {
@@ -239,8 +238,8 @@ class Store {
                         this._tooltipHighlight = null;
                     }
 
-                    const results = hit.results.filter(
-                        r => this.mapsLayersIdsList.includes(r.graphic.layer.id)
+                    const results = hit.results.filter(r => 
+                        this.interactiveLayerIdSet.has(r.graphic.layer.id)
                     );
 
 
@@ -299,7 +298,7 @@ class Store {
       this.appState.loadingMessage('Loading data.');
 
       await registerSession(this.appState.session);
-      this._buildAutoRunEffects();
+      // this._buildAutoRunEffects();
 
       this.locationsByArea.forEach(l => 
         l.locations.forEach(loc => 
@@ -326,13 +325,22 @@ class Store {
           this.appState.onError(e, 'Could not load the map, does the layer item exist?');
         }
       }
-      this.lyr = this.map.layers.getItemAt(0);
-      if (this.outFields) this.lyr.outFields = this.outFields;
 
-      this._loadLayers();
+			// keep this going in the background
+			// this._loadLayers()
+			// 	.then(_ => {
+			// 		this.loadFilters();
+			// 		this.loadCharts();
+			// 	})
+
+      if (this.hasCustomTooltip) {
+        this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
+        this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
+			}
 
       // placement of this is important, affects calculated values that get run when set
-      this.mapLoaded = true;
+			this.mapLoaded = true;
+			this.appState.clearMessage();
       return this.view;
 
     }
@@ -401,12 +409,16 @@ class Store {
 
     get interactiveLayers(){
       return this.layers.filter((layer, index) => {
-        const config = this._getLayerConfigById(index);
+        const config = this._getLayerConfigByInitialIndex(index);
         if(config && config.showFilter === false){
           return false;
         }
         return true;
       });
+    }
+
+    get interactiveLayerIdSet(){
+        return new Set(this.interactiveLayers.map(l => l.id));
     }
 
     get bookmarks() {
@@ -432,10 +444,14 @@ decorate(Store, {
     where: computed,
     layers: computed,
     interactiveLayers: computed,
+    interactiveLayerIdSet: computed,
     bookmarks: computed,
     load: action.bound,
     _updateRendererFields: action.bound,
-    _loadLayers: action.bound,
+		_loadLayers: action.bound,
+		_applyInitialLayerOverrides: action.bound,
+		_initLayerDataStructures: action.bound,
+		_registerLayerViews: action.bound,
     loadFilters: action.bound,
     loadCharts: action.bound,
     setRendererField: action.bound,

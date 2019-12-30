@@ -14,7 +14,7 @@ class HumanMobilityStore extends Store{
   async load(mapViewDiv){
     const view = await super.load(mapViewDiv);
     this.layers.forEach((layer, index) => {
-      const layerConfig = super._getLayerConfigById(index);
+      const layerConfig = super._getLayerConfigByInitialIndex(index);
       if (!["average_speed","bicycles_lanes"].includes(layerConfig.name)){
         super.setLayerVisibility(layer, false);
       }
