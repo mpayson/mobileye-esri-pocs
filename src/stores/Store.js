@@ -117,7 +117,7 @@ class Store {
     // TODO: go off of Layer ID not collection index since mutable
     _applyInitialLayerOverrides(layer, collectionIndex){  
         // backwards compatible one-layer pattern
-        if(collectionIndex === 0){
+        if(!this.layersConfig && collectionIndex === 0){
             if(this.outFields) layer.outFields = this.outFields; // used if client-side functionality that requires fields
             if(this.rendererField) // used if need there are many renderer options for layer not in webmap
                 layer.renderer = this._formatRenderer(this.renderers[this.rendererField]);
@@ -142,12 +142,11 @@ class Store {
         // Port static logic
         if(config.defaultRendererField && config.type !== 'static'){
             const renderer = this.renderers[config.defaultRendererField];
-            console.log(renderer, layer.title);
             layer.renderer = this._formatRenderer(renderer);
         }
-        // if(!this.defaultVisibleLayersList.includes(config.id)){
-        //     layer.visible = false;
-        // }
+        if(!this.defaultVisibleLayersList.includes(config.id)){
+            layer.visible = false;
+        }
     }
 
     _initLayerDataStructures(layer, collectionIndex){
@@ -201,15 +200,16 @@ class Store {
         this.rendererHandler = autorun(_ => {
             const rendererField = this.rendererField;
             // only interactive layers will have updated renderers
-            if(!this.interactiveLayers || this.interactiveLayers.length < 1) return;
-            this.interactiveLayers.forEach((layer,key) => {
-                console.log("updating");
-                if (this.layersConfig)
-                    this._updateRendererFields(layer,key);
-                else
-                    this._updateRendererFields(layer);
+            if ((this.map && this.map.layers.length > 0) || this.lyr) {
+                const layers = this.mapId ? this.map.layers : [this.lyr];
+                layers.forEach((layer,key) => {
+                    if (this.layersConfig)
+                        this._updateRendererFields(layer,key);
+                    else
+                        this._updateRendererFields(layer);
 
-            });
+                });
+            }
         })
     }
 
