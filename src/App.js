@@ -10,7 +10,7 @@ import LoginBGImage from './resources/images/LoginBG.png';
 import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
-import TestApp from './safety/TestApp';
+// import TestApp from './safety/TestApp';
 import HumanMobilityApp from './human_mobility/HumanMobilityApp';
 
 import {
@@ -149,7 +149,7 @@ class App extends React.Component{
         <PrivateRoute
           path="/safety"
           appState={this.appState}
-          Component={TestApp}/>
+          Component={SafetyApp}/>
         <PrivateRoute
           path="/events"
           appState={this.appState}
