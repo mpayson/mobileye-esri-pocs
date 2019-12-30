@@ -2,25 +2,18 @@ body {
     font-family: 'Hind Siliguri', sans-serif;
     height: 100vh;
     width: 100vw;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
 }
-
-body {
-  overscroll-behavior-y: none;
-  overscroll-behavior-x: none;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+ 
+/* don't want to overwride focus behavior of other components? */
 :focus {
     outline: none;
     background-color: transparent;
-}
+} 
 
-header {
+
+.splash-header {
     background: url(https://static.mobileye.com/website/corporate/data-demos/header.jpg) center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -52,17 +45,19 @@ header {
     transform: translateY(-50%);
 }
 
-h1 {
-    font-size: 4.2vw;
-    line-height: 4.2vw;
-    font-weight: 700;
+.bottom-header-h1 {
+  color: #fff;
+  font-size: 4.2vw;
+  line-height: 4.2vw;
+  font-weight: 700;
 }
 
-h2 {
-    font-size: 2vw;
-    line-height: 2vw;
-    font-weight: 400;
-    margin-top: 1vw;
+.bottom-header-h2 {
+  color: #fff;
+  font-size: 2vw;
+  line-height: 2vw;
+  font-weight: 400;
+  margin-top: 1vw;
 }
 
 .login-btn {

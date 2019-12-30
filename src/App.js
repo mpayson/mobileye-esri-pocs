@@ -1,16 +1,13 @@
 import React from 'react'
 import { observer } from "mobx-react";
 import { HashRouter as Router, BrowserRouter, Route, Link, Redirect } from "react-router-dom";
-import { Row, Col, Card, Layout, Button, Divider } from 'antd';
+import { Layout, Button } from 'antd';
 import AppState from './stores/AppState';
-import EventsImage from './resources/images/Events.png';
-import SurveyImage from './resources/images/survey.png';
-import SafetyImage from './resources/images/safety.png';
-import LoginBGImage from './resources/images/LoginBG.png';
 import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
 import HumanMobilityApp from './human_mobility/HumanMobilityApp';
+
 import './style.css';
 
 import {
@@ -58,46 +55,38 @@ const Home = observer(class Home extends React.Component{
   render(){
     let appState = this.props.appState;
 
-    let topComponent = appState.isAuthenticated
-      ? <h1>Hello <b>{appState.displayName}</b>, please select the application you would like to use:</h1>
-      : <Button type="primary" size="large" onClick={appState.login}>Log in to get started</Button>;
-
     const {from} = this.props.location.state || {from: null};
     if(appState.redirectToReferrer && from){
       return <Redirect to={from}/>
     }
 
-    // Not good practice, should find a way to inject router Link into antd Button
-    const linkClass = "ant-btn ant-btn-primary ant-btn-background-ghost ant-btn-block ant-btn ant-btn-lg";
+    const loginText = appState.isAuthenticated
+      ? 'Logout'
+      : 'Login';
+
+    const loginClickHandler = appState.isAuthenticated
+      ? appState.logout
+      : appState.login;
 
     return(
         <div>
-          <meta charSet="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
-          <link rel="stylesheet" href="style.css" />
-          <link
-            href="https://fonts.googleapis.com/css?family=Hind+Siliguri&display=swap"
-            rel="stylesheet"
-          />
-          <title>CES Data Demos</title>
-          <header>
+          <header className="splash-header">
             <div className="top-header">
               <img
                 src="https://static.mobileye.com/website/common/images/me_logo_white_2.svg"
                 alt="Mobileye Logo"
                 className="logo"
               />
-              <button className="login-btn">Login</button>
+              <button className="login-btn" onClick={loginClickHandler}>{loginText}</button>
             </div>
             <div className="bottom-header">
-              <h1>Mobileye Data Services</h1>
-              <h2>Serving Public More Efficiently</h2>
+              <h1 className="bottom-header-h1">Mobileye Data Services</h1>
+              <h2 className="bottom-header-h2">Serving Public More Efficiently</h2>
             </div>
           </header>
           <div className="grid">
-            <a
-              href="/#/survey"
+            <Link
+              to="/survey"
               disabled={!appState.isAuthenticated}
               className="item"
             >
@@ -108,23 +97,23 @@ const Home = observer(class Home extends React.Component{
               <p>
                 Infrastructure <br /> Asset Inventory
               </p>
-            </a>
-            <a href="/#/mobility" disabled={!appState.isAuthenticated} className="item">
+            </Link>
+            <Link to="/mobility" disabled={!appState.isAuthenticated} className="item">
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-m.svg"
                 alt="Mobility"
               />
               <p>Mobility</p>
-            </a>
-            <a href="/#/parking" disabled={!appState.isAuthenticated} className="item">
+            </Link>
+            <Link to="/parking" disabled={!appState.isAuthenticated} className="item">
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-p.svg"
                 alt="Parking"
               />
               <p>Parking</p>
-            </a>
-            <a
-              href="/#/safety"
+            </Link>
+            <Link
+              to="/safety"
               className="item"
               disabled={!appState.isAuthenticated}
             >
@@ -135,66 +124,17 @@ const Home = observer(class Home extends React.Component{
               <p>
                 Road Risk <br /> Score
               </p>
-            </a>
-            <a href="" disabled={!appState.isAuthenticated} className="item">
+            </Link>
+            <Link to="" disabled={!appState.isAuthenticated} className="item">
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-l2.svg"
                 alt="L2+"
               />
               <p>L2+</p>
-            </a>
+            </Link>
           </div>
         </div>
     )
-    // return(
-    //   <Layout style={{ minHeight: '100vh' , backgroundImage: `url(${LoginBGImage})`,backgroundPosition: 'center', backgroundSize: 'cover',  backgroundRepeat: 'no-repeat'}}>
-    //     <Content style={{ padding: '50px 50px'}}>
-    //       <Row type="flex" justify="space-around" align="middle">
-    //         <Col style={{textAlign: 'center'}}>
-    //           {topComponent}
-    //         </Col>
-    //       </Row>
-    //       <Divider/>
-    //       <Row type="flex" justify="space-around" align="middle">
-    //         <Col md={{span: 0}} xl={{span: 2}}/>
-    //         <Col md={{span: 6}} xl={{span: 4}}>
-    //           <Card
-    //           cover={<img alt="example" src={SafetyImage} />}>
-    //             <Link
-    //               to="/safety"
-    //               className={linkClass}
-    //               disabled={!appState.isAuthenticated}>
-    //               Explore Safety
-    //             </Link>
-    //           </Card>
-    //         </Col>
-    //         <Col md={{span: 6}} xl={{span: 4}}>
-    //           <Card
-    //           cover={<img alt="example" src={EventsImage}/>}>
-    //             <Link
-    //               to="/events"
-    //               className={linkClass}
-    //               disabled={!appState.isAuthenticated}>
-    //               Explore Events
-    //             </Link>
-    //           </Card>
-    //         </Col>
-    //         <Col md={{span: 6}} xl={{span: 4}}>
-    //           <Card
-    //           cover={<img alt="example" src={SurveyImage} />}>
-    //           <Link
-    //             to="/survey"
-    //             className={linkClass}
-    //             disabled={!appState.isAuthenticated}>
-    //             Explore Survey
-    //           </Link>
-    //           </Card>
-    //         </Col>
-    //         <Col md={{span: 0}} xl={{span: 2}}/>
-    //       </Row>
-    //     </Content>
-    //   </Layout>
-    // )
   }
 });
 
