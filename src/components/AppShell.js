@@ -1,6 +1,11 @@
 import React from 'react'
 import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col, Card, Button } from 'antd';
+import {
+  addSearchWidget,
+  addHomeWidget,
+  addLegendWidget
+} from '../services/MapService';
 
 import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
@@ -9,6 +14,7 @@ const { Header, Content, Sider } = Layout;
 const AppShell = observer(class App extends React.Component {
 
   state = {
+    navKey: null,
     collapsed: true
   };
 
@@ -23,15 +29,15 @@ const AppShell = observer(class App extends React.Component {
   };
 
   onSelect = item => {
-    const navKey = this.props.navKey === item.key
+    const navKey = this.state.navKey === item.key
       ? null
       : item.key;
-    this.props.onNavKeyChange(navKey);
+    this.setState({ navKey });
     if(!this.store.autoplay) this.store.clearBookmark();
   }
 
   onClose = () => {
-    this.props.onNavKeyChange(null);
+    this.setState({ navKey: null });
     if(!this.store.autoplay) this.store.clearBookmark();
   };
 
@@ -57,6 +63,8 @@ const AppShell = observer(class App extends React.Component {
   componentDidMount = () => {
     this.store.load(this.mapViewRef.current)
       .then(mapView => {
+        addSearchWidget(mapView, 'top-right', 0, true);
+        addHomeWidget(mapView, 'top-right');
         if(this.props.onMapViewLoad){
           this.props.onMapViewLoad(mapView);
         }
@@ -105,8 +113,6 @@ const AppShell = observer(class App extends React.Component {
       )
     }
 
-    console.log(this.props.children.map(c => c.type.isMenuItem));
-
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -119,7 +125,7 @@ const AppShell = observer(class App extends React.Component {
             defaultSelectedKeys={['0']}
             mode="inline"
             theme="dark"
-            selectedKeys={[this.props.navKey]}
+            selectedKeys={[this.state.navKey]}
             onClick={this.onSelect}>
             {this.props.children}
           </Menu>
@@ -140,18 +146,18 @@ const AppShell = observer(class App extends React.Component {
               {tooltip}
               {bookmarkCard}
               <Drawer
-                title={this.props.navKey}
+                title={this.state.navKey}
                 closable={true}
                 onClose={this.onClose}
                 placement="left"
-                visible={this.props.navKey}
+                visible={this.state.navKey}
                 mask={false}
                 width={340}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", minHeight: "calc(100% - 55px)"}}
               >
-                {this.props.panel}
+                {this.props.getPanel(this.state.navKey)}
               </Drawer>
             </Col>
             </Row>

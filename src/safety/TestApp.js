@@ -3,8 +3,6 @@ import { observer } from "mobx-react";
 import AppShell from '../components/AppShell';
 import {Menu, Icon} from 'antd';
 import {
-  addSearchWidget,
-  addHomeWidget,
   addLegendWidget
 } from '../services/MapService';
 
@@ -48,17 +46,11 @@ function humanize(number) {
 
 const TestApp = observer(class TestApp extends React.Component {
 
-  state = {
-    navKey: null
-  }
-
   constructor(props, context){
     super(props, context);
-    this.mapViewRef = React.createRef();
     this.store = new SafetyStore(props.appState, safetyConfig);
     var months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     var today = new Date();
-
     this.today_str = months[today.getMonth()] + humanize(today.getDate());
   }
 
@@ -68,52 +60,41 @@ const TestApp = observer(class TestApp extends React.Component {
 
   onMapViewLoad = mapView => {
     this.view = mapView;
-    addSearchWidget(this.view, 'top-right', 0, true);
     addLegendWidget(this.view, 'bottom-right', {
       layerInfos: [{layer: this.store.lyr, title: ""}]
     });
-    addHomeWidget(this.view, 'top-right');
   }
 
-  onNavKeyChange = navKey => {
-    this.setState({navKey});
+  getPanelForNavkey = navKey => {
+    switch(navKey){
+      case 'Data Layers':
+        return <LayerPanel store={this.store}/>;
+      case 'Saved Locations':
+        return <BookmarkPanel store={this.store}/>
+      case 'Route':
+        return <RoutePanel store={this.store}/>
+      case 'Locations':
+        return <LocationsPanel store={this.store}/>
+      default:
+        return null;
+    }
   }
 
   render() {
-
-    let panel;
-    switch(this.state.navKey){
-      case 'Data Layers':
-        panel = <LayerPanel store={this.store}/>;
-        break;
-      case 'Saved Locations':
-        panel = <BookmarkPanel store={this.store}/>
-        break;
-      case 'Route':
-        panel = <RoutePanel store={this.store}/>
-        break;
-      case 'Locations':
-        panel = <LocationsPanel store={this.store}/>
-        break;
-      default:
-        panel = null;
-    }
 
     return (
       <AppShell
         appState={this.props.appState}
         store={this.store}
         onMapViewLoad={this.onMapViewLoad}
-        navKey={this.state.navKey}
-        onNavKeyChange={this.onNavKeyChange}
+        getPanel={this.getPanelForNavkey}
         title={
           <>
-          <h1 style={{float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
-          <div style={{float: "left"}}> (Data presented from Sep 1st - {this.today_str})</div>
+            <h1 style={{float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
+            <div style={{float: "left"}}> (Data presented from Sep 1st - {this.today_str})</div>
           </>
         }
-        tooltip={<SafetyTooltip store={this.store}/>}
-        panel={panel}>
+        tooltip={<SafetyTooltip store={this.store}/>}>
         <Menu.Item key="Data Layers">
           <Icon component={MenuFilterIcon} />
           <span>Data Layers</span>
