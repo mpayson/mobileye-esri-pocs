@@ -85,6 +85,7 @@ class Store {
 
     _getLayerConfigById(id){
         var layer;
+        if(!this.layersConfig) return null;
         for (layer of this.layersConfig){
             if (layer.id === id)
                 return layer;
@@ -119,7 +120,7 @@ class Store {
         const layers = this.mapId ? this.map.layers : [this.lyr];
         layers.forEach((layer, key) => {
           const layerConfig = this._getLayerConfigById(key);
-          layer.title = layerConfig.title;
+          if(layerConfig && layerConfig.title) layer.title = layerConfig.title;
           this.setLayerVisibility(layer, layer.visible);
             this.view.whenLayerView(layer)
                 .then(lV => {
