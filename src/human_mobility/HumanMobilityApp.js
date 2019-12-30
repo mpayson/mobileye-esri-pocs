@@ -7,7 +7,7 @@ import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import Store from '../stores/Store';
+import Store from './HumanMobilityStore';
 import humanMobilityConfig from './HumanMobilityConfig';
 import HumanMobilityTooltip from './HumanMobilityTooltip';
 
