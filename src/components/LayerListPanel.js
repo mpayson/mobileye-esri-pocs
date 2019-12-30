@@ -1,12 +1,13 @@
 import React from 'react';
 import { observer } from "mobx-react";
 import {
-  Switch } from 'antd';
+  Switch 
+} from 'antd';
 import PanelCard from '../components/PanelCard';
 import LayerIcon from 'calcite-ui-icons-react/LayerIcon';
 import './LayerListPanel.css'
 
-const ListLayer = observer(class ListLayer extends React.Component{
+const LayerListItem = observer(class ListLayer extends React.Component{
 
   onToggle = () => {
     this.props.store.toggleLayerVisibility(this.props.layer);
@@ -31,27 +32,23 @@ const ListLayer = observer(class ListLayer extends React.Component{
   }
 });
 
-const LayerPanel = observer(class LayerPanel extends React.Component{
+const LayerList = observer(({store}) => 
+  <>
+    {store.interactiveLayers.map(l =>
+      <LayerListItem key={l.id} layer={l} store={store}/>
+    )}
+  </>
+);
 
-  render(){
-    const layers = this.props.store.layers;
-    const layerListViews = layers.map(l => {
-      return <ListLayer key={l.id} layer={l} store={this.props.store}/>
-    });
+const LayerListPanel = observer(({store}) => (
+  <PanelCard
+    icon={<LayerIcon size="20" style={{position: "relative", top: "4px", left: "0px"}}/>}
+    title="Layer List"
+    collapsible={true}
+    defaultActive={true}>
+    <LayerList store={store}/>
+  </PanelCard>
+))
 
-    return (
-      <>
-        <PanelCard
-          icon={<LayerIcon size="20" style={{position: "relative", top: "4px", left: "0px"}}/>}
-          title="Layer List"
-          collapsible={true}
-          defaultActive={true}>
-          {layerListViews}
-        </PanelCard>
-      </>
-    )
-  }
-
-});
-
-export default LayerPanel;
+export {LayerList}
+export default LayerListPanel;
