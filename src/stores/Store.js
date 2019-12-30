@@ -24,6 +24,7 @@ class Store {
     bookmarkIndex = -1;
     layerViewsMap = null;
     mapLayers = null;
+    mapLoaded = false;
 
     constructor(appState, storeConfig) {
         this.appState = appState;
@@ -88,6 +89,7 @@ class Store {
 
     _getLayerConigById(id){
         var layer;
+        if(!this.layersConfig) return null;
         for (layer of this.layersConfig){
             if (layer.id === id)
                 return layer;
@@ -297,6 +299,10 @@ class Store {
 
     toggleLayerVisibility(layer) {
         const isVisible = !layer.visible;
+        this.setLayerVisibility(layer, isVisible);
+    }
+
+    setLayerVisibility(layer, isVisible){
         layer.visible = isVisible;
         this.layerVisibleMap.set(layer.id, isVisible);
     }
@@ -337,6 +343,7 @@ class Store {
         //if(renderer) this.lyr.renderer = renderer;
         if (this.outFields) this.lyr.outFields = this.outFields;
         this._loadLayers();
+        this.mapLoaded = true;
         return this.view;
     }
 
@@ -394,18 +401,27 @@ class Store {
     }
 
     get layers() {
-        if (this.map && this.layerLoaded) {
-            return this.map.layers.items.reverse();
+        if (this.map && this.mapLoaded) {
+          // WARNING, previously used reverse but this is mutable
+          return this.map.layers.items;
         }
-        ;
         return [];
     }
+
+    get interactiveLayers(){
+        return this.layers.filter((layer, index) => {
+          const config = this._getLayerConigById(index);
+          if(config && config.showFilter === false){
+            return false;
+          }
+          return true;
+        });
+      }
 
     get bookmarks() {
         if (this.map && this.layerLoaded) {
             return this.map.bookmarks.items;
         }
-        ;
         return [];
     }
 }
@@ -414,6 +430,7 @@ decorate(Store, {
     user: observable,
     rendererField: observable,
     layerLoaded: observable,
+    mapLoaded: observable,
     aliasMap: observable,
     layerVisibleMap: observable,
     autoplay: observable,
@@ -424,6 +441,7 @@ decorate(Store, {
     mapLayers: observable.ref,
     where: computed,
     layers: computed,
+    interactiveLayers: computed,
     bookmarks: computed,
     load: action.bound,
     _updateRendererFields: action.bound,
@@ -433,6 +451,7 @@ decorate(Store, {
     setRendererField: action.bound,
     clearFilters: action.bound,
     toggleLayerVisibility: action.bound,
+    setLayerVisibility: action.bound,
     _onMouseMove: action.bound,
     onBookmarkClick: action.bound,
     onLocationClick: action.bound,
