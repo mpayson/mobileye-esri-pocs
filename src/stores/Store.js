@@ -13,7 +13,6 @@ message.config({
 
 class Store {
 
-    credential = {};
     aliasMap = null;
     chartResultMap = new Map();
     map = null;
@@ -22,7 +21,7 @@ class Store {
     bookmarkInfo = null;
     autoplay = false;
     bookmarkIndex = -1;
-    layerViewsMap = null;
+    layerViewsMap = new Map();
     mapLayers = null;
     mapLoaded = false;
 
@@ -96,136 +95,119 @@ class Store {
         }
     }
 
-    _updateRendererFields(layer,key) {
+    _formatRenderer(renderer){
+        return renderer._type === 'jsapi'
+            ? renderer
+            : jsonToRenderer(renderer);
+    }
+
+    _updateRendererFields(layer, key) {
         var renderer;
         if (key) {
             renderer = this.renderers[this._getLayerConigById(key).defaultRendererField];
         }
-        else
+        else {
             renderer = this.renderers[this.rendererField];
-
-        if (renderer._type === 'jsapi') {
-            layer.renderer = renderer;
-        } else {
-            layer.renderer = jsonToRenderer(this.renderers[this.rendererField])
         }
+        layer.renderer = this._formatRenderer(renderer);
     }
 
+    // TODO: go off of Layer ID not collection index since mutable
+    _applyInitialLayerOverrides(layer, collectionIndex){  
+        // backwards compatible one-layer pattern
+        if(collectionIndex === 0){
+            if(this.outFields) layer.outFields = this.outFields; // used if client-side functionality that requires fields
+            if(this.rendererField) // used if need there are many renderer options for layer not in webmap
+                layer.renderer = this._formatRenderer(this.renderers[this.rendererField]);
+            if(this.popupTemplate) // used if need to override popup from webmap
+                layer.popupTemplate = this.popupTemplate;
+        }
 
-    _loadLayers() {
+        // new layers config pattern
+        // TODO these can all be saved in the webmap
+        if(!this.layersConfig) return;
+        const config = this.layersConfig.find(c => 
+            c.id === collectionIndex
+        );
+        if(!config) return;
+
+        if(config.title) layer.title = config.title;
+        if(config.name) layer.id = config.name;
+        if(config.baselineWhereCondition) 
+            layer.definitionExpression = config.baselineWhereCondition;
+        if(config.outFields) layer.outFields = config.outFields;
+        
+        // Port static logic
+        if(config.defaultRendererField && config.type !== 'static'){
+            const renderer = this.renderers[config.defaultRendererField];
+            console.log(renderer, layer.title);
+            layer.renderer = this._formatRenderer(renderer);
+        }
+        // if(!this.defaultVisibleLayersList.includes(config.id)){
+        //     layer.visible = false;
+        // }
+    }
+
+    _initLayerDataStructures(layer, collectionIndex){
+        // sets observable visibility map for layer list
+        this.setLayerVisibility(layer, layer.visible);
+        
+        return this.view.whenLayerView(layer)
+            .then(lV => {
+                // backwards compatible one-layer pattern
+                if(collectionIndex === 0) {
+                    this.lyrView = lV;
+                    this.aliasMap = layer.fields.reduce((p,f) => {
+                        p.set(f.name, f.alias);
+                        return p;
+                    }, new Map());
+                }
+                // multiple layers pattern
+                this.layerViewsMap.set(layer.id, lV);
+
+                // set initial where, port of logic where only applied if theres a baseline condition
+                // because baseline condition was set to definitionexpression
+                if(layer.definitionExpression){
+                    lV.filter = {where: this.where}
+                }
+            })
+    }
+
+    async _loadLayers(){
         this.mapLayers = this.map.layers;
-        this.mapsLayersIdsList = this.layersConfig ? this.map.layers.map((layer,index) => {
-            if (this._getLayerConigById(index).type !== "static")
-                return layer.id;
-        }
-        ) : [this.lyr.id];
-        this.layerViewsMap = new Map();
-        var initialLayerSetup = true;
-        const layers = this.mapId ? this.map.layers : [this.lyr];
-        layers.forEach((layer, key) => {
-            this.view.whenLayerView(layer)
-                .then(lV => {
-                        message.destroy();
-                        if (this.layersConfig) {
-                            const layerConfig = this._getLayerConigById(key);
-                            if (layerConfig.type !== "static") {
-                                this._updateRendererFields(layer, key);
-                                this.layerViewsMap.set(layer.id, lV);
-                            }
-                            layer.outFields = layerConfig.outFields;
-                            if (layerConfig.baselineWhereCondition)
-                                lV.filter = {where: this.where + layerConfig.baselineWhereCondition};
 
-                        }
-                        else {
-                            this._updateRendererFields(layer);
-                            this.layerViewsMap.set(layer.id, lV);
-
-                        }
-                        if (this.popupTemplate !== undefined) layer.popupTemplate = this.popupTemplate;
-
-                        this.aliasMap = layer.fields.reduce((p, f) => {
-                            p.set(f.name, f.alias);
-                            return p;
-                        }, new Map());
-
-
-                        if (initialLayerSetup) {
-
-                            this.loadFilters();
-                            this.loadCharts();
-
-                            this.layerLoaded = true;
-                            initialLayerSetup = false;
-                        }
-
-
-                    }
-                )
-                .catch(er => {
-                    message.destroy();
-                    message.error('Error loading the layers, does your account have access to the data?', 4);
-                    console.log(er);
-                });
-
-
-        })
-
-        if (this.hasCustomTooltip) {
-            this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
-            this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
-        }
-
-
+        this.map.layers.items.forEach(this._applyInitialLayerOverrides);
+        const pLyrs = this.map.layers.items.map(this._initLayerDataStructures);
+        return Promise.all(pLyrs);
     }
 
     _buildAutoRunEffects() {
-        const onApplyFilter = debounce(function (layerViewsMap, where, layersConfig,liveLayersStartIndex) {
-            var index = (liveLayersStartIndex) ? liveLayersStartIndex : 0;
-            layerViewsMap.forEach((layerView) => {
-                var staticLayer = false;
-                var whereCondition = where;
-                if (layersConfig) {
-
-                    var layerConfigTemp;
-                    var layerConfig;
-                    for (layerConfigTemp of layersConfig){
-                        if (layerConfigTemp.id === index) {
-                            if (layerConfigTemp.type === "static") {
-                                staticLayer = true;
-                            }
-                            layerConfig = layerConfigTemp;
-                            break;
-                        }
-                    }
-                    whereCondition = whereCondition + layerConfig.baselineWhereCondition;
+        const onApplyFilter = debounce(function (layerViewsMap, where, interactiveIds) {
+            layerViewsMap.forEach(lV => {
+                const id = lV.layer.id;
+                if(interactiveIds.has(id)){
+                    lV.filter = {where};
                 }
-                if (!staticLayer) {
-                    layerView.filter = {where: whereCondition};
-                }
-                index++;
-            })
-
+            });
         });
         this.effectHandler = autorun(_ => {
             const where = this.where;
             if (this.layerViewsMap && onApplyFilter) {
-                onApplyFilter(this.layerViewsMap, where, this.layersConfig, this.liveLayersStartIndex);
+                onApplyFilter(this.layerViewsMap, where, this.interactiveLayerIdSet);
             }
         });
         this.rendererHandler = autorun(_ => {
             const rendererField = this.rendererField;
-            if ((this.map && this.map.layers.length > 0) || this.lyr) {
-                const layers = this.mapId ? this.map.layers : [this.lyr];
-                layers.forEach((layer,key) => {
-                    console.log("updating");
-                    if (this.layersConfig)
-                        this._updateRendererFields(layer,key);
-                    else
-                        this._updateRendererFields(layer);
+            // only interactive layers will have updated renderers
+            if(!this.interactiveLayers || this.interactiveLayers.length < 1) return;
+            this.interactiveLayers.forEach((layer,key) => {
+                console.log("updating");
+                if (this.layersConfig)
+                    this._updateRendererFields(layer,key);
+                else
+                    this._updateRendererFields(layer);
 
-                });
-            }
+            });
         })
     }
 
@@ -240,50 +222,48 @@ class Store {
     // function to watch for mouse movement
     _onMouseMove(evt) {
         const promise = (this._tooltipPromise = this.view
-                .hitTest(evt)
-                .then(hit => {
+            .hitTest(evt)
+            .then(hit => {
 
-                    if (promise !== this._tooltipPromise) {
-                        return; // another test was performed
-                    }
-                    if (this._tooltipHighlight) {
-                        this._tooltipHighlight.remove();
-                        this._tooltipHighlight = null;
-                    }
+                if (promise !== this._tooltipPromise) {
+                    return; // another test was performed
+                }
+                if (this._tooltipHighlight) {
+                    this._tooltipHighlight.remove();
+                    this._tooltipHighlight = null;
+                }
 
-                    const results = hit.results.filter(
-                        r => this.mapsLayersIdsList.includes(r.graphic.layer.id)
-                    );
+                const results = hit.results.filter(
+                    r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
+                );
 
+                if (results.length) {
+                    var new_geometry = results[0].graphic.geometry;
+                    new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
+                    new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
+                    this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
+                        where: this.where,
+                        geometry: results[0].graphic.geometry,
+                        returnGeometry: true,
+                        spatialRelationship: "contains",
+                        outStatistics: this.onMouseOutStatistics
+                    }).then(queryFeaturesResults => {
+                        const graphic = results[0].graphic;
+                        const screenPoint = hit.screenPoint;
+                        this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
+                        const queryResults = queryFeaturesResults.features;
+                        this.tooltipResults = {
+                            screenPoint,
+                            graphic,
+                            queryResults
+                        }
 
-                    if (results.length) {
-                        var new_geometry = results[0].graphic.geometry;
-                        new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
-                        new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
-                        this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
-                            where: this.where,
-                            geometry: results[0].graphic.geometry,
-                            returnGeometry: true,
-                            spatialRelationship: "contains",
-                            outStatistics: this.onMouseOutStatistics
-                        }).then(queryFeaturesResults => {
-                            const graphic = results[0].graphic;
-                            const screenPoint = hit.screenPoint;
-                            this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
-                            const queryResults = queryFeaturesResults.features;
-                            this.tooltipResults = {
-                                screenPoint,
-                                graphic,
-                                queryResults
-                            }
+                    });
 
-                        });
-
-
-                    } else {
-                        this.tooltipResults = null;
-                    }
-                })
+                } else {
+                    this.tooltipResults = null;
+                }
+            })
 
         )
     }
@@ -303,7 +283,9 @@ class Store {
     }
 
     setLayerVisibility(layer, isVisible){
-        layer.visible = isVisible;
+        if(layer.visible !== isVisible){
+            layer.visible = isVisible;
+        }
         this.layerVisibleMap.set(layer.id, isVisible);
     }
 
@@ -339,11 +321,25 @@ class Store {
             }
         }
 
+        // wait for layers to load before loading filters / charts
+        // can return from function and keep this going in background
         this.lyr = this.map.layers.getItemAt(0);
-        //if(renderer) this.lyr.renderer = renderer;
-        if (this.outFields) this.lyr.outFields = this.outFields;
-        this._loadLayers();
+        this._loadLayers()
+            .then(_ => {
+                this.loadFilters();
+                this.loadCharts();
+            })
+            .catch(er => {
+                this.appState.onError(er, 'Could not load layers, do you have access to the data?')
+            })
+
+        if (this.hasCustomTooltip) {
+            this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
+            this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
+        }
+
         this.mapLoaded = true;
+        message.destroy();
         return this.view;
     }
 
@@ -410,13 +406,17 @@ class Store {
 
     get interactiveLayers(){
         return this.layers.filter((layer, index) => {
-          const config = this._getLayerConigById(index);
-          if(config && config.showFilter === false){
-            return false;
-          }
-          return true;
+            const config = this._getLayerConigById(index);
+            if(config && config.type === 'static'){
+                return false;
+            }
+            return true;
         });
-      }
+    }
+
+    get interactiveLayerIdSet(){
+        return new Set(this.interactiveLayers.map(l => l.id));
+    }
 
     get bookmarks() {
         if (this.map && this.layerLoaded) {
@@ -442,10 +442,13 @@ decorate(Store, {
     where: computed,
     layers: computed,
     interactiveLayers: computed,
+    interactiveLayerIdSet: computed,
     bookmarks: computed,
     load: action.bound,
     _updateRendererFields: action.bound,
     _loadLayers: action.bound,
+    _applyInitialLayerOverrides: action.bound,
+    _initLayerDataStructures: action.bound,
     loadFilters: action.bound,
     loadCharts: action.bound,
     setRendererField: action.bound,
