@@ -61,7 +61,7 @@ import BarcelonaImage from '../resources/images/Barcelona.jpg'
 import FrankfurtImage from "../resources/images/frankfurt-am-main.jpg"
 import MunichImage from "../resources/images/Munich.jpg"
 import BerlinImage from "../resources/images/Berlin.jpg"
-import HamburgImage from "../resources/images/hamburg.jpg"
+import LasVegasImage from "../resources/images/Las Vegas.jpg"
 import HanoverImage from "../resources/images/hanover.jpg"
 
 const trafficSignType2speed = {
@@ -321,6 +321,67 @@ const surveyConfig = {
     },
   },
   locationsByArea: [
+    {areaName : 'USA',
+     locations : [
+                      {
+                        'name' : 'Las Vegas, NV',
+                        'image' : LasVegasImage,
+                        'extent' : {
+                                      "xmin":-115.228211,
+                                      "ymin":36.084378,
+                                      "xmax":-115.125557,
+                                      "ymax":36.116765,
+                                      "spatialReference" : { 
+                                        "wkid":4326
+                                      }
+                                    }
+                      },
+                      {
+                        'name' : 'New York City',
+                        'image' : NYCImage,
+                        'extent' : {
+                                      "xmin":-8233752.069196624,
+                                      "ymin":4976855.35232054,
+                                      "xmax":-8232870.057549805,
+                                      "ymax":4977349.2071830435,
+                                      "spatialReference" : { 
+                                        "wkid":102100
+                                      }
+                                    }
+                      },
+                      {
+                        'name' : 'Los Angeles',
+                        'image' : LAImage,
+                        'extent' : {
+                          'ymax' : 34.062122, 
+                          'xmin' : -118.275700,
+                          'ymin' : 34.030624, 
+                          'xmax' : -118.214838,
+                          'spatialReference' : {
+                            'wkid' : 4326
+                          }
+                        }
+                      },
+                      {
+                        'name' : 'San Francisco, CA',
+                        'image' : SanFranImage,
+                        'extent' : {
+                                    "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
+                                    ,
+                                    "spatialReference":{"wkid":102100}
+                                  }
+                      },
+                      {
+                        'name' : 'Atlanta, GA',
+                        'image' : AtlantaImage,
+                        'extent' : {
+                                    "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
+                                    ,
+                                    "spatialReference":{"wkid":102100}
+                                  }
+                      }
+                    ]
+      },
     { areaName : 'Germany',
       locations : [
         {
@@ -415,54 +476,7 @@ const surveyConfig = {
                     },
                   ]
     },
-    {areaName : 'USA',
-     locations : [
-                      {
-                        'name' : 'New York City',
-                        'image' : NYCImage,
-                        'extent' : {
-                                      "xmin":-8233752.069196624,
-                                      "ymin":4976855.35232054,
-                                      "xmax":-8232870.057549805,
-                                      "ymax":4977349.2071830435,
-                                      "spatialReference" : { 
-                                        "wkid":102100
-                                      }
-                                    }
-                      },
-                      {
-                        'name' : 'Los Angeles',
-                        'image' : LAImage,
-                        'extent' : {
-                          'ymax' : 34.062122, 
-                          'xmin' : -118.275700,
-                          'ymin' : 34.030624, 
-                          'xmax' : -118.214838,
-                          'spatialReference' : {
-                            'wkid' : 4326
-                          }
-                        }
-                      },
-                      {
-                        'name' : 'San Francisco, CA',
-                        'image' : SanFranImage,
-                        'extent' : {
-                                    "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
-                                    ,
-                                    "spatialReference":{"wkid":102100}
-                                  }
-                      },
-                      {
-                        'name' : 'Atlanta, GA',
-                        'image' : AtlantaImage,
-                        'extent' : {
-                                    "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
-                                    ,
-                                    "spatialReference":{"wkid":102100}
-                                  }
-                      }
-                    ]
-      },
+    
       {
         areaName : 'Japan',
         locations : [

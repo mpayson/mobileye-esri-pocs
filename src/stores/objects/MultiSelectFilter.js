@@ -31,9 +31,6 @@ class MultiSelectFilter extends SelectFilter{
     if (t === null) {
       return null;
     }
-    if (this.subset_query !== "1=1") {
-      return "(" + t + " OR NOT ("+this.subset_query+"))";
-    }
     return t;
   }
 
