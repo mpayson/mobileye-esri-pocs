@@ -10,6 +10,7 @@ import LoginBGImage from './resources/images/LoginBG.png';
 import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
+// import TestApp from './safety/TestApp';
 import HumanMobilityApp from './human_mobility/HumanMobilityApp';
 
 import {
