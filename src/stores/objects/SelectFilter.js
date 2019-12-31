@@ -42,16 +42,13 @@ class SelectFilter extends Filter{
   }
 
   load(featureLayer, layers = null){
-    if (!layers) {
-      super.load(featureLayer);
-    }
-    if (layers)
-      layers.forEach(layer => {
-        this.loadLayer(layer)
-      })
-    else{
-      this.loadLayer(featureLayer);
-    }
+
+    super.load(layers.items[0]);
+
+    layers.forEach(layer => {
+      this.loadLayer(layer)
+    })
+
     if (this.customFieldDomainMap)
       this.domainMap = this.customFieldDomainMap;
   }
