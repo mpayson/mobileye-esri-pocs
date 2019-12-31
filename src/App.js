@@ -7,7 +7,6 @@ import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
 import HumanMobilityApp from './human_mobility/HumanMobilityApp';
-
 import './style.css';
 
 import {
@@ -77,7 +76,7 @@ const Home = observer(class Home extends React.Component{
             </div>
             <div className="bottom-header">
               <h1 className="bottom-header-h1">Mobileye Data Services</h1>
-              <h2 className="bottom-header-h2">Serving Public More Efficiently</h2>
+              <h2 className="bottom-header-h2">Serving the Public More Efficiently</h2>
             </div>
           </header>
           <div className="grid">
@@ -101,7 +100,7 @@ const Home = observer(class Home extends React.Component{
               />
               <p>Mobility</p>
             </Link>
-            <Link to="/parking" disabled={!appState.isAuthenticated} className="item">
+            <Link to="" className="item">
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-p.svg"
                 alt="Parking"

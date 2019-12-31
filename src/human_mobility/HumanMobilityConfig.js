@@ -53,27 +53,26 @@ const humanMobilityConfig = {
       _type: "jsapi",
       type: 'class-breaks',
       field: 'average_speed',
-
       classBreakInfos: [{
         minValue: 0,
         maxValue: 30,
         symbol: {type: "simple-line", width: "2.8px", color: [215,25,28,255]},
-        label: "Low"
+        label: "0-30 km/h"
       }, {
         minValue: 30,
         maxValue: 50,
         symbol: {type: "simple-line", width: "2.8px", color: [253,174,97,255]},
-        label: "Average"
+        label: "30-50 km/h"
       }, {
         minValue: 50,
         maxValue: 90,
         symbol: {type: "simple-line", width: "2.8px", color: [255,255,191,255]},
-        label: "High"
+        label: "50-90 km/h"
       }, {
         minValue: 100,
         maxValue: 1000,
         symbol: {type: "simple-line", width: "2.8px", color: [171,217,233,255]},
-        label: "Very High"
+        label: "100+ km/h"
       }]
     },
     'pedestrian_density': getClassBreakRenderer('pedestrian_density',[0,1,2,3,4],['Low','Medium','High','Very High'],[[171,217,233,255],[255,255,191,255],[253,174,97,255],[215,25,28,255]]),
@@ -94,9 +93,9 @@ const humanMobilityConfig = {
   layers : [
     {id: 0, type: "static", defaultRendererField: 'ID', name:"bus_stops", title:"Bus stop", showFilter:false},
     {id: 1, type: "static", defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bicycle lanes", showFilter:false},
-    {id: 2, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed" , postText:"Km/H", showFilter:true},
-    {id: 3, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Pedestrian density", postText:"Per ride", showFilter:true},
-    {id: 4, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Bicycle density", postText:"Per ride", showFilter:true}
+    {id: 2, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed      " , postText:"km/h", showFilter:true},
+    {id: 3, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},
+    {id: 4, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Average cyclist volume", postText:"per ride", showFilter:true}
    ],
 
   liveLayersStartIndex: 2,
@@ -110,29 +109,14 @@ const humanMobilityConfig = {
       statisticType: 'avg'
     },
     {
-      onStatisticField: 'average_speed',
-      outStatisticFieldName: 'average_speed_count',
-      statisticType: 'count'
-    },
-                                    {
       onStatisticField: 'pedestrian_density',
       outStatisticFieldName: 'pedestrian_density',
       statisticType: 'avg'
     },
     {
-      onStatisticField: 'pedestrian_density',
-      outStatisticFieldName: 'pedestrian_density_count',
-      statisticType: 'count'
-    },
-    {
       onStatisticField: 'bicycles_density',
       outStatisticFieldName: 'bicycles_density',
       statisticType: 'avg'
-    },
-    {
-      onStatisticField: 'bicycles_density',
-      outStatisticFieldName: 'bicycles_density_count',
-      statisticType: 'count'
     },
   ],
   viewConfig: {

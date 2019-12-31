@@ -19,8 +19,8 @@ const HumanMobilityTooltip = observer(({store}) => {
     position: 'absolute',
     top: '25px',
     right: '55px',
-    width: '260px',
-    height: '200px',
+    width: '270px',
+    height: '250px',
     overflow: 'auto',
     zIndex: '99',
     pointerEvents: 'none'
@@ -29,13 +29,13 @@ const HumanMobilityTooltip = observer(({store}) => {
   const attrs = queryResults[0].attributes;
 
   const infoContent = humanMobilityConfig.layers.filter(layer => layer.type !== "static").map(f =>
-        <Col key={f.name} span={12}>
+        <Col key={f.name} span={17}>
           <Statistic title={f.title} value={Math.round(attrs[f.name])} suffix={f.postText}/>
         </Col>
   )
 
   return (
-    <Card className="antd-esri-widget" style={style} size="small" title={`Mobility Information:`}>
+    <Card className="antd-esri-widget" style={style} size="small" title={`Mobility Data:`}>
         {infoContent}
     </Card>
   )

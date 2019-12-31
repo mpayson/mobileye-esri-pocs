@@ -162,7 +162,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>City Mobility</h1>
+          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Mobility</h1>
           {signin}
         </Header>
         <Layout>
@@ -199,8 +199,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
               {tooltip}
-
-              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Hours of day:`}>
+              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Hours of the day:`}>
                  <Row gutter={16}>
                  <Col span={3}>
                 <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary">
@@ -217,7 +216,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 </Col>
                 </Row>
               </Card>
-
               <Drawer
                 // title={this.state.navKey}
                 closable={false}
