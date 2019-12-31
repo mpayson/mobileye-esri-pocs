@@ -53,6 +53,10 @@ const humanMobilityConfig = {
       _type: "jsapi",
       type: 'class-breaks',
       field: 'average_speed',
+      // NOT SURE WHY THIS IS NEEDED?!
+      legendOptions: {
+        title: "Average speed"
+      },
       classBreakInfos: [{
         minValue: 0,
         maxValue: 30,

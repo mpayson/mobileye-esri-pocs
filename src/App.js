@@ -14,8 +14,6 @@ import {
   UserSession
 } from "@esri/arcgis-rest-auth";
 import config from './config/config';
-import {loadScript} from 'esri-loader';
-import options from './config/esri-loader-options';
 
 const { Content } = Layout;
 const { appId } = config;

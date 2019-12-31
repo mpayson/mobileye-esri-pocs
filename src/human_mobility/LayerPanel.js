@@ -27,7 +27,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           defaultActive={true}>
           <LayerList store={this.props.store}/>
           <br/>
-          <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Days of week:</h3>
+          <h3 style={{margin: "0px 0px 10px 0px"}}>Days of week:</h3>
           {dayFilterView}
           <br/>
         </PanelCard>

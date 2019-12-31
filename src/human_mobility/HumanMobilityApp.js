@@ -149,14 +149,14 @@ const HumanMobilityApp = observer(class App extends React.Component {
     this.hourFilter = this.store.filters.find(f => f.field === 'agg_hour');
     const hoursSlider = <MinMaxSlideFilter store={this.hourFilter} key={this.hourFilter.field} lowerBoundLabel={this.hourFilter.lowerBoundLabel} upperBoundLabel={this.hourFilter.upperBoundLabel}/>
     const hoursSliderStyle = {
-      display: 'block',
-      position: 'absolute',
-      top: '620px',
-      right: '520px',
-      width: '600px',
+      display: 'bloc',
+      position: "absolute",
+      width: "600px",
       height: 'auto',
       overflow: 'auto',
-      zIndex: '99',
+      bottom: "30px",
+      left: "50%",
+      marginLeft: "-300px"
     }
 
     return (
@@ -222,6 +222,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 // onClose={this.onClose}
                 placement="left"
                 visible={this.state.navKey}
+                width={300}
                 mask={false}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}

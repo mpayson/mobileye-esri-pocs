@@ -165,6 +165,7 @@ class Store {
                 }
                 // multiple layers pattern
                 this.layerViewsMap.set(layer.id, lV);
+                console.log(layer.title, layer.fields);
 
                 // set initial where, port of logic where only applied if theres a baseline condition
                 // because baseline condition was set to definitionexpression
