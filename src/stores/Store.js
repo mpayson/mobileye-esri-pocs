@@ -116,6 +116,9 @@ class Store {
 
     // TODO: go off of Layer ID not collection index since mutable
     _applyInitialLayerOverrides(layer, collectionIndex){  
+        // guard against other layer types that may be in the map
+        if(layer.type !== 'feature') return;
+
         // backwards compatible one-layer pattern
         if(!this.layersConfig && collectionIndex === 0){
             if(this.outFields) layer.outFields = this.outFields; // used if client-side functionality that requires fields
@@ -150,6 +153,9 @@ class Store {
     }
 
     _initLayerDataStructures(layer, collectionIndex){
+        // guard against other layer types that may be in the map
+        if(layer.type !== 'feature') return;
+
         // sets observable visibility map for layer list
         this.setLayerVisibility(layer, layer.visible);
         
