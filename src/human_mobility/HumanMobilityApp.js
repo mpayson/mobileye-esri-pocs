@@ -81,7 +81,9 @@ const HumanMobilityApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         });
 
-        const layerInfos = this.store.mapLayers.map((layer, index) => ({layer:layer, title:""}));
+        const layerInfos = this.store.mapLayers.filter((l,index) => this.store._getLayerConigById(index).type !== "static")
+            .map((layer, index) => ({layer:layer, title:""}));
+        layerInfos.forEach(l=>console.log(l.layer));
         const legend = new Legend({view: this.view, layerInfos: layerInfos});
         //this.view.ui.add(slider, "bottom-right");
 

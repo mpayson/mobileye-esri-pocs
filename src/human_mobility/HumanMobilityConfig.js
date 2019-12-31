@@ -36,7 +36,7 @@ const getClassBreakRenderer = (field,stops,labels,colors) => ({
       minValue: stops[3],
       maxValue: stops[4],
       symbol: {type: "simple-line", width: "2.5px", color: colors[3]},
-      label: [3]
+      label: labels[3]
     }]
 })
 
@@ -53,6 +53,7 @@ const humanMobilityConfig = {
       _type: "jsapi",
       type: 'class-breaks',
       field: 'average_speed',
+
       classBreakInfos: [{
         minValue: 0,
         maxValue: 30,
