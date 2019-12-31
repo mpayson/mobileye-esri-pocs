@@ -32,7 +32,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       switch(f.type){
 
         case 'multiselect':
-          return <SelectFilter store={f} mode={f.mode} key={f.field} id={f.field}/>
+          return <SelectFilter store={f} mode={f.mode} style= {f.style} key={f.field} id={f.field}/>
         case 'select':
           return <SelectFilter store={f} key={f.field}/>
         default:

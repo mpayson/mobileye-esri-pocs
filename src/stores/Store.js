@@ -69,6 +69,8 @@ class Store {
         if (this.layersConfig) {
             layers = this.map.layers.filter((layer,index) => this._getLayerConigById(index).type !== "static");
         }
+        else
+            layers = this.map.layers;
         this.filters.forEach(f => f.load(this.lyr, layers, this.view));
     }
 

@@ -15,15 +15,30 @@ class SelectFilter extends Filter{
     this.style = params && params.style ? params.style : 'dropdown';
     this.subset_query =  params && params.subset_query ? params.subset_query : '1=1';
     this.mode = params && params.mode ? params.mode : '';
+    this.customFieldDomainMap = params && params.customFieldDomainMap ? params.customFieldDomainMap : null;
+    this.optionsToRemovePostfix = params && params.optionsToRemovePostfix ? params.optionsToRemovePostfix : null;
   }
   _setFromQueryResults(results){
     results.features.forEach(f => {
       if (this.options.indexOf(f.attributes[this.field]) === -1)
-        this.options.push(f.attributes[this.field]);
+        if (!this.optionsToRemovePostfix || !f.attributes[this.field].endsWith(this.optionsToRemovePostfix))
+          this.options.push(f.attributes[this.field]);
     }
     );
     //this.options = this.options.slice().sort()
   this.loaded = true;
+  }
+
+  loadLayer(layer){
+    const domain = layer.getFieldDomain(this.field);
+    if(domain){
+      getDomainMap(domain).forEach((value, key)=> this.domainMap.set(key,value));
+    }
+    layer.queryFeatures({
+        where: this.subset_query,
+        returnDistinctValues: true,
+        outFields: [this.field]
+      }).then(this._setFromQueryResults);
   }
 
   load(featureLayer, layers = null){
@@ -32,23 +47,13 @@ class SelectFilter extends Filter{
     }
     if (layers)
       layers.forEach(layer => {
-        layer.queryFeatures({
-          where: this.subset_query,
-          returnDistinctValues: true,
-          outFields: [this.field]
-        }).then(this._setFromQueryResults);
+        this.loadLayer(layer)
       })
     else{
-      const domain = featureLayer.getFieldDomain(this.field);
-      if(domain){
-        this.domainMap = getDomainMap(domain);
-      }
-      featureLayer.queryFeatures({
-          where: this.subset_query,
-          returnDistinctValues: true,
-          outFields: [this.field]
-        }).then(this._setFromQueryResults);
+      this.loadLayer(featureLayer);
     }
+    if (this.customFieldDomainMap)
+      this.domainMap = this.customFieldDomainMap;
   }
 
   // execute client-side query based on what's currently available

@@ -57,7 +57,17 @@ const eventsConfig = {
   filters: [
 //    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 20, log: true}},
 //    {name: 'eventtype', type: 'multiselect'},
-    {name: 'eventType', type: 'multiselect', params: {mode:'multiple-radios'}},
+    {name: 'eventType', type: 'multiselect',
+        params: {style: "radio", mode:'multiple',
+            customFieldDomainMap: new Map([
+                                          ['ET_CONSTRUCTION_AREA', 'Construction areas'],
+                                          ['ET_PHYSICAL_OBJECT', 'Physical object'],
+                                          ['pedestrians',    'Pedestrians'],
+                                          ['bicycles','Bicycles']
+                                        ]),
+            optionsToRemovePostfix:"_test",
+        }
+    },
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
