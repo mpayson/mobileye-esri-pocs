@@ -7,7 +7,7 @@ import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
 import HumanMobilityApp from './human_mobility/HumanMobilityApp';
-import ParkingVideo from "./resources/SampleVideo_1280x720_1mb.mp4"
+import ParkingVideo from "./resources/Video/L2.mp4"
 import './style.css';
 
 import {
