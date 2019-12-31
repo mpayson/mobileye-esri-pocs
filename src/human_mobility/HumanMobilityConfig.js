@@ -13,29 +13,29 @@ if (process.env.WEBMAP_ID){
     webmapIdEnv = process.env.WEBMAP_ID;
 }
 
-const getClassBreakRenderer = (field,stops,labels,colors) => ({
+const getClassBreakRenderer = (field,stops,labels,colors,width) => ({
     _type: "jsapi",
     type: 'class-breaks',
     field: field,
     classBreakInfos: [{
       minValue: stops[0],
       maxValue: stops[1],
-      symbol: {type: "simple-line", width: "2.5px", color: colors[0]},
+      symbol: {type: "simple-line", width: width[0], color: colors[0]},
       label: labels[0]
     }, {
       minValue: stops[1],
       maxValue: stops[2],
-      symbol: {type: "simple-line", width: "2.5px", color: colors[1]},
+      symbol: {type: "simple-line", width: width[1], color: colors[1]},
       label: labels[1]
     }, {
       minValue: stops[2],
       maxValue: stops[3],
-      symbol: {type: "simple-line", width: "2.5px", color: colors[2]},
+      symbol: {type: "simple-line", width: width[2], color: colors[2]},
       label: labels[2]
     }, {
       minValue: stops[3],
       maxValue: stops[4],
-      symbol: {type: "simple-line", width: "2.5px", color: colors[3]},
+      symbol: {type: "simple-line", width: width[3], color: colors[3]},
       label: labels[3]
     }]
 })
@@ -56,27 +56,27 @@ const humanMobilityConfig = {
       classBreakInfos: [{
         minValue: 0,
         maxValue: 30,
-        symbol: {type: "simple-line", width: "2.8px", color: [215,25,28,255]},
+        symbol: {type: "simple-line", width: "2.3px", color: [215,25,28,255]},
         label: "0-30 km/h"
       }, {
         minValue: 30,
         maxValue: 50,
-        symbol: {type: "simple-line", width: "2.8px", color: [253,174,97,255]},
+        symbol: {type: "simple-line", width: "2.3px", color: [253,174,97,255]},
         label: "30-50 km/h"
       }, {
         minValue: 50,
         maxValue: 90,
-        symbol: {type: "simple-line", width: "2.8px", color: [255,255,191,255]},
+        symbol: {type: "simple-line", width: "2.3px", color: [255,255,191,255]},
         label: "50-90 km/h"
       }, {
         minValue: 100,
         maxValue: 1000,
-        symbol: {type: "simple-line", width: "2.8px", color: [171,217,233,255]},
+        symbol: {type: "simple-line", width: "2.3px", color: [171,217,233,255]},
         label: "100+ km/h"
       }]
     },
-    'pedestrian_density': getClassBreakRenderer('pedestrian_density',[0,1,2,3,4],['Low','Medium','High','Very High'],[[171,217,233,255],[255,255,191,255],[253,174,97,255],[215,25,28,255]]),
-    'bicycles_density': getClassBreakRenderer('bicycles_density',[0,5,8,10,100],['Low','Medium','High','Very High'],[[171,217,233,255],[255,255,191,255],[253,174,97,255],[215,25,28,255]]),
+    'pedestrian_density': getClassBreakRenderer('pedestrian_density',[0,1,2,3,4],['Very Low','Low','Medium','High'],[[224,255,255,100],[255,255,191,255],[253,174,97,255],[215,25,28,255]],["2.3px","2.3px","2.3px","2.3px"]),
+    'bicycles_density': getClassBreakRenderer('bicycles_density',[0,5,8,10,100],['Low','Medium','High','Very High'],[[171,217,233,255],[255,255,191,255],[253,174,97,255],[215,25,28,255]],["2.3px","2.3px","2.3px","2.3px"]),
   }
   ,
   filters: [
@@ -91,11 +91,11 @@ const humanMobilityConfig = {
   hasCustomTooltip: true,
 
   layers : [
-    {id: 0, type: "static", defaultRendererField: 'ID', name:"bus_stops", title:"Bus stop", showFilter:false},
-    {id: 1, type: "static", defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bicycle lanes", showFilter:false},
-    {id: 2, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed      " , postText:"km/h", showFilter:true},
-    {id: 3, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},
-    {id: 4, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Average cyclist volume", postText:"per ride", showFilter:true}
+    {id: 0, type: "static", showLegend:true , defaultRendererField: 'ID', name:"bus_stops", title:"Bus stop", showFilter:false},
+    {id: 1, type: "static", showLegend:false , defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bicycle lanes", showFilter:false},
+    {id: 2, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed      " , postText:"km/h", showFilter:true},
+    {id: 3, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0",  defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},
+    {id: 4, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density >= 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Average cyclist volume", postText:"per ride", showFilter:true}
    ],
 
   liveLayersStartIndex: 2,
