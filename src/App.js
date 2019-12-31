@@ -7,6 +7,7 @@ import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
 import HumanMobilityApp from './human_mobility/HumanMobilityApp';
+import ParkingVideo from "./resources/SampleVideo_1280x720_1mb.mp4"
 import './style.css';
 
 import {
@@ -18,7 +19,7 @@ import options from './config/esri-loader-options';
 
 const { Content } = Layout;
 const { appId } = config;
-
+console.log(ParkingVideo);
 // TODO, see if faster way to accept callback without loading whole app
 const OAuth = _ => {
   UserSession.completeOAuth2({
@@ -100,13 +101,14 @@ const Home = observer(class Home extends React.Component{
               />
               <p>Mobility</p>
             </Link>
-            <Link to="" className="item">
+
+            <a href={ParkingVideo} className="item">
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-p.svg"
                 alt="Parking"
               />
               <p>Parking</p>
-            </Link>
+            </a>
             <Link
               to="/safety"
               className="item"
