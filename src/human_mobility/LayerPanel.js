@@ -24,7 +24,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   //   [2,{'name':"bicycles_density", 'title':'Bicycles Density'}],
   // ])
 
-  days = new Map([['Weekend',[5,6]],['Weekdays',[0,1,2,3,4]],['Monday',[0]],['Tuesday',[1]],['Wednesday',[2]]
+  days = new Map([['Weekdays',[0,1,2,3,4]],['Weekend',[5,6]],['Monday',[0]],['Tuesday',[1]],['Wednesday',[2]]
   ,['Thursday',[3]],['Friday',[4]],['Saturday',[5]],['Sunday',[6]]]);
 
 
