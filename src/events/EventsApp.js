@@ -147,7 +147,7 @@ const EventsApp = observer(class App extends React.Component {
     }
 
     // Init Time Slider
-    if (this.store.layerLoaded){
+    if (this.store.mapLoaded){
       const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
 
       // set up time slider properties

@@ -125,11 +125,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
         panel = null;
     }
 
-    // Init Time Slider
-    if (this.store.layerLoaded){
-      // set up time slider properties
-    }
-
 
     const signin = this.props.appState.displayName
       ? (
