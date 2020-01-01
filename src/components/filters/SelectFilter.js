@@ -135,7 +135,7 @@ const SelectFilter = observer( ({store, mode, style}) => {
       }
       return <BtnMultiSelectFilter store={store}/>
     case 'radio':
-      if(mode !== 'multiple'){
+      if(mode === 'multiple'){
         throw new Error("Radio filter style is only available for single selection mode");
       }
       return <RadioSelectFilter store={store}/>

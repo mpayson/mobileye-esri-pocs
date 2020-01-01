@@ -2,6 +2,7 @@ import SelectFilter from './objects/SelectFilter';
 import MinMaxFilter from './objects/MinMaxFilter';
 import MultiSelectFilter from './objects/MultiSelectFilter';
 import QuantileFilter from './objects/QuantileFilter';
+import DayOfWeekFilter from './objects/DayOfWeekFilter';
 
 function createFilterFromConfig(filterConfig){
   const f = filterConfig;
@@ -14,8 +15,8 @@ function createFilterFromConfig(filterConfig){
         return new SelectFilter(f.name, f.params);
     case 'quantile':
         return new QuantileFilter(f.name, f.params);
-    // case 'dayofweek':
-    //   return new DayOfWeekFilter(f.name, f.params);
+    case 'dayofweek':
+      return new DayOfWeekFilter(f.name, f.params);
     default:
         throw new Error("Unknown filter type!")
   }
@@ -23,4 +24,4 @@ function createFilterFromConfig(filterConfig){
 
 export default createFilterFromConfig;
 
-export {SelectFilter, MinMaxFilter, MultiSelectFilter, QuantileFilter}
+export {SelectFilter, MinMaxFilter, MultiSelectFilter, QuantileFilter, DayOfWeekFilter}

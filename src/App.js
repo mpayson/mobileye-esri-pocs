@@ -14,12 +14,10 @@ import {
   UserSession
 } from "@esri/arcgis-rest-auth";
 import config from './config/config';
-import {loadScript} from 'esri-loader';
-import options from './config/esri-loader-options';
 
 const { Content } = Layout;
 const { appId } = config;
-console.log(ParkingVideo);
+// console.log(ParkingVideo);
 // TODO, see if faster way to accept callback without loading whole app
 const OAuth = _ => {
   UserSession.completeOAuth2({

@@ -53,6 +53,10 @@ const humanMobilityConfig = {
       _type: "jsapi",
       type: 'class-breaks',
       field: 'average_speed',
+      // NOT SURE WHY THIS IS NEEDED?!
+      legendOptions: {
+        title: "Average speed"
+      },
       classBreakInfos: [{
         minValue: 0,
         maxValue: 30,
@@ -80,7 +84,7 @@ const humanMobilityConfig = {
   }
   ,
   filters: [
-    {name: 'day_of_week', type: 'multiselect'},
+    {name: 'day_of_week', type: 'dayofweek', params: {style: 'radio'}},
     {name: 'agg_hour', type: 'minmax',
           params:{'lowerBoundLabel':0, 'upperBoundLabel':24, 'lowerBound':0, 'upperBound':24, 'numBins':23,
           marks : {
@@ -96,6 +100,11 @@ const humanMobilityConfig = {
     {id: 2, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " and average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed      " , postText:"km/h", showFilter:true},
     {id: 3, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " and pedestrian_density > 0",  defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},
     {id: 4, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " and bicycles_density >= 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Average cyclist volume", postText:"per ride", showFilter:true}
+    {id: 0, type: "static", defaultRendererField: 'ID', name:"bus_stops", title:"Bus stop", showFilter:false},
+    {id: 1, type: "static", defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bicycle lanes", showFilter:false},
+    {id: 2, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed      " , postText:"km/h", showFilter:true},
+    {id: 3, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "pedestrian_density > 0", defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},
+    {id: 4, type: "live", outFields: defaultLayerOutFields, baselineWhereCondition: "bicycles_density > 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Average cyclist volume", postText:"per ride", showFilter:true}
    ],
 
   liveLayersStartIndex: 2,
