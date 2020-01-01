@@ -98,7 +98,7 @@ const humanMobilityConfig = {
   hasCustomTooltip: true,
 
   layers : [
-    {id: 0, type: "static", showLegend:true , defaultRendererField: 'ID', name:"bus_stops", title:"Bus stop", showFilter:false},
+    {id: 0, type: "static", customLegendTitle: "Bus stops", showLegend:true , defaultRendererField: 'ID', name:"bus_stops", title:"Bus stop", showFilter:false},
     {id: 1, type: "static", showLegend:false , defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bicycle lanes", showFilter:false},
     {id: 2, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " average_speed > 0", defaultRendererField: 'average_speed', name:"average_speed", title:"Average speed      " , postText:"km/h", showFilter:true},
     {id: 3, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " pedestrian_density > 0",  defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},

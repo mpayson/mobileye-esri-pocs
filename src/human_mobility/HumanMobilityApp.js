@@ -82,7 +82,8 @@ const HumanMobilityApp = observer(class App extends React.Component {
         });
 
         const layerInfos = this.store.mapLayers.filter((l,index) => this.store._getLayerConigById(index).showLegend)
-            .map((layer, index) => ({layer:layer, title:""}));
+            .map((layer, index) => ({layer:layer, title:  this.store._getLayerConigById(index).customLegendTitle?
+                  this.store._getLayerConigById(index).customLegendTitle:""}));
         layerInfos.forEach(l=>console.log(l.layer));
         const legend = new Legend({view: this.view, layerInfos: layerInfos});
         //this.view.ui.add(slider, "bottom-right");
@@ -226,7 +227,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 mask={false}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}
-                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
+                bodyStyle={{ padding: "10px", background: "#f5f5f5",height: "100%" }}
               >
                 {panel}
               </Drawer>
