@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/mobileye-esri-pocs/precache-manifest.ac9c3eee16faf12b86f93207bbc14da3.js"
+  "/mobileye-esri-pocs/precache-manifest.329bda289fe447be5b8b5574aedb7fde.js"
 );
 
 self.addEventListener('message', (event) => {
