@@ -13,10 +13,13 @@ if (process.env.WEBMAP_ID){
     webmapIdEnv = process.env.WEBMAP_ID;
 }
 
-const getClassBreakRenderer = (field,stops,labels,colors,width) => ({
+const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
     _type: "jsapi",
     type: 'class-breaks',
     field: field,
+    legendOptions: {
+        title:caption
+    },
     classBreakInfos: [{
       minValue: stops[0],
       maxValue: stops[1],
@@ -79,8 +82,8 @@ const humanMobilityConfig = {
         label: "100+ km/h"
       }]
     },
-    'pedestrian_density': getClassBreakRenderer('pedestrian_density',[0,1,2,3,4],['Very Low','Low','Medium','High'],[[224,255,255,100],[255,255,191,255],[253,174,97,255],[215,25,28,255]],["2.3px","2.3px","2.3px","2.3px"]),
-    'bicycles_density': getClassBreakRenderer('bicycles_density',[0,5,8,10,100],['Low','Medium','High','Very High'],[[171,217,233,255],[255,255,191,255],[253,174,97,255],[215,25,28,255]],["2.3px","2.3px","2.3px","2.3px"]),
+    'pedestrian_density': getClassBreakRenderer('pedestrian_density',[0,1,2,3,4],['Low','Medium','High','Very High'],[[224,255,255,100],[255,255,191,255],[253,174,97,255],[215,25,28,255]],["2.3px","2.3px","2.3px","2.3px"],"Average pedestrian volume"),
+    'bicycles_density': getClassBreakRenderer('bicycles_density',[0,5,8,10,100],['Low','Medium','High','Very High'],[[171,217,233,255],[255,255,191,255],[253,174,97,255],[215,25,28,255]],["2.3px","2.3px","2.3px","2.3px"],"Average cyclist volume"),
   }
   ,
   filters: [

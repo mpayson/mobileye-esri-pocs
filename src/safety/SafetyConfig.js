@@ -4,7 +4,7 @@ import TokyoImage from '../resources/images/Tokyo.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
 
 // for now expect exactly 5 stops that map to the same color ramp
-const getRenderer = (field, stops,labels) => ({
+const getRenderer = (field, stops,labels,caption) => ({
   _type: "jsapi",
   type: "simple",
   symbol: { type: "simple-line" ,width: "2.5px"},
@@ -12,6 +12,9 @@ const getRenderer = (field, stops,labels) => ({
   visualVariables: [{
     type: "color",
     field,
+    legendOptions: {
+        title:caption
+    },
     stops: [
       { value: stops[0], color: [44,123,182,255], label: `${labels[0]}` },
       { value: stops[1], color: [171,217,233,255], label: null },
@@ -45,6 +48,9 @@ const safetyConfig = {
       _type: "jsapi",
       type: 'class-breaks',
       field: 'eventvalue',
+      legendOptions: {
+        title: "Average speed"
+      },
       classBreakInfos: [{
         minValue: 0,
         maxValue: 2.499,
@@ -67,14 +73,14 @@ const safetyConfig = {
         label: "Very High"
       }]
     },
-    'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14],['Low','Medium','High']),
-    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High']),
-    'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High']),
-    'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22],['Low','Medium','High']),
-    'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High']),
-    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70']),
-    'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High']),
-     'fcw': getRenderer('fcw', [0,1.35499499,2.66894309,6.03785078,8.2561676],['Low','Medium','High'])
+    'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14],['Low','Medium','High'],"Harsh braking"),
+    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High'],"Harsh cornering"),
+    'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High'],"Average pedestrian volume"),
+    'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22],['Low','Medium','High'],"Average cyclist volume"),
+    'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High'],"Above average speeds"),
+    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70'],"Average speeds"),
+    'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High'],"Pedestrian collision warning (PCW)"),
+    'fcw': getRenderer('fcw', [0,1.35499499,2.66894309,6.03785078,8.2561676],['Low','Medium','High'],"Forward collision warning (FCW)")
   },
   filters: [{
     name:'eventvalue',
