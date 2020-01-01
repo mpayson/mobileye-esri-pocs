@@ -38,7 +38,6 @@ class Store {
         this.rendererField = storeConfig.initialRendererField;
         this.popupTemplate = storeConfig.popupTemplate;
         this.onMouseOutStatistics = storeConfig.onMouseOutStatistics;
-        this.layerLoaded = false;
         this.viewConfig = storeConfig.viewConfig;
         this.outFields = storeConfig.outFields;
         this.layersConfig = storeConfig.layers;
@@ -427,7 +426,7 @@ class Store {
     }
 
     get bookmarks() {
-        if (this.map && this.layerLoaded) {
+        if (this.map && this.mapLoaded) {
             return this.map.bookmarks.items;
         }
         return [];
@@ -437,7 +436,6 @@ class Store {
 decorate(Store, {
     user: observable,
     rendererField: observable,
-    layerLoaded: observable,
     mapLoaded: observable,
     aliasMap: observable,
     layerVisibleMap: observable,
