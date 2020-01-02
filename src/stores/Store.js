@@ -96,6 +96,15 @@ class Store {
         }
     }
 
+    _getLayerConigByName(name){
+        var layer;
+        if(!this.layersConfig) return null;
+        for (layer of this.layersConfig){
+            if (layer.name === name)
+                return layer;
+        }
+    }
+
     _formatRenderer(renderer){
         return renderer._type === 'jsapi'
             ? renderer
@@ -208,7 +217,7 @@ class Store {
             if ((this.map && this.map.layers.length > 0) || this.lyr) {
                 const layers = this.mapId ? this.map.layers : [this.lyr];
                 layers.forEach((layer,key) => {
-                    if (this.layersConfig)
+                    if (this.layersConfig && this.interactiveLayerIdSet.has(key))
                         this._updateRendererFields(layer,key);
                     else
                         this._updateRendererFields(layer);
@@ -245,27 +254,31 @@ class Store {
                 );
 
                 if (results.length) {
-                    var new_geometry = results[0].graphic.geometry;
-                    new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
-                    new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
-                    this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
-                        where: this.where,
-                        geometry: results[0].graphic.geometry,
-                        returnGeometry: true,
-                        spatialRelationship: "contains",
-                        outStatistics: this.onMouseOutStatistics
-                    }).then(queryFeaturesResults => {
-                        const graphic = results[0].graphic;
-                        const screenPoint = hit.screenPoint;
-                        this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
-                        const queryResults = queryFeaturesResults.features;
-                        this.tooltipResults = {
-                            screenPoint,
-                            graphic,
-                            queryResults
-                        }
+                    const graphic = results[0].graphic;
+                    const screenPoint = hit.screenPoint;
+                    this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
 
-                    });
+                    if (this.onMouseOutStatistics) {
+                        var new_geometry = results[0].graphic.geometry;
+                        new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
+                        new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
+                        this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
+                            where: this.where,
+                            geometry: results[0].graphic.geometry,
+                            returnGeometry: true,
+                            spatialRelationship: "contains",
+                            outStatistics: this.onMouseOutStatistics
+                        }).then(queryFeaturesResults => {
+                            const queryResults = queryFeaturesResults.features;
+                            this.tooltipResults = {
+                                screenPoint,
+                                graphic,
+                                queryResults
+                            }
+
+                        });
+                    } else
+                        this.tooltipResults = {screenPoint, graphic}
 
                 } else {
                     this.tooltipResults = null;

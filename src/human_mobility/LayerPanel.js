@@ -6,18 +6,53 @@ import MinMaxSlideFilter from '../components/filters/MinMaxSlideFilter';
 
 import {LayerList} from '../components/LayerListPanel';
 import {getFilterView} from '../components/FilterPanel';
+import {Radio, Switch} from "antd";
+import humanMobilityConfig from './HumanMobilityConfig';
+const RadioGroup = Radio.Group;
 
 const LayerPanel = observer(class LayerPanel extends React.Component{
+
+  state = {
+    selectedStatId: 'avg_spd',
+  };
 
   constructor(props, context){
     super(props, context);
     this.dayOfWeekFilter = this.props.store.filters.find(f => f.field === 'day_of_week');
   }
 
+  _onRadioClick = e => {
+    this.setState({
+      selectedStatId: e.target.value,
+    });
+  //      const layerId = this._getLayerConigByName('avg_spd').id;
+
+    this.props.store._updateValueExpression(e.target.value);
+    this.props.store.setRendererField(e.target.value);
+
+//    console.log(this.props.store.mapLayers.items[layerId].renderer.valueExpression);
+  }
+
+
+  _updateRendererExpression(){
+  }
   render(){
 
-    const dayFilterView = getFilterView(this.dayOfWeekFilter);
+    const radioStyle = {
+      display: 'block',
+      height: '30px',
+      lineHeight: '30px',
+    }
 
+    const dayFilterView = getFilterView(this.dayOfWeekFilter);
+    const statsRadios = Object.entries(humanMobilityConfig.statisticsFieldsInfo).map(entry =>
+        <Radio value={entry[0]} key={entry[0]} style={radioStyle}>{entry[1].title}</Radio>
+    )
+    const statsListGroup =
+      <RadioGroup onChange={this._onRadioClick} value={this.state.selectedStatId}>
+        {statsRadios}
+      </RadioGroup>
+;
     return (
       <>
         <PanelCard
@@ -25,7 +60,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           title="GIS Layers"
           collapsible={true}
           defaultActive={true}>
-          <LayerList store={this.props.store}/>
+          {statsListGroup}
           <br/>
           <h3 style={{margin: "0px 0px 10px 0px"}}>Days of week:</h3>
           {dayFilterView}
