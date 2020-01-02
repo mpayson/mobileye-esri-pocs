@@ -24,13 +24,16 @@ class HumanMobilityStore extends Store{
     let selectedStatsSumList = this._buildSelectedStatsSumList(id);
     //const valueExpression = "(" + selectedStatsSumList.join(" + ") + ")/"+selectedStatsSumList.length.toString();
     const valueExpression =
-        "var myArray = [" + selectedStatsSumList.join(",") + "];\n" +
+        "var fieldList = ['" + selectedStatsSumList.join("','") + "'];\n" +
         "var sum = 0;\n" +
         "var count = 0;\n" +
-        "for(var k in myArray){\n" +
-        "  if (myArray[k] != null && myArray[k] > 0)\n" +
-        "    count++;\n" +
-        "  sum += myArray[k];\n" +
+        "for(var k in fieldList){\n" +
+        "  var field = fieldList[k];\n" +
+        "  if (HasKey($feature,field)){\n" +
+        "      if ($feature[field] != null && $feature[field] > 0)\n" +
+        "        count++;\n" +
+        "      sum += $feature[field];\n" +
+        "  }\n" +
         "}\n" +
         "sum/count;"
 
@@ -44,7 +47,7 @@ class HumanMobilityStore extends Store{
     for (let day of this.selectedDays)
       for (let hour of this.selectedHours)
         for (let prefix of [selectedStatId]){
-          results.push(["$feature." + prefix,day.toString(),hour.toString()].join("_"));
+          results.push([prefix,day.toString(),hour.toString()].join("_"));
         }
     return results;
   }
