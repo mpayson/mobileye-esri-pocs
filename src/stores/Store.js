@@ -38,7 +38,6 @@ class Store {
         this.rendererField = storeConfig.initialRendererField;
         this.popupTemplate = storeConfig.popupTemplate;
         this.onMouseOutStatistics = storeConfig.onMouseOutStatistics;
-        this.layerLoaded = false;
         this.viewConfig = storeConfig.viewConfig;
         this.outFields = storeConfig.outFields;
         this.layersConfig = storeConfig.layers;
@@ -116,6 +115,9 @@ class Store {
 
     // TODO: go off of Layer ID not collection index since mutable
     _applyInitialLayerOverrides(layer, collectionIndex){  
+        // guard against other layer types that may be in the map
+        if(layer.type !== 'feature') return;
+
         // backwards compatible one-layer pattern
         if(!this.layersConfig && collectionIndex === 0){
             if(this.outFields) layer.outFields = this.outFields; // used if client-side functionality that requires fields
@@ -150,6 +152,9 @@ class Store {
     }
 
     _initLayerDataStructures(layer, collectionIndex){
+        // guard against other layer types that may be in the map
+        if(layer.type !== 'feature') return;
+
         // sets observable visibility map for layer list
         this.setLayerVisibility(layer, layer.visible);
         
@@ -421,7 +426,7 @@ class Store {
     }
 
     get bookmarks() {
-        if (this.map && this.layerLoaded) {
+        if (this.map && this.mapLoaded) {
             return this.map.bookmarks.items;
         }
         return [];
@@ -431,7 +436,6 @@ class Store {
 decorate(Store, {
     user: observable,
     rendererField: observable,
-    layerLoaded: observable,
     mapLoaded: observable,
     aliasMap: observable,
     layerVisibleMap: observable,

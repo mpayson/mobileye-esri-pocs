@@ -81,8 +81,9 @@ const HumanMobilityApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         });
 
-        const layerInfos = this.store.mapLayers.filter((l,index) => this.store._getLayerConigById(index).type !== "static")
-            .map((layer, index) => ({layer:layer, title:""}));
+        const layerInfos = this.store.mapLayers.filter((l,index) => this.store._getLayerConigById(index).showLegend)
+            .map((layer, index) => ({layer:layer, title:  this.store._getLayerConigById(index).customLegendTitle?
+                  this.store._getLayerConigById(index).customLegendTitle:""}));
         layerInfos.forEach(l=>console.log(l.layer));
         const legend = new Legend({view: this.view, layerInfos: layerInfos});
         //this.view.ui.add(slider, "bottom-right");
@@ -124,11 +125,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
         panel = null;
     }
 
-    // Init Time Slider
-    if (this.store.layerLoaded){
-      // set up time slider properties
-    }
-
 
     const signin = this.props.appState.displayName
       ? (
@@ -156,13 +152,13 @@ const HumanMobilityApp = observer(class App extends React.Component {
       overflow: 'auto',
       bottom: "30px",
       left: "50%",
-      marginLeft: "-300px"
+      marginLeft: "-300px",
     }
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Mobility</h1>
+          <h1 style={{color: "rgba(255,255,255,0.8)", float: "left"}}>Mobility</h1>
           {signin}
         </Header>
         <Layout>
@@ -199,7 +195,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
               {tooltip}
-              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Hours of the day:`}>
+              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Time of day:`}>
                  <Row gutter={16}>
                  <Col span={3}>
                 <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary">
@@ -226,7 +222,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 mask={false}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}
-                bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
+                bodyStyle={{ padding: "10px", background: "#f5f5f5",height: "100%" }}
               >
                 {panel}
               </Drawer>

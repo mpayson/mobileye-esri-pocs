@@ -5,8 +5,8 @@ import { decorate, computed } from 'mobx';
 class DayOfWeekFilter extends SelectFilter{
   type = 'dayofweek';
   dayMap = new Map([
-    ['Weekend',[5,6]],
     ['Weekdays',[0,1,2,3,4]],
+    ['Weekend',[5,6]],
     ['Monday',[0]],
     ['Tuesday',[1]],
     ['Wednesday',[2]],
