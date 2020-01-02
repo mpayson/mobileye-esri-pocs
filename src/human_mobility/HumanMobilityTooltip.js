@@ -44,7 +44,7 @@ const HumanMobilityTooltip = observer(({store}) => {
     }
   const infoContent =Object.entries(humanMobilityConfig.statisticsFieldsInfo).map(entry=>
         <Col key={entry[0]} span={17}>
-          <Statistic title={entry[1].title} value={Math.round(results[entry[0]].sum / results[entry[0]].count)} suffix={entry[1].postText}/>
+          <Statistic title={entry[1].title} value={Math.round(results[entry[0]].count != 0 ? results[entry[0]].sum / results[entry[0]].count : 0)} suffix={entry[1].postText}/>
         </Col>
 
   )
