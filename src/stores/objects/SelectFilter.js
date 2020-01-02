@@ -55,7 +55,6 @@ class SelectFilter extends Filter{
 
   // execute client-side query based on what's currently available
   refresh(featureLayer, featureLayerView, where=this.subset_query){
-    console.log("zdfgsfdgsdf");
     super.load(featureLayer);
     const domain = featureLayer.getFieldDomain(this.field);
     if(domain){

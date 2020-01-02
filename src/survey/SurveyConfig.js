@@ -53,7 +53,7 @@ import otherDot from '../resources/images/Other.png';
 import dotImage from '../resources/images/dot.png';
 import NYCImage from '../resources/images/NYC.jpg';
 import LAImage from '../resources/images/LA.jpg';
-import AtlantaImage from '../resources/images/Atlanta.jpg'
+// import AtlantaImage from '../resources/images/Atlanta.jpg'
 import SanFranImage from '../resources/images/SanFran.jpg'
 import HeathrowImage from '../resources/images/Heathrow.jpg'
 import ObaidaImage from '../resources/images/Obaida.jpg'
@@ -140,8 +140,8 @@ const speedSignIconsExp = ['Europe', 'US'].map(region =>
 ).join()
 
 
-const category_l2IconsExp = Object.keys(category_l22image).map(system_type => 
-  "($feature.system_type == " + system_type + "), '"+category_l22image[system_type]+"'"
+const category_l2IconsExp = Object.keys(category_l22image).map(category_l2 => 
+  "($feature.category_l2 == " + category_l2 + "), '"+category_l22image[category_l2]+"'"
 ).join()
 
 const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", '" + `${dotImage}` + "')";
@@ -149,7 +149,7 @@ const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", 
 const surveyConfig = {
   
   
-  layerItemId: 'bf933c24999240ee98a3b7334817cf80',
+  layerItemId: '497bde7b9b0b4039b740f5b0724c309e',
   webmapId: '3a979480c3644b2d91cf4053af9568b9',
   initialRendererField: 'all',
   renderers: {
@@ -208,7 +208,7 @@ const surveyConfig = {
   {
     id: 'traffic_sign_category_l3_label',
     type: 'bar',
-    title: 'Landmark Type',
+    title: 'Traffic Sign Type',
     xField: 'traffic_sign_category_l3_label',
     yField: 'countOFtraffic_sign_category_l3',
     // see here
@@ -249,7 +249,7 @@ const surveyConfig = {
   {
     id: 'tfl_category_l3_label',
     type: 'bar',
-    title: 'Landmark Type',
+    title: 'Traffic Light Type',
     xField: 'tfl_category_l3_label',
     yField: 'countOFtfl_category_l3',
     // see here
@@ -290,7 +290,7 @@ const surveyConfig = {
   {
     id: 'road_marking_category_l3_label',
     type: 'bar',
-    title: 'Landmark Type',
+    title: 'Road Marking Types',
     xField: 'road_marking_category_l3_label',
     yField: 'countOFroad_marking_category_l3',
     // see here
@@ -331,7 +331,7 @@ const surveyConfig = {
   {
     id: 'pole_category_l3_label',
     type: 'bar',
-    title: 'Landmark Type',
+    title: 'Pole types',
     xField: 'pole_category_l3_label',
     yField: 'countOFpole_category_l3',
     // see here
@@ -372,7 +372,7 @@ const surveyConfig = {
   {
     id: 'manhole_category_l3_label',
     type: 'bar',
-    title: 'Landmark Type',
+    title: 'Manhole Type',
     xField: 'manhole_category_l3_label',
     yField: 'countOFmanhole_category_l3',
     // see here
@@ -412,7 +412,7 @@ const surveyConfig = {
   },
 ], 
   popupTemplate: {
-    title: "{expression/title-prefix} {system_type} {expression/title_suffix}",
+    title: "{expression/title-prefix} {category_l1} {expression/title_suffix}",
     content: [
       {
       type: "text",
@@ -438,9 +438,9 @@ const surveyConfig = {
         name: "type-expr",
         title: "Type",
         expression: "When($feature.category_l1 == 0, DomainName($feature, 'traffic_sign_category_l4', $feature.traffic_sign_category_l4)," +
-                        "$feature.category_l1 == 1, DomainName($feature, 'traffic_sign_category_l4', $feature.traffic_sign_category_l4)," +
-                        "$feature.category_l1 == 2, DomainName($feature, \"road_marking_category_l4\", $feature.road_marking_category_l4)," +
-                       "$feature.category_l1 == 3, DomainName($feature, \"pole_category_l4\", $feature.pole_category_l4)," +
+                        "$feature.category_l1 == 1, DomainName($feature, 'tfl_category_l4', $feature.tfl_category_l4)," +
+                        "$feature.category_l1 == 2, DomainName($feature, 'road_marking_category_l4', $feature.road_marking_category_l4)," +
+                        "$feature.category_l1 == 3, DomainName($feature, \"pole_category_l4\", $feature.pole_category_l4)," +
 //                        "$feature.category_l1 == 4, DomainName($feature, \"manhole_category_l4\", $feature.manhole_category_l4)," +
                         "'')"
 
@@ -511,15 +511,6 @@ const surveyConfig = {
                         'image' : SanFranImage,
                         'extent' : {
                                     "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
-                                    ,
-                                    "spatialReference":{"wkid":102100}
-                                  }
-                      },
-                      {
-                        'name' : 'Atlanta, GA',
-                        'image' : AtlantaImage,
-                        'extent' : {
-                                    "xmin":-9396266.79940966,"ymin":3995212.652711483,"xmax":-9391637.581884017,"ymax":3997367.2214463283
                                     ,
                                     "spatialReference":{"wkid":102100}
                                   }
@@ -594,7 +585,7 @@ const surveyConfig = {
           }
         },
       ]},
-      { areaName: "Other Europe",
+      { areaName: "Europe",
       locations: [
                       {
                       'name' : 'Barcelona',

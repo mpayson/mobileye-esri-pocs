@@ -3,8 +3,8 @@ import MinMaxFilter from './objects/MinMaxFilter';
 import MultiSelectFilter from './objects/MultiSelectFilter';
 import QuantileFilter from './objects/QuantileFilter';
 import DayOfWeekFilter from './objects/DayOfWeekFilter';
-import NestedFilter from './objects/NestedFIlter';
-
+import NestedFilter from './objects/NestedFilter';
+    
 function createFilterFromConfig(filterConfig){
   const f = filterConfig;
   switch (f.type) {

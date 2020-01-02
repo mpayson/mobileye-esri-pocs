@@ -87,7 +87,7 @@ const SurveyApp = observer(class App extends React.Component {
         })
         this.view.ui.add(searchExpand, "top-right");
         const legend = new Legend({view: this.view,
-                                   layerInfos: [{layer: this.store.lyr, title: "Landmark Type"}]});
+                                   layerInfos: [{layer: this.store.lyr, title: "Assets"}]});
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
         this.homeWidget = new Home({
@@ -114,7 +114,7 @@ const SurveyApp = observer(class App extends React.Component {
         panel = <BookmarkPanel store={this.store}/>
         break;
       case 'About':
-        panel = <h1>This application presents the various assets Mobileye is able to survey and map</h1>;
+        panel = <h1>" Mapping road assets such as traffic lights, signs, poles, and more. For each asset, we can detail its precise location, dimensions and type, and information on detected changes."</h1>;
         break;
       default:
         panel = null;
