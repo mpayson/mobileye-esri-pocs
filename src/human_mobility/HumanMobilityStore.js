@@ -22,7 +22,18 @@ class HumanMobilityStore extends Store{
 
   _updateValueExpression(id){
     let selectedStatsSumList = this._buildSelectedStatsSumList(id);
-    const valueExpression = "(" + selectedStatsSumList.join(" + ") + ")/"+selectedStatsSumList.length.toString();
+    //const valueExpression = "(" + selectedStatsSumList.join(" + ") + ")/"+selectedStatsSumList.length.toString();
+    const valueExpression =
+        "var myArray = [" + selectedStatsSumList.join(",") + "];\n" +
+        "var sum = 0;\n" +
+        "var count = 0;\n" +
+        "for(var k in myArray){\n" +
+        "  if (myArray[k] != null && myArray[k] > 0)\n" +
+        "    count++;\n" +
+        "  sum += myArray[k];\n" +
+        "}\n" +
+        "sum/count;"
+
     this.renderers[id].valueExpression =  valueExpression;
     console.log(valueExpression);
 

@@ -4,7 +4,7 @@ import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 
-var webmapIdEnv = '494f004ca70c4a768151d934ea266125';
+var webmapIdEnv = '0b800d1e71d94002b8d2451dcd08155d';
 //var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
 
 
