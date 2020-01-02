@@ -64,7 +64,7 @@ import BerlinImage from "../resources/images/Berlin.jpg"
 import LasVegasImage from "../resources/images/Las Vegas.jpg"
 import HanoverImage from "../resources/images/hanover.jpg"
 
-const trafficSignType2speed = {
+const category_l42speed = {
                '0': '10', '1': '20', '2': '30', '3': '40', '4': '50', '5': '60',
                '6': '70', '7': '80', '8': '90', '9': '100', '10': '110',
                '11': '120', '12': '130', '13': '140',
@@ -113,7 +113,7 @@ const speed2image = {
           '80' : `${sign80USImage}`,
         }
 };
-const groupType2image = {
+const category_l22image = {
     '0' : `${circularSignNoSpeedImage}`,
     '1' : `${warningImage}`,
     '2' : `${constructionImage}`,
@@ -130,35 +130,33 @@ const groupType2image = {
 } ;
 
 const speedSignIconsExp = ['Europe', 'US'].map(region => 
-  Object.keys(trafficSignType2speed).filter(signType => 
-    trafficSignType2speed[signType] in speed2image[region]
-  ).map(signType => 
-     "(($feature.system_type_group==0 || $feature.system_type_group==3)" +
-     " && ($feature.traffic_sign_type == "+signType+")" + 
+  Object.keys(category_l42speed).filter(categoryL4 => 
+    category_l42speed[categoryL4] in speed2image[region]
+  ).map(categoryL4 => 
+     "(($feature.category_l1==0 || $feature.category_l1==3)" +
+     " && ($feature.traffic_sign_category_l4 == "+categoryL4+")" + 
             " && ($feature.region == '"+region+"')), '" + 
-            speed2image[region][trafficSignType2speed[signType]]+"'").join() 
+            speed2image[region][category_l42speed[categoryL4]]+"'").join() 
 ).join()
 
 
-const groupTypeIconsExp = Object.keys(groupType2image).map(system_type => 
-  "($feature.system_type == " + system_type + "), '"+groupType2image[system_type]+"'"
+const category_l2IconsExp = Object.keys(category_l22image).map(system_type => 
+  "($feature.system_type == " + system_type + "), '"+category_l22image[system_type]+"'"
 ).join()
 
-const icons_exp = "When(" + speedSignIconsExp + ", " + groupTypeIconsExp + ", '" + `${dotImage}` + "')";
+const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", '" + `${dotImage}` + "')";
 
 const surveyConfig = {
   
-  // layerItemId: '3d218196cda94e2eacf86994f9bbd4e4',
-  // webmapId: 'e89e13f2f6174777bcd81073c4158ce6',
   
-  layerItemId: '8454a5c3867b4133aeedfd00352272e2',
-  webmapId: 'aabc5fa9e96045eaa0968702fd33e6d9',
+  layerItemId: 'bf933c24999240ee98a3b7334817cf80',
+  webmapId: '3a979480c3644b2d91cf4053af9568b9',
   initialRendererField: 'all',
   renderers: {
     'all': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
-      field: "system_type_group",
+      field: "category_l1",
       
       defaultSymbol: {type: "picture-marker", url: otherDot, width: "10px", height: "10px"},
       uniqueValueInfos: [
@@ -171,22 +169,48 @@ const surveyConfig = {
   }
   },
   filters: [
-
-    {name: 'traffic_sign_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=0"}},
-    {name: 'tfl_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=1"}},
-    {name: 'road_marking_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=2"}},
-    {name: 'pole_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=3"}},
-    {name: 'manhole_type', type: 'multiselect', params: {dynamic: true, mode:'multiple', subset_query: "system_type_group=4"}},
-    {name: 'comparsion_to_prev_map', type: 'multiselect', params: {dynamic: true, mode:'multiple'}},
-    {name: 'system_type_group', type: 'multiselect', params: {dynamic: true, mode:'multiple'}}
+    // {name: 'category_l1', type: 'nested', params: {
+    //   filters: [
+    //     {name: 'traffic_sign_category_l3', 
+    //      type: 'multiselect', 
+    //      params: {dynamic: true, mode:'multiple', nesting_field_value:'0'}},
+    //     {name: 'tfl_category_l3', 
+    //      type: 'multiselect', 
+    //      params: {dynamic: true, mode:'multiple', nesting_field_value:"1"}},
+    //     {name: 'road_marking_category_l3', 
+    //      type: 'multiselect', 
+    //      params: {dynamic: true, mode:'multiple', nesting_field_value:"2"}},
+    //     {name: 'pole_category_l3', 
+    //      type: 'multiselect', 
+    //      params: {dynamic: true, mode:'multiple', nesting_field_value:"3"}},
+    //     {name: 'manhole_category_l3', 
+    //      type: 'multiselect', 
+    //      params: {dynamic: true, mode:'multiple', nesting_field_value:"4"}}
+    //   ]}},
+    {name: 'traffic_sign_category_l3', 
+         type: 'multiselect', 
+         params: {dynamic: true, mode:'multiple', subset_query:'category_l1=0'}},
+        {name: 'tfl_category_l3', 
+         type: 'multiselect', 
+         params: {dynamic: true, mode:'multiple', subset_query:"category_l1=1"}},
+        {name: 'road_marking_category_l3', 
+         type: 'multiselect', 
+         params: {dynamic: true, mode:'multiple', subset_query:"category_l1=2"}},
+        {name: 'pole_category_l3', 
+         type: 'multiselect', 
+         params: {dynamic: true, mode:'multiple', subset_query:"category_l1=3"}},
+        {name: 'manhole_category_l3', 
+         type: 'multiselect', 
+         params: {dynamic: true, mode:'multiple', subset_query:"category_l1=4"}},
+    {name: 'new_detected_missing', type: 'multiselect', params: {dynamic: true, mode:'multiple'}},
   ],
   charts: [
   {
-    id: 'system_type_group_label',
+    id: 'traffic_sign_category_l3_label',
     type: 'bar',
     title: 'Landmark Type',
-    xField: 'system_type_group_label',
-    yField: 'countOFsystem_type_group',
+    xField: 'traffic_sign_category_l3_label',
+    yField: 'countOFtraffic_sign_category_l3',
     // see here
     // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
     // and here
@@ -195,26 +219,26 @@ const surveyConfig = {
    queryDefinition: {
         where: "1=1",
         outFields: "*",
-        orderByFields: "countOFsystem_type_group",
-        groupByFieldsForStatistics: "system_type_group",
+        orderByFields: "countOFtraffic_sign_category_l3",
+        groupByFieldsForStatistics: "traffic_sign_category_l3",
         outStatistics: [{
-          "onStatisticField":"system_type_group",
-          "outStatisticFieldName":"countOFsystem_type_group",
+          "onStatisticField":"traffic_sign_category_l3",
+          "outStatisticFieldName":"countOFtraffic_sign_category_l3",
           "statisticType":"count"
       }]
     },
     resultTransform: result => {
       if(!result || !result.features || result.features.length < 1) return result;
-      const field = result.fields.find(f => f.name === 'system_type_group');
+      const field = result.fields.find(f => f.name === 'traffic_sign_category_l3');
       const domainMap = getDomainMap(field.domain);
       const newFeatures = result.features.map(f => {  
         const attributes = f.attributes;
-        const fieldValue = f.attributes['system_type_group'];
+        const fieldValue = f.attributes['traffic_sign_category_l3'];
         const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
         return {
           attributes: {
             ...attributes,
-            system_type_group_label: fieldDomain
+            traffic_sign_category_l3_label: fieldDomain
           }
         }
       });
@@ -223,46 +247,170 @@ const surveyConfig = {
     }
   },
   {
-    id: 'system_type_label',
+    id: 'tfl_category_l3_label',
     type: 'bar',
-    title: 'Specific Landmark type',
-    xField: 'system_type_label',
-    yField: 'countOFsystem_type',
+    title: 'Landmark Type',
+    xField: 'tfl_category_l3_label',
+    yField: 'countOFtfl_category_l3',
     // see here
     // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
     // and here
     // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
     // use "order by" parameter or "resultTransform" to sort
-    queryDefinition: {
-      where: "1=1",
-      outFields: "*",
-      orderByFields: "countOFsystem_type",
-      groupByFieldsForStatistics: "system_type",
-      outStatistics: [{
-        "onStatisticField":"system_type",
-        "outStatisticFieldName":"countOFsystem_type",
-        "statisticType":"count"
+   queryDefinition: {
+        where: "1=1",
+        outFields: "*",
+        orderByFields: "countOFtfl_category_l3",
+        groupByFieldsForStatistics: "tfl_category_l3",
+        outStatistics: [{
+          "onStatisticField":"tfl_category_l3",
+          "outStatisticFieldName":"countOFtfl_category_l3",
+          "statisticType":"count"
       }]
-      },
+    },
     resultTransform: result => {
       if(!result || !result.features || result.features.length < 1) return result;
-      const field = result.fields.find(f => f.name === 'system_type');
+      const field = result.fields.find(f => f.name === 'tfl_category_l3');
       const domainMap = getDomainMap(field.domain);
       const newFeatures = result.features.map(f => {  
         const attributes = f.attributes;
-        const fieldValue = f.attributes['system_type'];
+        const fieldValue = f.attributes['tfl_category_l3'];
         const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
         return {
           attributes: {
             ...attributes,
-            system_type_label: fieldDomain
+            tfl_category_l3_label: fieldDomain
           }
         }
       });
       result.features = newFeatures;
       return result;
     }
-  },], 
+  },
+  {
+    id: 'road_marking_category_l3_label',
+    type: 'bar',
+    title: 'Landmark Type',
+    xField: 'road_marking_category_l3_label',
+    yField: 'countOFroad_marking_category_l3',
+    // see here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
+    // and here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
+    // use "order by" parameter or "resultTransform" to sort
+   queryDefinition: {
+        where: "1=1",
+        outFields: "*",
+        orderByFields: "countOFroad_marking_category_l3",
+        groupByFieldsForStatistics: "road_marking_category_l3",
+        outStatistics: [{
+          "onStatisticField":"road_marking_category_l3",
+          "outStatisticFieldName":"countOFroad_marking_category_l3",
+          "statisticType":"count"
+      }]
+    },
+    resultTransform: result => {
+      if(!result || !result.features || result.features.length < 1) return result;
+      const field = result.fields.find(f => f.name === 'road_marking_category_l3');
+      const domainMap = getDomainMap(field.domain);
+      const newFeatures = result.features.map(f => {  
+        const attributes = f.attributes;
+        const fieldValue = f.attributes['road_marking_category_l3'];
+        const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
+        return {
+          attributes: {
+            ...attributes,
+            road_marking_category_l3_label: fieldDomain
+          }
+        }
+      });
+      result.features = newFeatures;
+      return result;
+    }
+  },
+  {
+    id: 'pole_category_l3_label',
+    type: 'bar',
+    title: 'Landmark Type',
+    xField: 'pole_category_l3_label',
+    yField: 'countOFpole_category_l3',
+    // see here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
+    // and here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
+    // use "order by" parameter or "resultTransform" to sort
+   queryDefinition: {
+        where: "1=1",
+        outFields: "*",
+        orderByFields: "countOFpole_category_l3",
+        groupByFieldsForStatistics: "pole_category_l3",
+        outStatistics: [{
+          "onStatisticField":"pole_category_l3",
+          "outStatisticFieldName":"countOFpole_category_l3",
+          "statisticType":"count"
+      }]
+    },
+    resultTransform: result => {
+      if(!result || !result.features || result.features.length < 1) return result;
+      const field = result.fields.find(f => f.name === 'pole_category_l3');
+      const domainMap = getDomainMap(field.domain);
+      const newFeatures = result.features.map(f => {  
+        const attributes = f.attributes;
+        const fieldValue = f.attributes['pole_category_l3'];
+        const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
+        return {
+          attributes: {
+            ...attributes,
+            pole_category_l3_label: fieldDomain
+          }
+        }
+      });
+      result.features = newFeatures;
+      return result;
+    }
+  },
+  {
+    id: 'manhole_category_l3_label',
+    type: 'bar',
+    title: 'Landmark Type',
+    xField: 'manhole_category_l3_label',
+    yField: 'countOFmanhole_category_l3',
+    // see here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-Query.html
+    // and here
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-tasks-support-StatisticDefinition.html
+    // use "order by" parameter or "resultTransform" to sort
+   queryDefinition: {
+        where: "1=1",
+        outFields: "*",
+        orderByFields: "countOFmanhole_category_l3",
+        groupByFieldsForStatistics: "manhole_category_l3",
+        outStatistics: [{
+          "onStatisticField":"manhole_category_l3",
+          "outStatisticFieldName":"countOFmanhole_category_l3",
+          "statisticType":"count"
+      }]
+    },
+    resultTransform: result => {
+      if(!result || !result.features || result.features.length < 1) return result;
+      const field = result.fields.find(f => f.name === 'manhole_category_l3');
+      const domainMap = getDomainMap(field.domain);
+      const newFeatures = result.features.map(f => {  
+        const attributes = f.attributes;
+        const fieldValue = f.attributes['manhole_category_l3'];
+        const fieldDomain = domainMap.has(fieldValue) ? domainMap.get(fieldValue) : fieldValue;
+        return {
+          attributes: {
+            ...attributes,
+            manhole_category_l3_label: fieldDomain
+          }
+        }
+      });
+      result.features = newFeatures;
+      return result;
+    }
+  },
+], 
   popupTemplate: {
     title: "{expression/title-prefix} {system_type} {expression/title_suffix}",
     content: [
@@ -289,23 +437,23 @@ const surveyConfig = {
       {
         name: "type-expr",
         title: "Type",
-        expression: "When($feature.system_type_group == 0, DomainName($feature, 'traffic_sign_type', $feature.traffic_sign_type)," +
-                        "$feature.system_type_group == 1, 'Traffic Light'," +
-                        "$feature.system_type_group == 2, DomainName($feature, \"road_marking_type\", $feature.road_marking_type)," +
-                       "$feature.system_type_group == 3, DomainName($feature, \"pole_type\", $feature.pole_type)," +
-//                        "$feature.system_type_group == 4, DomainName($feature, \"manhole_type\", $feature.manhole_type)," +
+        expression: "When($feature.category_l1 == 0, DomainName($feature, 'traffic_sign_category_l4', $feature.traffic_sign_category_l4)," +
+                        "$feature.category_l1 == 1, DomainName($feature, 'traffic_sign_category_l4', $feature.traffic_sign_category_l4)," +
+                        "$feature.category_l1 == 2, DomainName($feature, \"road_marking_category_l4\", $feature.road_marking_category_l4)," +
+                       "$feature.category_l1 == 3, DomainName($feature, \"pole_category_l4\", $feature.pole_category_l4)," +
+//                        "$feature.category_l1 == 4, DomainName($feature, \"manhole_category_l4\", $feature.manhole_category_l4)," +
                         "'')"
 
       },
       {
         name: "title-prefix",
         title: "Title Prefix",
-        expression: "When($feature.comparsion_to_prev_map == 2, 'Missing', $feature.comparsion_to_prev_map == 1, 'New',  '')"
+        expression: "When($feature.new_detected_missing == 2, 'Missing', $feature.new_detected_missing == 1, 'New',  '')"
       },
       {
         name: "title-suffix",
         title: "Title Suffix",
-        expression: "When(($feature.comparsion_to_prev_map == 2) ||  ($feature.comparsion_to_prev_map == 1), '',  'information')"
+        expression: "When(($feature.new_detected_missing == 2) ||  ($feature.new_detected_missing == 1), '',  'detected')"
       },
       {
         name: "sign-icon",
@@ -315,10 +463,6 @@ const surveyConfig = {
   },
   
   bookmarkInfos: {
-   'ORK': {
-       title: '61st on 1st',
-        content: 'The most beutiful traffic light in all of NYC.'
-    },
   },
   locationsByArea: [
     {areaName : 'USA',

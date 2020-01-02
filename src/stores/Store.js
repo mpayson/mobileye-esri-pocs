@@ -331,9 +331,9 @@ class Store {
                 this.loadFilters();
                 this.loadCharts();
             })
-            .catch(er => {
-                this.appState.onError(er, 'Could not load layers, do you have access to the data?')
-            })
+            // .catch(er => {
+            //     this.appState.onError(er, 'Could not load layers, do you have access to the data?')
+            // })
 
         if (this.hasCustomTooltip) {
             this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);

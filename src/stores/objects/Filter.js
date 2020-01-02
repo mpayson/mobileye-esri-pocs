@@ -10,7 +10,11 @@ class Filter {
   }
 
   setFieldInfoFromLayer(featureLayer){
+    if (this.field == "category_l1") {
+      console.log(featureLayer.fields.find(f => f.name === this.field))
+    }
     this.fieldInfo = featureLayer.fields.find(f => f.name === this.field);
+
   }
 
   load(featureLayer){
