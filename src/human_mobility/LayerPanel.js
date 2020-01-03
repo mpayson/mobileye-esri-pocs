@@ -5,7 +5,7 @@ import LayerIcon from 'calcite-ui-icons-react/LayerIcon';
 import MinMaxSlideFilter from '../components/filters/MinMaxSlideFilter';
 
 import {LayerList} from '../components/LayerListPanel';
-import {getFilterView} from '../components/FilterPanel';
+import {getSingleLevelFilterView} from '../components/FilterPanel';
 
 const LayerPanel = observer(class LayerPanel extends React.Component{
 
@@ -16,7 +16,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
   render(){
 
-    const dayFilterView = getFilterView(this.dayOfWeekFilter);
+    const dayFilterView = getSingleLevelFilterView(this.dayOfWeekFilter);
 
     return (
       <>

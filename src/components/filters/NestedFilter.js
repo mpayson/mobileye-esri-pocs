@@ -1,51 +1,19 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import MinMaxSlideFilter from './filters/MinMaxSlideFilter';
-import HistMinMaxSlideFilter from './filters/HistMinMaxSlideFilter';
-import SelectFilter from './filters/SelectFilter';
-import NestedFilter from './filters/NestedFilter';
-import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
-import PanelCard from './PanelCard';
-import { Collapse, Button, Icon, Popover } from 'antd';
+import { getSingleLevelFilterView } from "../FilterPanel";
+import { Collapse, Button, Icon, Popover, Card } from 'antd';
 
-import './FilterPanel.css';
-const { Panel } = Collapse;
+const Panel = Collapse;
 
-
-const getSingleLevelFilterView = (filter) => {
-  const f = filter;
-  switch(filter.type){
-    case 'minmax':
-      return f.hasHistograms
-        ? <HistMinMaxSlideFilter store={f} key={f.field}/>
-        : <MinMaxSlideFilter store={f} key={f.field} lowerBoundLabel={f.lowerBoundLabel} upperBoundLabel={f.upperBoundLabel}/>
-    case 'multiselect':
-        return <SelectFilter store={f} key={f.field} mode="multiple" style={f.style}/>
-    case 'select':
-      return <SelectFilter store={f} key={f.field} style={f.style}/>
-    case 'quantile':
-      return <SelectFilter store={f} key={f.field} mode="multiple" style={f.style}/>
-    case 'dayofweek':
-      return <SelectFilter store={f} key={f.field} style={f.style}/>
-    default:
-      throw new Error("Unknown filter type!", filter.type);
-  }
-}
-
-const getMultiLevelFilterView = (filter) => 
-  (filter.type == 'nested' ?
-    (<NestedFilter store={filter} key={filter.field} style={filter.style}/>) :
-    getSingleLevelFilterView(filter)
-  );
 
 
 const customPanelStyle = {
-  borderRadius: 4,
-  border: 0
+   borderRadius: 4,
+   border: 0
 };
 
-const FilterPanel = observer(class FilterPanel extends React.Component{
-
+const NestedFilter = observer(class FilterPanel extends React.Component{
+    
   state = {
     activeKeys: []
   }
@@ -72,10 +40,11 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
   render(){
     const filters = this.props.store.filters;
     const filterViews = filters.map(f => {
-      console.log(f.field, f.alias);
-      const alias = f.isActive
+        
+      const headerText = f.isActive
         ? <span style={{color: '#00abbc'}}><b>{f.alias}</b></span>
         : f.alias;
+        
       let header = f.infoText
         ? <>
             <Popover content={f.infoText} placement="topLeft">
@@ -83,12 +52,13 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
                 type="info-circle"
                 style={{marginRight: "3px", color: f.isActive ? '#00abbc' : undefined}}/>
             </Popover>
-            {alias}
+            {headerText}
           </>
-        : alias;
+        : headerText;
+        console.log(header);
       return (
         <Panel header={header} key={f.field} style={customPanelStyle} className='minimal-padding'>
-          {getMultiLevelFilterView(f)}
+          {getSingleLevelFilterView(f)}
         </Panel>
       )
     });
@@ -107,13 +77,8 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
     : 'Open all';
 
     return (
-      <PanelCard
-        title="Filter"
-        icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
-        collapsible={true}
-        open={panelOpen}
-        onChange={onPanelChange}
-        defaultActive={defaultActive}>
+        
+        <Card>
         <div style={{display: "inline-block", width: "100%", padding: "0px 15px 10px 5px"}}>
           <Button type="danger" size="small" ghost  onClick={this.props.store.clearFilters}>Clear</Button>
           <Button size="small" onClick={onToggleClick} style={{float: "right"}}>{toggleButtonText}</Button>
@@ -122,16 +87,18 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
             activeKey={activeKeys}
             bordered={false}
             expandIconPosition='right'
-            onChange={onAccordionChange}>
+            onChange={onAccordionChange}
+            >
             {filterViews}
           </Collapse>
-      </PanelCard>
+          </Card>
 
     )
   }
   
-});
+    
 
+})
 
-export {getMultiLevelFilterView, getSingleLevelFilterView};
-export default FilterPanel;
+export {getSingleLevelFilterView};
+export default NestedFilter;
