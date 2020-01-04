@@ -37,12 +37,16 @@ const HumanMobilityTooltip = observer(({store}) => {
     for (let hour of store.selectedHours){
       for (let prefix of Object.keys(humanMobilityConfig.statisticsFieldsInfo)){
         const value = attrs[[prefix,day.toString(),hour.toString()].join("_")]
+        const count = attrs[['count',day.toString(),hour.toString()].join("_")]
+
         if (value !== null && value > 0) {
-          results[prefix].count++;
+          //results[prefix].count++;
+          results[prefix].count = results[prefix].count + count;
           results[prefix].sum += value;
         }
       }
     }
+  console.log(results)
   const infoContent =Object.entries(humanMobilityConfig.statisticsFieldsInfo).map(entry=>
         <Col key={entry[0]} span={17}>
           <Statistic title={entry[1].title} value={Math.round(results[entry[0]].count != 0 ? results[entry[0]].sum / results[entry[0]].count : 0)} suffix={entry[1].postText}/>

@@ -26,12 +26,9 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     this.setState({
       selectedStatId: e.target.value,
     });
-  //      const layerId = this._getLayerConigByName('avg_spd').id;
-
     this.props.store._updateValueExpression(e.target.value);
     this.props.store.setRendererField(e.target.value);
 
-//    console.log(this.props.store.mapLayers.items[layerId].renderer.valueExpression);
   }
 
 

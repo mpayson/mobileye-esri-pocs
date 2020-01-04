@@ -17,7 +17,7 @@ class HumanMobilityStore extends Store{
   }
 
   get where() {
-      return "1=1";
+      return "1=1 and project = 'me8'";
   }
 
   _updateValueExpression(id){
@@ -38,8 +38,6 @@ class HumanMobilityStore extends Store{
         "sum/count;"
 
     this.renderers[id].valueExpression =  valueExpression;
-//    console.log(valueExpression);
-
   }
 
   _buildSelectedStatsSumList(selectedStatId){
@@ -79,8 +77,6 @@ class HumanMobilityStore extends Store{
     this.rendererHandler = autorun(_ => {
         const rendererField = this.rendererField;
         // only interactive layers will have updated renderers
-  //      console.log("updating rendererField");
-
         if ((this.map && this.map.layers.length > 0)) {
             this.mapLayers.forEach((layer,key) => {
               if(this._getLayerConigById(key).type !== 'static') {
