@@ -84,7 +84,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
         const layerInfos = this.store.mapLayers.filter((l,index) => this.store._getLayerConigById(index).showLegend)
             .map((layer, index) => ({layer:layer, title:  this.store._getLayerConigById(index).customLegendTitle?
                   this.store._getLayerConigById(index).customLegendTitle:""}));
-        layerInfos.forEach(l=>console.log(l.layer));
         const legend = new Legend({view: this.view, layerInfos: layerInfos});
         //this.view.ui.add(slider, "bottom-right");
 
@@ -142,7 +141,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
       ? <HumanMobilityTooltip store={this.store}/>
       : null;
 
-    this.hourFilter = this.store.filters.find(f => f.field === 'agg_hour');
+    this.hourFilter = this.store.filters.find(f => f.field === 'hour');
     const hoursSlider = <MinMaxSlideFilter store={this.hourFilter} key={this.hourFilter.field} lowerBoundLabel={this.hourFilter.lowerBoundLabel} upperBoundLabel={this.hourFilter.upperBoundLabel}/>
     const hoursSliderStyle = {
       display: 'bloc',

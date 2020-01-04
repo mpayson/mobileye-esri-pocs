@@ -26,13 +26,34 @@ const HumanMobilityTooltip = observer(({store}) => {
     pointerEvents: 'none'
   }
   if(!graphic) style.display = 'none';
-  const attrs = queryResults[0].attributes;
+  const attrs = graphic.attributes;
 
-  const infoContent = humanMobilityConfig.layers.filter(layer => layer.type !== "static").map(f =>
-        <Col key={f.name} span={17}>
-          <Statistic title={f.title} value={Math.round(attrs[f.name])} suffix={f.postText}/>
+  var results = {};
+  for (let prefix of Object.keys(humanMobilityConfig.statisticsFieldsInfo)) {
+    results[prefix] = {count:0,sum:0}
+  }
+
+  for (let day of store.selectedDays)
+    for (let hour of store.selectedHours){
+      for (let prefix of Object.keys(humanMobilityConfig.statisticsFieldsInfo)){
+        const value = attrs[[prefix,day.toString(),hour.toString()].join("_")]
+        if (value !== null && value > 0) {
+          results[prefix].count++;
+          results[prefix].sum += value;
+        }
+      }
+    }
+  const infoContent =Object.entries(humanMobilityConfig.statisticsFieldsInfo).map(entry=>
+        <Col key={entry[0]} span={17}>
+          <Statistic title={entry[1].title} value={Math.round(results[entry[0]].count != 0 ? results[entry[0]].sum / results[entry[0]].count : 0)} suffix={entry[1].postText}/>
         </Col>
+
   )
+  // const infoContent = humanMobilityConfig.layers.filter(layer => layer.type !== "static").map(f =>
+  //       <Col key={f.name} span={17}>
+  //         <Statistic title={f.title} value={Math.round(attrs[f.name])} suffix={f.postText}/>
+  //       </Col>
+  // )
 
   return (
     <Card className="antd-esri-widget" style={style} size="small" title={`Mobility Data:`}>
