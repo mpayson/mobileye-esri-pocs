@@ -41,6 +41,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
     this.mapViewRef = React.createRef();
     this.sliderRef = React.createRef();
     this.store = new Store(props.appState, humanMobilityConfig);
+    this.hourFilter = this.store.hourFilter;
   }
 
   onCollapse = collapsed => {
@@ -141,7 +142,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
       ? <HumanMobilityTooltip store={this.store}/>
       : null;
 
-    this.hourFilter = this.store.filters.find(f => f.field === 'hour');
     const hoursSlider = <MinMaxSlideFilter store={this.hourFilter} key={this.hourFilter.field} lowerBoundLabel={this.hourFilter.lowerBoundLabel} upperBoundLabel={this.hourFilter.upperBoundLabel}/>
     const hoursSliderStyle = {
       display: 'bloc',

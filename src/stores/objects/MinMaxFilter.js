@@ -104,6 +104,18 @@ class MinMaxFilter extends Filter{
 
   }
 
+  // used to override the loaded state if nothing to load from feature layer
+  // TODO consolidate loading logic and move up class heirarchy
+  manualLoad(){
+    if (
+      !(this.lowerBound || this.lowerBound === 0) || 
+      !(this.upperBound || this.upperBound === 0)
+    ) {
+      throw new Error("Lower and upper bounds required for minmax filter, set them in config or load through the layer");
+    }
+    this.loaded = true;
+  }
+
   onValuesChange(min, max){
     this.min = min;
     this.max = max;
@@ -133,6 +145,7 @@ decorate(MinMaxFilter, {
   fieldInfo: observable,
   where: computed,
   load: action.bound,
+  manualLoad: action.bound,
   onValuesChange: action.bound,
   clear: action.bound
 })
