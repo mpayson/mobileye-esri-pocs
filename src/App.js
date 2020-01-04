@@ -7,7 +7,9 @@ import SafetyApp from './safety/SafetyApp';
 import EventsApp from './events/EventsApp';
 import SurveyApp from './survey/SurveyApp';
 import HumanMobilityApp from './human_mobility/HumanMobilityApp';
-import ParkingVideo from "./resources/Video/L2.mp4"
+import ParkingVideo from "./resources/Video/ParkingJerusalem.mp4"
+import L2Video from "./resources/Video/L2.mp4"
+
 import './style.css';
 
 import {
@@ -120,13 +122,13 @@ const Home = observer(class Home extends React.Component{
                 Road Risk <br /> Score
               </p>
             </Link>
-            <Link to="" disabled={!appState.isAuthenticated} className="item">
+            <a href={L2Video} className="item">
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-l2.svg"
                 alt="L2+"
               />
               <p>L2+</p>
-            </Link>
+            </a>
           </div>
         </div>
     )
