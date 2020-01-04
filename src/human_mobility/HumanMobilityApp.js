@@ -194,7 +194,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
               {tooltip}
-              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Hours of the day:`}>
+              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Time of day:`}>
                  <Row gutter={16}>
                  <Col span={3}>
                 <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary">

@@ -5,6 +5,7 @@ import LayerIcon from 'calcite-ui-icons-react/LayerIcon';
 import MinMaxSlideFilter from '../components/filters/MinMaxSlideFilter';
 
 import {LayerList} from '../components/LayerListPanel';
+import {getSingleLevelFilterView} from '../components/FilterPanel';
 import {getFilterView} from '../components/FilterPanel';
 import {Radio, Switch} from "antd";
 import humanMobilityConfig from './HumanMobilityConfig';
@@ -37,6 +38,8 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   _updateRendererExpression(){
   }
   render(){
+
+    const dayFilterView = getSingleLevelFilterView(this.dayOfWeekFilter);
 
     const radioStyle = {
       display: 'block',
