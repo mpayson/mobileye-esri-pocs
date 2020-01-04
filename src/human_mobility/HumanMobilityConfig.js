@@ -71,9 +71,9 @@ const humanMobilityConfig = {
   hasCustomTooltip: true,
   initialRendererField: 'avg_spd',
   layers : [
-    {id: 0, type: "static", customLegendTitle: "Bus stops", showLegend:true , defaultRendererField: 'ID', name:"bus_stops", title:"Bus stop", showFilter:false},
+    {id: 0, type: "static", customLegendTitle: "Bus stops", showLegend:true , defaultRendererField: 'ID', name:"bus_stops", title:"Bus stops", showFilter:false},
     {id: 1, type: "static",customLegendTitle: "Bicycle lanes", showLegend:true , defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bike lanes", showFilter:false},
-    {id: 2, type: "live", showLegend:true, outFields:'*' , defaultRendererField: 'avg_spd', name:"avg_spd", title:"Average speed      " , postText:"km/h", showFilter:true},
+    {id: 2, type: "live", showLegend:true, outFields:'*' , defaultRendererField: 'avg_spd', name:"avg_spd", title:"Average speed        " , postText:"km/h", showFilter:true},
 //    {id: 3, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " pedestrian_density >= 0",   defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},
 //    {id: 4, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " bicycles_density >= 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Average cyclist volume", postText:"per ride", showFilter:true}
 
