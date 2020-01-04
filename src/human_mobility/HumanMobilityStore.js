@@ -38,7 +38,7 @@ class HumanMobilityStore extends Store{
         "sum/count;"
 
     this.renderers[id].valueExpression =  valueExpression;
-    console.log(valueExpression);
+//    console.log(valueExpression);
 
   }
 
@@ -79,7 +79,7 @@ class HumanMobilityStore extends Store{
     this.rendererHandler = autorun(_ => {
         const rendererField = this.rendererField;
         // only interactive layers will have updated renderers
-        console.log("updating rendererField");
+  //      console.log("updating rendererField");
 
         if ((this.map && this.map.layers.length > 0)) {
             this.mapLayers.forEach((layer,key) => {
