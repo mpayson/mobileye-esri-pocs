@@ -47,7 +47,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       lineHeight: '30px',
     }
 
-    const dayFilterView = getFilterView(this.dayOfWeekFilter);
     const statsRadios = Object.entries(humanMobilityConfig.statisticsFieldsInfo).map(entry =>
         <Radio value={entry[0]} key={entry[0]} style={radioStyle}>{entry[1].title}</Radio>
     )
