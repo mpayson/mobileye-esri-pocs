@@ -14,7 +14,7 @@ const RadioGroup = Radio.Group;
 const LayerPanel = observer(class LayerPanel extends React.Component{
 
   state = {
-    selectedStatId: 'avg_spd',
+    selectedStatId: this.props.store.rendererField,
   };
 
   constructor(props, context){
@@ -51,7 +51,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         <Radio value={entry[0]} key={entry[0]} style={radioStyle}>{entry[1].title}</Radio>
     )
     const statsListGroup =
-      <RadioGroup onChange={this._onRadioClick} value={this.state.selectedStatId}>
+      <RadioGroup onChange={this._onRadioClick} value={this.props.store.rendererField}>
         {statsRadios}
       </RadioGroup>
 ;
