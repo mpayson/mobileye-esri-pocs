@@ -284,7 +284,6 @@ export function jsonToRenderer(rendererJson){
 
 export function jsonToGraphic(esriJson, options){
   _moduleCheck(_jsonUtils, "You must register an authenticated session before using graphics");
-  console.log(esriJson);
   return new _Graphic({
     ...esriJson,
     ...options

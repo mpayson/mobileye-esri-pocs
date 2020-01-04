@@ -5,6 +5,7 @@ import {
     registerSession, jsonToExtent, layerFromId, debounce
 } from '../services/MapService';
 import {message} from 'antd';
+import { combineNullableWheres } from '../utils/Utils';
 
 // can we keep this at the top? I find it intrusive in the middle?
 message.config({
@@ -42,6 +43,7 @@ class Store {
         this.outFields = storeConfig.outFields;
         this.layersConfig = storeConfig.layers;
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
+        this.hasZoomListener = storeConfig.hasZoomListener;
         this.bookmarkInfos = storeConfig.bookmarkInfos;
         this.locationsByArea = storeConfig.locationsByArea ? storeConfig.locationsByArea : [];
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
@@ -60,6 +62,7 @@ class Store {
             clearTimeout(this.bookmarkAutoplayId);
             this.bookmarkAutoplayId = null;
         }
+        if (this._zoomListener) this._zoomListener.remove();
     }
 
     loadFilters() {
@@ -146,8 +149,12 @@ class Store {
 
         if(config.title) layer.title = config.title;
         if(config.name) layer.id = config.name;
-        if(config.baselineWhereCondition) 
-            layer.definitionExpression = config.baselineWhereCondition;
+        if(config.baselineWhereCondition || config.initialZoomExpression) {
+            layer.definitionExpression = combineNullableWheres([
+                config.baselineWhereCondition,
+                config.initialZoomExpression
+            ]);
+        }
         if(config.outFields) layer.outFields = config.outFields;
         
         // Port static logic
@@ -293,6 +300,21 @@ class Store {
         this.clearTooltip();
     }
 
+    _onZoomChange(zoom){
+        if(!this.layers || !Number.isInteger(zoom)) return;
+        this.layers.forEach((l, index) => {
+            const config = this._getLayerConigById(index);
+            if(!config || !config.zoomExpressions) return;
+            const expression = config.zoomExpressions.find(e => zoom < e.zoom);
+            const where = expression ? expression.where : null;
+            const combinedWhere = combineNullableWheres([
+                config.baselineWhereCondition,
+                where
+            ]);
+            l.definitionExpression = combinedWhere;
+        })
+    }
+
     setRendererField(field) {
         this.rendererField = field;
     }
@@ -356,6 +378,9 @@ class Store {
         if (this.hasCustomTooltip) {
             this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
             this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
+        }
+        if (this.hasZoomListener) {
+            this._zoomListener = this.view.watch("zoom", this._onZoomChange);
         }
 
         this.mapLoaded = true;
@@ -475,6 +500,7 @@ decorate(Store, {
     toggleLayerVisibility: action.bound,
     setLayerVisibility: action.bound,
     _onMouseMove: action.bound,
+    _onZoomChange: action.bound,
     onBookmarkClick: action.bound,
     onLocationClick: action.bound,
     clearBookmark: action.bound,

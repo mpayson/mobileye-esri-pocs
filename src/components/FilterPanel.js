@@ -72,7 +72,6 @@ const FilterPanel = observer(class FilterPanel extends React.Component{
   render(){
     const filters = this.props.store.filters;
     const filterViews = filters.map(f => {
-      console.log(f.field, f.alias);
       const alias = f.isActive
         ? <span style={{color: '#00abbc'}}><b>{f.alias}</b></span>
         : f.alias;

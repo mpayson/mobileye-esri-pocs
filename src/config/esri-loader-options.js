@@ -4,11 +4,11 @@ const options = {
   // css: "/jscss/my-theme/main.css",
   // css: true,
   css: "https://js.arcgis.com/4.14/esri/themes/light/main.css",
-  dojoConfig: {
-    has: {
-      "esri-native-promise": true
-    }
-  }
+  // dojoConfig: {
+  //   has: {
+  //     "esri-native-promise": true
+  //   }
+  // }
 }
 
 export default options;

@@ -62,6 +62,13 @@ const getMinQuery = (field) => ({
   statisticType: 'min'
 })
 
+const combineNullableWheres = (wheres, operator='AND') => {
+  const where = wheres
+    .filter(w => !!w)
+    .join(` ${operator} `)
+  return where ? where : null;
+}
+
 const getRange = (min, max) => 
   (new Array(max - min + 1)).fill(undefined).map((_, i) => i + min);
 
@@ -74,5 +81,6 @@ export {
   getMinQuery,
   getDomainMap,
   transformQueryToRechartSeries,
-  getRange
+  getRange,
+  combineNullableWheres
 };
