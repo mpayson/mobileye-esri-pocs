@@ -121,6 +121,36 @@ class MinMaxFilter extends Filter{
     this.max = max;
   }
 
+  increment(reset=false){
+    let min, max;
+    if(this.max + this.step <= this.upperBound){
+      max = this.max + this.step;
+      min = this.min + this.step;
+    } else if(reset){
+      max = this.lowerBound + (this.max - this.min);
+      min = this.lowerBound;
+    } else {
+      max = this.upperBound;
+      min = this.upperBound - (this.max - this.min);
+    }
+    this.onValuesChange(min, max);
+  }
+
+  decrement(reset=false){
+    let min, max;
+    if(this.min - this.step >= this.lowerBound){
+      max = this.max - this.step;
+      min = this.min - this.step;
+    } else if (reset){
+      max = this.upperBound;
+      min = this.upperBound - (this.max - this.min);
+    } else {
+      max = this.lowerBound + (this.max - this.min);
+      min = this.lowerBound;
+    }
+    this.onValuesChange(min, max);
+  }
+
   clear(){
     this.min = this.lowerBound;
     this.max = this.upperBound;
@@ -147,7 +177,9 @@ decorate(MinMaxFilter, {
   load: action.bound,
   manualLoad: action.bound,
   onValuesChange: action.bound,
-  clear: action.bound
+  clear: action.bound,
+  increment: action.bound,
+  decrement: action.bound
 })
 
 export default MinMaxFilter;

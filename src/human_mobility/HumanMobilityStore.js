@@ -1,9 +1,11 @@
 import Store from '../stores/Store';
 import {debounce} from "../services/MapService";
-import {autorun, decorate, computed, action} from "mobx";
+import {autorun, decorate, computed, action, observable} from "mobx";
 import { getRange } from '../utils/Utils';
 
 class HumanMobilityStore extends Store{
+
+  hourAutoplay = false;
 
   constructor(appState, storeConfig){
     super(appState, storeConfig);
@@ -23,6 +25,9 @@ class HumanMobilityStore extends Store{
   destroy(){
     super.destroy();
     if(this.selectionHandler) this.selectionHandler();
+    if(this.hourAutoplayId){
+      clearTimeout(this.hourAutoplayId);
+    }
   }
 
   async load(mapViewDiv){
@@ -78,6 +83,24 @@ class HumanMobilityStore extends Store{
     return results;
   }
 
+  startAutoplayTime(){
+    this.hourAutoplay = true;
+    this.hourFilter.increment(true);
+    this.hourAutoplayId = setTimeout(this.startAutoplayTime, 5000);
+  }
+
+  stopAutoplayTime(){
+    this.hourAutoplay = false;
+    if(this.hourAutoplayId){
+      clearTimeout(this.hourAutoplayId);
+    }
+  }
+
+  toggleAutoplayTime(){
+    if(this.hourAutoplay) this.stopAutoplayTime();
+    else this.startAutoplayTime();
+  }
+
   get selectedDays(){
     return this.dayOfWeekFilter.selectedDays;
   }
@@ -90,7 +113,11 @@ class HumanMobilityStore extends Store{
 }
 
 decorate(HumanMobilityStore, {
+  hourAutoplay: observable,
   load: action.bound,
+  startAutoplayTime: action.bound,
+  stopAutoplayTime: action.bound,
+  toggleAutoplayTime: action.bound,
   selectedDays: computed,
   selectedHours: computed
 })

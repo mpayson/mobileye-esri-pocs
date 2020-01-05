@@ -86,17 +86,11 @@ const HumanMobilityApp = observer(class App extends React.Component {
   }
 
   _onHoursForwardButtonClick = (event) => {
-    if (this.hourFilter.max !== 24) {
-      this.hourFilter.max = this.hourFilter.max + this.hourFilter.step;
-      this.hourFilter.min = this.hourFilter.min + this.hourFilter.step;
-    }
+    this.hourFilter.increment();
   }
 
   _onHoursBackwardsButtonClick = (event) => {
-    if (this.hourFilter.min !== 0) {
-      this.hourFilter.min = this.hourFilter.min - this.hourFilter.step;
-      this.hourFilter.max = this.hourFilter.max - this.hourFilter.step;
-    }
+    this.hourFilter.decrement();
   }
 
   render() {
@@ -144,6 +138,8 @@ const HumanMobilityApp = observer(class App extends React.Component {
       marginLeft: "-300px",
     }
 
+    const autoIcon = this.store.hourAutoplay ? "pause" : "caret-right";
+
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
@@ -184,20 +180,23 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}/>
               {tooltip}
-              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Time of day:`}>
-                 <Row gutter={16}>
-                 <Col span={3}>
-                <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary">
-                  <Icon type="left" />
-                </Button>
+              <Card
+                className="antd-esri-widget"
+                style={hoursSliderStyle}
+                size="small"
+                title={`Time of day:`}
+                extra={
+                  <Button id="autoplay" icon={autoIcon} onClick={this.store.toggleAutoplayTime}/>
+                }>
+                <Row gutter={16} type="flex" align="middle" justify="space-around">
+                <Col span={2}>
+                  <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary" icon="left"/>
                 </Col>
-                <Col span={18}>
-                {hoursSlider}
+                <Col span={20}>
+                  {hoursSlider}
                 </Col>
-                <Col span={3}>
-                <Button id="backwards" onClick={this._onHoursForwardButtonClick} type="primary">
-                  <Icon type="right" />
-                </Button>
+                <Col span={2}>
+                  <Button id="backwards" onClick={this._onHoursForwardButtonClick} type="primary" icon="right"/>
                 </Col>
                 </Row>
               </Card>
