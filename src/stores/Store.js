@@ -2,15 +2,10 @@ import {decorate, observable, action, computed, autorun} from 'mobx';
 import createFilterFromConfig from './Filters';
 import {
     loadWebMap, loadMap, jsonToRenderer, 
-    registerSession, jsonToExtent, layerFromId, debounce
+    registerSession, jsonToExtent, layerFromId, debounce,
+    whenFalseOnce
 } from '../services/MapService';
-import {message} from 'antd';
 import { combineNullableWheres } from '../utils/Utils';
-
-// can we keep this at the top? I find it intrusive in the middle?
-message.config({
-    top: 75,
-});
 
 class Store {
 
@@ -134,6 +129,7 @@ class Store {
             ]);
         }
         if(config.outFields) layer.outFields = config.outFields;
+        if(config.popupTemplate !== undefined) layer.popupTemplate = config.popupTemplate;
         
         // Port static logic
         if(config.defaultRendererField && config.type !== 'static'){
@@ -167,9 +163,9 @@ class Store {
 
                 // set initial where, port of logic where only applied if theres a baseline condition
                 // because baseline condition was set to definitionexpression
-                if(layer.definitionExpression){
-                    lV.filter = {where: this.where}
-                }
+                const config = this.layerConfigByLayerId.get(layer.id);
+                if(config && config.ignoreFilter === true) return;
+                lV.filter = {where: this.where}
             })
     }
 
@@ -303,7 +299,7 @@ class Store {
     }
 
     async load(mapViewDiv) {
-        message.loading('Loading data.', 0);
+        this.appState.loadingMessage('Loading map.');
 
         await registerSession(this.appState.session);
         this._buildAutoRunEffects();
@@ -342,9 +338,9 @@ class Store {
                 this.loadFilters();
                 this.loadCharts();
             })
-            // .catch(er => {
-            //     this.appState.onError(er, 'Could not load layers, do you have access to the data?')
-            // })
+            .catch(er => {
+                this.appState.onError(er, 'Could not load layers, do you have access to the data?')
+            })
 
         if (this.hasCustomTooltip) {
             this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
@@ -353,7 +349,9 @@ class Store {
         if (this.hasZoomListener) {
             this._zoomListener = this.view.watch("zoom", this._onZoomChange);
         }
-        message.destroy();
+        whenFalseOnce(this.view, 'updating')
+            .then(_ => this.appState.clearMessage());
+
         return this.view;
     }
 

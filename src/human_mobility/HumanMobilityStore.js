@@ -1,11 +1,12 @@
 import Store from '../stores/Store';
-import {debounce} from "../services/MapService";
+import {debounce, buffer} from "../services/MapService";
 import {autorun, decorate, computed, action, observable} from "mobx";
 import { getRange } from '../utils/Utils';
 
 class HumanMobilityStore extends Store{
 
   hourAutoplay = false;
+  mouseResults = null;
 
   constructor(appState, storeConfig){
     super(appState, storeConfig);
@@ -28,14 +29,25 @@ class HumanMobilityStore extends Store{
     if(this.hourAutoplayId){
       clearTimeout(this.hourAutoplayId);
     }
+    if(this._onMouseClickListener) this._onMouseClickListener.remove();
   }
 
   async load(mapViewDiv){
     await super.load(mapViewDiv);
     // don't want any side effects for now, so remove parent renderer handler
     if(this.rendererHandler) this.rendererHandler();
+    if(this.effectHandler) this.effectHandler();
+    if(this._tooltipListener) {
+      this._tooltipListener.remove()
+      this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
+    };
     this._buildMobilityAutoRunEffects();
+    this._onMouseClickListener = this.view.on("click", this._onMouseClick);
     return this.view;
+  }
+
+  _onMouseMove(evt){
+    if(!this.mouseResults) super._onMouseMove(evt);
   }
 
   _buildMobilityAutoRunEffects(){
@@ -83,6 +95,87 @@ class HumanMobilityStore extends Store{
     return results;
   }
 
+  _onMouseClick(evt){
+    if(!this.layersLoaded) return;
+    this.clearMouseResults();
+    const promise = (this._clickPromise = this.view
+      .hitTest(evt)
+      .then(hit => {
+        if(promise !== this._clickPromise){
+          return; // another test was performed
+        }
+        const results = hit.results.filter(
+          r => !this.interactiveLayerIdSet.has(r.graphic.layer.id)
+        );
+        if(!results.length) return;
+
+        super.clearTooltip();
+
+        const graphic = results[0].graphic;
+
+        const bufferSize = graphic.layer.id === 'bus_stops'
+          ? 150
+          : 50;
+        const geometry = buffer(graphic.geometry, bufferSize, 'meters');
+        // right now there's only one interactive layer, in future may need to iterate
+        const lyrView = this.layerViewsMap.get(this.interactiveLayers[0].id);
+        
+        lyrView.effect = {
+          filter: {
+            geometry,
+            spatialRelationship: "contains"
+          },
+          excludedEffect: "grayscale(60%) opacity(60%)",
+          includedEffect: "brightness(150%)"
+        };
+        
+        this.view.graphics.add({
+          geometry,
+          symbol: {
+            type: "simple-fill",
+            color: [255,255,255, 0],
+            style: "solid",
+            outline: {
+              color: [255,255,255,0.8],
+              width: 1
+            }
+          }
+        });
+
+        const graphicLV = this.layerViewsMap.get(graphic.layer.id);
+        this._mouseResultHighlight = graphicLV.highlight(graphic);
+
+        lyrView.queryFeatures({
+          outFields: "*",
+          geometry,
+          spatialRelationship: "contains"
+        })
+        .then(qRes => {
+          const title = graphic.layer.id === 'bus_stops'
+            ? `Bus Stop ${graphic.attributes.CODI_CAPA}`
+            : `Bike Lane ${graphic.attributes.TOOLTIP}`
+          this.mouseResults = {
+            graphics: qRes.features,
+            title
+          }
+        })
+        .catch(er => console.log(er));
+      })
+      
+    )
+  }
+
+  clearMouseResults(){
+    this.mouseResults = null;
+    const lyrView = this.layerViewsMap.get(this.interactiveLayers[0].id);
+    lyrView.effect = null;
+    this.view.graphics.removeAll();
+    if(this._mouseResultHighlight){
+      this._mouseResultHighlight.remove();
+      this._mouseResultHighlight = null;
+    }
+  }
+
   startAutoplayTime(){
     this.hourAutoplay = true;
     this.hourFilter.increment(true);
@@ -114,10 +207,14 @@ class HumanMobilityStore extends Store{
 
 decorate(HumanMobilityStore, {
   hourAutoplay: observable,
+  mouseResults: observable.ref,
   load: action.bound,
   startAutoplayTime: action.bound,
   stopAutoplayTime: action.bound,
   toggleAutoplayTime: action.bound,
+  _onMouseClick: action.bound,
+  _onMouseMove: action.bound,
+  clearMouseResults: action.bound,
   selectedDays: computed,
   selectedHours: computed
 })

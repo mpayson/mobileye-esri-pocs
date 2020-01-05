@@ -72,11 +72,12 @@ const humanMobilityConfig = {
   hasZoomListener: true,
   initialRendererField: 'avg_spd',
   layers : [
-    {id: 0, type: "static", customLegendTitle: "Bus stops", showLegend:true , defaultRendererField: 'ID', name:"bus_stops", title:"Bus stops", showFilter:false},
-    {id: 1, type: "static",customLegendTitle: "Bicycle lanes", showLegend:true , defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bike lanes", showFilter:false},
+    {id: 0, type: "static", popupTemplate: null, customLegendTitle: "Bus stops", outFields: ['FID', 'CODI_CAPA'], showLegend:true, defaultRendererField: 'ID', name:"bus_stops", title:"Bus stops", ignoreFilter:true},
+    {id: 1, type: "static", popupTemplate: null, customLegendTitle: "Bicycle lanes", outFields: ['FID', 'TOOLTIP'], showLegend:true , defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bike lanes", ignoreFilter:true},
     {
       id: 2,
       type: "live",
+      popupTemplate: null,
       showLegend:true,
       outFields:'*',
       baselineWhereCondition: "project = 'me8'",
@@ -84,7 +85,7 @@ const humanMobilityConfig = {
       name:"avg_spd",
       title:"Average speed",
       postText:"km/h",
-      showFilter:true,
+      ignoreFilter:true,
       initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
       // applies where corresponding to lowest specified zoom that is greater than map zoom
       zoomExpressions: [
@@ -124,7 +125,7 @@ const humanMobilityConfig = {
   viewConfig: {
     //center: [-74.00157, 40.71955],
     //center: [128.608705, 35.862483],
-    center: [2.1732,41.3842],
+    center: [2.1532,41.3842],
     zoom: 12
   },
   locationsByArea: [

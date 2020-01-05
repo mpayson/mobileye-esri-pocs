@@ -1,13 +1,15 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button} from 'antd';
+import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button, Typography} from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
+import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
 import {
   addSearchWidget,
-  addLegendWidget
+  addLegendWidget,
+  addHomeWidget
 } from '../services/MapService';
 
 import Store from './HumanMobilityStore';
@@ -20,6 +22,7 @@ import BookmarkPanel from "../components/BookmarkPanel";
 import MinMaxSlideFilter from "../components/filters/MinMaxSlideFilter";
 
 const { Header, Content, Sider } = Layout;
+const Title = Typography.Title;
 
 const MenuFilterIcon = () => (
   <LayerFilterIcon size="18" filled/>
@@ -82,6 +85,12 @@ const HumanMobilityApp = observer(class App extends React.Component {
               : ""
           }));
         addLegendWidget(this.view, 'bottom-right', {layerInfos});
+        
+        const homeTarget = this.store.viewConfig.center && this.store.viewConfig.zoom
+          ? {...this.store.viewConfig}
+          : null
+
+        addHomeWidget(this.view, "top-right", homeTarget);
       });
   }
 
@@ -117,7 +126,10 @@ const HumanMobilityApp = observer(class App extends React.Component {
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
+          <Menu.Item key="sign in" onClick={this.onSignOutClick}>
+            <Icon type="logout"/>
+            {this.props.appState.displayName}
+          </Menu.Item>
         </Menu>
       )
       : null;
@@ -142,32 +154,36 @@ const HumanMobilityApp = observer(class App extends React.Component {
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8)", float: "left"}}>Mobility</h1>
-          {signin}
-        </Header>
+        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+          <img
+            src={MobileyeLogo}
+            alt="Mobileye Logo"
+            style={{height: "40px", margin: "12px"}}/>
+          <Menu
+            defaultSelectedKeys={['0']}
+            mode="inline"
+            theme="dark"
+            selectedKeys={[this.state.navKey]}
+            onClick={this.onSelect}>
+            <Menu.Item key="Layers">
+              <Icon component={MenuFilterIcon} />
+              <span>Layers</span>
+            </Menu.Item>
+            <Menu.Item key="Bookmarks">
+              <Icon component={MenuBookmarkIcon} />
+              <span>Bookmarks</span>
+            </Menu.Item>
+            <Menu.Item key="Locations">
+              <Icon component={MenuLocationsIcon} />
+              <span>Locations</span>
+            </Menu.Item>
+          </Menu>
+        </Sider>
         <Layout>
-          <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-            <Menu
-              defaultSelectedKeys={['0']}
-              mode="inline"
-              theme="dark"
-              selectedKeys={[this.state.navKey]}
-              onClick={this.onSelect}>
-              <Menu.Item key="Layers">
-                <Icon component={MenuFilterIcon} />
-                <span>Layers</span>
-              </Menu.Item>
-              <Menu.Item key="Bookmarks">
-                <Icon component={MenuBookmarkIcon} />
-                <span>Bookmarks</span>
-              </Menu.Item>
-              <Menu.Item key="Locations">
-                <Icon component={MenuLocationsIcon} />
-                <span>Locations</span>
-              </Menu.Item>
-            </Menu>
-          </Sider>
+          <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
+            <h1 style={{float: "left", color: "rgba(255,255,255,0.8)"}}>Mobility</h1>
+            {signin}
+          </Header>
           <Content>
             <Row>
               <Col
@@ -178,7 +194,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 ref={this.sliderRef}/>
               <div
                 ref={this.mapViewRef}
-                style={{width: "100%", height: "100%"}}/>
+                style={{width: "100%", height: "100%", background: '#1E2224'}}/>
               {tooltip}
               <Card
                 className="antd-esri-widget"

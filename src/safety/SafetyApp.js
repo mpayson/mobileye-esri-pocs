@@ -222,7 +222,7 @@ const SafetyApp = observer(class App extends React.Component {
                 style={{height: "calc(100vh - 64px)"}}>
               <div
                 ref={this.mapViewRef}
-                style={{width: "100%", height: "100%", background: '#373938'}}/>
+                style={{width: "100%", height: "100%", background: '#1E2224'}}/>
               {tooltip}
               {bookmarkCard}
               <Drawer
