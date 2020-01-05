@@ -23,8 +23,7 @@ class Store {
     autoplay = false;
     bookmarkIndex = -1;
     layerViewsMap = new Map();
-    mapLayers = null;
-    mapLoaded = false;
+    layersLoaded = false;
 
     constructor(appState, storeConfig) {
         this.appState = appState;
@@ -66,13 +65,7 @@ class Store {
     }
 
     loadFilters() {
-        var layers = null; //this.lyr;
-        if (this.layersConfig) {
-            layers = this.map.layers.filter((layer,index) => this._getLayerConigById(index).type !== "static");
-        }
-        else
-            layers = this.map.layers;
-        this.filters.forEach(f => f.load(this.lyr, layers, this.view));
+        this.filters.forEach(f => f.load(this.lyr, this.interactiveLayers, this.view));
     }
 
     // todo could query the client instead of the server
@@ -90,36 +83,21 @@ class Store {
         });
     }
 
-    _getLayerConigById(id){
-        var layer;
-        if(!this.layersConfig) return null;
-        for (layer of this.layersConfig){
-            if (layer.id === id)
-                return layer;
-        }
-    }
-
-    _getLayerConigByName(name){
-        var layer;
-        if(!this.layersConfig) return null;
-        for (layer of this.layersConfig){
-            if (layer.name === name)
-                return layer;
-        }
-    }
-
     _formatRenderer(renderer){
         return renderer._type === 'jsapi'
             ? renderer
             : jsonToRenderer(renderer);
     }
 
-    _updateRendererFields(layer, key) {
-        var renderer;
-        if (key) {
-            renderer = this.renderers[this._getLayerConigById(key).defaultRendererField];
-        }
-        else {
+    // todo, if many layers will have many dynamic renderers
+    // should create a map of layer id to renderer field
+    _updateRendererFields(layer, useDefault=false) {
+        if(!layer) return;
+        let renderer;
+        const config = this.layerConfigByLayerId.get(layer.id);
+        if (useDefault && config){
+            renderer = config.defaultRendererField;
+        } else {
             renderer = this.renderers[this.rendererField];
         }
         layer.renderer = this._formatRenderer(renderer);
@@ -196,9 +174,9 @@ class Store {
     }
 
     async _loadLayers(){
-        this.mapLayers = this.map.layers;
-
         this.map.layers.items.forEach(this._applyInitialLayerOverrides);
+        this.layersLoaded = true;
+
         const pLyrs = this.map.layers.items.map(this._initLayerDataStructures);
         return Promise.all(pLyrs);
     }
@@ -221,16 +199,9 @@ class Store {
         this.rendererHandler = autorun(_ => {
             const rendererField = this.rendererField;
             // only interactive layers will have updated renderers
-            if ((this.map && this.map.layers.length > 0) || this.lyr) {
-                const layers = this.mapId ? this.map.layers : [this.lyr];
-                layers.forEach((layer,key) => {
-                    if (this.layersConfig && this.interactiveLayerIdSet.has(key))
-                        this._updateRendererFields(layer,key);
-                    else
-                        this._updateRendererFields(layer);
-
-                });
-            }
+            this.interactiveLayers.forEach(layer => {
+                this._updateRendererFields(layer);
+            })
         })
     }
 
@@ -302,8 +273,8 @@ class Store {
 
     _onZoomChange(zoom){
         if(!this.layers || !Number.isInteger(zoom)) return;
-        this.layers.forEach((l, index) => {
-            const config = this._getLayerConigById(index);
+        this.layers.forEach(l => {
+            const config = this.layerConfigByLayerId.get(l.id);
             if(!config || !config.zoomExpressions) return;
             const expression = config.zoomExpressions.find(e => zoom < e.zoom);
             const where = expression ? expression.where : null;
@@ -382,8 +353,6 @@ class Store {
         if (this.hasZoomListener) {
             this._zoomListener = this.view.watch("zoom", this._onZoomChange);
         }
-
-        this.mapLoaded = true;
         message.destroy();
         return this.view;
     }
@@ -442,7 +411,7 @@ class Store {
     }
 
     get layers() {
-        if (this.map && this.mapLoaded) {
+        if (this.map && this.layersLoaded) {
           // WARNING, previously used reverse but this is mutable
           return this.map.layers.items;
         }
@@ -450,8 +419,8 @@ class Store {
     }
 
     get interactiveLayers(){
-        return this.layers.filter((layer, index) => {
-            const config = this._getLayerConigById(index);
+        return this.layers.filter(layer => {
+            const config = this.layerConfigByLayerId.get(layer.id);
             if(config && config.type === 'static'){
                 return false;
             }
@@ -463,8 +432,19 @@ class Store {
         return new Set(this.interactiveLayers.map(l => l.id));
     }
 
+    get layerConfigByLayerId(){
+        if(!this.layersLoaded){
+            throw new Error("Wait until the layers are loaded as the ID gets overrwritten when created")
+        }
+        if(!this.layersConfig) return new Map();
+        return this.layersConfig.reduce((p, c) => {
+            p.set(c.name, c);
+            return p;
+        }, new Map());
+    }
+
     get bookmarks() {
-        if (this.map && this.mapLoaded) {
+        if (this.map && this.layersLoaded) {
             return this.map.bookmarks.items;
         }
         return [];
@@ -474,7 +454,7 @@ class Store {
 decorate(Store, {
     user: observable,
     rendererField: observable,
-    mapLoaded: observable,
+    layersLoaded: observable,
     aliasMap: observable,
     layerVisibleMap: observable,
     autoplay: observable,
@@ -482,7 +462,6 @@ decorate(Store, {
     tooltipResults: observable.shallow,
     bookmarkInfo: observable.ref,
     map: observable.ref,
-    mapLayers: observable.ref,
     where: computed,
     layers: computed,
     interactiveLayers: computed,

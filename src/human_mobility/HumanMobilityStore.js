@@ -35,14 +35,10 @@ class HumanMobilityStore extends Store{
 
   _buildMobilityAutoRunEffects(){
     const onRedefineRenderers = debounce(function(store, selectedField, selectedDays, selectedHours) {
-      if(store.map && store.map.layers.length > 0){
-        store.mapLayers.forEach((layer, key) => {
-          if(store._getLayerConigById(key).type !== 'static'){
-            store._updateValueExpression(selectedField, selectedDays, selectedHours);
-            store._updateRendererFields(layer);
-          }
-        })
-      }
+      store.interactiveLayers.forEach(layer => {
+        store._updateValueExpression(selectedField, selectedDays, selectedHours);
+        store._updateRendererFields(layer);
+      });
     });
 
     this.selectionHandler = autorun(_ => {

@@ -5,8 +5,11 @@ import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
 
-import {loadModules} from 'esri-loader';
-import options from '../config/esri-loader-options';
+import {
+  addSearchWidget,
+  addLegendWidget
+} from '../services/MapService';
+
 import Store from './HumanMobilityStore';
 import humanMobilityConfig from './HumanMobilityConfig';
 import HumanMobilityTooltip from './HumanMobilityTooltip';
@@ -63,35 +66,22 @@ const HumanMobilityApp = observer(class App extends React.Component {
 
   componentDidMount = () => {
 
-    const modulePromise = loadModules([
-      'esri/widgets/Search',
-      'esri/widgets/Legend',
-      'esri/widgets/Expand',
-      "esri/widgets/Slider"
-    ], options);
-    const loadPromise = this.store.load(this.mapViewRef.current);
-
-    Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, Expand], mapView]) => {
+    this.store.load(this.mapViewRef.current)
+      .then(mapView => {
         this.view = mapView;
-        const search = new Search({view: this.view});
-
-        const searchExpand = new Expand({
-          view: this.view,
-          content: search,
-          expandIconClass: 'esri-icon-search'
-        });
-
-        const layerInfos = this.store.mapLayers.filter((l,index) => this.store._getLayerConigById(index).showLegend)
-            .map((layer, index) => ({layer:layer, title:  this.store._getLayerConigById(index).customLegendTitle?
-                  this.store._getLayerConigById(index).customLegendTitle:""}));
-        const legend = new Legend({view: this.view, layerInfos: layerInfos});
-        //this.view.ui.add(slider, "bottom-right");
-
-        this.view.ui.add(searchExpand, "top-right");
-        this.view.ui.add(legend, "bottom-right");
-        this.view.ui.move("zoom", "top-right");
-
+        addSearchWidget(this.view, 'top-right', 0, true);
+        const layerInfos = this.store.layers
+          .filter(l => {
+            const config = this.store.layerConfigByLayerId.get(l.id);
+            return config && config.showLegend; // default to false
+          })
+          .map(l => ({
+            layer: l,
+            title: this.store.layerConfigByLayerId.get(l.id).customLegendTitle
+              ? this.store.layerConfigByLayerId.get(l.id).customLegendTitle
+              : ""
+          }));
+        addLegendWidget(this.view, 'bottom-right', {layerInfos});
       });
   }
 
