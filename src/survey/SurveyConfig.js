@@ -470,7 +470,7 @@ const surveyConfig = {
     {areaName : 'USA',
      locations : [
                       {
-                        'name' : 'Las Vegas, NV',
+                        'name' : 'Las Vegas',
                         'image' : LasVegasImage,
                         'extent' : {
                                       "xmin":-115.228211,
@@ -509,7 +509,7 @@ const surveyConfig = {
                         }
                       },
                       {
-                        'name' : 'San Francisco, CA',
+                        'name' : 'San Francisco',
                         'image' : SanFranImage,
                         'extent' : {
                                     "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
