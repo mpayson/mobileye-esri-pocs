@@ -25,8 +25,13 @@ class SelectFilter extends Filter{
           this.options.push(f.attributes[this.field]);
     }
     );
+    if (this.subset_query !== "1=1" && this.options.length === 0) {
+      this.options.push(-100); // marking the "all" option
+    }
+    
+    
     //this.options = this.options.slice().sort()
-  this.loaded = true;
+    this.loaded = true;
   }
 
   loadLayer(layer){
@@ -80,6 +85,7 @@ class SelectFilter extends Filter{
   }
 
   get where(){
+    if (this.selectValue === "-100") return this.subset_query;
     return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type)
   }
 

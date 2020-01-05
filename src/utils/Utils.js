@@ -30,6 +30,7 @@ const getMinMaxWhere = (field, min, max) => {
 
 const getMultiSelectWhere = (field, values, fieldType) => {
   if(!values || values.length < 1) return null;
+  
   let where = null;
   if(fieldType === 'string') {
     const wstr = values.join("','");
@@ -43,6 +44,7 @@ const getMultiSelectWhere = (field, values, fieldType) => {
 
 const getSelectWhere = (field, value, fieldType) => {
   if(!value) return null;
+  if (value === -100) return "2=2";
   let where = null;
   where = (fieldType === 'string')
     ? `${field} = '${value}'` :

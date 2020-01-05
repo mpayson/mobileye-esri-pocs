@@ -11,6 +11,9 @@ const DropdownSelectFilter = observer(({store, mode}) => {
     if (store.domainMap.has(o)) {
         label = store.domainMap.get(o);
     }
+    if (o === -100) {
+      label = "All";
+    }
     return <Option key={o}>{label}</Option>
   })
   return (
@@ -37,9 +40,10 @@ const ToggleMultiSelectFilter = observer(class ToggleMultiSelectFilter extends R
   render() {
     const store = this.props.store;
     return store.displayOptions.map(o => {
-      let label = store.domainMap.has(o)
-        ? store.domainMap.get(o)
-        : o;
+      let label = (o === -100 ? "All" : 
+          (store.domainMap.has(o) ? 
+            store.domainMap.get(o)
+            : o));
       return (
         <div key={o}>
           <Switch
@@ -68,6 +72,9 @@ const BtnMultiSelectFilter = observer(class BtnMultiSelectFilter extends React.C
       let label = o;
       if (domainMap.has(o)) {
           label = domainMap.get(o);
+      }
+      if (o === -100) {
+        label = "All";
       }
       return (
         <Button
@@ -107,9 +114,10 @@ const RadioSelectFilter = observer(class RadioSelectFilter extends React.Compone
     }
     const store = this.props.store;
     let radios = store.displayOptions.map(o => {
-      let label = store.domainMap.has(o)
-        ? store.domainMap.get(o)
-        : o;
+      let label = (o === -100 ? "All" : 
+      (store.domainMap.has(o) ? 
+        store.domainMap.get(o)
+        : o));
       return (
         <Radio value={o} key={o} style={radioStyle}>{label}</Radio>
       )

@@ -114,7 +114,7 @@ const SurveyApp = observer(class App extends React.Component {
         panel = <BookmarkPanel store={this.store}/>
         break;
       case 'About':
-        panel = <h1>" Mapping road assets such as traffic lights, signs, poles, and more. For each asset, we can detail its precise location, dimensions and type, and information on detected changes."</h1>;
+        panel = <h1>Mapping road assets such as traffic lights, signs, poles, and more. For each asset, we can detail its precise location, dimensions and type, and information on detected changes.</h1>;
         break;
       default:
         panel = null;

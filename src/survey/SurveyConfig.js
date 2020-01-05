@@ -63,6 +63,8 @@ import MunichImage from "../resources/images/Munich.jpg"
 import BerlinImage from "../resources/images/Berlin.jpg"
 import LasVegasImage from "../resources/images/Las Vegas.jpg"
 import HanoverImage from "../resources/images/hanover.jpg"
+import ParisImage from "../resources/images/Paris.png"
+import SingaporeImage from "../resources/images/Singapore.jpg"
 
 const category_l42speed = {
                '0': '10', '1': '20', '2': '30', '3': '40', '4': '50', '5': '60',
@@ -149,7 +151,7 @@ const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", 
 const surveyConfig = {
   
   
-  layerItemId: '497bde7b9b0b4039b740f5b0724c309e',
+  layerItemId: 'c12ae0ee9c974c91bf97f178b0ccc2ca',
   webmapId: '3a979480c3644b2d91cf4053af9568b9',
   initialRendererField: 'all',
   renderers: {
@@ -609,11 +611,24 @@ const surveyConfig = {
                                    "spatialReference":{"wkid":102100}
                                  }
                     },
+                    {
+                      'name' : "Paris",
+                      'image' : ParisImage,
+                      extent : {
+                        'ymax' : 48.900043, 
+                        'xmin' : 2.219860,
+                        'ymin' : 48.811833, 
+                        'xmax' : 2.461388,
+                        'spatialReference' : {
+                          'wkid' : 4326
+                        }
+                      }
+                    }
                   ]
     },
     
       {
-        areaName : 'Japan',
+        areaName : 'APAC',
         locations : [
                         {
                           'name' : 'Obaida (Tokyo)',
@@ -624,14 +639,29 @@ const surveyConfig = {
                                       "spatialReference":{"wkid":102100}
                                     }
                         },
+                        {
+                          'name' : 'Singapore',
+                          'image' : SingaporeImage,
+                          'extent' : {
+                                      'ymax' : 1.429421, 
+                                      'xmin' : 103.697668,
+                                      'ymin' : 1.241328, 
+                                      'xmax' : 104.035841,
+                                      'spatialReference' : {
+                                          'wkid' : 4326
+                                      }
+    
+                          }
+                        },
         ]
       }
 
   ],
    
   viewConfig: { 
-    // center: [-73.974051, 40.762746],
+    
     center: [-122.483311, 37.707744],
+    //center: [11.577279, 48.137732],
     zoom: 15
   }
 }

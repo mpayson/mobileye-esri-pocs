@@ -27,6 +27,8 @@ class MultiSelectFilter extends SelectFilter{
   }
   
   get where(){
+    
+    if (this.selectValue.indexOf("-100") !== -1) return this.subset_query;
     let t = getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
     if (t === null) {
       return null;
