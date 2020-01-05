@@ -162,3 +162,16 @@ body {
 .ant-progress-inner {
   background: white !important;
 }
+
+.stats-list-switch {
+  float: left;
+  margin: 6px 0px 5px 0px;
+}
+.stats-list-header {
+  display: inline-block;
+  margin: 5px 0px 7px 10px;
+}
+.stats-list-subswitch {
+  margin: 3px 10px 2px 10px;
+}
+
