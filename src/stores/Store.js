@@ -272,7 +272,7 @@ class Store {
     }
 
     _onZoomChange(zoom){
-        if(!this.layers || !Number.isInteger(zoom)) return;
+        if(!this.layers || this.layers.length < 1 || !Number.isInteger(zoom)) return;
         this.layers.forEach(l => {
             const config = this.layerConfigByLayerId.get(l.id);
             if(!config || !config.zoomExpressions) return;
