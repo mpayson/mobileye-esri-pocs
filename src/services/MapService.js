@@ -20,6 +20,7 @@ let
     _Expand,
     // services
     _locatorService,
+    _geometryEngine,
     // geometries
     _Point,
     _Extent,
@@ -47,6 +48,7 @@ export function preloadAllModules(){
     'esri/widgets/Expand',
     // services
     'esri/tasks/Locator',
+    "esri/geometry/geometryEngine",
     // geometry objs
     'esri/geometry/Point',
     'esri/geometry/Extent',
@@ -68,6 +70,7 @@ export function preloadAllModules(){
     Home,
     Expand,
     Locator,
+    geometryEngine,
     Point,
     Extent,
     Graphic,
@@ -91,6 +94,7 @@ export function preloadAllModules(){
     _locatorService = new Locator({
       url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
     })
+    _geometryEngine = geometryEngine;
 
     _Point = Point;
     _Extent = Extent;
@@ -113,8 +117,7 @@ let _routeService,
   _RouteParameters,
   _FeatureSet,
   _SketchVM,
-  _SpatialReference,
-  _geometryEngine;
+  _SpatialReference
 
 export function preloadSafetyModules(){
   _pSafetyModules = loadModules([
@@ -122,16 +125,14 @@ export function preloadSafetyModules(){
     'esri/tasks/support/RouteParameters',
     'esri/tasks/support/FeatureSet',
     'esri/widgets/Sketch/SketchViewModel',
-    'esri/geometry/SpatialReference',
-    "esri/geometry/geometryEngine"
+    'esri/geometry/SpatialReference'
   ], loaderOptions)
   .then(([
     RouteTask,
     RouteParameters,
     FeatureSet,
     SketchVM,
-    SpatialReference,
-    geometryEngine
+    SpatialReference
   ]) => {
     _routeService = new RouteTask({
       url: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve"
@@ -140,7 +141,6 @@ export function preloadSafetyModules(){
     _FeatureSet = FeatureSet;
     _SketchVM = SketchVM;
     _SpatialReference = SpatialReference;
-    _geometryEngine = geometryEngine;
   });
   return _pSafetyModules;
 }
@@ -263,7 +263,7 @@ export function generateRoute(startGraphic, endGraphic, options){
 }
 
 export function buffer(geometry, distance, unit){
-  _moduleCheck(_geometryEngine, "You must register a sketch view model before buffering in safety app");
+  _moduleCheck(_geometryEngine, "You must register an authenticated session before buffering");
   return _geometryEngine.buffer(geometry, distance, unit);
 }
 
@@ -284,16 +284,21 @@ export function jsonToRenderer(rendererJson){
 
 export function jsonToGraphic(esriJson, options){
   _moduleCheck(_jsonUtils, "You must register an authenticated session before using graphics");
-  console.log(esriJson);
   return new _Graphic({
     ...esriJson,
     ...options
   });
 }
 
-export function addHomeWidget(view, position='top-right'){
+export function addHomeWidget(view, position='top-right', goToTarget){
   _moduleCheck(_Home, "You must register an authenticated session before adding widgets");
   const home = new _Home({view})
+  if(goToTarget){
+    home.goToOverride = (v, goToParams) => {
+      goToParams.target = {...goToTarget};
+      return v.goTo(goToParams.target, goToParams.options);
+    }
+  }
   view.ui.add(home, position);
 }
 
@@ -329,6 +334,11 @@ export function addLegendWidget(view, position, options){
 export function whenTrue(object, property, handler){
   _moduleCheck(_wU, "You must register an authenticated session before adding watches");
   return _wU.whenTrue(object, property, handler);
+}
+
+export function whenFalseOnce(object, property){
+  _moduleCheck(_wU, "You must register an authenticated session before adding watches");
+  return _wU.whenFalseOnce(object, property);
 }
 
 export function debounce(asyncFunction){

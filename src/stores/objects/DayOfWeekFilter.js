@@ -23,10 +23,15 @@ class DayOfWeekFilter extends SelectFilter{
   load(featureLayer, layers=null){
     super.setFieldInfoFromLayer(featureLayer, layers);
   }
+
   get where(){
     const values = this.dayMap.get(this.selectValue);
     return getMultiSelectWhere(this.field, values, 'int');
   }
+  get selectedDays(){
+    return this.dayMap.get(this.selectValue);
+  }
+
   get displayOptions(){
     return this.options;
   }
@@ -34,7 +39,8 @@ class DayOfWeekFilter extends SelectFilter{
 
 decorate(DayOfWeekFilter, {
   where: computed,
-  displayOptions: computed
+  displayOptions: computed,
+  selectedDays: computed
 });
 
 export default DayOfWeekFilter;

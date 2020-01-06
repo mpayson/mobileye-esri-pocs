@@ -48,7 +48,7 @@ class SelectFilter extends Filter{
 
   load(featureLayer, layers = null){
     //console.log("Load called ", this.field)
-    super.load(layers.items[0]);
+    super.load(layers[0]);
 
     layers.forEach(layer => {
       this.loadLayer(layer)

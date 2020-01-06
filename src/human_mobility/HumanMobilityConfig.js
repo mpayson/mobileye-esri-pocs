@@ -55,8 +55,8 @@ const humanMobilityConfig = {
   renderers : {
     'avg_spd': getClassBreakRenderer('avg_spd',[0,30,50,90,1000],
         ['0-30 km/h','30-50 km/h','50-100 km/h','100+ km/h '],[[206,22,32,255],[255,89,103,255],[241,173,179,255],[254,220,225,255]],["2.3px","2.3px","2.3px","2.3px"],"Average speed"),
-    'ped_den': getClassBreakRenderer('ped_den',[0,3,10,20,500],['Low','Medium','High','Very High'],[[248,255,248,255],[129,189,255,255],[0,108,226,255],[0,54,104,255]],["2.3px","2.3px","2.3px","2.3px"],"Average pedestrian volume"),
-    'bic_den': getClassBreakRenderer('bic_den',[0,2,5,20,500],['Low','Medium','High','Very High'],[[172,255,175,255],[133,187,101,255],[0,128,0,255],[65,72,51,255]],["2.3px","2.3px","2.3px","2.3px"],"Average cyclist volume"),
+    'ped_den': getClassBreakRenderer('ped_den',[0,3,10,20,500],['Low','Medium','High','Very High'],[[0,54,104,255], [0,108,226,255], [129,189,255,255],[248,255,248,255]],["2.3px","2.3px","2.3px","2.3px"],"Average pedestrian volume"),
+    'bic_den': getClassBreakRenderer('bic_den',[0,2,5,20,500],['Low','Medium','High','Very High'],[[65,72,51,255], [0,128,0,255], [133,187,101,255], [172,255,175,255]],["2.3px","2.3px","2.3px","2.3px"],"Average cyclist volume"),
   }
   ,
   filters: [
@@ -69,11 +69,29 @@ const humanMobilityConfig = {
         step: 1, min:6, max:18, tooltipVisible:true}},
   ],
   hasCustomTooltip: true,
+  hasZoomListener: true,
   initialRendererField: 'avg_spd',
   layers : [
-    {id: 0, type: "static", customLegendTitle: "Bus stops", showLegend:true , defaultRendererField: 'ID', name:"bus_stops", title:"Bus stops", showFilter:false},
-    {id: 1, type: "static",customLegendTitle: "Bicycle lanes", showLegend:true , defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bike lanes", showFilter:false},
-    {id: 2, type: "live", showLegend:true, outFields:'*' , defaultRendererField: 'avg_spd', name:"avg_spd", title:"Average speed" , postText:"km/h", showFilter:true},
+    {id: 0, type: "static", popupTemplate: null, customLegendTitle: "Bus stops", outFields: ['FID', 'CODI_CAPA'], showLegend:true, defaultRendererField: 'ID', name:"bus_stops", title:"Bus stops", ignoreFilter:true},
+    {id: 1, type: "static", popupTemplate: null, customLegendTitle: "Bicycle lanes", outFields: ['FID', 'TOOLTIP'], showLegend:true , defaultRendererField: 'ID', name:"bicycles_lanes", title:"Bike lanes", ignoreFilter:true},
+    {
+      id: 2,
+      type: "live",
+      popupTemplate: null,
+      showLegend:true,
+      outFields:'*',
+      baselineWhereCondition: "project = 'me8'",
+      defaultRendererField: 'avg_spd',
+      name:"avg_spd",
+      title:"Average speed",
+      postText:"km/h",
+      ignoreFilter:true,
+      initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
+      // applies where corresponding to lowest specified zoom that is greater than map zoom
+      zoomExpressions: [
+        {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
+      ]
+    },
 //    {id: 3, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " pedestrian_density >= 0",   defaultRendererField: 'pedestrian_density', name:"pedestrian_density", title:"Average pedestrian volume", postText:"per ride", showFilter:true},
 //    {id: 4, type: "live", showLegend:true , outFields: defaultLayerOutFields, baselineWhereCondition: " bicycles_density >= 0", defaultRendererField: 'bicycles_density', name:"bicycles_density", title:"Average cyclist volume", postText:"per ride", showFilter:true}
 
@@ -107,7 +125,7 @@ const humanMobilityConfig = {
   viewConfig: {
     //center: [-74.00157, 40.71955],
     //center: [128.608705, 35.862483],
-    center: [2.1732,41.3842],
+    center: [2.1532,41.3842],
     zoom: 12
   },
   locationsByArea: [

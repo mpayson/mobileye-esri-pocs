@@ -2,14 +2,10 @@ import {decorate, observable, action, computed, autorun} from 'mobx';
 import createFilterFromConfig from './Filters';
 import {
     loadWebMap, loadMap, jsonToRenderer, 
-    registerSession, jsonToExtent, layerFromId, debounce
+    registerSession, jsonToExtent, layerFromId, debounce,
+    whenFalseOnce
 } from '../services/MapService';
-import {message} from 'antd';
-
-// can we keep this at the top? I find it intrusive in the middle?
-message.config({
-    top: 75,
-});
+import { combineNullableWheres } from '../utils/Utils';
 
 class Store {
 
@@ -22,8 +18,7 @@ class Store {
     autoplay = false;
     bookmarkIndex = -1;
     layerViewsMap = new Map();
-    mapLayers = null;
-    mapLoaded = false;
+    layersLoaded = false;
 
     constructor(appState, storeConfig) {
         this.appState = appState;
@@ -42,6 +37,7 @@ class Store {
         this.outFields = storeConfig.outFields;
         this.layersConfig = storeConfig.layers;
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
+        this.hasZoomListener = storeConfig.hasZoomListener;
         this.bookmarkInfos = storeConfig.bookmarkInfos;
         this.locationsByArea = storeConfig.locationsByArea ? storeConfig.locationsByArea : [];
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
@@ -60,16 +56,11 @@ class Store {
             clearTimeout(this.bookmarkAutoplayId);
             this.bookmarkAutoplayId = null;
         }
+        if (this._zoomListener) this._zoomListener.remove();
     }
 
     loadFilters() {
-        var layers = null; //this.lyr;
-        if (this.layersConfig) {
-            layers = this.map.layers.filter((layer,index) => this._getLayerConigById(index).type !== "static");
-        }
-        else
-            layers = this.map.layers;
-        this.filters.forEach(f => f.load(this.lyr, layers, this.view));
+        this.filters.forEach(f => f.load(this.lyr, this.interactiveLayers, this.view));
     }
 
     // todo could query the client instead of the server
@@ -87,36 +78,21 @@ class Store {
         });
     }
 
-    _getLayerConigById(id){
-        var layer;
-        if(!this.layersConfig) return null;
-        for (layer of this.layersConfig){
-            if (layer.id === id)
-                return layer;
-        }
-    }
-
-    _getLayerConigByName(name){
-        var layer;
-        if(!this.layersConfig) return null;
-        for (layer of this.layersConfig){
-            if (layer.name === name)
-                return layer;
-        }
-    }
-
     _formatRenderer(renderer){
         return renderer._type === 'jsapi'
             ? renderer
             : jsonToRenderer(renderer);
     }
 
-    _updateRendererFields(layer, key) {
-        var renderer;
-        if (key) {
-            renderer = this.renderers[this._getLayerConigById(key).defaultRendererField];
-        }
-        else {
+    // todo, if many layers will have many dynamic renderers
+    // should create a map of layer id to renderer field
+    _updateRendererFields(layer, useDefault=false) {
+        if(!layer) return;
+        let renderer;
+        const config = this.layerConfigByLayerId.get(layer.id);
+        if (useDefault && config){
+            renderer = config.defaultRendererField;
+        } else {
             renderer = this.renderers[this.rendererField];
         }
         layer.renderer = this._formatRenderer(renderer);
@@ -146,9 +122,14 @@ class Store {
 
         if(config.title) layer.title = config.title;
         if(config.name) layer.id = config.name;
-        if(config.baselineWhereCondition) 
-            layer.definitionExpression = config.baselineWhereCondition;
+        if(config.baselineWhereCondition || config.initialZoomExpression) {
+            layer.definitionExpression = combineNullableWheres([
+                config.baselineWhereCondition,
+                config.initialZoomExpression
+            ]);
+        }
         if(config.outFields) layer.outFields = config.outFields;
+        if(config.popupTemplate !== undefined) layer.popupTemplate = config.popupTemplate;
         
         // Port static logic
         if(config.defaultRendererField && config.type !== 'static'){
@@ -182,16 +163,16 @@ class Store {
 
                 // set initial where, port of logic where only applied if theres a baseline condition
                 // because baseline condition was set to definitionexpression
-                if(layer.definitionExpression){
-                    lV.filter = {where: this.where}
-                }
+                const config = this.layerConfigByLayerId.get(layer.id);
+                if(config && config.ignoreFilter === true) return;
+                lV.filter = {where: this.where}
             })
     }
 
     async _loadLayers(){
-        this.mapLayers = this.map.layers;
-
         this.map.layers.items.forEach(this._applyInitialLayerOverrides);
+        this.layersLoaded = true;
+
         const pLyrs = this.map.layers.items.map(this._initLayerDataStructures);
         return Promise.all(pLyrs);
     }
@@ -214,16 +195,9 @@ class Store {
         this.rendererHandler = autorun(_ => {
             const rendererField = this.rendererField;
             // only interactive layers will have updated renderers
-            if ((this.map && this.map.layers.length > 0) || this.lyr) {
-                const layers = this.mapId ? this.map.layers : [this.lyr];
-                layers.forEach((layer,key) => {
-                    if (this.layersConfig && this.interactiveLayerIdSet.has(key))
-                        this._updateRendererFields(layer,key);
-                    else
-                        this._updateRendererFields(layer);
-
-                });
-            }
+            this.interactiveLayers.forEach(layer => {
+                this._updateRendererFields(layer);
+            })
         })
     }
 
@@ -293,6 +267,21 @@ class Store {
         this.clearTooltip();
     }
 
+    _onZoomChange(zoom){
+        if(!this.layers || this.layers.length < 1 || !Number.isInteger(zoom)) return;
+        this.layers.forEach(l => {
+            const config = this.layerConfigByLayerId.get(l.id);
+            if(!config || !config.zoomExpressions) return;
+            const expression = config.zoomExpressions.find(e => zoom < e.zoom);
+            const where = expression ? expression.where : null;
+            const combinedWhere = combineNullableWheres([
+                config.baselineWhereCondition,
+                where
+            ]);
+            l.definitionExpression = combinedWhere;
+        })
+    }
+
     setRendererField(field) {
         this.rendererField = field;
     }
@@ -310,7 +299,7 @@ class Store {
     }
 
     async load(mapViewDiv) {
-        message.loading('Loading data.', 0);
+        this.appState.loadingMessage('Loading map.');
 
         await registerSession(this.appState.session);
         this._buildAutoRunEffects();
@@ -349,17 +338,20 @@ class Store {
                 this.loadFilters();
                 this.loadCharts();
             })
-            // .catch(er => {
-            //     this.appState.onError(er, 'Could not load layers, do you have access to the data?')
-            // })
+            .catch(er => {
+                this.appState.onError(er, 'Could not load layers, do you have access to the data?')
+            })
 
         if (this.hasCustomTooltip) {
             this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
             this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);
         }
+        if (this.hasZoomListener) {
+            this._zoomListener = this.view.watch("zoom", this._onZoomChange);
+        }
+        whenFalseOnce(this.view, 'updating')
+            .then(_ => this.appState.clearMessage());
 
-        this.mapLoaded = true;
-        message.destroy();
         return this.view;
     }
 
@@ -417,7 +409,7 @@ class Store {
     }
 
     get layers() {
-        if (this.map && this.mapLoaded) {
+        if (this.map && this.layersLoaded) {
           // WARNING, previously used reverse but this is mutable
           return this.map.layers.items;
         }
@@ -425,8 +417,8 @@ class Store {
     }
 
     get interactiveLayers(){
-        return this.layers.filter((layer, index) => {
-            const config = this._getLayerConigById(index);
+        return this.layers.filter(layer => {
+            const config = this.layerConfigByLayerId.get(layer.id);
             if(config && config.type === 'static'){
                 return false;
             }
@@ -438,8 +430,19 @@ class Store {
         return new Set(this.interactiveLayers.map(l => l.id));
     }
 
+    get layerConfigByLayerId(){
+        if(!this.layersLoaded){
+            throw new Error("Wait until the layers are loaded as the ID gets overrwritten when created")
+        }
+        if(!this.layersConfig) return new Map();
+        return this.layersConfig.reduce((p, c) => {
+            p.set(c.name, c);
+            return p;
+        }, new Map());
+    }
+
     get bookmarks() {
-        if (this.map && this.mapLoaded) {
+        if (this.map && this.layersLoaded) {
             return this.map.bookmarks.items;
         }
         return [];
@@ -449,7 +452,7 @@ class Store {
 decorate(Store, {
     user: observable,
     rendererField: observable,
-    mapLoaded: observable,
+    layersLoaded: observable,
     aliasMap: observable,
     layerVisibleMap: observable,
     autoplay: observable,
@@ -457,7 +460,6 @@ decorate(Store, {
     tooltipResults: observable.shallow,
     bookmarkInfo: observable.ref,
     map: observable.ref,
-    mapLayers: observable.ref,
     where: computed,
     layers: computed,
     interactiveLayers: computed,
@@ -475,6 +477,7 @@ decorate(Store, {
     toggleLayerVisibility: action.bound,
     setLayerVisibility: action.bound,
     _onMouseMove: action.bound,
+    _onZoomChange: action.bound,
     onBookmarkClick: action.bound,
     onLocationClick: action.bound,
     clearBookmark: action.bound,

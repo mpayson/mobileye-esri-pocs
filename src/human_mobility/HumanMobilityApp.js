@@ -1,12 +1,17 @@
 import React from 'react'
 import { observer } from "mobx-react";
-import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button} from 'antd';
+import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button, Typography} from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
+import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
-import {loadModules} from 'esri-loader';
-import options from '../config/esri-loader-options';
+import {
+  addSearchWidget,
+  addLegendWidget,
+  addHomeWidget
+} from '../services/MapService';
+
 import Store from './HumanMobilityStore';
 import humanMobilityConfig from './HumanMobilityConfig';
 import HumanMobilityTooltip from './HumanMobilityTooltip';
@@ -17,6 +22,7 @@ import BookmarkPanel from "../components/BookmarkPanel";
 import MinMaxSlideFilter from "../components/filters/MinMaxSlideFilter";
 
 const { Header, Content, Sider } = Layout;
+const Title = Typography.Title;
 
 const MenuFilterIcon = () => (
   <LayerFilterIcon size="18" filled/>
@@ -41,6 +47,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
     this.mapViewRef = React.createRef();
     this.sliderRef = React.createRef();
     this.store = new Store(props.appState, humanMobilityConfig);
+    this.hourFilter = this.store.hourFilter;
   }
 
   onCollapse = collapsed => {
@@ -62,50 +69,37 @@ const HumanMobilityApp = observer(class App extends React.Component {
 
   componentDidMount = () => {
 
-    const modulePromise = loadModules([
-      'esri/widgets/Search',
-      'esri/widgets/Legend',
-      'esri/widgets/Expand',
-      "esri/widgets/Slider"
-    ], options);
-    const loadPromise = this.store.load(this.mapViewRef.current);
-
-    Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, Expand], mapView]) => {
+    this.store.load(this.mapViewRef.current)
+      .then(mapView => {
         this.view = mapView;
-        const search = new Search({view: this.view});
+        addSearchWidget(this.view, 'top-right', 0, true);
+        const layerInfos = this.store.layers
+          .filter(l => {
+            const config = this.store.layerConfigByLayerId.get(l.id);
+            return config && config.showLegend; // default to false
+          })
+          .map(l => ({
+            layer: l,
+            title: this.store.layerConfigByLayerId.get(l.id).customLegendTitle
+              ? this.store.layerConfigByLayerId.get(l.id).customLegendTitle
+              : ""
+          }));
+        addLegendWidget(this.view, 'bottom-right', {layerInfos});
+        
+        const homeTarget = this.store.viewConfig.center && this.store.viewConfig.zoom
+          ? {...this.store.viewConfig}
+          : null
 
-        const searchExpand = new Expand({
-          view: this.view,
-          content: search,
-          expandIconClass: 'esri-icon-search'
-        });
-
-        const layerInfos = this.store.mapLayers.filter((l,index) => this.store._getLayerConigById(index).showLegend)
-            .map((layer, index) => ({layer:layer, title:  this.store._getLayerConigById(index).customLegendTitle?
-                  this.store._getLayerConigById(index).customLegendTitle:""}));
-        const legend = new Legend({view: this.view, layerInfos: layerInfos});
-        //this.view.ui.add(slider, "bottom-right");
-
-        this.view.ui.add(searchExpand, "top-right");
-        this.view.ui.add(legend, "bottom-right");
-        this.view.ui.move("zoom", "top-right");
-
+        addHomeWidget(this.view, "top-right", homeTarget);
       });
   }
 
   _onHoursForwardButtonClick = (event) => {
-    if (this.hourFilter.max !== 24) {
-      this.hourFilter.max = this.hourFilter.max + this.hourFilter.step;
-      this.hourFilter.min = this.hourFilter.min + this.hourFilter.step;
-    }
+    this.hourFilter.increment();
   }
 
   _onHoursBackwardsButtonClick = (event) => {
-    if (this.hourFilter.min !== 0) {
-      this.hourFilter.min = this.hourFilter.min - this.hourFilter.step;
-      this.hourFilter.max = this.hourFilter.max - this.hourFilter.step;
-    }
+    this.hourFilter.decrement();
   }
 
   render() {
@@ -132,7 +126,10 @@ const HumanMobilityApp = observer(class App extends React.Component {
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
-          <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
+          <Menu.Item key="sign in" onClick={this.onSignOutClick}>
+            <Icon type="logout"/>
+            {this.props.appState.displayName}
+          </Menu.Item>
         </Menu>
       )
       : null;
@@ -141,7 +138,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
       ? <HumanMobilityTooltip store={this.store}/>
       : null;
 
-    this.hourFilter = this.store.filters.find(f => f.field === 'hour');
     const hoursSlider = <MinMaxSlideFilter store={this.hourFilter} key={this.hourFilter.field} lowerBoundLabel={this.hourFilter.lowerBoundLabel} upperBoundLabel={this.hourFilter.upperBoundLabel}/>
     const hoursSliderStyle = {
       display: 'bloc',
@@ -154,34 +150,40 @@ const HumanMobilityApp = observer(class App extends React.Component {
       marginLeft: "-300px",
     }
 
+    const autoIcon = this.store.hourAutoplay ? "pause" : "caret-right";
+
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8)", float: "left"}}>Mobility</h1>
-          {signin}
-        </Header>
+        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+          <img
+            src={MobileyeLogo}
+            alt="Mobileye Logo"
+            style={{height: "40px", margin: "12px"}}/>
+          <Menu
+            defaultSelectedKeys={['0']}
+            mode="inline"
+            theme="dark"
+            selectedKeys={[this.state.navKey]}
+            onClick={this.onSelect}>
+            <Menu.Item key="Layers">
+              <Icon component={MenuFilterIcon} />
+              <span>Layers</span>
+            </Menu.Item>
+            <Menu.Item key="Bookmarks">
+              <Icon component={MenuBookmarkIcon} />
+              <span>Bookmarks</span>
+            </Menu.Item>
+            <Menu.Item key="Locations">
+              <Icon component={MenuLocationsIcon} />
+              <span>Locations</span>
+            </Menu.Item>
+          </Menu>
+        </Sider>
         <Layout>
-          <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-            <Menu
-              defaultSelectedKeys={['0']}
-              mode="inline"
-              theme="dark"
-              selectedKeys={[this.state.navKey]}
-              onClick={this.onSelect}>
-              <Menu.Item key="Layers">
-                <Icon component={MenuFilterIcon} />
-                <span>Layers</span>
-              </Menu.Item>
-              <Menu.Item key="Bookmarks">
-                <Icon component={MenuBookmarkIcon} />
-                <span>Bookmarks</span>
-              </Menu.Item>
-              <Menu.Item key="Locations">
-                <Icon component={MenuLocationsIcon} />
-                <span>Locations</span>
-              </Menu.Item>
-            </Menu>
-          </Sider>
+          <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
+            <h1 style={{float: "left", color: "rgba(255,255,255,0.8)"}}>Mobility</h1>
+            {signin}
+          </Header>
           <Content>
             <Row>
               <Col
@@ -192,22 +194,25 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 ref={this.sliderRef}/>
               <div
                 ref={this.mapViewRef}
-                style={{width: "100%", height: "100%"}}/>
+                style={{width: "100%", height: "100%", background: '#1E2224'}}/>
               {tooltip}
-              <Card className="antd-esri-widget" style={hoursSliderStyle} size="small" title={`Time of day:`}>
-                 <Row gutter={16}>
-                 <Col span={3}>
-                <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary">
-                  <Icon type="left" />
-                </Button>
+              <Card
+                className="antd-esri-widget"
+                style={hoursSliderStyle}
+                size="small"
+                title={`Time of day:`}
+                extra={
+                  <Button id="autoplay" icon={autoIcon} onClick={this.store.toggleAutoplayTime}/>
+                }>
+                <Row gutter={16} type="flex" align="middle" justify="space-around">
+                <Col span={2}>
+                  <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary" icon="left"/>
                 </Col>
-                <Col span={18}>
-                {hoursSlider}
+                <Col span={20}>
+                  {hoursSlider}
                 </Col>
-                <Col span={3}>
-                <Button id="backwards" onClick={this._onHoursForwardButtonClick} type="primary">
-                  <Icon type="right" />
-                </Button>
+                <Col span={2}>
+                  <Button id="backwards" onClick={this._onHoursForwardButtonClick} type="primary" icon="right"/>
                 </Col>
                 </Row>
               </Card>

@@ -19,16 +19,14 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
   constructor(props, context){
     super(props, context);
-    this.dayOfWeekFilter = this.props.store.filters.find(f => f.field === 'day_of_week');
+    this.dayOfWeekFilter = this.props.store.dayOfWeekFilter;
   }
 
   _onRadioClick = e => {
     this.setState({
       selectedStatId: e.target.value,
     });
-    this.props.store._updateValueExpression(e.target.value);
     this.props.store.setRendererField(e.target.value);
-
   }
 
 

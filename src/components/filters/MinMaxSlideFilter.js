@@ -55,6 +55,11 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
     if (this.store.step)
       step = this.store.step;
 
+    let addlProps = {};
+    if(this.store.tooltipVisible === false){
+      addlProps.tooltipVisible = false;
+    }
+
     return(
       <Slider
         range
@@ -66,7 +71,7 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
         onChange={this.onChange}
         disabled={!this.store.loaded}
         step={step}
-        tooltipVisible={this.store.tooltipVisible}
+        {...addlProps}
       />
     )
   }

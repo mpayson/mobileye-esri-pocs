@@ -22,7 +22,7 @@ class NestedFilter extends Filter{
     this.loaded = true;
   }
   load(featureLayer, layers = null){
-    super.load(layers.items[0]);
+    super.load(layers[0]);
     if (this.customFieldDomainMap)
       this.domainMap = this.customFieldDomainMap;
     Promise.all(this.filters.map(f => f.load(featureLayer, layers)))
