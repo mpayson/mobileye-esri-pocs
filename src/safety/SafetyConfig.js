@@ -49,7 +49,7 @@ const safetyConfig = {
       type: 'class-breaks',
       field: 'eventvalue',
       legendOptions: {
-        title: "Average speed"
+        title: "Road risk score"
       },
       classBreakInfos: [{
         minValue: 0,
