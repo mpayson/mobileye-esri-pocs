@@ -146,7 +146,8 @@ const category_l2IconsExp = Object.keys(category_l22image).map(category_l2 =>
   "($feature.category_l2 == " + category_l2 + "), '"+category_l22image[category_l2]+"'"
 ).join()
 
-const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", '" + `${dotImage}` + "')";
+// const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", '" + `${dotImage}` + "')";
+const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", '')";
 
 const surveyConfig = {
   
@@ -420,7 +421,7 @@ const surveyConfig = {
       type: "text",
       text: "Type: <b>{expression/type-expr}</b><br>" +
              "Detected at {publish_date} (version {map_version})<br>" +
-             "Size: {height} X {width} m<br>",
+             "{expression/size-expr}<br>",
     }, 
     {
       type: "media", // MediaContentElement
@@ -442,8 +443,8 @@ const surveyConfig = {
         expression: "When($feature.category_l1 == 0, DomainName($feature, 'traffic_sign_category_l4', $feature.traffic_sign_category_l4)," +
                         "$feature.category_l1 == 1, DomainName($feature, 'tfl_category_l4', $feature.tfl_category_l4)," +
                         "$feature.category_l1 == 2, DomainName($feature, 'road_marking_category_l4', $feature.road_marking_category_l4)," +
-                        "$feature.category_l1 == 3, DomainName($feature, \"pole_category_l4\", $feature.pole_category_l4)," +
-//                        "$feature.category_l1 == 4, DomainName($feature, \"manhole_category_l4\", $feature.manhole_category_l4)," +
+                        "$feature.category_l1 == 3, DomainName($feature, 'pole_category_l4', $feature.pole_category_l4)," +
+//                        "$feature.category_l1 == 4, DomainName($feature, 'manhole_category_l4', $feature.manhole_category_l4)," +
                         "'')"
 
       },
@@ -460,6 +461,11 @@ const surveyConfig = {
       {
         name: "sign-icon",
         expression: icons_exp
+      },
+      {
+        name: "size-expr",
+        title: "Size",
+        expression: "When($feature.category_l1 == 3, '', 'Size: {height} X {width} m'"
       }
     ],
   },
@@ -660,8 +666,8 @@ const surveyConfig = {
    
   viewConfig: { 
     
-    center: [-122.483311, 37.707744],
-    //center: [11.577279, 48.137732],
+    // center: [-122.483311, 37.707744],
+    center: [11.577279, 48.137732],
     zoom: 15
   }
 }
