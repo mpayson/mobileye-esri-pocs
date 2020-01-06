@@ -125,22 +125,22 @@ class HumanMobilityStore extends Store{
             geometry,
             spatialRelationship: "contains"
           },
-          excludedEffect: "grayscale(60%) opacity(60%)",
+          excludedEffect: "grayscale(80%) opacity(80%)",
           includedEffect: "brightness(150%)"
         };
         
-        this.view.graphics.add({
-          geometry,
-          symbol: {
-            type: "simple-fill",
-            color: [255,255,255, 0],
-            style: "solid",
-            outline: {
-              color: [255,255,255,0.8],
-              width: 1
-            }
-          }
-        });
+        // this.view.graphics.add({
+        //   geometry,
+        //   symbol: {
+        //     type: "simple-fill",
+        //     color: [255,255,255, 0],
+        //     style: "solid",
+        //     outline: {
+        //       color: [255,255,255,0.8],
+        //       width: 1
+        //     }
+        //   }
+        // });
 
         const graphicLV = this.layerViewsMap.get(graphic.layer.id);
         this._mouseResultHighlight = graphicLV.highlight(graphic);
@@ -169,7 +169,7 @@ class HumanMobilityStore extends Store{
     this.mouseResults = null;
     const lyrView = this.layerViewsMap.get(this.interactiveLayers[0].id);
     lyrView.effect = null;
-    this.view.graphics.removeAll();
+    // this.view.graphics.removeAll();
     if(this._mouseResultHighlight){
       this._mouseResultHighlight.remove();
       this._mouseResultHighlight = null;
