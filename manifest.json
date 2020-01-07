@@ -1,6 +1,6 @@
 {
-  "short_name": "American Search",
-  "name": "TAU CSUS American Search",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",
