@@ -9,8 +9,8 @@ var webmapIdEnv = '0b800d1e71d94002b8d2451dcd08155d';
 
 
 
-if (process.env.WEBMAP_ID){
-    webmapIdEnv = process.env.WEBMAP_ID;
+if (process.env.MOBILITY_WEBMAP_ID){
+    webmapIdEnv = process.env.MOBILITY_WEBMAP_ID;
 }
 
 const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({

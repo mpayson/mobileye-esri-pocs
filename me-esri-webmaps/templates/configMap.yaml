@@ -5,4 +5,7 @@ metadata:
 data:
   environment: {{ .Values.global.environment }}
   aws_default_region: {{ .Values.global.aws_default_region }}
-  webmap_id: {{ .Values.webmapId }}
+  safety_webmap_id: {{ .Values.webmapId }}
+  mobility_webmap_id: {{ .Values.webmapId }}
+  events_webmap_id: {{ .Values.webmapId }}
+  survey_webmap_id: {{ .Values.webmapId }}

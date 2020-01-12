@@ -6,6 +6,15 @@ import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 
+var webmapIdEnv = '37f6876be7dc4d7e8166c3ef0df0c3aa';
+//var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
+
+
+
+if (process.env.EVENTS_WEBMAP_ID){
+    webmapIdEnv = process.env.EVENTS_WEBMAP_ID;
+}
+
 const eventsConfig = {
   //layerItemId: 'baf1358ce8d74342af3340f621688e21',
   //webmapId: '54d46b14f5f74e59a523e0ae46ef8736',

@@ -20,7 +20,18 @@ healthzPath: "/"
 initialDelaySeconds: 90
 periodSeconds: 3
 failureThreshold: 30
-webmapId: "aabc5fa9e96045eaa0968702fd33e6d9"
+
+safety:
+  webmapId: "906b58f399944774a29e05d3d24a939b"
+
+mobility:
+  webmapId: "0b800d1e71d94002b8d2451dcd08155d"
+
+events:
+  webmapId: "37f6876be7dc4d7e8166c3ef0df0c3aa"
+
+survey:
+  webmapId: "3a979480c3644b2d91cf4053af9568b9"
 
 ### how many replica for application
 replicas: 3

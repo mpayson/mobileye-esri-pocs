@@ -104,10 +104,10 @@ slaveHandler.basicMe { label ->
             // get relevant web map id
             sh "pip3 install arcgis==1.6.1 --no-deps ; pip3 install --no-deps -r esri_tools/requirements.txt; python3 -c 'from esri_tools.esri_tools import get_webmap_id' "
 
-            webmapId = sh(script: 'python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"${envName}\\"))"',returnStdout: true).trim()
-            sh "echo ${webmapId}"
+            safetyWebmapId = sh(script: 'python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"${envName}\\"))"',returnStdout: true).trim()
+            sh "echo ${safetyWebmapId}"
             EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
-            awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName} --set webmapId=${webmapId}")
+            awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName} --set safety.webmapId=${safetyWebmapId}")
 
         }
 

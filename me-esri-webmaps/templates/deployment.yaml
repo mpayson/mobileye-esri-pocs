@@ -52,8 +52,23 @@ spec:
             configMapKeyRef:
               name: {{ .Chart.Name }}-config
               key: environment
-        - name: WEBMAP_ID
+        - name: SAFETY_WEBMAP_ID
           valueFrom:
             configMapKeyRef:
               name: {{ .Chart.Name }}-config
-              key: webmap_id
+              key: safety_webmap_id
+        - name: MOBILITY_WEBMAP_ID
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Chart.Name }}-config
+              key: mobility_webmap_id
+        - name: EVENTS_WEBMAP_ID
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Chart.Name }}-config
+              key: events_webmap_id
+        - name: SURVEY_WEBMAP_ID
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Chart.Name }}-config
+              key: survey_webmap_id
