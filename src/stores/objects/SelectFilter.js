@@ -21,7 +21,7 @@ class SelectFilter extends Filter{
   _setFromQueryResults(results){
     results.features.forEach(f => {
       if (this.options.indexOf(f.attributes[this.field]) === -1)
-        if (!this.optionsToRemovePostfix || !f.attributes[this.field].endsWith(this.optionsToRemovePostfix))
+        if (!this.optionsToRemovePostfix || !f.attributes[this.field].toLowerCase().endsWith(this.optionsToRemovePostfix))
           this.options.push(f.attributes[this.field]);
     }
     );

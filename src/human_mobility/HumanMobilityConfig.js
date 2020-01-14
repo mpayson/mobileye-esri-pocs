@@ -49,9 +49,6 @@ const defaultLayerOutFields = ['average_speed','pedestrian_density','bicycles_de
 
 const humanMobilityConfig = {
   webmapId: webmapIdEnv,
-  //layerRefreshIntervalMin: 1,
-
-//  initialRendererField: 'average_speed',
   renderers : {
     'avg_spd': getClassBreakRenderer('avg_spd',[0,30,50,90,1000],
         ['0-30 km/h','30-50 km/h','50-100 km/h','100+ km/h '],[[206,22,32,255],[255,89,103,255],[241,173,179,255],[254,220,225,255]],["2.3px","2.3px","2.3px","2.3px"],"Average speed"),

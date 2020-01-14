@@ -93,11 +93,6 @@ const EventsApp = observer(class App extends React.Component {
           mode: "time-window",
           view: this.view,
           loop: false,
-          // values: [
-          //   new Date(2019, 12, 12), // Initialize the current time for the beginning of the fullTimeExtent.
-
-          //   new Date(2019, 12, 10),
-          // ],        
           stops: {
             interval: {
               value: 1,
@@ -108,18 +103,22 @@ const EventsApp = observer(class App extends React.Component {
 
         });
 
-        // const timeSlider = new TimeSlider({
-        //   container: "timeSlider",
-        //   playRate: 50,
-        //   stops: {
-        //     interval: {
-        //       value: 1,
-        //       unit: "hours"
-        //     }
-        //   }
-        // });
-        this.timeSlider = timeSlider;
-        //timeSlider.values = [new Date(2019, 1, 1), new Date(2020, 1, 1)];
+        this.store.view.whenLayerView(this.store.map.layers.getItemAt(0)).then(lv => {
+          this.timeSlider = timeSlider;
+
+          const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
+          // set up time slider properties
+          this.timeSlider.fullTimeExtent = fullTimeExtent;
+          //this.timeSlider.fullTimeExtent.start =
+          var today = new Date();
+          var yesterday = new Date();
+          yesterday.setDate(yesterday.getDate()-1);
+
+          this.timeSlider.values = [yesterday, today]
+          //this.timeSlider.fullTimeExtent.end = today;
+
+        });
+
         this.view.ui.add(timeSlider, "top-right");
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
@@ -140,16 +139,14 @@ const EventsApp = observer(class App extends React.Component {
         panel = <LocationsPanel store={this.store}/>
         break;
       case 'About':
-        panel = <h1>This is a slick app! Thanks Max!</h1>;
+        panel = <h1>Live events application</h1>;
         break;
       default:
         panel = null;
     }
 
-    // Init Time Slider
-    if (this.store.mapLoaded){
+    if (this.store.lyr){
       const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
-
       // set up time slider properties
       this.timeSlider.fullTimeExtent = fullTimeExtent;
       var today = new Date();

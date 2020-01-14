@@ -16,10 +16,7 @@ if (process.env.EVENTS_WEBMAP_ID){
 }
 
 const eventsConfig = {
-  //layerItemId: 'baf1358ce8d74342af3340f621688e21',
-  //webmapId: '54d46b14f5f74e59a523e0ae46ef8736',
-  webmapId: '37f6876be7dc4d7e8166c3ef0df0c3aa',
-  //layerRefreshIntervalMin: 1,
+  webmapId: '8654f5c608384b9eb7e06fd566643afc',
   initialRendererField: 'eventType',
   renderers : {
     'eventType': {
@@ -30,12 +27,16 @@ const eventsConfig = {
       uniqueValueInfos: [
       {
         value: "pedestrians",
+        label:"Pedestrians",
+
         symbol: {
           type: "picture-marker",
           url: pedImage
-        }
+        },
       }, {
         value: "bicycles",
+        label:"Bicycles",
+
         symbol: {
           type: "picture-marker",
           url: bicycleImage
@@ -44,20 +45,48 @@ const eventsConfig = {
 
       {
         value: "ET_PHYSICAL_OBJECT",
+        label:"Physical object",
+
         symbol: {
-          type: "picture-marker",
-          url: pedImage
+          type: "simple-marker",
+          style: "circle",
+          color: "white",
+          width: "8.5px",
         }
       },
       {
         value: "ET_CONSTRUCTION_AREA",
+        label:"Construction areas",
         symbol: {
           type: "simple-line",
           width: "8.5px",
           color: [253,174,97,255]
 
         }
+      },
+      {
+        value: "EID_STOPPED_CAR_ON_HW_SHOULDER",
+        label:"Stopped car",
+
+        symbol: {
+          type: "simple-marker",
+          style: "circle",
+          color: "blue",
+          width: "8.5px",
+        }
+      },
+      {
+        value: "EID_VRU_ON_HW",
+        label:"Vulnerable road user",
+        symbol: {
+          type: "simple-marker",
+          style: "circle",
+          color: "red",
+          width: "8.5px",
+        }
       }
+
+
 
       ]
     }
@@ -67,12 +96,15 @@ const eventsConfig = {
 //    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 20, log: true}},
 //    {name: 'eventtype', type: 'multiselect'},
     {name: 'eventType', type: 'multiselect',
-        params: {style: "radio", mode:'multiple',
+        params: {style: "toggle", mode:'multiple',
             customFieldDomainMap: new Map([
                                           ['ET_CONSTRUCTION_AREA', 'Construction areas'],
                                           ['ET_PHYSICAL_OBJECT', 'Physical object'],
                                           ['pedestrians',    'Pedestrians'],
-                                          ['bicycles','Bicycles']
+                                          ['bicycles','Bicycles'],
+                                          ['EID_STOPPED_CAR_ON_HW_SHOULDER',    'Stopped car'],
+                                          ['EID_VRU_ON_HW',    'Vulnerable road user'],
+
                                         ]),
             optionsToRemovePostfix:"_test",
         }
