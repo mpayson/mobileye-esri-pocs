@@ -44,10 +44,9 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       <>
         <PanelCard
           icon={<LayerIcon size="20" style={{position: "relative", top: "4px", left: "0px"}}/>}
-          title="Layer Selection"
-          collapsible={true}
+          title="Event type"
+          collapsible={false}
           defaultActive={true}>
-          <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Event type:</h3>
           {eventOptions}
         </PanelCard>
       </>
