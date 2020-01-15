@@ -6,6 +6,17 @@ import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 
+
+const  popupTemplate =  {
+    title: "Event information:",
+    content: "Event type: <b>{eventType}</b><br>" +
+        "Project: {project}<br>" +
+        "Event value: {eventValue}<br>" +
+        "First seen: {eventTimestamp}<br>" +
+        "Expiration timestamp: {eventExpirationTimestamp}"
+
+  }
+
 var webmapIdEnv = '37f6876be7dc4d7e8166c3ef0df0c3aa';
 //var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
 
@@ -92,9 +103,12 @@ const eventsConfig = {
     }
   }
   ,
+  layers : [
+    {id: 0, type: "live", popupTemplate: popupTemplate},
+    {id: 1, type: "live", popupTemplate: popupTemplate},
+  ],
   filters: [
-//    {name: 'eventvalue', type: 'minmax', params: {lowerBound: 0, upperBound: 20, log: true}},
-//    {name: 'eventtype', type: 'multiselect'},
+    {name: 'eventExpirationTimestamp', type: 'minmax', params:{min:"CURRENT_TIMESTAMP", max:"CURRENT_TIMESTAMP + 30"}},
     {name: 'eventType', type: 'multiselect',
         params: {style: "toggle", mode:'multiple',
             customFieldDomainMap: new Map([
@@ -112,15 +126,6 @@ const eventsConfig = {
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
-  popupTemplate: {
-    title: "Event information:",
-    content: "Event type: <b>{eventType}</b><br>" +
-        "Project: {project}<br>" +
-        "Event value: {eventValue}<br>" +
-        "First seen: {eventTimestamp}<br>" +
-        "Expiration timestamp: {eventExpirationTimestamp}"
-
-  },
   viewConfig: {
     //center: [-74.00157, 40.71955],
     center: [128.608705, 35.862483],

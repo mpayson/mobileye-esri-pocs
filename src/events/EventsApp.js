@@ -84,42 +84,6 @@ const EventsApp = observer(class App extends React.Component {
 
         const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
 
-        // create a new time slider widget
-        // set other properties when the layer view is loaded
-        // by default timeSlider.mode is "time-window" - shows
-        // data falls within time range
-        // const timeSlider = new TimeSlider({
-        //   container: "timeSlider",
-        //   mode: "time-window",
-        //   view: this.view,
-        //   loop: false,
-        //   stops: {
-        //     interval: {
-        //       value: 1,
-        //       unit: "days"
-        //     }
-        //   }
-        //
-        //
-        // });
-        //
-        // this.store.view.whenLayerView(this.store.map.layers.getItemAt(0)).then(lv => {
-        //   this.timeSlider = timeSlider;
-        //
-        //   const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
-        //   // set up time slider properties
-        //   this.timeSlider.fullTimeExtent = fullTimeExtent;
-        //   //this.timeSlider.fullTimeExtent.start =
-        //   var today = new Date();
-        //   var yesterday = new Date();
-        //   yesterday.setDate(yesterday.getDate()-1);
-        //
-        //   this.timeSlider.values = [yesterday, today]
-        //   //this.timeSlider.fullTimeExtent.end = today;
-        //
-        // });
-
-        //this.view.ui.add(timeSlider, "top-right");
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
@@ -144,18 +108,6 @@ const EventsApp = observer(class App extends React.Component {
       default:
         panel = null;
     }
-
-    // if (this.store.lyr){
-    //   const fullTimeExtent = this.store.lyr.timeInfo.fullTimeExtent;
-    //   // set up time slider properties
-    //   this.timeSlider.fullTimeExtent = fullTimeExtent;
-    //   var today = new Date();
-    //   var yesterday = new Date();
-    //   yesterday.setDate(yesterday.getDate()-1);
-    //
-    //   this.timeSlider.values = [yesterday, today]
-    // }
-    //
 
     const signin = this.props.appState.displayName
       ? (

@@ -105,7 +105,7 @@ class Store {
 
         // used if need to override popup from webmap
         if(!this.layersConfig && this.popupTemplate)
-            layer.popupTemplate = this.popupTemplate;
+                layer.popupTemplate = this.popupTemplate;
 
         // backwards compatible one-layer pattern
         if(!this.layersConfig && collectionIndex === 0){
@@ -138,7 +138,7 @@ class Store {
             const renderer = this.renderers[config.defaultRendererField];
             layer.renderer = this._formatRenderer(renderer);
         }
-        if(!this.defaultVisibleLayersList.includes(config.id)){
+        if(this.defaultVisibleLayersList && !this.defaultVisibleLayersList.includes(config.id)){
             layer.visible = false;
         }
     }
