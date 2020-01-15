@@ -117,7 +117,9 @@ const eventsConfig = {
     content: "Event type: <b>{eventType}</b><br>" +
         "Project: {project}<br>" +
         "Event value: {eventValue}<br>" +
-        "Event timestamp: {eventTimestamp}"
+        "First seen: {eventTimestamp}<br>" +
+        "Expiration timestamp: {eventExpirationTimestamp}"
+
   },
   viewConfig: {
     //center: [-74.00157, 40.71955],

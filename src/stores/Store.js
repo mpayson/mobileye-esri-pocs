@@ -103,13 +103,15 @@ class Store {
         // guard against other layer types that may be in the map
         if(layer.type !== 'feature') return;
 
+        // used if need to override popup from webmap
+        if(!this.layersConfig && this.popupTemplate)
+            layer.popupTemplate = this.popupTemplate;
+
         // backwards compatible one-layer pattern
         if(!this.layersConfig && collectionIndex === 0){
             if(this.outFields) layer.outFields = this.outFields; // used if client-side functionality that requires fields
             if(this.rendererField) // used if need there are many renderer options for layer not in webmap
                 layer.renderer = this._formatRenderer(this.renderers[this.rendererField]);
-            if(this.popupTemplate) // used if need to override popup from webmap
-                layer.popupTemplate = this.popupTemplate;
         }
 
         // new layers config pattern
