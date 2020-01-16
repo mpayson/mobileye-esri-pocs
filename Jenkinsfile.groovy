@@ -1,4 +1,4 @@
-@Library('Shared-Lib-DevOps@shared-advanture-v2')
+@Library('Shared-Lib-DevOps@￿￿￿￿￿￿￿￿￿MOBILEYE')
 import java.lang.String.*
 currentBuild.result = 'SUCCESS'
 
@@ -105,7 +105,7 @@ slaveHandler.basicMe { label ->
                 // get relevant web map id
                 sh "pip3 install arcgis==1.6.1 --no-deps ; pip3 install --no-deps -r esri_tools/requirements.txt; python3 -c 'from esri_tools.esri_tools import get_webmap_id' "
 
-                safetyWebmapId = sh(script: 'python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"${envName}\\", $USERNAME, $PASSWORD))"',returnStdout: true).trim()
+                safetyWebmapId = sh(script: 'ENV=${envName} python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"$ENV\\", $USERNAME, $PASSWORD))"',returnStdout: true).trim()
                 sh "echo ${safetyWebmapId}"
                 EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
                 awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName} --set safety.webmapId=${safetyWebmapId}")
