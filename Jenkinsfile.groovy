@@ -103,12 +103,12 @@ slaveHandler.basicMe { label ->
 
             withCredentials([usernamePassword(credentialsId: 'mobileye-arcgis', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 // get relevant web map id
-                sh "pip3 install arcgis==1.6.1 --no-deps ; pip3 install --no-deps -r esri_tools/requirements.txt; python3 -c 'from esri_tools.esri_tools import get_webmap_id' "
-
-                safetyWebmapId = sh(script: 'ENV=${envName} python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"$ENV\\", $USERNAME, $PASSWORD))"',returnStdout: true).trim()
+                sh "pip3 install --no-deps -r esri_tools/requirements.txt; python3 -c 'from esri_tools.esri_tools import get_webmap_id' "
+                command = 'python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"' + envName + '\\", \\"$USERNAME\\", \\"$PASSWORD\\"))"'
+                safetyWebmapId = sh(script: command, returnStdout: true).trim()
                 sh "echo ${safetyWebmapId}"
                 EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
-                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName} --set safety.webmapId=${safetyWebmapId}")
+                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}") //--set safety.webmapId=${safetyWebmapId}")
 
             }
 
