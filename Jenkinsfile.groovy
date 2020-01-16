@@ -85,6 +85,10 @@ slaveHandler.basicMe { label ->
 
 
         stage('Build Docker') {
+            if (!params.buildBaseDocker){
+                dockerHandler.dockerLogin()
+            }
+
             EcrActions.ecrDockerBuild(repoName,tagName)
             EcrActions.ecrDockerBuild(repoName, envName)
 
