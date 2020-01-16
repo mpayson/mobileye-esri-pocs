@@ -151,6 +151,7 @@ slaveHandler.basicMe { label ->
 
     }
 }
+}
 } catch (e) {
     build.handleException(e)
 } finally {
