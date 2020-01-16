@@ -1,5 +1,8 @@
 @Library('Shared-Lib-DevOps@MOBILEYE')
 import java.lang.String.*
+import intel.aa.mobileye.Build
+
+def build = new Build()
 currentBuild.result = 'SUCCESS'
 
 def gitHandler = getGitHandler()
@@ -60,8 +63,10 @@ slaveHandler.basicMe { label ->
         container('basic') {
 
         stage('SCM') {
-            step([$class: 'WsCleanup'])
-            sh "git clone https://github.com/mpayson/mobileye-esri-pocs.git ."
+            //step([$class: 'WsCleanup'])
+            //sh "git clone https://github.com/mpayson/mobileye-esri-pocs.git ."
+            build.cleanWSAndCheckout(params)
+
         }
 
         stage("aws authentication") {
@@ -108,7 +113,7 @@ slaveHandler.basicMe { label ->
                 safetyWebmapId = sh(script: command, returnStdout: true).trim()
                 sh "echo ${safetyWebmapId}"
                 EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
-                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}") //--set safety.webmapId=${safetyWebmapId}")
+                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps-ci harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}") //--set safety.webmapId=${safetyWebmapId}")
 
             }
 
@@ -140,18 +145,14 @@ slaveHandler.basicMe { label ->
                 updated_parameters.EnvironmentName = ["Ref":"EnvironmentName"]
                 cfnHandler.editTlsTemplateFile(tls_full_repo, tls_template_file, updated_parameters,
                         "${bucket_url_cf}/${new_template_file}", resource_name)
-                gitHandler.gitTag("${env.JOB_NAME}", "${env.BUILD_NUMBER}" , "${branch}")
 
             }
         }
 
     }
-    }
 }
-
-}
-catch(e){
-    currentBuild.result = 'FAILURE'
-    sendMail([mailAddress: mailingList], currentBuild.result)
-    throw e
+} catch (e) {
+    build.handleException(e)
+} finally {
+    build.handleFinally(params)
 }
