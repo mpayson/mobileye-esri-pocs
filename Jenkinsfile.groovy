@@ -35,7 +35,9 @@ properties([
     parameters ([stringParam(name: 'version', defaultValue: 'master', description: 'The current version'),
                  mobileyeParams.region(),
                  booleanParam(name: 'buildBaseDocker', defaultValue: false, description: 'Build base docker'),
-    ])
+    ]),
+    disableConcurrentBuilds()
+
 ])
 
 def pipelineBucket = getAwsS3Bucket(businessLine, [region: params.region, branch: branch, appName: repoName, authObj: awsAuth, debug: true])
@@ -76,6 +78,7 @@ slaveHandler.basicMe { label ->
         }
         if (params.buildBaseDocker){
             stage('Build Base Docker') {
+                dockerHandler.dockerLogin()
                 dockerHandler.buildTagPushWithPath("me-webmaps-base", "intelaa/me-webmaps-base", "${env.BUILD_NUMBER}", [:])
             }
         }
