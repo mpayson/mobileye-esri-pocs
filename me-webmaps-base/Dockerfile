@@ -34,7 +34,7 @@ RUN apt update
 RUN apt install -y git
 
 WORKDIR /app
-COPY ./ /app
+COPY ../ /app
 
 RUN npm install
 
