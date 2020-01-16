@@ -1,6 +1,7 @@
 @Library('Shared-Lib-DevOps@MOBILEYE')
 import java.lang.String.*
 import intel.aa.mobileye.Build
+import intel.aa.common.DockerConstants
 
 def build = new Build()
 currentBuild.result = 'SUCCESS'
@@ -65,12 +66,7 @@ slaveHandler.basicMe { label ->
     node(label) {
         container('basic') {
 
-        stage('SCM') {
-            //step([$class: 'WsCleanup'])
-            //sh "git clone https://github.com/mpayson/mobileye-esri-pocs.git ."
-            build.cleanWSAndCheckout(params)
-
-        }
+        build.cleanWSAndCheckout(params)
 
         stage("aws authentication") {
             awsAuth.awsLogin(credentialsId)
@@ -79,7 +75,13 @@ slaveHandler.basicMe { label ->
         if (params.buildBaseDocker){
             stage('Build Base Docker') {
                 dockerHandler.dockerLogin()
-                dockerHandler.buildTagPushWithPath("Dockerfile_base", "intelaa/me-webmaps-base", "${env.BUILD_NUMBER}", [:])
+                def dockerRepoNew = DockerConstants.INTEL_DOCKER_HUB_NEW
+                def dockerImageName = "me-webmaps-base"
+                def dockerImageTag = "${env.BUILD_NUMBER}"
+                dockerHandler.dockerBuild('.' ,"${dockerRepoNew}/${dockerImageName}" , "${dockerImageTag}", "-f Dockerfile_base", [:])
+                dockerHandler.dockerPush(dockerRepoNew, dockerImageName, dockerImageTag)
+
+                //dockerHandler.buildTagPushWithPath(".", "me-webmaps-base", "${env.BUILD_NUMBER}", [dockerFile: "Dockerfile_base"])
             }
         }
 
