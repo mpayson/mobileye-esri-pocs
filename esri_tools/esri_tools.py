@@ -2,9 +2,7 @@ import os
 from arcgis.gis import GIS
 import sys
 
-def get_webmap_id(map_postfix,environment):
-    username = 'dynrem.generic'
-    password = 'Dynr3mG3neric'
+def get_webmap_id(map_postfix,environment,username,password):
     gis = GIS(username=username, password=password)
     webmap_name = "dynrem-" + environment + "-" + map_postfix
     webmap_list = gis.content.search(webmap_name, item_type="Web Map")
