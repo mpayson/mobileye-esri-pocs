@@ -1,4 +1,4 @@
-@Library('Shared-Lib-DevOps@￿￿￿￿￿￿￿￿￿MOBILEYE')
+@Library('Shared-Lib-DevOps@MOBILEYE')
 import java.lang.String.*
 currentBuild.result = 'SUCCESS'
 
