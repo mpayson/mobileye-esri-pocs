@@ -79,7 +79,7 @@ slaveHandler.basicMe { label ->
         if (params.buildBaseDocker){
             stage('Build Base Docker') {
                 dockerHandler.dockerLogin()
-                dockerHandler.buildTagPushWithPath("me-webmaps-base", "intelaa/me-webmaps-base", "${env.BUILD_NUMBER}", [:])
+                dockerHandler.buildTagPushWithPath("Dockerfile_base", "intelaa/me-webmaps-base", "${env.BUILD_NUMBER}", [:])
             }
         }
 
