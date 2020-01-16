@@ -33,7 +33,8 @@ def mobileyeParams = new JobParameters()
 
 properties([
     parameters ([stringParam(name: 'version', defaultValue: 'master', description: 'The current version'),
-                 mobileyeParams.region()
+                 mobileyeParams.region(),
+                 booleanParam(name: 'buildBaseDocker', defaultValue: false, description: 'Build base docker'),
     ])
 ])
 
@@ -73,6 +74,12 @@ slaveHandler.basicMe { label ->
             awsAuth.awsLogin(credentialsId)
 
         }
+        if (params.buildBaseDocker){
+            stage('Build Base Docker') {
+                dockerHandler.buildTagPushWithPath("me-webmaps-base", "intelaa/me-webmaps-base", "${env.BUILD_NUMBER}", [:])
+            }
+        }
+
 
         stage('Build Docker') {
             EcrActions.ecrDockerBuild(repoName,tagName)
