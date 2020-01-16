@@ -30,7 +30,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     switch(e.target.value) {
         case 'Live':
             hoursBack = 0;
-            daysForward = 30;
+            daysForward = 3;
             break;
         case 'Last hour':
             hoursBack = 1;
