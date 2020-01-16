@@ -189,7 +189,7 @@ Resources:
 
   LoadBalancerRoute53Record:
     Type: AWS::Route53::RecordSet
-#    Condition: tlsBuildCondition
+    Condition: tlsBuildCondition
     Properties:
       HostedZoneId:
         Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-hosted-zone-id"
