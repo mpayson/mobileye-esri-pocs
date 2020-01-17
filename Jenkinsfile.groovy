@@ -81,7 +81,7 @@ slaveHandler.basicMe { label ->
 //                 dockerHandler.dockerBuild('.' ,"${dockerRepoNew}/${dockerImageName}" , "${dockerImageTag}", "-f Dockerfile_base", [:])
 //                 dockerHandler.dockerPush(dockerRepoNew, dockerImageName, dockerImageTag)
 
-                dockerHandler.buildTagPushWithPath(".", "me-webmaps-base", "${env.BUILD_NUMBER}", [dockerFile: "Dockerfile_base", additionalTags:"latest"])
+                dockerHandler.buildTagPushWithPath(".", "me-webmaps-base", "${env.BUILD_NUMBER}", [dockerFile: "Dockerfile_base", additionalTags:["latest"]])
             }
         }
 
