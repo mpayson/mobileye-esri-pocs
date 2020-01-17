@@ -74,23 +74,22 @@ slaveHandler.basicMe { label ->
         }
         if (params.buildBaseDocker){
             stage('Build Base Docker') {
-                dockerHandler.dockerLogin()
-                def dockerRepoNew = DockerConstants.INTEL_DOCKER_HUB_NEW
-                def dockerImageName = "me-webmaps-base"
-                def dockerImageTag = "${env.BUILD_NUMBER}"
-                dockerHandler.dockerBuild('.' ,"${dockerRepoNew}/${dockerImageName}" , "${dockerImageTag}", "-f Dockerfile_base", [:])
-                dockerHandler.dockerPush(dockerRepoNew, dockerImageName, dockerImageTag)
+//                 dockerHandler.dockerLogin()
+//                 def dockerRepoNew = DockerConstants.INTEL_DOCKER_HUB_NEW
+//                 def dockerImageName = "me-webmaps-base"
+//                 def dockerImageTag = "${env.BUILD_NUMBER}"
+//                 dockerHandler.dockerBuild('.' ,"${dockerRepoNew}/${dockerImageName}" , "${dockerImageTag}", "-f Dockerfile_base", [:])
+//                 dockerHandler.dockerPush(dockerRepoNew, dockerImageName, dockerImageTag)
 
-                //dockerHandler.buildTagPushWithPath(".", "me-webmaps-base", "${env.BUILD_NUMBER}", [dockerFile: "Dockerfile_base"])
+                dockerHandler.buildTagPushWithPath(".", "me-webmaps-base", "${env.BUILD_NUMBER}", [dockerFile: "Dockerfile_base", additionalTags:"latest"])
             }
         }
 
 
         stage('Build Docker') {
-//             if (!params.buildBaseDocker){
-//                 dockerHandler.dockerLogin()
-//             }
-            dockerHandler.dockerLogin()
+            if (!params.buildBaseDocker){
+                dockerHandler.dockerLogin()
+            }
 
             EcrActions.ecrDockerBuild(repoName,tagName)
             EcrActions.ecrDockerBuild(repoName, envName)
