@@ -72,15 +72,8 @@ slaveHandler.basicMe { label ->
             awsAuth.awsLogin(credentialsId)
 
         }
-        if (params.buildBaseDocker){
-            stage('Build Base Docker') {
-//                 dockerHandler.dockerLogin()
-//                 def dockerRepoNew = DockerConstants.INTEL_DOCKER_HUB_NEW
-//                 def dockerImageName = "me-webmaps-base"
-//                 def dockerImageTag = "${env.BUILD_NUMBER}"
-//                 dockerHandler.dockerBuild('.' ,"${dockerRepoNew}/${dockerImageName}" , "${dockerImageTag}", "-f Dockerfile_base", [:])
-//                 dockerHandler.dockerPush(dockerRepoNew, dockerImageName, dockerImageTag)
-
+        stage('Build Base Docker') {
+            if (params.buildBaseDocker){
                 dockerHandler.buildTagPushWithPath(".", "me-webmaps-base", "${env.BUILD_NUMBER}", [dockerFile: "Dockerfile_base", additionalTags:["latest"]])
             }
         }
@@ -90,11 +83,8 @@ slaveHandler.basicMe { label ->
             if (!params.buildBaseDocker){
                 dockerHandler.dockerLogin()
             }
-
             EcrActions.ecrDockerBuild(repoName,tagName)
             EcrActions.ecrDockerBuild(repoName, envName)
-
-
         }
 
 

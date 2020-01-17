@@ -1,5 +1,5 @@
 # base image
-FROM intelaa/me-webmaps-base
+FROM amr-registry.caas.intel.com/intelaa/me-webmaps-base
 
 # set working directory
 
