@@ -4,7 +4,6 @@ import {Layout, Menu, Drawer, Icon, Row, Col, Card, Button, Typography} from 'an
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
-import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 
 import {
   addSearchWidget,
@@ -20,6 +19,7 @@ import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
 import MinMaxSlideFilter from "../components/filters/MinMaxSlideFilter";
+import { Logo } from '../components/Logo';
 
 const { Header, Content, Sider } = Layout;
 const Title = Typography.Title;
@@ -155,10 +155,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-          <img
-            src={MobileyeLogo}
-            alt="Mobileye Logo"
-            style={{height: "40px", margin: "12px"}}/>
+          <Logo/>
           <Menu
             defaultSelectedKeys={['0']}
             mode="inline"

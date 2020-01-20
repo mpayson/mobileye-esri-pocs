@@ -17,8 +17,8 @@ import SafetyStore from './SafetyStore';
 import safetyConfig from './SafetyConfig';
 import BookmarkPanel from '../components/BookmarkPanel';
 import SafetyTooltip from './SafetyTooltip';
-import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
 import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
+import { Logo } from '../components/Logo';
 
 const { Header, Content, Sider } = Layout;
 
@@ -180,11 +180,7 @@ const SafetyApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-          <img
-            src={MobileyeLogo}
-            alt="Mobileye Logo"
-            style={{height: "40px", margin: "12px"}}
-            />
+          <Logo/>
           <Menu
             defaultSelectedKeys={['0']}
             mode="inline"

@@ -15,7 +15,7 @@ import BookmarkPanel from '../components/BookmarkPanel';
 import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
-import MobileyeLogo from '../resources/Basic_Web_White_Logo.png';
+import { Logo } from '../components/Logo';
 
 const { Header, Content, Sider } = Layout;
 
@@ -157,11 +157,7 @@ const SurveyApp = observer(class App extends React.Component {
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-          <img
-            src={MobileyeLogo}
-            alt="Mobileye Logo"
-            style={{height: "40px", margin: "12px"}}
-            />
+          <Logo/>
           <Menu
             defaultSelectedKeys={['0']}
             mode="inline"

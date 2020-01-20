@@ -13,6 +13,7 @@ import eventsConfig from './EventsConfig';
 import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
+import { Logo } from '../components/Logo';
 
 const { Header, Content, Sider } = Layout;
 
@@ -91,7 +92,7 @@ const EventsApp = observer(class App extends React.Component {
   }
 
   render() {
-    let panel;
+    let panel, panelWidth;
     switch (this.state.navKey) {
       case 'Layers':
         panel = <LayerPanel store={this.store}/>;
@@ -101,6 +102,7 @@ const EventsApp = observer(class App extends React.Component {
         break;
       case 'Locations':
         panel = <LocationsPanel store={this.store}/>
+        panelWidth = 300;
         break;
       case 'About':
         panel = <h1>Live events application</h1>;
@@ -123,36 +125,37 @@ const EventsApp = observer(class App extends React.Component {
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-          <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Mobileye City Lab</h1>
-          {signin}
-        </Header>
+        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+          <Logo />
+          <Menu
+            defaultSelectedKeys={['0']}
+            mode="inline"
+            theme="dark"
+            selectedKeys={[this.state.navKey]}
+            onClick={this.onSelect}>
+            <Menu.Item key="Layers">
+              <Icon component={MenuFilterIcon} />
+              <span>Layers</span>
+            </Menu.Item>
+            <Menu.Item key="Bookmarks">
+              <Icon component={MenuBookmarkIcon} />
+              <span>Bookmarks</span>
+            </Menu.Item>
+            <Menu.Item key="Locations">
+              <Icon component={MenuLocationsIcon} />
+              <span>Locations</span>
+            </Menu.Item>
+            <Menu.Item key="About">
+              <Icon component={MenuInformationIcon} />
+              <span>About</span>
+            </Menu.Item>
+          </Menu>
+        </Sider>
         <Layout>
-          <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-            <Menu
-              defaultSelectedKeys={['0']}
-              mode="inline"
-              theme="dark"
-              selectedKeys={[this.state.navKey]}
-              onClick={this.onSelect}>
-              <Menu.Item key="Layers">
-                <Icon component={MenuFilterIcon} />
-                <span>Layers</span>
-              </Menu.Item>
-              <Menu.Item key="Bookmarks">
-                <Icon component={MenuBookmarkIcon} />
-                <span>Bookmarks</span>
-              </Menu.Item>
-              <Menu.Item key="Locations">
-                <Icon component={MenuLocationsIcon} />
-                <span>Locations</span>
-              </Menu.Item>
-              <Menu.Item key="About">
-                <Icon component={MenuInformationIcon} />
-                <span>About</span>
-              </Menu.Item>
-            </Menu>
-          </Sider>
+          <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
+            <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Mobileye City Lab</h1>
+            {signin}
+          </Header>
           <Content>
             <Row>
               <Col
@@ -174,6 +177,7 @@ const EventsApp = observer(class App extends React.Component {
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
+                width={panelWidth}
               >
                 {panel}
               </Drawer>

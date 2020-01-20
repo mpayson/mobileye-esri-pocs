@@ -50,9 +50,17 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
   render(){
 
-    const eventOptions =  <SelectFilter store={this.eventFilter} mode={this.eventFilter.mode} style= {this.eventFilter.style} key={this.eventFilter.field} id={this.eventFilter.field}/>;
+    const eventOptions =  (
+      <SelectFilter 
+          store={this.eventFilter} 
+          mode={this.eventFilter.mode} 
+          style= {this.eventFilter.style} 
+          key={this.eventFilter.field} 
+          id={this.eventFilter.field}
+      />
+    );
 
-        const radioStyle = {
+    const radioStyle = {
       display: 'block',
       height: '30px',
       lineHeight: '30px',

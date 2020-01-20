@@ -11,6 +11,8 @@ import {
   Select
 } from 'antd';
 import PinIcon from 'calcite-ui-icons-react/PinPlusIcon';
+import config from '../config/config';
+const { outdatedResultsWarning } = config;
 const { Option } = Select;
 
 const CreateIcon = () => (
@@ -100,7 +102,8 @@ const RoutePanel = observer(class RoutePanel extends React.Component{
         afterClose={this.afterCloseAlert}
         closable/>
       )
-    } else if((store.safetyTimeDelta && store.safetyTimeDelta > 25) || this.alertFading){
+    } else if (outdatedResultsWarning && 
+        ((store.safetyTimeDelta && store.safetyTimeDelta > 25) || this.alertFading)) {
       alert = (
         <Alert
         style={{marginBottom: "10px"}}

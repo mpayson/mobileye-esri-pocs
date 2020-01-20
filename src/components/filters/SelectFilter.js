@@ -40,18 +40,20 @@ const ToggleMultiSelectFilter = observer(class ToggleMultiSelectFilter extends R
   render() {
     const store = this.props.store;
     return store.displayOptions.map(o => {
-      let label = (o === -100 ? "All" : 
+      const label = (o === -100 ? "All" : 
           (store.domainMap.has(o) ? 
             store.domainMap.get(o)
             : o));
+      const wrapperStyles = {display: "flex", alignItems: "center", height: "30px"}
       return (
-        <div key={o}>
+        <div style={wrapperStyles} key={o}>
           <Switch
               id={o}
               onChange={this._onToggle}
               checked={store.selectedOptionSet.has(o)}
-              style={{float: "left", marginTop: "1px"}}/>
-          <h3 style={{display: "inline-block", margin: "0px 0px 2px 10px"}}>{label}</h3>
+              style={{marginTop: "1px"}}
+          />
+          <div style={{margin: "0px 0px 2px 10px"}}>{label}</div>
         </div>
       )
     });

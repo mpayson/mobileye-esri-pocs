@@ -3,11 +3,16 @@ import { Collapse, Card } from 'antd';
 import './PanelCard.css';
 const { Panel } = Collapse;
 
+const CardHeader = ({icon, children}) => (
+  <h1 style={{padding: "5px 0", margin: "0"}}>
+    {icon && <span style={{marginRight: "10px"}}>{icon}</span>}
+    {children}
+  </h1>
+)
+
 const PanelCard = ({title, icon, collapsible, defaultActive, children, open, onChange}) => {
 
-  const header = icon
-    ? <h1 style={{padding: "0px"}}>{icon}<span style={{marginLeft: "10px"}}>{title}</span></h1>
-    : <h1 style={{padding: "0px"}}>{title}</h1>;
+  const header = <CardHeader icon={icon}>{title}</CardHeader>;
 
   if(!collapsible){
     return (

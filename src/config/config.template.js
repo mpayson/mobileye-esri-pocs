@@ -1,6 +1,7 @@
 const config = {
   appId: "myid",
-  portalUrl: "myurl"
+  portalUrl: "myurl",
+  outdatedResultsWarning: false,
 }
 
 export default config;
