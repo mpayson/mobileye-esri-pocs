@@ -52,6 +52,7 @@ const ToggleMultiSelectFilter = observer(class ToggleMultiSelectFilter extends R
               onChange={this._onToggle}
               checked={store.selectedOptionSet.has(o)}
               style={{marginTop: "1px"}}
+              size="small"
           />
           <div style={{margin: "0px 0px 2px 10px"}}>{label}</div>
         </div>
