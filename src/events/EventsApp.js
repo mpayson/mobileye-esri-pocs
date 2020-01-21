@@ -114,7 +114,6 @@ const EventsApp = observer(class App extends React.Component {
     const signin = this.props.appState.displayName
       ? (
         <Menu
-          theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
@@ -152,8 +151,8 @@ const EventsApp = observer(class App extends React.Component {
           </Menu>
         </Sider>
         <Layout>
-          <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-            <h1 style={{color: "rgba(255,255,255,0.8", float: "left"}}>Mobileye City Lab</h1>
+          <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
+            <h1 style={{float: "left"}}>Real time events</h1>
             {signin}
           </Header>
           <Content>
