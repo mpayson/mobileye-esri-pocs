@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from "mobx-react";
 import PanelCard from '../components/PanelCard';
-import LayerIcon from 'calcite-ui-icons-react/LayerIcon';
+import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
 import SelectFilter from '../components/filters/SelectFilter';
 import eventsConfig from "../events/EventsConfig";
 import {Radio} from "antd";
@@ -78,8 +78,8 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     return (
       <>
         <PanelCard
-          //icon={<LayerIcon size="20" style={{position: "relative", top: "4px", left: "0px"}}/>}
-          //title="Event type"
+          title="Filters"
+          icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
           collapsible={false}
           defaultActive={true}>
           <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Events expiration:</h3>
