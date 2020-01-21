@@ -44,17 +44,17 @@ const ToggleMultiSelectFilter = observer(class ToggleMultiSelectFilter extends R
           (store.domainMap.has(o) ? 
             store.domainMap.get(o)
             : o));
-      const wrapperStyles = {display: "flex", alignItems: "center", height: "30px"}
+      const wrapperStyles = {display: "flex", alignItems: "center", height: "32px"}
       return (
         <div style={wrapperStyles} key={o}>
           <Switch
               id={o}
               onChange={this._onToggle}
               checked={store.selectedOptionSet.has(o)}
-              style={{marginTop: "1px"}}
+              style={{marginRight: "10px"}}
               size="small"
           />
-          <div style={{margin: "0px 0px 2px 10px"}}>{label}</div>
+          <div style={{lineHeight: 1.15}}>{label}</div>
         </div>
       )
     });
