@@ -56,6 +56,8 @@ class SelectFilter extends Filter{
 
     if (this.customFieldDomainMap)
       this.domainMap = this.customFieldDomainMap;
+
+    this.selectValue = [...this.domainMap.keys()]
   }
 
   // execute client-side query based on what's currently available
