@@ -94,10 +94,11 @@ const humanMobilityConfig = {
 
     ],
 
-  statisticsFieldsInfo: { 'avg_spd': {title:"Average speed      " , postText:"km/h"},
-                    'ped_den': {title:"Average pedestrian volume" , postText:"per ride"},
-                    'bic_den': {title:"Average cyclist volume" , postText:"per ride"},
-                },
+  statisticsFieldsInfo: { 
+    'avg_spd': {title:"Average speed      " , postText:"km/h", iconTag: 'speed'},
+    'ped_den': {title:"Average pedestrian volume" , postText:"per ride", iconTag: 'walk'},
+    'bic_den': {title:"Average cyclist volume" , postText:"per ride", iconTag: 'bike'},
+  },
   liveLayersStartIndex: 2,
   defaultVisibleLayersList: [0,1,2],
 
