@@ -122,7 +122,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
     const signin = this.props.appState.displayName
       ? (
         <Menu
-          theme="dark"
           mode="horizontal"
           style={{ lineHeight: '64px', float: "right" }}
         >
@@ -177,8 +176,8 @@ const HumanMobilityApp = observer(class App extends React.Component {
           </Menu>
         </Sider>
         <Layout>
-          <Header style={{paddingLeft: "1rem", paddingRight: "0rem"}}>
-            <h1 style={{float: "left", color: "rgba(255,255,255,0.8)"}}>Mobility</h1>
+          <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
+            <h1 style={{float: "left"}}>Mobility</h1>
             {signin}
           </Header>
           <Content>

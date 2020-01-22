@@ -51,7 +51,7 @@ const humanMobilityConfig = {
   webmapId: webmapIdEnv,
   renderers : {
     'avg_spd': getClassBreakRenderer('avg_spd',[0,30,50,90,1000],
-        ['0-30 km/h','30-50 km/h','50-100 km/h','100+ km/h '],[[206,22,32,255],[255,89,103,255],[241,173,179,255],[254,220,225,255]],["2.3px","2.3px","2.3px","2.3px"],"Average speed"),
+        ['0-30 km/h','30-50 km/h','50-100 km/h','100+ km/h '],[[191,54,12,255],[255,109,0,255],[255,193,7,255],[255,238,88,255]],["2.3px","2.3px","2.3px","2.3px"],"Average speed"),
     'ped_den': getClassBreakRenderer('ped_den',[0,3,10,20,500],['Low','Medium','High','Very High'],[[0,54,104,255], [0,108,226,255], [129,189,255,255],[248,255,248,255]],["2.3px","2.3px","2.3px","2.3px"],"Average pedestrian volume"),
     'bic_den': getClassBreakRenderer('bic_den',[0,2,5,20,500],['Low','Medium','High','Very High'],[[65,72,51,255], [0,128,0,255], [133,187,101,255], [172,255,175,255]],["2.3px","2.3px","2.3px","2.3px"],"Average cyclist volume"),
   }
@@ -94,10 +94,11 @@ const humanMobilityConfig = {
 
     ],
 
-  statisticsFieldsInfo: { 'avg_spd': {title:"Average speed      " , postText:"km/h"},
-                    'ped_den': {title:"Average pedestrian volume" , postText:"per ride"},
-                    'bic_den': {title:"Average cyclist volume" , postText:"per ride"},
-                },
+  statisticsFieldsInfo: { 
+    'avg_spd': {title:"Average speed      " , postText:"km/h", iconTag: 'speed'},
+    'ped_den': {title:"Average pedestrian volume" , postText:"per ride", iconTag: 'walk'},
+    'bic_den': {title:"Average cyclist volume" , postText:"per ride", iconTag: 'bike'},
+  },
   liveLayersStartIndex: 2,
   defaultVisibleLayersList: [0,1,2],
 

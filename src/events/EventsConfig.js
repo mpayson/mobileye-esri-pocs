@@ -88,7 +88,7 @@ const eventsConfig = {
       },
       {
         value: "EID_VRU_ON_HW",
-        label:"Vulnerable road user",
+        label:"Pedestrian/cyclist on high speed road",
         symbol: {
           type: "simple-marker",
           style: "circle",
@@ -117,7 +117,7 @@ const eventsConfig = {
                                           ['pedestrians',    'Pedestrians'],
                                           ['bicycles','Bicycles'],
                                           ['EID_STOPPED_CAR_ON_HW_SHOULDER',    'Stopped car'],
-                                          ['EID_VRU_ON_HW',    'Vulnerable road user'],
+                                          ['EID_VRU_ON_HW',    'Pedestrian/cyclist on high speed road'],
 
                                         ]),
             optionsToRemovePostfix:"_test",

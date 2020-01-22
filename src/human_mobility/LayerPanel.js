@@ -46,10 +46,13 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         <Radio value={entry[0]} key={entry[0]} style={radioStyle}>{entry[1].title}</Radio>
     )
     const statsListGroup =
-      <RadioGroup onChange={this._onRadioClick} value={this.props.store.rendererField}>
+      <RadioGroup 
+        onChange={this._onRadioClick} 
+        value={this.props.store.rendererField} 
+        style={{marginBottom: '15px'}}
+      >
         {statsRadios}
-      </RadioGroup>
-;
+      </RadioGroup>;
     return (
       <>
         <PanelCard
