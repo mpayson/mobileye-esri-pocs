@@ -79,18 +79,19 @@ const HumanMobilityTooltip = observer(({store}) => {
   }
   const infoContent = Object.entries(humanMobilityConfig.statisticsFieldsInfo).map(entry => {
     const IconSvg = TAG_TO_SVG[entry[1].iconTag] || TAG_TO_SVG['none']
+    const value = Math.round(results[entry[0]].count != 0 ? results[entry[0]].sum / results[entry[0]].count : 0);
     return (
         <Col key={entry[0]} span={12} style={colStyle}>
           <IconSvg 
             style={iconStyle} 
             width={28} 
             height={28} 
-            fill={'rgba(0, 0, 0, 0.65)'} 
+            fill="#6e6e6e"
             title={entry[1].title} 
           />
           <span>
             <span style={{fontSize: '24px'}}>
-              {Math.round(results[entry[0]].count != 0 ? results[entry[0]].sum / results[entry[0]].count : 0)}  
+              {value}  
             </span>
             {' '}{entry[1].postText}
           </span>
