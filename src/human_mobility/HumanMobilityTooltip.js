@@ -6,7 +6,7 @@ import humanMobilityConfig from './HumanMobilityConfig';
 import { ReactComponent as BikeIcon} from '../resources/svg/directions_bike-24px.svg';
 import { ReactComponent as WalkIcon} from '../resources/svg/directions_walk-24px.svg';
 import { ReactComponent as SpeedIcon} from '../resources/svg/speed-24px.svg';
-import { ReactComponent as NoIcon } from '../resources/svg/no_icon-24px.svg';
+import { ReactComponent as NoIcon } from '../resources/svg/not_interested-24px.svg';
 
 const TAG_TO_SVG = {
   'bike': BikeIcon,
