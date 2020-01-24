@@ -17,13 +17,22 @@ class SelectFilter extends Filter{
     this.mode = params && params.mode ? params.mode : '';
     this.customFieldDomainMap = params && params.customFieldDomainMap ? params.customFieldDomainMap : null;
     this.optionsToRemovePostfix = params && params.optionsToRemovePostfix ? params.optionsToRemovePostfix : null;
+    this.optionsToMerge = (params && params.optionsToMerge) || null;
   }
   _setFromQueryResults(results){
     results.features.forEach(f => {
-      if (this.options.indexOf(f.attributes[this.field]) === -1)
-        if (!this.optionsToRemovePostfix || !f.attributes[this.field].toLowerCase().endsWith(this.optionsToRemovePostfix))
-          this.options.push(f.attributes[this.field]);
-    }
+      const key = f.attributes[this.field];
+      if (this.optionsToMerge && this.optionsToMerge.has(key)) {
+        const metaKey = this.optionsToMerge.get(key);
+        if (metaKey) {
+          if (this.options.indexOf(metaKey) === -1) {
+            this.options.push(metaKey);
+          }
+        }
+      } else if (this.options.indexOf(key) === -1)
+        if (!this.optionsToRemovePostfix || !key.toLowerCase().endsWith(this.optionsToRemovePostfix))
+          this.options.push(key);
+      }
     );
     if (this.subset_query !== "1=1" && this.options.length === 0) {
       this.options.push(-100); // marking the "all" option
@@ -88,7 +97,21 @@ class SelectFilter extends Filter{
 
   get where(){
     if (this.selectValue === "-100") return this.subset_query;
-    return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type)
+    let value = this.selectValue;
+    console.log(value);
+    if (this.optionsToMerge) {
+      const metaKeys = new Set(this.optionsToMerge.keys());
+      if (Array.isArray(value)) {
+        value = value.filter(key => !metaKeys.has(key)).concat(this.optionsToMerge.values());
+      } else {
+        value = metaKeys.has(value) 
+          ? [...this.optionsToMerge.values()] 
+          : [value, ...this.optionsToMerge.values()];
+      }
+    }
+    const query = getSelectWhere(this.field, value, this.fieldInfo.type)
+    console.log(query);
+    return query;
   }
 
   get optionSet(){

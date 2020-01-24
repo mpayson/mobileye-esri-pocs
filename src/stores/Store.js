@@ -407,6 +407,7 @@ class Store {
             .filter(f => !!f.where)
             .map(f => f.where)
             .join(' AND ');
+        console.log(where);
         return where ? where : "1=1";
     }
 

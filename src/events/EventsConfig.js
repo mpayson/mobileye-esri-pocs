@@ -121,6 +121,11 @@ const eventsConfig = {
 
                                         ]),
             optionsToRemovePostfix:"_test",
+            optionsToMerge: new Map([
+                                    // ['pedestrians', 'pedestrians'],
+                                    ['bicycles', 'pedestrians'],
+                                    ['EID_VRU_ON_HW', 'pedestrians']
+                                  ]),
         }
     },
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
