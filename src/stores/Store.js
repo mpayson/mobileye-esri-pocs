@@ -129,10 +129,11 @@ class Store {
                 config.baselineWhereCondition,
                 config.initialZoomExpression
             ]);
+            console.log(layer.definitionExpression)
         }
         if(config.outFields) layer.outFields = config.outFields;
         if(config.popupTemplate !== undefined) layer.popupTemplate = config.popupTemplate;
-        
+
         // Port static logic
         if(config.defaultRendererField && config.type !== 'static'){
             const renderer = this.renderers[config.defaultRendererField];
@@ -180,25 +181,30 @@ class Store {
     }
 
     _buildAutoRunEffects() {
-        const onApplyFilter = debounce(function (layerViewsMap, where, interactiveIds) {
+        const onApplyFilter = debounce(function (layerViewsMap, where, interactiveIds, layerConfigByLayerId) {
             layerViewsMap.forEach(lV => {
                 const id = lV.layer.id;
                 if(interactiveIds.has(id)){
-                    lV.filter = {where};
+                     const config = layerConfigByLayerId.get(id);
+                     if(config && !config.ignoreFilter)
+                       lV.filter = {where};
                 }
             });
         });
         this.effectHandler = autorun(_ => {
             const where = this.where;
-            if (this.layerViewsMap && onApplyFilter) {
-                onApplyFilter(this.layerViewsMap, where, this.interactiveLayerIdSet);
+            if (this.layerViewsMap && this.layersLoaded && onApplyFilter) {
+                onApplyFilter(this.layerViewsMap, where, this.interactiveLayerIdSet, this.layerConfigByLayerId);
             }
         });
         this.rendererHandler = autorun(_ => {
             const rendererField = this.rendererField;
             // only interactive layers will have updated renderers
             this.interactiveLayers.forEach(layer => {
-                this._updateRendererFields(layer);
+                const config = this.layerConfigByLayerId.get(layer.id);
+                if (!config.ignoreRendererUpdate) {
+                    this._updateRendererFields(layer);
+                }
             })
         })
     }
@@ -418,6 +424,19 @@ class Store {
         return [];
     }
 
+    get legendLayerInfos() {
+        return this.layers
+            .filter(l => {
+                const config = this.layerConfigByLayerId.get(l.id);
+                return config && config.showLegend; // default to false
+            })
+            .map(l => ({
+                layer: l,
+                title: this.layerConfigByLayerId.get(l.id).customLegendTitle
+                    ? this.layerConfigByLayerId.get(l.id).customLegendTitle
+                    : ""
+            }));
+    }
     get interactiveLayers(){
         return this.layers.filter(layer => {
             const config = this.layerConfigByLayerId.get(layer.id);
@@ -466,6 +485,7 @@ decorate(Store, {
     layers: computed,
     interactiveLayers: computed,
     interactiveLayerIdSet: computed,
+    layerConfigByLayerId: computed,
     bookmarks: computed,
     load: action.bound,
     _updateRendererFields: action.bound,

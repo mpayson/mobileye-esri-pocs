@@ -4,7 +4,7 @@ import PanelCard from '../components/PanelCard';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
 import SelectFilter from '../components/filters/SelectFilter';
 import eventsConfig from "../events/EventsConfig";
-import {Radio} from "antd";
+import {Radio, Switch} from "antd";
 const RadioGroup = Radio.Group;
 
 
@@ -14,12 +14,47 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     super(props, context);
     this.eventFilter = props.store.filters.find(f => f.field === 'eventType');
     this.expirationFilter = props.store.filters.find(f => f.field === 'eventExpirationTimestamp');
-
+    this.speedValueFilter = props.store.filters.find(f => f.field === this.state.speedRendererField);
   }
 
   state = {
     selectedExpirationRadio: 'Live',
+    selectedSpeedRadio: 'Last hour',
+    speedRendererField: 'avg_last_hour'
   };
+
+  _onShowSpeedRadioClick = e => {
+    var rendererField = "";
+    switch(e.target.value) {
+        case 'Last 15 minutes':
+            rendererField = 'avg_last_15_min';
+            break;
+        case 'Last hour':
+            rendererField = 'avg_last_hour';
+            break;
+        case 'Last 5 hours':
+            rendererField = 'avg_last_5_hours';
+            break;
+        default:
+    }
+    this.setState({
+      selectedSpeedRadio: e.target.value,
+      speedRendererField: rendererField
+    });
+
+    this._updateSpeedLayerFilter(rendererField);
+
+  }
+
+  _updateSpeedLayerFilter(rendererField){
+
+    this.props.store.layerViewsMap.forEach(lV => {
+      const id = lV.layer.id;
+      if (id == "speed") {
+          lV.filter = {where: rendererField + " > 0"};
+      }
+    });
+  }
 
   _onRadioClick = e => {
     this.setState({
@@ -49,7 +84,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   render(){
-
     const eventOptions =  (
       <SelectFilter 
           store={this.eventFilter} 
@@ -65,6 +99,17 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       height: '30px',
       lineHeight: '30px',
     }
+
+    const speedOptions = ['Last 15 minutes','Last hour','Last 5 hours']
+    const speedOptionsRadios = speedOptions.map(entry =>
+        <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
+    )
+    const speedListGroup =
+      <RadioGroup onChange={this._onShowSpeedRadioClick} value={this.state.selectedSpeedRadio}>
+        {speedOptionsRadios}
+      </RadioGroup>;
+
+
     const expirationOptions = ['Live','Last hour','Last 5 hours', 'Last 24 hours']
     const expirationOptionsRadios = expirationOptions.map(entry =>
         <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
@@ -74,7 +119,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         {expirationOptionsRadios}
       </RadioGroup>;
 
-
     return (
       <>
         <PanelCard
@@ -82,12 +126,15 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
           icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
           collapsible={false}
           defaultActive={true}>
+          <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Speed average:</h3>
+          <br/>
+          {speedListGroup}
+          <br/>
+          <br/>
           <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Events expiration:</h3>
-
           {statsListGroup}
           <br/>
           <br/>
-
           <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Event type:</h3>
           {eventOptions}
         </PanelCard>

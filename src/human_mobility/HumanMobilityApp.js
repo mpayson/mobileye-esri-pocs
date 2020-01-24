@@ -73,17 +73,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
       .then(mapView => {
         this.view = mapView;
         addSearchWidget(this.view, 'top-right', 0, true);
-        const layerInfos = this.store.layers
-          .filter(l => {
-            const config = this.store.layerConfigByLayerId.get(l.id);
-            return config && config.showLegend; // default to false
-          })
-          .map(l => ({
-            layer: l,
-            title: this.store.layerConfigByLayerId.get(l.id).customLegendTitle
-              ? this.store.layerConfigByLayerId.get(l.id).customLegendTitle
-              : ""
-          }));
+        const layerInfos = this.store.legendLayerInfos;
         addLegendWidget(this.view, 'bottom-right', {layerInfos});
         
         const homeTarget = this.store.viewConfig.center && this.store.viewConfig.zoom
