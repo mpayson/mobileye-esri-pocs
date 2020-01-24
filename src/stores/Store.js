@@ -129,7 +129,6 @@ class Store {
                 config.baselineWhereCondition,
                 config.initialZoomExpression
             ]);
-            console.log(layer.definitionExpression)
         }
         if(config.outFields) layer.outFields = config.outFields;
         if(config.popupTemplate !== undefined) layer.popupTemplate = config.popupTemplate;
