@@ -1,6 +1,6 @@
 import Filter from './Filter';
 import { decorate, observable, action, computed } from 'mobx';
-import { getSelectWhere, getDomainMap } from '../../utils/Utils';
+import { getSelectWhere, getDomainMap, getMultiSelectWhere } from '../../utils/Utils';
 
 class SelectFilter extends Filter{
   type = 'select';
@@ -97,21 +97,20 @@ class SelectFilter extends Filter{
 
   get where(){
     if (this.selectValue === "-100") return this.subset_query;
-    let value = this.selectValue;
-    console.log(value);
     if (this.optionsToMerge) {
-      const metaKeys = new Set(this.optionsToMerge.keys());
-      if (Array.isArray(value)) {
-        value = value.filter(key => !metaKeys.has(key)).concat(this.optionsToMerge.values());
-      } else {
-        value = metaKeys.has(value) 
-          ? [...this.optionsToMerge.values()] 
-          : [value, ...this.optionsToMerge.values()];
+      const reversed = new Map(); // meta -> real
+      for (let [k, v] of this.optionsToMerge.entries()) {
+          if (!reversed.has(v)) {
+            reversed.set(v, [])
+          }
+          reversed.get(v).push(k);
+      }
+      const realValues = reversed.get(this.selectValue);
+      if (realValues) {
+        return getMultiSelectWhere(this.field, realValues, this.fieldInfo.type);
       }
     }
-    const query = getSelectWhere(this.field, value, this.fieldInfo.type)
-    console.log(query);
-    return query;
+    return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
   }
 
   get optionSet(){
