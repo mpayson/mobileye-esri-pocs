@@ -166,6 +166,10 @@ class Store {
                 // set initial where, port of logic where only applied if theres a baseline condition
                 // because baseline condition was set to definitionexpression
                 const config = this.layerConfigByLayerId.get(layer.id);
+                if(config && config.customDefaultFilter) {
+                    lV.filter = {where: config.customDefaultFilter}
+                    return;
+                }
                 if(config && config.ignoreFilter === true) return;
                 lV.filter = {where: this.where}
             })

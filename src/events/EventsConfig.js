@@ -147,7 +147,7 @@ const eventsConfig = {
     {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:true},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 2, type: "live", name: "speed", popupTemplate: popupTemplate,showLegend:true,
         defaultRendererField: 'averageSpeed',
-        ignoreFilter:true, ignoreRendererUpdate: true},
+        customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true},
 
   ],
   filters: [

@@ -47,7 +47,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   _updateSpeedLayerFilter(rendererField){
-
     this.props.store.layerViewsMap.forEach(lV => {
       const id = lV.layer.id;
       if (id == "speed") {
@@ -84,6 +83,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   render(){
+
     const eventOptions =  (
       <SelectFilter 
           store={this.eventFilter} 
