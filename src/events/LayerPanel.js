@@ -20,9 +20,23 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   state = {
     selectedExpirationRadio: 'Live',
     selectedSpeedRadio: 'Last hour',
-    speedRendererField: 'avg_last_hour'
+    speedRendererField: 'avg_last_hour',
+    showSpeed: true,
   };
 
+  _onShowSpeedToggle = e => {
+    console.log(e)
+    this.setState({
+      showSpeed: e,
+    });
+    this.props.store.layerViewsMap.forEach(lV => {
+      const id = lV.layer.id;
+      if (id == "speed") {
+          lV.visible = e;
+      }
+    });
+
+  }
   _onShowSpeedRadioClick = e => {
     var rendererField = "";
     switch(e.target.value) {
@@ -32,8 +46,8 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         case 'Last hour':
             rendererField = 'avg_last_hour';
             break;
-        case 'Last 5 hours':
-            rendererField = 'avg_last_5_hours';
+        case 'Last 3 hours':
+            rendererField = 'avg_last_3_hours';
             break;
         default:
     }
@@ -100,7 +114,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       lineHeight: '30px',
     }
 
-    const speedOptions = ['Last 15 minutes','Last hour','Last 5 hours']
+    const speedOptions = ['Last 15 minutes','Last hour','Last 3 hours']
     const speedOptionsRadios = speedOptions.map(entry =>
         <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
     )
@@ -119,15 +133,27 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         {expirationOptionsRadios}
       </RadioGroup>;
 
+    const wrapperStyles = {display: "flex", alignItems: "center", height: "32px"}
+    const showSpeedSwitch =
+        <div style={wrapperStyles} key="showSpeed">
+          <Switch
+              id="showSpeed"
+              onChange={this._onShowSpeedToggle}
+              checked={this.state.showSpeed}
+              style={{marginRight: "10px"}}
+              size="small"
+          />
+          <div style={{lineHeight: 1.15}}>Average Speed:</div>
+        </div>
     return (
+
       <>
         <PanelCard
           title="Filters"
           icon={<LayerFilterIcon size="20" style={{position: "relative", top: "3px", left: "0px"}}/>}
           collapsible={false}
           defaultActive={true}>
-          <h3 style={{display: "inline-block", margin: "0px 0px 10px 0px"}}>Speed average:</h3>
-          <br/>
+          {showSpeedSwitch}
           {speedListGroup}
           <br/>
           <br/>

@@ -205,7 +205,7 @@ class Store {
             // only interactive layers will have updated renderers
             this.interactiveLayers.forEach(layer => {
                 const config = this.layerConfigByLayerId.get(layer.id);
-                if (!config.ignoreRendererUpdate) {
+                if (!config || (config && !config.ignoreRendererUpdate)) {
                     this._updateRendererFields(layer);
                 }
             })
