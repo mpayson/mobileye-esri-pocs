@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import PanelCard from '../components/PanelCard';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
 import SelectFilter from '../components/filters/SelectFilter';
-import eventsConfig from "../events/EventsConfig";
 import {Radio, Switch} from "antd";
 const RadioGroup = Radio.Group;
 
@@ -14,7 +13,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     super(props, context);
     this.eventFilter = props.store.filters.find(f => f.field === 'eventType');
     this.expirationFilter = props.store.filters.find(f => f.field === 'eventExpirationTimestamp');
-    this.speedValueFilter = props.store.filters.find(f => f.field === this.state.speedRendererField);
   }
 
   state = {
@@ -25,7 +23,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   };
 
   _onShowSpeedToggle = e => {
-    console.log(e)
     this.setState({
       showSpeed: e,
     });
@@ -37,7 +34,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     });
 
   }
-  _onShowSpeedRadioClick = e => {
+  _onSpeedRadioClick = e => {
     var rendererField = "";
     switch(e.target.value) {
         case 'Last 15 minutes':
@@ -56,7 +53,14 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       speedRendererField: rendererField
     });
 
+    this.props.store.layers.forEach(layer => {
+        if (layer.id == "speed") {
+            console.log(layer.renderer);
+            layer.renderer.field = rendererField;
+        }
+    })
     this._updateSpeedLayerFilter(rendererField);
+
 
   }
 
@@ -119,7 +123,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
     )
     const speedListGroup =
-      <RadioGroup onChange={this._onShowSpeedRadioClick} value={this.state.selectedSpeedRadio}>
+      <RadioGroup onChange={this._onSpeedRadioClick} value={this.state.selectedSpeedRadio}>
         {speedOptionsRadios}
       </RadioGroup>;
 
