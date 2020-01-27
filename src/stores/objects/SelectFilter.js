@@ -1,6 +1,6 @@
 import Filter from './Filter';
 import { decorate, observable, action, computed } from 'mobx';
-import { getSelectWhere, getDomainMap, getMultiSelectWhere } from '../../utils/Utils';
+import { getSelectWhere, getDomainMap, getMultiSelectWhere, reverse } from '../../utils/Utils';
 
 class SelectFilter extends Filter{
   type = 'select';
@@ -18,7 +18,9 @@ class SelectFilter extends Filter{
     this.customFieldDomainMap = params && params.customFieldDomainMap ? params.customFieldDomainMap : null;
     this.optionsToRemovePostfix = params && params.optionsToRemovePostfix ? params.optionsToRemovePostfix : null;
     this.optionsToMerge = (params && params.optionsToMerge) || null;
+    this.mergedOptions = this.optionsToMerge ? reverse(this.optionsToMerge) : null;
   }
+  
   _setFromQueryResults(results){
     results.features.forEach(f => {
       const key = f.attributes[this.field];
@@ -97,17 +99,10 @@ class SelectFilter extends Filter{
 
   get where(){
     if (this.selectValue === "-100") return this.subset_query;
-    if (this.optionsToMerge) {
-      const reversed = new Map(); // meta -> real
-      for (let [k, v] of this.optionsToMerge.entries()) {
-          if (!reversed.has(v)) {
-            reversed.set(v, [])
-          }
-          reversed.get(v).push(k);
-      }
-      const realValues = reversed.get(this.selectValue);
-      if (realValues) {
-        return getMultiSelectWhere(this.field, realValues, this.fieldInfo.type);
+    if (this.mergedOptions) {
+      const values = this.mergedOptions.get(this.selectValue);
+      if (values) {
+        return getMultiSelectWhere(this.field, values, this.fieldInfo.type);
       }
     }
     return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type);

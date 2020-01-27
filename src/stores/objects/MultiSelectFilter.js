@@ -29,21 +29,14 @@ class MultiSelectFilter extends SelectFilter{
   get where(){
     if (this.selectValue.indexOf("-100") !== -1) return this.subset_query;
     let values = this.selectValue;
-    if (this.optionsToMerge) {
-      const reversed = new Map(); // meta -> real
-      for (let [k, v] of this.optionsToMerge.entries()) {
-          if (!reversed.has(v)) {
-            reversed.set(v, [])
-          }
-          reversed.get(v).push(k);
-      }
-      let updValues = []
-      for (let v of values) {
-        const addKeys = reversed.get(v);
+    if (this.mergedOptions) {
+      const updValues = []
+      for (const val of values) {
+        const addKeys = this.mergedOptions.get(val);
         if (addKeys) {
-          updValues = updValues.concat(addKeys);
+          addKeys.forEach(key => updValues.push(key));
         } else {
-          updValues.push(v);
+          updValues.push(val);
         }
       }
       values = updValues;
