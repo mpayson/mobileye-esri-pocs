@@ -89,9 +89,6 @@ const EventsApp = observer(class App extends React.Component {
           layerInfos: this.store.legendLayerInfos,
           style: 'card',
           layout: 'stack',
-          styles: {
-            background: 'red'
-          }
         });
 
         this.view.ui.add(searchExpand, "top-right");
