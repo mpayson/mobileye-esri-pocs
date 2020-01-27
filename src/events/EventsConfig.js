@@ -157,13 +157,15 @@ const eventsConfig = {
             customFieldDomainMap: new Map([
                                           ['ET_CONSTRUCTION_AREA', 'Construction areas'],
                                           ['ET_PHYSICAL_OBJECT', 'Physical object'],
-                                          ['pedestrians',    'Pedestrians'],
-                                          ['bicycles','Bicycles'],
                                           ['EID_STOPPED_CAR_ON_HW_SHOULDER',    'Stopped car'],
-                                          ['EID_VRU_ON_HW',    'Pedestrian/cyclist on high speed road'],
-
+                                          ['ped_cycl', 'Pedestrian / cyclist']
                                         ]),
             optionsToRemovePostfix:"_test",
+            optionsToMerge: new Map([
+                                    ['pedestrians', 'ped_cycl'],
+                                    ['bicycles', 'ped_cycl'],
+                                    ['EID_VRU_ON_HW', 'ped_cycl']
+                                  ]),
         }
     },
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},

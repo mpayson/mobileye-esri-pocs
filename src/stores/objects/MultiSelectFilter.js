@@ -27,13 +27,21 @@ class MultiSelectFilter extends SelectFilter{
   }
   
   get where(){
-    
     if (this.selectValue.indexOf("-100") !== -1) return this.subset_query;
-    let t = getMultiSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
-    if (t === null) {
-      return null;
+    let values = this.selectValue;
+    if (this.mergedOptions) {
+      const updValues = []
+      for (const val of values) {
+        const addKeys = this.mergedOptions.get(val);
+        if (addKeys) {
+          addKeys.forEach(key => updValues.push(key));
+        } else {
+          updValues.push(val);
+        }
+      }
+      values = updValues;
     }
-    return t;
+    return getMultiSelectWhere(this.field, values, this.fieldInfo.type);
   }
 
   get selectedOptionSet(){

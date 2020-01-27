@@ -74,6 +74,16 @@ const combineNullableWheres = (wheres, operator='AND') => {
 const getRange = (min, max) => 
   (new Array(max - min + 1)).fill(undefined).map((_, i) => i + min);
 
+const reverse = (map) => {
+  const reversed = new Map();
+  for (const [k, v] of map.entries()) {
+      if (!reversed.has(v)) {
+        reversed.set(v, [])
+      }
+      reversed.get(v).push(k);
+  }
+  return reversed;
+}
 
 export {
   getMinMaxWhere,
@@ -84,5 +94,6 @@ export {
   getDomainMap,
   transformQueryToRechartSeries,
   getRange,
-  combineNullableWheres
+  combineNullableWheres,
+  reverse
 };

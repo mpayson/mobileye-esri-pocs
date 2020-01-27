@@ -1,6 +1,6 @@
 import Filter from './Filter';
 import { decorate, observable, action, computed } from 'mobx';
-import { getSelectWhere, getDomainMap } from '../../utils/Utils';
+import { getSelectWhere, getDomainMap, getMultiSelectWhere, reverse } from '../../utils/Utils';
 
 class SelectFilter extends Filter{
   type = 'select';
@@ -17,13 +17,24 @@ class SelectFilter extends Filter{
     this.mode = params && params.mode ? params.mode : '';
     this.customFieldDomainMap = params && params.customFieldDomainMap ? params.customFieldDomainMap : null;
     this.optionsToRemovePostfix = params && params.optionsToRemovePostfix ? params.optionsToRemovePostfix : null;
+    this.optionsToMerge = (params && params.optionsToMerge) || null;
+    this.mergedOptions = this.optionsToMerge ? reverse(this.optionsToMerge) : null;
   }
+  
   _setFromQueryResults(results){
     results.features.forEach(f => {
-      if (this.options.indexOf(f.attributes[this.field]) === -1)
-        if (!this.optionsToRemovePostfix || !f.attributes[this.field].toLowerCase().endsWith(this.optionsToRemovePostfix))
-          this.options.push(f.attributes[this.field]);
-    }
+      const key = f.attributes[this.field];
+      if (this.optionsToMerge && this.optionsToMerge.has(key)) {
+        const metaKey = this.optionsToMerge.get(key);
+        if (metaKey) {
+          if (this.options.indexOf(metaKey) === -1) {
+            this.options.push(metaKey);
+          }
+        }
+      } else if (this.options.indexOf(key) === -1)
+        if (!this.optionsToRemovePostfix || !key.toLowerCase().endsWith(this.optionsToRemovePostfix))
+          this.options.push(key);
+      }
     );
     if (this.subset_query !== "1=1" && this.options.length === 0) {
       this.options.push(-100); // marking the "all" option
@@ -88,7 +99,13 @@ class SelectFilter extends Filter{
 
   get where(){
     if (this.selectValue === "-100") return this.subset_query;
-    return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type)
+    if (this.mergedOptions) {
+      const values = this.mergedOptions.get(this.selectValue);
+      if (values) {
+        return getMultiSelectWhere(this.field, values, this.fieldInfo.type);
+      }
+    }
+    return getSelectWhere(this.field, this.selectValue, this.fieldInfo.type);
   }
 
   get optionSet(){
