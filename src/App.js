@@ -122,13 +122,17 @@ const Home = observer(class Home extends React.Component{
                 Road Risk <br /> Score
               </p>
             </Link>
-            <a href={L2Video} className="item">
+            <Link
+              to="/events"
+              className="item"
+              disabled={!appState.isAuthenticated}
+            >
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-l2.svg"
                 alt="L2+"
               />
-              <p>L2+</p>
-            </a>
+              <p>Real Time <br /> Events</p>
+            </Link>
           </div>
         </div>
     )

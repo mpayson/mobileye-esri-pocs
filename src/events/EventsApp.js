@@ -14,6 +14,7 @@ import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
 import { Logo } from '../components/Logo';
+import './Legend.css';
 
 const { Header, Content, Sider } = Layout;
 
@@ -83,7 +84,12 @@ const EventsApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         })
 
-        const legend = new Legend({view: this.view, layerInfos: this.store.legendLayerInfos});
+        const legend = new Legend({
+          view: this.view, 
+          layerInfos: this.store.legendLayerInfos,
+          style: 'card',
+          layout: 'stack',
+        });
 
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
@@ -105,7 +111,7 @@ const EventsApp = observer(class App extends React.Component {
         panelWidth = 300;
         break;
       case 'About':
-        panel = <h1>Live events application</h1>;
+        panel = <h1>Real Time Events</h1>;
         break;
       default:
         panel = null;
@@ -152,7 +158,7 @@ const EventsApp = observer(class App extends React.Component {
         </Sider>
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
-            <h1 style={{float: "left"}}>Real time events</h1>
+            <h1 style={{float: "left"}}>Real Time Events</h1>
             {signin}
           </Header>
           <Content>

@@ -48,8 +48,8 @@ const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
     }]
 })
 const speedRenderer = (field) =>
-     getClassBreakRenderer(field, [0, 30, 50, 90, 1000],
-        ['0-30 km/h', '30-50 km/h', '50-100 km/h', '100+ km/h '], [[191, 54, 12, 255], [255, 109, 0, 255], [255, 193, 7, 255], [255, 238, 88, 255]], ["2.3px", "2.3px", "2.3px", "2.3px"], "Average speed");
+     getClassBreakRenderer(field, [0, 15, 50, 100, 1000], ['0-15 km/h','15-50 km/h','50-100 km/h','100+ km/h '],
+      [[230,74,25,255],[255,196,0,255],[255,241,118,255],[212,225,87,255]], ["2.3px","2.3px","2.3px","2.3px"], "Average speed");
 
 //const eventsBaselineWhereCondition = 'eventExpirationTimestamp >= CURRENT_TIMESTAMP - 1 AND eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3'
 //                                      eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3 AND eventExpirationTimestamp >= CURRENT_TIMESTAMP
@@ -144,7 +144,7 @@ const eventsConfig = {
   ,
   layers : [
     {id: 0, type: "live", name: "events0", popupTemplate: popupTemplate,showLegend:true},// baselineWhereCondition:eventsBaselineWhereCondition},
-    {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:true},// baselineWhereCondition:eventsBaselineWhereCondition},
+    {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:false},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 2, type: "live", name: "speed",showLegend:true,
         defaultRendererField: 'averageSpeed',
         customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true},

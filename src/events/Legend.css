@@ -1,0 +1,12 @@
+.esri-legend--card.esri-legend--stacked {
+    height: auto;
+    min-width: 200px;
+}
+
+.esri-legend--card.esri-legend--stacked .esri-legend--card__section {
+    overflow-y: hidden;
+    height: auto;
+    margin-bottom: 32px;
+    min-width: 200px;
+    width: 200px;
+}
