@@ -17,6 +17,44 @@ const  popupTemplate =  {
 
   }
 
+const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
+    _type: "jsapi",
+    type: 'class-breaks',
+    field: field,
+    //valueExpression: "($feature.avg_spd_0_0 + $feature.avg_spd_1_0 + $feature.avg_spd_2_0 + $feature.avg_spd_3_0)/4",
+    legendOptions: {
+        title:caption
+    },
+    classBreakInfos: [{
+      minValue: stops[0],
+      maxValue: stops[1],
+      symbol: {type: "simple-line", width: width[0], color: colors[0]},
+      label: labels[0]
+    }, {
+      minValue: stops[1],
+      maxValue: stops[2],
+      symbol: {type: "simple-line", width: width[1], color: colors[1]},
+      label: labels[1]
+    }, {
+      minValue: stops[2],
+      maxValue: stops[3],
+      symbol: {type: "simple-line", width: width[2], color: colors[2]},
+      label: labels[2]
+    }, {
+      minValue: stops[3],
+      maxValue: stops[4],
+      symbol: {type: "simple-line", width: width[3], color: colors[3]},
+      label: labels[3]
+    }]
+})
+const speedRenderer = (field) =>
+     getClassBreakRenderer(field, [0, 30, 50, 90, 1000],
+        ['0-30 km/h', '30-50 km/h', '50-100 km/h', '100+ km/h '], [[191, 54, 12, 255], [255, 109, 0, 255], [255, 193, 7, 255], [255, 238, 88, 255]], ["2.3px", "2.3px", "2.3px", "2.3px"], "Average speed");
+
+//const eventsBaselineWhereCondition = 'eventExpirationTimestamp >= CURRENT_TIMESTAMP - 1 AND eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3'
+//                                      eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3 AND eventExpirationTimestamp >= CURRENT_TIMESTAMP
+const eventsBaselineWhereCondition = '1=1'
+
 var webmapIdEnv = '37f6876be7dc4d7e8166c3ef0df0c3aa';
 //var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
 
@@ -30,6 +68,7 @@ const eventsConfig = {
   webmapId: '8654f5c608384b9eb7e06fd566643afc',
   initialRendererField: 'eventType',
   renderers : {
+    'averageSpeed': speedRenderer('avg_last_hour'),
     'eventType': {
       _type: "jsapi",
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
@@ -104,11 +143,15 @@ const eventsConfig = {
   }
   ,
   layers : [
-    {id: 0, type: "live", popupTemplate: popupTemplate},
-    {id: 1, type: "live", popupTemplate: popupTemplate},
+    {id: 0, type: "live", name: "events0", popupTemplate: popupTemplate,showLegend:true},// baselineWhereCondition:eventsBaselineWhereCondition},
+    {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:true},// baselineWhereCondition:eventsBaselineWhereCondition},
+    {id: 2, type: "live", name: "speed",showLegend:true,
+        defaultRendererField: 'averageSpeed',
+        customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true},
+
   ],
   filters: [
-    {name: 'eventExpirationTimestamp', type: 'minmax', params:{min:"CURRENT_TIMESTAMP", max:"CURRENT_TIMESTAMP + 30"}},
+    {name: 'eventExpirationTimestamp', type: 'minmax', params:{min:"CURRENT_TIMESTAMP", max:"CURRENT_TIMESTAMP + 3"}},
     {name: 'eventType', type: 'multiselect',
         params: {style: "toggle", mode:'multiple',
             customFieldDomainMap: new Map([
@@ -129,8 +172,8 @@ const eventsConfig = {
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
   viewConfig: {
-    //center: [-74.00157, 40.71955],
-    center: [128.608705, 35.862483],
+    center: [-74.00157, 40.71955],
+    //center: [128.608705, 35.862483],
     zoom: 12
   },
   locationsByArea: [

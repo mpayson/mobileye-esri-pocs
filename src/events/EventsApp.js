@@ -83,7 +83,7 @@ const EventsApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         })
 
-        const legend = new Legend({view: this.view, layerInfos: [{layer: this.store.lyr, title: ""}]});
+        const legend = new Legend({view: this.view, layerInfos: this.store.legendLayerInfos});
 
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
