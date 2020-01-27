@@ -30,6 +30,7 @@ const HumanMobilityTooltip = observer(({store}) => {
     graphics = [store.tooltipResults.graphic]
     title = 'Mobility Data:'
   }
+  title = <span style={{fontSize: '16px'}}>{title}</span>
 
   const style = {
     display: 'block',
