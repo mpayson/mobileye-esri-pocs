@@ -14,6 +14,7 @@ import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
 import { Logo } from '../components/Logo';
+import './Legend.css';
 
 const { Header, Content, Sider } = Layout;
 
@@ -83,7 +84,15 @@ const EventsApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         })
 
-        const legend = new Legend({view: this.view, layerInfos: this.store.legendLayerInfos});
+        const legend = new Legend({
+          view: this.view, 
+          layerInfos: this.store.legendLayerInfos,
+          style: 'card',
+          layout: 'stack',
+          styles: {
+            background: 'red'
+          }
+        });
 
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
