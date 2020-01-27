@@ -50,8 +50,8 @@ const defaultLayerOutFields = ['average_speed','pedestrian_density','bicycles_de
 const humanMobilityConfig = {
   webmapId: webmapIdEnv,
   renderers : {
-    'avg_spd': getClassBreakRenderer('avg_spd',[0,30,50,90,1000],
-        ['0-30 km/h','30-50 km/h','50-100 km/h','100+ km/h '],[[191,54,12,255],[255,109,0,255],[255,193,7,255],[255,238,88,255]],["2.3px","2.3px","2.3px","2.3px"],"Average speed"),
+    'avg_spd': getClassBreakRenderer('avg_spd',[0,15,50,100,1000],
+        ['0-15 km/h','15-50 km/h','50-100 km/h','100+ km/h '],[[230,74,25,255],[255,196,0,255],[255,241,118,255],[212,225,87,255]],["2.3px","2.3px","2.3px","2.3px"],"Average speed"),
     'ped_den': getClassBreakRenderer('ped_den',[0,3,10,20,500],['Low','Medium','High','Very High'],[[0,54,104,255], [0,108,226,255], [129,189,255,255],[248,255,248,255]],["2.3px","2.3px","2.3px","2.3px"],"Average pedestrian volume"),
     'bic_den': getClassBreakRenderer('bic_den',[0,2,5,20,500],['Low','Medium','High','Very High'],[[65,72,51,255], [0,128,0,255], [133,187,101,255], [172,255,175,255]],["2.3px","2.3px","2.3px","2.3px"],"Average cyclist volume"),
   }
