@@ -5,7 +5,11 @@ import pedImage from '../resources/images/ET_PED_ON_HW.png'
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
-
+// import DangerImage from '../resources/svg/flaticon/error.svg';
+import DangerImage from '../resources/svg/svgrepo/warning.svg';
+import RunningManImage from '../resources/svg/svgrepo/running.svg';
+import CarImage from '../resources/svg/svgrepo/sports-car.svg';
+import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
 
 const  popupTemplate =  {
     title: "Event information:",
@@ -81,6 +85,8 @@ const eventsConfig = {
 
         symbol: {
           type: "picture-marker",
+          height: '20px',
+          width: '20px',
           url: pedImage
         },
       }, {
@@ -89,6 +95,8 @@ const eventsConfig = {
 
         symbol: {
           type: "picture-marker",
+          height: '20px',
+          width: '20px',
           url: bicycleImage
         }
       },
@@ -96,22 +104,21 @@ const eventsConfig = {
       {
         value: "ET_PHYSICAL_OBJECT",
         label:"Physical object",
-
         symbol: {
-          type: "simple-marker",
-          style: "circle",
-          color: "white",
-          width: "8.5px",
+          type: "picture-marker",
+          height: '22px',
+          width: '22px',
+          url: BarrierImage,
         }
       },
       {
         value: "ET_CONSTRUCTION_AREA",
         label:"Construction areas",
         symbol: {
-          type: "simple-line",
-          width: "8.5px",
-          color: [253,174,97,255]
-
+          type: "picture-marker",
+          height: '20px',
+          width: '20px',
+          url: DangerImage,
         }
       },
       {
@@ -119,20 +126,20 @@ const eventsConfig = {
         label:"Stopped car",
 
         symbol: {
-          type: "simple-marker",
-          style: "circle",
-          color: "blue",
-          width: "8.5px",
+          type: "picture-marker",
+          height: '20px',
+          width: '20px',
+          url: CarImage,
         }
       },
       {
         value: "EID_VRU_ON_HW",
         label:"Pedestrian/cyclist on high speed road",
         symbol: {
-          type: "simple-marker",
-          style: "circle",
-          color: "red",
-          width: "8.5px",
+          type: "picture-marker",
+          height: '20px',
+          width: '20px',
+          url: RunningManImage
         }
       }
 
