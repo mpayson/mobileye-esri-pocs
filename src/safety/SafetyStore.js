@@ -14,7 +14,7 @@ import {
 
 // number of barriers to account for when routing
 const NUMBER_BARRIERS = 200;
-// added_network_cost = eventvalue / RISK_SCALE_FACTOR 
+// added_network_cost = risk_score / RISK_SCALE_FACTOR 
 const RISK_SCALE_FACTOR = 3;
 
 message.config({
@@ -33,7 +33,7 @@ const stopSymbol = {
 };
 
 const scoreStatQuery = {
-  onStatisticField: 'eventvalue',
+  onStatisticField: 'risk_score',
   outStatisticFieldName: 'score_sum',
   statisticType: 'sum'
 }
@@ -245,12 +245,12 @@ class SafetyStore extends Store {
     
     
     return this.layerViewsMap.get(this.lyr.id).queryFeatures({
-      where: "eventvalue > 0",
+      where: "risk_score > 0",
       geometry: this.view.extent,
       spatialRelationship: 'contains',
-      orderByFields: ['eventvalue DESC'],
+      orderByFields: ['risk_score DESC'],
       returnGeometry: true,
-      outFields: ['eventvalue', 'OBJECTID']
+      outFields: ['risk_score', 'OBJECTID']
     })
     .then(qres => {
       const scorePolys = qres.features.slice(0, NUMBER_BARRIERS).map(f => ({
@@ -258,7 +258,7 @@ class SafetyStore extends Store {
         attributes: {
           Name: f.attributes['ObjectId'],
           BarrierType: 1,
-          Attr_Miles: f.attributes['eventvalue'] / RISK_SCALE_FACTOR
+          Attr_Miles: f.attributes['risk_score'] / RISK_SCALE_FACTOR
         }
       }));
       const scorePolyFS = featuresIntoFeatureSet(scorePolys);

@@ -25,8 +25,8 @@ const getRenderer = (field, stops,labels,caption) => ({
   }]
 })
 
-//var webmapIdEnv = 'c54f0d3d4555429fa8e4a4250ed12164';
-var webmapIdEnv = '906b58f399944774a29e05d3d24a939b';
+var webmapIdEnv = '6512c324486d4b618ef568bdba6d9dcd';
+//var webmapIdEnv = '906b58f399944774a29e05d3d24a939b';
 
 if (process.env.SAFETY_WEBMAP_ID){
     webmapIdEnv = process.env.SAFETY_WEBMAP_ID;
@@ -42,12 +42,12 @@ const safetyConfig = {
   //webmapId: 'c54f0d3d4555429fa8e4a4250ed12164',
 
   // webmapId: '58d18243967d40e9a25db1f02d3652b0',
-  initialRendererField: 'eventvalue',
+  initialRendererField: 'risk_score',
   renderers: {
-    'eventvalue': {
+    'risk_score': {
       _type: "jsapi",
       type: 'class-breaks',
-      field: 'eventvalue',
+      field: 'risk_score',
       legendOptions: {
         title: "Road risk score"
       },
@@ -73,17 +73,17 @@ const safetyConfig = {
         label: "Very High"
       }]
     },
-    'harsh_acc_ratio': getRenderer('harsh_acc_ratio', [0,3.5,7,10.5,14],['Low','Medium','High'],"Harsh braking"),
+      'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', [0,3.5,7,10.5,14],['Low','Medium','High'],"Harsh braking"),
     'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High'],"Harsh cornering"),
     'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High'],"Average pedestrian volume"),
     'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22],['Low','Medium','High'],"Average cyclist volume"),
     'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High'],"Above average speed"),
-    'avarge_speed': getRenderer('avarge_speed',[28,38,48,58,68],['< 25','50','> 70'],"Average speed"),
+    'average_speed': getRenderer('average_speed',[28,38,48,58,68],['< 25','50','> 70'],"Average speed"),
     'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High'],"Pedestrian collision warning (PCW)"),
     'fcw': getRenderer('fcw', [0,1.35499499,2.66894309,6.03785078,8.2561676],['Low','Medium','High'],"Forward collision warning (FCW)")
   },
   filters: [{
-    name:'eventvalue',
+    name:'risk_score',
     type: 'quantile',
     params: {
       quantiles: [{
@@ -111,7 +111,7 @@ const safetyConfig = {
       style: "button"
     }
   },{
-    name: 'harsh_acc_ratio',
+    name: 'harsh_breaking_ratio',
     type: 'minmax',
     params: {
       isLogarithmic: false,
@@ -161,7 +161,7 @@ const safetyConfig = {
       info: "The percentage of vehicles that drive a standard deviation above the average speed at the segment."
     }
   },{
-    name: 'avarge_speed',
+    name: 'average_speed',
     type: 'minmax',
     params: {
       isLogarithmic: false,
@@ -193,8 +193,8 @@ const safetyConfig = {
   }],
   hasCustomTooltip: true,
   outFields: [
-    'eventvalue', 'harsh_cornering_ratio', 'harsh_acc_ratio', 'pedestrians_density',
-    'bicycles_density', 'speeding_ratio', 'avarge_speed','pcw','fcw'
+    'risk_score', 'harsh_cornering_ratio', 'harsh_breaking_ratio', 'pedestrians_density',
+    'bicycles_density', 'speeding_ratio', 'average_speed','pcw','fcw'
   ], 
   popupTemplate: null,
   //for n
@@ -213,7 +213,7 @@ const safetyConfig = {
   //         digitSeparator: true
   //       },
   //     }, {
-  //       fieldName: 'harsh_acc_ratio',
+  //       fieldName: 'harsh_breaking_ratio',
   //       label: "Harsh braking (%)",
   //       format: {
   //         places: 2,
@@ -241,7 +241,7 @@ const safetyConfig = {
   //         digitSeparator: true
   //       },
   //     }, {
-  //       fieldName: 'avarge_speed',
+  //       fieldName: 'average_speed',
   //       label: 'Average speed (Km/H)',
   //       format: {
   //         places: 2,
@@ -251,7 +251,7 @@ const safetyConfig = {
   //   }],
   //   expressionInfos: [{
   //     name: "round_score",
-  //     expression: "Round($feature.eventvalue,2)"
+  //     expression: "Round($feature.risk_score,2)"
   //   }]
   // },
   viewConfig: {

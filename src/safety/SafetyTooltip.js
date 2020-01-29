@@ -6,7 +6,7 @@ import safetyConfig from './SafetyConfig';
 
 // This is really lazy, should be a method in the store but need to adjust config too so
 // quantiles only get defined once
-const quantiles = safetyConfig.filters.find(f => f.name === 'eventvalue').params.quantiles;
+const quantiles = safetyConfig.filters.find(f => f.name === 'risk_score').params.quantiles;
 
 const getQuantileLabel = value => {
   for(let i=0; i < quantiles.length; i++){
@@ -29,7 +29,7 @@ const SafetyTooltip = observer(({store}) => {
   } = store.tooltipResults;
   //const {x,y} = screenPoint;
 
-  const isSubsetFields = store.rendererField && store.rendererField !== 'eventvalue';
+  const isSubsetFields = store.rendererField && store.rendererField !== 'risk_score';
 
   const style = {
     display: 'block',
@@ -53,7 +53,7 @@ const SafetyTooltip = observer(({store}) => {
   // longer term may want to move this out of the filters
 
   const infoContent = store.filters.filter(f => {
-    const defaultBool = attrs.hasOwnProperty(f.field) && f.type === 'minmax' && f.field !== 'eventvalue';
+    const defaultBool = attrs.hasOwnProperty(f.field) && f.type === 'minmax' && f.field !== 'risk_score';
     return isSubsetFields
       ? defaultBool && store.rendererField === f.field
       : defaultBool;
@@ -77,7 +77,7 @@ const SafetyTooltip = observer(({store}) => {
   )
 
   return (
-    <Card className="antd-esri-widget" style={style} size="small" title={`${aM.get('eventvalue')}: ${getQuantileLabel(attrs['eventvalue'])}`}>
+    <Card className="antd-esri-widget" style={style} size="small" title={`${aM.get('risk_score')}: ${getQuantileLabel(attrs['risk_score'])}`}>
       {/* <table style={{width: "100%", tableLayout: 'fixed'}}>
       <tbody> */}
         {infoContent}
