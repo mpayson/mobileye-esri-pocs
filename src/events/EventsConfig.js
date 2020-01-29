@@ -5,7 +5,9 @@ import pedImage from '../resources/images/ET_PED_ON_HW.png'
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
-
+import CarImage from '../resources/svg/svgrepo/sports-car.svg';
+import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
+import MistImage from '../resources/svg/svgrepo/mist.svg';
 
 const  popupTemplate =  {
     title: "Event information:",
@@ -81,6 +83,8 @@ const eventsConfig = {
 
         symbol: {
           type: "picture-marker",
+          height: '20px',
+          width: '20px',
           url: pedImage
         },
       }, {
@@ -89,29 +93,19 @@ const eventsConfig = {
 
         symbol: {
           type: "picture-marker",
+          height: '20px',
+          width: '20px',
           url: bicycleImage
         }
       },
-
       {
         value: "ET_PHYSICAL_OBJECT",
         label:"Physical object",
-
         symbol: {
-          type: "simple-marker",
-          style: "circle",
-          color: "white",
-          width: "8.5px",
-        }
-      },
-      {
-        value: "ET_CONSTRUCTION_AREA",
-        label:"Construction areas",
-        symbol: {
-          type: "simple-line",
-          width: "8.5px",
-          color: [253,174,97,255]
-
+          type: "picture-marker",
+          height: '22px',
+          width: '22px',
+          url: BarrierImage,
         }
       },
       {
@@ -119,25 +113,42 @@ const eventsConfig = {
         label:"Stopped car",
 
         symbol: {
-          type: "simple-marker",
-          style: "circle",
-          color: "blue",
-          width: "8.5px",
+          type: "picture-marker",
+          height: '20px',
+          width: '20px',
+          url: CarImage,
         }
       },
       {
         value: "EID_VRU_ON_HW",
         label:"Pedestrian/cyclist on high speed road",
         symbol: {
-          type: "simple-marker",
-          style: "circle",
-          color: "red",
-          width: "8.5px",
+          type: "picture-marker",
+          height: '20px',
+          width: '20px',
+          url: pedImage
         }
-      }
-
-
-
+      },
+      {
+        value: "ET_FOG",
+        label:"Fog",
+        symbol: {
+          type: "picture-marker",
+          height: '20px',
+          width: '20px',
+          url: MistImage,
+        }
+      },
+      {
+        value: "ET_CONSTRUCTION_AREA",
+        label:"Construction areas",
+        symbol: {
+          type: "simple-line",
+          width: '4.6px',
+          style: 'short-dash',
+          color: '#FF6D00',
+        }
+      },
       ]
     }
   }
@@ -155,6 +166,7 @@ const eventsConfig = {
     {name: 'eventType', type: 'multiselect',
         params: {style: "toggle", mode:'multiple',
             customFieldDomainMap: new Map([
+                                          ['ET_FOG', 'Fog'],
                                           ['ET_CONSTRUCTION_AREA', 'Construction areas'],
                                           ['ET_PHYSICAL_OBJECT', 'Physical object'],
                                           ['EID_STOPPED_CAR_ON_HW_SHOULDER',    'Stopped car'],
