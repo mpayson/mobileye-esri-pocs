@@ -5,9 +5,6 @@ import pedImage from '../resources/images/ET_PED_ON_HW.png'
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
-// import DangerImage from '../resources/svg/flaticon/error.svg';
-import DangerImage from '../resources/svg/svgrepo/warning.svg';
-import RunningManImage from '../resources/svg/svgrepo/running.svg';
 import CarImage from '../resources/svg/svgrepo/sports-car.svg';
 import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
 
@@ -112,16 +109,6 @@ const eventsConfig = {
         }
       },
       {
-        value: "ET_CONSTRUCTION_AREA",
-        label:"Construction areas",
-        symbol: {
-          type: "picture-marker",
-          height: '20px',
-          width: '20px',
-          url: DangerImage,
-        }
-      },
-      {
         value: "EID_STOPPED_CAR_ON_HW_SHOULDER",
         label:"Stopped car",
 
@@ -139,12 +126,19 @@ const eventsConfig = {
           type: "picture-marker",
           height: '20px',
           width: '20px',
-          url: RunningManImage
+          url: pedImage
         }
-      }
-
-
-
+      },
+      {
+        value: "ET_CONSTRUCTION_AREA",
+        label:"Construction areas",
+        symbol: {
+          type: "simple-line",
+          width: '4.6px',
+          style: 'short-dash',
+          color: '#FF6D00',
+        }
+      },
       ]
     }
   }
