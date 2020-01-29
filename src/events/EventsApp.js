@@ -90,7 +90,6 @@ const EventsApp = observer(class App extends React.Component {
           style: 'card',
           layout: 'stack',
         });
-        console.log(this.store.legendLayerInfos);
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
