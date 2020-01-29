@@ -7,6 +7,7 @@ import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 import CarImage from '../resources/svg/svgrepo/sports-car.svg';
 import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
+import MistImage from '../resources/svg/svgrepo/mist.svg';
 
 const  popupTemplate =  {
     title: "Event information:",
@@ -97,7 +98,6 @@ const eventsConfig = {
           url: bicycleImage
         }
       },
-
       {
         value: "ET_PHYSICAL_OBJECT",
         label:"Physical object",
@@ -130,6 +130,16 @@ const eventsConfig = {
         }
       },
       {
+        value: "ET_FOG",
+        label:"Fog",
+        symbol: {
+          type: "picture-marker",
+          height: '20px',
+          width: '20px',
+          url: MistImage,
+        }
+      },
+      {
         value: "ET_CONSTRUCTION_AREA",
         label:"Construction areas",
         symbol: {
@@ -156,6 +166,7 @@ const eventsConfig = {
     {name: 'eventType', type: 'multiselect',
         params: {style: "toggle", mode:'multiple',
             customFieldDomainMap: new Map([
+                                          ['ET_FOG', 'Fog'],
                                           ['ET_CONSTRUCTION_AREA', 'Construction areas'],
                                           ['ET_PHYSICAL_OBJECT', 'Physical object'],
                                           ['EID_STOPPED_CAR_ON_HW_SHOULDER',    'Stopped car'],
