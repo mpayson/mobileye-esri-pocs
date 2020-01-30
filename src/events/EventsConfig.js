@@ -195,7 +195,9 @@ const eventsConfig = {
   ],
   hasCustomTooltip: true,
   statisticsFieldsInfo: { 
-    'avg_last_hour': {title: 'Average speed', postText: 'km/h', iconTag: 'speed'},
+    'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
+    'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},
+    'avg_last_3_hours': {title: 'Average speed for the last 3 hours',     postText: 'km/h', iconTag: 'speed'},
     // 'insert_ts': {title: 'Detection time'},
   },
   timestampFieldsInfo: {
