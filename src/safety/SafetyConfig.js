@@ -53,17 +53,17 @@ const safetyConfig = {
       },
       classBreakInfos: [{
         minValue: 0,
-        maxValue: 2.499,
+        maxValue: 0.5,
         symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255]},
         label: "Low"
       }, {
-        minValue: 2.5,
-        maxValue: 5.6453,
+        minValue: 0.5,
+        maxValue: 1,
         symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255]},
         label: "Average"
       }, {
-        minValue: 5.6454,
-        maxValue: 12.499,
+        minValue: 1,
+        maxValue: 12.5,
         symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255]},
         label: "High"
       }, {
@@ -73,14 +73,14 @@ const safetyConfig = {
         label: "Very High"
       }]
     },
-      'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', [0,3.5,7,10.5,14],['Low','Medium','High'],"Harsh braking"),
-    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,1.86,3.7,5.56,7.4],['Low','Medium','High'],"Harsh cornering"),
-    'pedestrians_density': getRenderer('pedestrians_density', [0,0.3,0.61,0.9,1.2],['Low','Medium','High'],"Average pedestrian volume"),
-    'bicycles_density': getRenderer('bicycles_density', [0,0.056,0.112,0.166,0.22],['Low','Medium','High'],"Average cyclist volume"),
-    'speeding_ratio': getRenderer('speeding_ratio', [0,3.7,7.5,11.2,15],['Low','Medium','High'],"Above average speed"),
+      'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', [0,0.02,0.1,1.5,14],['Low','Medium','High'],"Harsh braking"),
+    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,0.02,0.1,1.5,14],['Low','Medium','High'],"Harsh cornering"),
+    'pedestrians_density': getRenderer('pedestrians_density', [0,1,14,20,1.2],['Low','Medium','High'],"Average pedestrian volume"),
+    'bicycles_density': getRenderer('bicycles_density', [0,1,14,20,1.2],['Low','Medium','High'],"Average cyclist volume"),
+    'speeding_ratio': getRenderer('speeding_ratio', [0,0.01,0.1,0.5,15],['Low','Medium','High'],"Above average speed"),
     'average_speed': getRenderer('average_speed',[28,38,48,58,68],['< 25','50','> 70'],"Average speed"),
     'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High'],"Pedestrian collision warning (PCW)"),
-    'fcw': getRenderer('fcw', [0,1.35499499,2.66894309,6.03785078,8.2561676],['Low','Medium','High'],"Forward collision warning (FCW)")
+    'fcw': getRenderer('fcw', [0,0.01181361,0.04357791,0.5,1],['Low','Medium','High'],"Forward collision warning (FCW)")
   },
   filters: [{
     name:'risk_score',
@@ -191,6 +191,23 @@ const safetyConfig = {
       info: "Forward collision warning (FCW)"
     }
   }],
+   layers : [
+    {
+      id: 0,
+      type: "live",
+      //popupTemplate: null,
+      showLegend:true,
+      outFields:'*',
+      //baselineWhereCondition: "project = 'me8'",
+      defaultRendererField: 'risk_score',
+      name:"risk_score",
+      ignoreFilter:true,
+      //initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
+      // applies where corresponding to lowest specified zoom that is greater than map zoom
+      // zoomExpressions: [
+      //   {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
+      // ]
+    }],
   hasCustomTooltip: true,
   outFields: [
     'risk_score', 'harsh_cornering_ratio', 'harsh_breaking_ratio', 'pedestrians_density',
