@@ -153,7 +153,7 @@ const eventsConfig = {
   filters: [
     {name: 'eventExpirationTimestamp', type: 'minmax', params:{min:"CURRENT_TIMESTAMP", max:"CURRENT_TIMESTAMP + 3"}},
     {name: 'eventType', type: 'multiselect',
-        params: {style: "toggle", mode:'multiple',
+        params: {style: "toggle", mode:'multiple', setSelectedValuesFromDomain:true,
             customFieldDomainMap: new Map([
                                           ['ET_CONSTRUCTION_AREA', 'Construction areas'],
                                           ['ET_PHYSICAL_OBJECT', 'Physical object'],

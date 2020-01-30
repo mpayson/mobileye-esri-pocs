@@ -19,6 +19,7 @@ class SelectFilter extends Filter{
     this.optionsToRemovePostfix = params && params.optionsToRemovePostfix ? params.optionsToRemovePostfix : null;
     this.optionsToMerge = (params && params.optionsToMerge) || null;
     this.mergedOptions = this.optionsToMerge ? reverse(this.optionsToMerge) : null;
+    this.setSelectedValuesFromDomain = (params && params.setSelectedValuesFromDomain) || null;
   }
   
   _setFromQueryResults(results){
@@ -67,8 +68,8 @@ class SelectFilter extends Filter{
 
     if (this.customFieldDomainMap)
       this.domainMap = this.customFieldDomainMap;
-
-    this.selectValue = [...this.domainMap.keys()]
+    if (this.setSelectedValuesFromDomain)
+      this.selectValue = [...this.domainMap.keys()]
   }
 
   // execute client-side query based on what's currently available
