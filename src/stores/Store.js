@@ -279,7 +279,6 @@ class Store {
     }
 
     _onZoomChange(zoom){
-        console.log("zooming")
         if(!this.layers || this.layers.length < 1 || !Number.isInteger(zoom)) return;
         this.layers.forEach(l => {
             const config = this.layerConfigByLayerId.get(l.id);
@@ -290,7 +289,6 @@ class Store {
                 config.baselineWhereCondition,
                 where
             ]);
-            console.log(combinedWhere);
             l.definitionExpression = combinedWhere;
         })
     }

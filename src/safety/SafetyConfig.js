@@ -88,16 +88,16 @@ const safetyConfig = {
     params: {
       quantiles: [{
         min: 0,
-        max: 2.5,
+        max: 0.5,
         // label: "Low (30%)",
         label: "Low"
       }, {
-        min: 2.5,
-        max: 5.6453,
+        min: 0.5,
+        max: 1,
         // label: "Average (40%)",
         label: "Average"
       }, {
-        min: 5.6453,
+        min: 1,
         max: 12.5,
         // label: "High (20%)"
         label: "High"
@@ -191,6 +191,8 @@ const safetyConfig = {
       info: "Forward collision warning (FCW)"
     }
   }],
+    hasZoomListener: true,
+
    layers : [
     {
       id: 0,
@@ -201,12 +203,12 @@ const safetyConfig = {
       //baselineWhereCondition: "project = 'me8'",
       defaultRendererField: 'risk_score',
       name:"risk_score",
-      ignoreFilter:true,
-      //initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
+      //ignoreFilter:true,
+      initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
       // applies where corresponding to lowest specified zoom that is greater than map zoom
-      // zoomExpressions: [
-      //   {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
-      // ]
+       zoomExpressions: [
+         {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
+       ]
     }],
   hasCustomTooltip: true,
   outFields: [
