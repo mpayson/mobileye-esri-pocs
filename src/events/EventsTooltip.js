@@ -60,7 +60,7 @@ const EventsTooltip = observer(({store}) => {
   }
 
   const activeLayer = graphics.slice(-1)[0].layer;
-  const activeTimeFilter = activeLayer.renderer.field;
+  const activeFilter = activeLayer.renderer.field;
 
   const colStyle = {
     lineHeight: 1.1, 
@@ -81,18 +81,18 @@ const EventsTooltip = observer(({store}) => {
   };
 
   const infoContent = Object.entries(eventConfig.statisticsFieldsInfo)
-    .filter(([key, _]) => key === activeTimeFilter)
+    .filter(([key, _]) => key === activeFilter)
     .map(([key, params]) => { 
       const IconSvg = TAG_TO_SVG[params.iconTag] || NoIcon;
       const value = results[key].count ? Math.round(results[key].sum / results[key].count) : 0;
-      return value ? (
+      return (
           <Col key={key} span={12} style={colStyle}>
             <IconSvg {...iconProps} title={params.title}/>
             <span>
               <span style={{fontSize: '24px'}}>{value}</span>{' '}{params.postText}
             </span>
           </Col>
-      ) : null;
+      );
     })
 
   const timeContent = Object.entries(eventConfig.timestampFieldsInfo).map(entry => { 
