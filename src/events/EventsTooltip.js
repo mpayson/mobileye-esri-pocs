@@ -58,8 +58,6 @@ const EventsTooltip = observer(({store}) => {
           }
       }
   }
-  console.log(graphics[0]);
-  console.log(store);
   const colStyle = {
     lineHeight: 1.1, 
     marginTop: '12px',
