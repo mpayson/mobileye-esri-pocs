@@ -89,10 +89,7 @@ const EventsTooltip = observer(({store}) => {
           <Col key={key} span={12} style={colStyle}>
             <IconSvg {...iconProps} title={params.title}/>
             <span>
-              <span style={{fontSize: '24px'}}>
-                {value}  
-              </span>
-              {' '}{params.postText}
+              <span style={{fontSize: '24px'}}>{value}</span>{' '}{params.postText}
             </span>
           </Col>
       ) : null;
@@ -102,7 +99,7 @@ const EventsTooltip = observer(({store}) => {
     const [key, params] = entry;
     const last = graphics.slice(-1)[0]['attributes'];
     const value = last[key];
-    let IconSvg = TAG_TO_SVG[params.iconTag] || ClockIcon;
+    const IconSvg = TAG_TO_SVG[params.iconTag] || ClockIcon;
     return value ? (
         <Col key={key} span={24} style={colStyle}>
           <IconSvg {...iconProps} title={params.title}/>
