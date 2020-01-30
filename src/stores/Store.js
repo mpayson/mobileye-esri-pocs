@@ -189,7 +189,7 @@ class Store {
                 const id = lV.layer.id;
                 if(interactiveIds.has(id)){
                      const config = layerConfigByLayerId.get(id);
-                     if(config && !config.ignoreFilter)
+                     if(!config || (config && !config.ignoreFilter))
                        lV.filter = {where};
                 }
             });
