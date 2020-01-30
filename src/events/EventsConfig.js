@@ -142,12 +142,21 @@ const eventsConfig = {
     }
   }
   ,
+      hasZoomListener: true,
+
   layers : [
     {id: 0, type: "live", name: "events0", popupTemplate: popupTemplate,showLegend:true},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:false},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 2, type: "live", name: "speed",showLegend:true,
         defaultRendererField: 'averageSpeed',
-        customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true},
+        customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true,
+          initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
+      // applies where corresponding to lowest specified zoom that is greater than map zoom
+       zoomExpressions: [
+         {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
+       ]
+
+    },
 
   ],
   filters: [
