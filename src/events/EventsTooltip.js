@@ -26,7 +26,14 @@ const EventsTooltip = observer(({store}) => {
     extra= <Button type="link" onClick={store.clearMouseResults}>X</Button>
   } else {
     graphics = [store.tooltipResults.graphic]
-    title = 'Events data:'
+    const eventType = graphics[0].attributes['eventType'];
+    if (eventType) {
+      const eventInfo = store.renderers['eventType'].uniqueValueInfos
+        .find(event => event.value === eventType);
+      title = eventInfo ? eventInfo.label : eventType;
+    } else {
+      title = 'Average speed:'
+    }
   }
   title = <span style={{fontSize: '16px'}}>{title}</span>
 
