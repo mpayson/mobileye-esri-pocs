@@ -15,6 +15,7 @@ import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
 import { Logo } from '../components/Logo';
 import './Legend.css';
+import EventTooltip from './EventsTooltip';
 
 const { Header, Content, Sider } = Layout;
 
@@ -127,6 +128,10 @@ const EventsApp = observer(class App extends React.Component {
       )
       : null;
 
+    const tooltip = this.store.hasCustomTooltip
+      ? <EventTooltip store={this.store}/>
+      : null;
+
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -162,15 +167,16 @@ const EventsApp = observer(class App extends React.Component {
           </Header>
           <Content>
             <Row>
-              <Col
-                span={24}
-                style={{height: "calc(100vh - 64px)"}}>
+              <Col span={24} style={{height: "calc(100vh - 64px)"}}>
               <div
                 style={{ position: 'absolute', left: '30%', right: '15px', bottom: '30px'}}
-                ref={this.sliderRef}/>
+                ref={this.sliderRef}
+              />
               <div
                 ref={this.mapViewRef}
-                style={{width: "100%", height: "100%"}}/>
+                style={{width: "100%", height: "100%"}}
+              />
+              {tooltip}
               <Drawer
                 // title={this.state.navKey}
                 closable={false}

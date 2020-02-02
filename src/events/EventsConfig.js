@@ -156,10 +156,11 @@ const eventsConfig = {
       //hasZoomListener: true,
 
   layers : [
-    {id: 0, type: "live", name: "events0", popupTemplate: popupTemplate,showLegend:true},// baselineWhereCondition:eventsBaselineWhereCondition},
+    {id: 0, type: "live", name: "events0", popupTemplate: popupTemplate,showLegend:true, 
+     outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:false},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 2, type: "live", name: "speed",showLegend:true,
-        defaultRendererField: 'averageSpeed',
+        defaultRendererField: 'averageSpeed', outFields: ['insert_ts', 'avg_last_hour'],
         customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true,
     //      initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
       // applies where corresponding to lowest specified zoom that is greater than map zoom
@@ -192,6 +193,17 @@ const eventsConfig = {
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
+  hasCustomTooltip: true,
+  statisticsFieldsInfo: { 
+    'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
+    'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},
+    'avg_last_3_hours': {title: 'Average speed for the last 3 hours',     postText: 'km/h', iconTag: 'speed'},
+  },
+  timestampFieldsInfo: {
+    'insert_ts': {title: 'Detection time'},
+    'eventTimestamp': {title: 'Detection time'},
+    'eventExpirationTimestamp': {title: 'Expiration time', iconTag: 'timer'},
+  },
   viewConfig: {
     center: [-74.00157, 40.71955],
     //center: [128.608705, 35.862483],
