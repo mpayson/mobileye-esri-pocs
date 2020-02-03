@@ -5,6 +5,7 @@ import pedImage from '../resources/images/ET_PED_ON_HW.png'
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
+import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 import CarImage from '../resources/svg/svgrepo/sports-car.svg';
 import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
 import MistImage from '../resources/svg/svgrepo/mist.svg';
@@ -254,6 +255,22 @@ const eventsConfig = {
                     },
                   ]
                 },
+      {
+        areaName: 'Middle East',
+        locations: [{
+          name: 'Israel',
+          image: TelAvivImage,
+          extent: {
+            xmin: 3757032.8142690174, 
+            ymin: 3678761.2973109875, 
+            xmax: 3835304.331233021, 
+            ymax: 3835304.331238987, 
+            spatialReference: {
+              wkid: 3857
+            }
+          }
+        }] 
+      },
       { areaName : 'APAC',
         locations: [{           
         'name' : 'Tokyo',
