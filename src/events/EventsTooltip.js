@@ -74,7 +74,7 @@ const EventsTooltip = observer(({store}) => {
   const last = graphics.slice(-1)[0];
   const activeLayer = last.layer;
   const activeFilter = activeLayer.renderer.field;
-  const eventType = last['attributes']['eventType'];
+  const eventType = last.attributes['eventType'];
 
   const colStyle = {
     lineHeight: 1.1, 
