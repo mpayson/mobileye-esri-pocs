@@ -146,7 +146,7 @@ const eventsConfig = {
           type: "simple-line",
           width: '4.6px',
           style: 'short-dash',
-          color: '#FF6D00',
+          color: '#e67e22',
         }
       },
       ]
@@ -202,6 +202,12 @@ const eventsConfig = {
   timestampFieldsInfo: {
     'eventTimestamp': {title: 'Detection time'},
     'eventExpirationTimestamp': {title: 'Expiration time', iconTag: 'timer'},
+  },
+  overrideFieldsInfoByEventType: {
+    'ET_CONSTRUCTION_AREA': {
+      'eventTimestamp': {title: 'First detected', noIcon: true},
+      'eventExpirationTimestamp': {title: 'Last detected', noIcon: true},
+    }
   },
   viewConfig: {
     center: [-74.00157, 40.71955],
