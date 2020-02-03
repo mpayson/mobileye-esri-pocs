@@ -13,6 +13,11 @@ const TAG_TO_SVG = {
   'timer': TimerIcon,
 }
 
+const DATE_TIME = new Intl.DateTimeFormat('en-GB', {
+  dateStyle: 'short', 
+  timeStyle: 'short'
+});
+
 const EventsTooltip = observer(({store}) => {
 
   if(!store.tooltipResults && !store.mouseResults){
@@ -113,7 +118,7 @@ const EventsTooltip = observer(({store}) => {
   const timeContent = Object.entries(timeFields).map(entry => { 
     const [key, params] = entry;
     const value = last['attributes'][key];
-    
+
     let label;
     if (params.noIcon) {
       label = (
@@ -129,7 +134,7 @@ const EventsTooltip = observer(({store}) => {
         <Col key={key} span={24} style={colStyle}>
           {label}
           <span style={{fontSize: '13px'}}>
-            {new Date(value).toLocaleString()}
+            {DATE_TIME.format(value)}
           </span>
         </Col>
     ) : null;

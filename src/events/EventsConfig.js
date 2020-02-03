@@ -156,13 +156,33 @@ const eventsConfig = {
       //hasZoomListener: true,
 
   layers : [
-    {id: 0, type: "live", name: "events0", popupTemplate: popupTemplate,showLegend:true, 
-     outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']},// baselineWhereCondition:eventsBaselineWhereCondition},
-    {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:false},// baselineWhereCondition:eventsBaselineWhereCondition},
-    {id: 2, type: "live", name: "speed",showLegend:true,
-        defaultRendererField: 'averageSpeed', outFields: ['avg_last_15_min', 'avg_last_hour', 'avg_last_3_hours'],
-        customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true,
-    //      initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
+    {
+      id: 0, 
+      type: "live", 
+      name: "events0", 
+      popupTemplate: popupTemplate,
+      showLegend: true, 
+      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']
+    },// baselineWhereCondition:eventsBaselineWhereCondition},
+    {
+      id: 1, 
+      type: "live", 
+      name: "events1",
+      popupTemplate: popupTemplate,
+      showLegend: false,
+      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']
+    },// baselineWhereCondition:eventsBaselineWhereCondition},
+    {
+      id: 2, 
+      type: "live", 
+      name: "speed",
+      showLegend: true,
+      defaultRendererField: 'averageSpeed', 
+      outFields: ['avg_last_15_min', 'avg_last_hour', 'avg_last_3_hours'],
+      customDefaultFilter:"avg_last_hour > 0", 
+      ignoreRendererUpdate: true, 
+      ignoreFilter: true,
+      // initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
       // applies where corresponding to lowest specified zoom that is greater than map zoom
       // zoomExpressions: [
       //   {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
@@ -201,7 +221,6 @@ const eventsConfig = {
   },
   timestampFieldsInfo: {
     'eventTimestamp': {title: 'Detection time'},
-    'eventExpirationTimestamp': {title: 'Expiration time', iconTag: 'timer'},
   },
   overrideFieldsInfoByEventType: {
     'ET_CONSTRUCTION_AREA': {
