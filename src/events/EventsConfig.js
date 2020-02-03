@@ -145,8 +145,8 @@ const eventsConfig = {
         symbol: {
           type: "simple-line",
           width: '4.6px',
-          style: 'short-dash',
-          color: '#e67e22',
+          // style: 'short-dash',
+          color: 'rgba(0,153,188 ,0.35)',
         }
       },
       ]
