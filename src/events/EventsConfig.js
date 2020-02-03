@@ -160,7 +160,7 @@ const eventsConfig = {
      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:false},// baselineWhereCondition:eventsBaselineWhereCondition},
     {id: 2, type: "live", name: "speed",showLegend:true,
-        defaultRendererField: 'averageSpeed', outFields: ['insert_ts', 'avg_last_hour'],
+        defaultRendererField: 'averageSpeed', outFields: ['avg_last_15_min', 'avg_last_hour', 'avg_last_3_hours'],
         customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true,
     //      initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
       // applies where corresponding to lowest specified zoom that is greater than map zoom
@@ -200,7 +200,6 @@ const eventsConfig = {
     'avg_last_3_hours': {title: 'Average speed for the last 3 hours',     postText: 'km/h', iconTag: 'speed'},
   },
   timestampFieldsInfo: {
-    'insert_ts': {title: 'Detection time'},
     'eventTimestamp': {title: 'Detection time'},
     'eventExpirationTimestamp': {title: 'Expiration time', iconTag: 'timer'},
   },
