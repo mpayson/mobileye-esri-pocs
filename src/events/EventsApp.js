@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
-import InformationIcon from 'calcite-ui-icons-react/InformationIcon';
 import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
@@ -24,9 +23,6 @@ const MenuFilterIcon = () => (
 )
 const MenuBookmarkIcon = () => (
   <BookmarkIcon size="18" filled/>
-)
-const MenuInformationIcon = () => (
-  <InformationIcon size="17" filled/>
 )
 const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
@@ -110,9 +106,6 @@ const EventsApp = observer(class App extends React.Component {
         panel = <LocationsPanel store={this.store}/>
         panelWidth = 300;
         break;
-      case 'About':
-        panel = <h1>Real Time Events</h1>;
-        break;
       default:
         panel = null;
     }
@@ -153,10 +146,6 @@ const EventsApp = observer(class App extends React.Component {
             <Menu.Item key="Locations">
               <Icon component={MenuLocationsIcon} />
               <span>Locations</span>
-            </Menu.Item>
-            <Menu.Item key="About">
-              <Icon component={MenuInformationIcon} />
-              <span>About</span>
             </Menu.Item>
           </Menu>
         </Sider>

@@ -13,6 +13,11 @@ const TAG_TO_SVG = {
   'timer': TimerIcon,
 }
 
+const DATE_TIME = new Intl.DateTimeFormat('en-GB', {
+  dateStyle: 'short', 
+  timeStyle: 'short'
+});
+
 const EventsTooltip = observer(({store}) => {
 
   if(!store.tooltipResults && !store.mouseResults){
@@ -66,8 +71,10 @@ const EventsTooltip = observer(({store}) => {
       }
   }
 
-  const activeLayer = graphics.slice(-1)[0].layer;
+  const last = graphics.slice(-1)[0];
+  const activeLayer = last.layer;
   const activeFilter = activeLayer.renderer.field;
+  const eventType = last.attributes['eventType'];
 
   const colStyle = {
     lineHeight: 1.1, 
@@ -102,16 +109,32 @@ const EventsTooltip = observer(({store}) => {
       );
     })
 
-  const timeContent = Object.entries(eventConfig.timestampFieldsInfo).map(entry => { 
+  let timeFields = eventConfig.timestampFieldsInfo;
+  const overrideFields = eventConfig.overrideFieldsInfoByEventType[eventType];
+  if (overrideFields) {
+    timeFields = {...timeFields, ...overrideFields};
+  }
+
+  const timeContent = Object.entries(timeFields).map(entry => { 
     const [key, params] = entry;
-    const last = graphics.slice(-1)[0]['attributes'];
-    const value = last[key];
-    const IconSvg = TAG_TO_SVG[params.iconTag] || ClockIcon;
+    const value = last['attributes'][key];
+
+    let label;
+    if (params.noIcon) {
+      label = (
+        <span style={{marginRight: '6px'}}>
+          <b>{params.title}:</b>
+        </span>
+      )
+    } else {
+      const IconSvg = TAG_TO_SVG[params.iconTag] || ClockIcon;
+      label = <IconSvg {...iconProps} title={params.title}/>
+    }
     return value ? (
         <Col key={key} span={24} style={colStyle}>
-          <IconSvg {...iconProps} title={params.title}/>
+          {label}
           <span style={{fontSize: '13px'}}>
-            {new Date(value).toLocaleString()}
+            {DATE_TIME.format(value)}
           </span>
         </Col>
     ) : null;

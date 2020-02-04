@@ -5,6 +5,7 @@ import pedImage from '../resources/images/ET_PED_ON_HW.png'
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
+import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 import CarImage from '../resources/svg/svgrepo/sports-car.svg';
 import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
 import MistImage from '../resources/svg/svgrepo/mist.svg';
@@ -145,8 +146,8 @@ const eventsConfig = {
         symbol: {
           type: "simple-line",
           width: '4.6px',
-          style: 'short-dash',
-          color: '#FF6D00',
+          // style: 'short-dash',
+          color: 'rgba(0,153,188 ,0.35)',
         }
       },
       ]
@@ -156,13 +157,33 @@ const eventsConfig = {
       //hasZoomListener: true,
 
   layers : [
-    {id: 0, type: "live", name: "events0", popupTemplate: popupTemplate,showLegend:true, 
-     outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']},// baselineWhereCondition:eventsBaselineWhereCondition},
-    {id: 1, type: "live", name: "events1" ,popupTemplate: popupTemplate,showLegend:false},// baselineWhereCondition:eventsBaselineWhereCondition},
-    {id: 2, type: "live", name: "speed",showLegend:true,
-        defaultRendererField: 'averageSpeed', outFields: ['insert_ts', 'avg_last_hour'],
-        customDefaultFilter:"avg_last_hour > 0", ignoreRendererUpdate: true, ignoreFilter: true,
-    //      initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
+    {
+      id: 0, 
+      type: "live", 
+      name: "events0", 
+      popupTemplate: popupTemplate,
+      showLegend: true, 
+      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']
+    },// baselineWhereCondition:eventsBaselineWhereCondition},
+    {
+      id: 1, 
+      type: "live", 
+      name: "events1",
+      popupTemplate: popupTemplate,
+      showLegend: false,
+      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']
+    },// baselineWhereCondition:eventsBaselineWhereCondition},
+    {
+      id: 2, 
+      type: "live", 
+      name: "speed",
+      showLegend: true,
+      defaultRendererField: 'averageSpeed', 
+      outFields: ['avg_last_15_min', 'avg_last_hour', 'avg_last_3_hours'],
+      customDefaultFilter:"avg_last_hour > 0", 
+      ignoreRendererUpdate: true, 
+      ignoreFilter: true,
+      // initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
       // applies where corresponding to lowest specified zoom that is greater than map zoom
       // zoomExpressions: [
       //   {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
@@ -200,9 +221,13 @@ const eventsConfig = {
     'avg_last_3_hours': {title: 'Average speed for the last 3 hours',     postText: 'km/h', iconTag: 'speed'},
   },
   timestampFieldsInfo: {
-    'insert_ts': {title: 'Detection time'},
     'eventTimestamp': {title: 'Detection time'},
-    'eventExpirationTimestamp': {title: 'Expiration time', iconTag: 'timer'},
+  },
+  overrideFieldsInfoByEventType: {
+    'ET_CONSTRUCTION_AREA': {
+      'eventTimestamp': {title: 'First detected', noIcon: true},
+      'eventExpirationTimestamp': {title: 'Last detected', noIcon: true},
+    }
   },
   viewConfig: {
     center: [-74.00157, 40.71955],
@@ -230,6 +255,22 @@ const eventsConfig = {
                     },
                   ]
                 },
+      {
+        areaName: 'Middle East',
+        locations: [{
+          name: 'Israel',
+          image: TelAvivImage,
+          extent: {
+            xmin: 3757032.8142690174, 
+            ymin: 3678761.2973109875, 
+            xmax: 3835304.331233021, 
+            ymax: 3835304.331238987, 
+            spatialReference: {
+              wkid: 3857
+            }
+          }
+        }] 
+      },
       { areaName : 'APAC',
         locations: [{           
         'name' : 'Tokyo',
