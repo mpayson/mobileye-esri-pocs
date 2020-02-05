@@ -13,14 +13,19 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     super(props, context);
     this.eventFilter = props.store.filters.find(f => f.field === 'eventType');
     this.expirationFilter = props.store.filters.find(f => f.field === 'eventExpirationTimestamp');
+    this.state = this._initState(props);
   }
 
-  state = {
-    selectedExpirationRadio: 'Live',
-    selectedSpeedRadio: 'Last hour',
-    speedRendererField: 'avg_last_hour',
-    showSpeed: true,
-  };
+  _initState(props) {
+    const speedLayer = props.store.layers.find(l => l.id === 'speed');
+    const speedLayerView = props.store.layerViewsMap.get('speed');
+
+    return {
+      selectedExpirationRadio: 'Live',
+      speedRendererField: speedLayer ? speedLayer.renderer.field : 'avg_last_hour',
+      showSpeed: speedLayerView ? speedLayerView.visible : true,
+    };
+  }
 
   _onShowSpeedToggle = e => {
     this.setState({
@@ -28,40 +33,25 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     });
     this.props.store.layerViewsMap.forEach(lV => {
       const id = lV.layer.id;
-      if (id == "speed") {
+      if (id === "speed") {
           lV.visible = e;
       }
     });
 
   }
   _onSpeedRadioClick = e => {
-    var rendererField = "";
-    switch(e.target.value) {
-        case 'Last 15 minutes':
-            rendererField = 'avg_last_15_min';
-            break;
-        case 'Last hour':
-            rendererField = 'avg_last_hour';
-            break;
-        case 'Last 3 hours':
-            rendererField = 'avg_last_3_hours';
-            break;
-        default:
-    }
+    const rendererField = e.target.value;
     this.setState({
-      selectedSpeedRadio: e.target.value,
       speedRendererField: rendererField
     });
 
     this.props.store.layers.forEach(layer => {
-        if (layer.id == "speed") {
+        if (layer.id === "speed") {
             console.log(layer.renderer);
             layer.renderer.field = rendererField;
         }
     })
     this._updateSpeedLayerFilter(rendererField);
-
-
   }
 
   _updateSpeedLayerFilter(rendererField){
@@ -118,12 +108,16 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       lineHeight: '30px',
     }
 
-    const speedOptions = ['Last 15 minutes','Last hour','Last 3 hours']
-    const speedOptionsRadios = speedOptions.map(entry =>
-        <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
+    const speedOptions = {
+      'avg_last_15_min':  'Last 15 minutes',
+      'avg_last_hour':    'Last hour',
+      'avg_last_3_hours': 'Last 3 hours',
+    }
+    const speedOptionsRadios = Object.entries(speedOptions).map(([value, label]) =>
+        <Radio value={value} key={value} style={radioStyle}>{label}</Radio>
     )
     const speedListGroup =
-      <RadioGroup onChange={this._onSpeedRadioClick} value={this.state.selectedSpeedRadio}>
+      <RadioGroup onChange={this._onSpeedRadioClick} value={this.state.speedRendererField}>
         {speedOptionsRadios}
       </RadioGroup>;
 
