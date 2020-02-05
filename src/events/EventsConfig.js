@@ -6,6 +6,7 @@ import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
+import DaeguImage from '../resources/images/Daegu.jpg';
 import CarImage from '../resources/svg/svgrepo/sports-car.svg';
 import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
 import MistImage from '../resources/svg/svgrepo/mist.svg';
@@ -282,7 +283,7 @@ const eventsConfig = {
         },
         {            
           'name' : 'Daegu',
-          'image' : null,
+          'image' : DaeguImage,
           'extent' : {
                       "xmin":14303307.736117812,"ymin":4274406.414936752,"xmax":14330003.368246375,"ymax":4289024.996596272,
                       "spatialReference":{"wkid":102100}
