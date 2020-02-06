@@ -90,7 +90,17 @@ const EventsApp = observer(class App extends React.Component {
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
+        App._fixLayerOrder(this.view);
       });
+  }
+
+  static _fixLayerOrder(mapView) {
+    const layers = mapView.map.layers;
+    const iSpeed = layers.items.findIndex(lyr => lyr.id === 'speed');
+    if (iSpeed > 0) {
+      const speedLayer = layers.getItemAt(iSpeed);
+      layers.reorder(speedLayer, 0);
+    }
   }
 
   render() {
