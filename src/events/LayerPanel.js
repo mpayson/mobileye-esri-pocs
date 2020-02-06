@@ -21,10 +21,15 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     const speedLayerView = props.store.layerViewsMap.get('speed');
 
     return {
-      selectedExpirationRadio: 'Live',
+      eventsLifeSpanHours: this._parseExpirationHours(),
       speedRendererField: speedLayer ? speedLayer.renderer.field : 'avg_last_hour',
       showSpeed: speedLayerView ? speedLayerView.visible : true,
     };
+  }
+
+  _parseExpirationHours() {
+    const daysBack = this.expirationFilter.min.match(/(\d+.?\d*)$/);
+    return daysBack && daysBack[0] ? Math.round(daysBack[0] * 24).toString() : '0';
   }
 
   _onShowSpeedToggle = e => {
@@ -47,7 +52,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
 
     this.props.store.layers.forEach(layer => {
         if (layer.id === "speed") {
-            console.log(layer.renderer);
             layer.renderer.field = rendererField;
         }
     })
@@ -57,35 +61,19 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   _updateSpeedLayerFilter(rendererField){
     this.props.store.layerViewsMap.forEach(lV => {
       const id = lV.layer.id;
-      if (id == "speed") {
+      if (id === "speed") {
           lV.filter = {where: rendererField + " > 0"};
       }
     });
   }
 
   _onRadioClick = e => {
+    const hoursBack = e.target.value;
     this.setState({
-      selectedExpirationRadio: e.target.value,
+      eventsLifeSpanHours: hoursBack,
     });
-    var hoursBack;
-    var daysForward = 0;
-    switch(e.target.value) {
-        case 'Live':
-            hoursBack = 0;
-            daysForward = 3;
-            break;
-        case 'Last hour':
-            hoursBack = 1;
-            break;
-        case 'Last 5 hours':
-            hoursBack = 5;
-            break;
-        case 'Last 24 hours':
-            hoursBack = 24;
-            break;
-        default:
-    }
-    const daysBack = hoursBack / 24;
+    const daysForward = hoursBack === '0' ? 3 : 0;
+    const daysBack = parseInt(hoursBack) / 24;
     this.expirationFilter.max = "CURRENT_TIMESTAMP + " + daysForward.toString();
     this.expirationFilter.min = "CURRENT_TIMESTAMP - " + daysBack.toString();
   }
@@ -121,13 +109,17 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         {speedOptionsRadios}
       </RadioGroup>;
 
-
-    const expirationOptions = ['Live','Last hour','Last 5 hours', 'Last 24 hours']
-    const expirationOptionsRadios = expirationOptions.map(entry =>
-        <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
+    const expirationOptions = {
+      '0':  'Live',
+      '1':  'Last hour',
+      '5':  'Last 5 hours',
+      '24': 'Last 24 hours',
+    }
+    const expirationOptionsRadios = Object.entries(expirationOptions).map(([value, label]) =>
+        <Radio value={value} key={value} style={radioStyle}>{label}</Radio>
     )
     const statsListGroup =
-      <RadioGroup onChange={this._onRadioClick} value={this.state.selectedExpirationRadio}>
+      <RadioGroup onChange={this._onRadioClick} value={this.state.eventsLifeSpanHours}>
         {expirationOptionsRadios}
       </RadioGroup>;
 
