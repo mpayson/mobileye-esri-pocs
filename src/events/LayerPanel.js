@@ -13,14 +13,24 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     super(props, context);
     this.eventFilter = props.store.filters.find(f => f.field === 'eventType');
     this.expirationFilter = props.store.filters.find(f => f.field === 'eventExpirationTimestamp');
+    this.state = this._initState(props);
   }
 
-  state = {
-    selectedExpirationRadio: 'Live',
-    selectedSpeedRadio: 'Last hour',
-    speedRendererField: 'avg_last_hour',
-    showSpeed: true,
-  };
+  _initState(props) {
+    const speedLayer = props.store.layers.find(l => l.id === 'speed');
+    const speedLayerView = props.store.layerViewsMap.get('speed');
+
+    return {
+      eventsLifeSpanHours: this._parseExpirationHours(),
+      speedRendererField: speedLayer ? speedLayer.renderer.field : 'avg_last_hour',
+      showSpeed: speedLayerView ? speedLayerView.visible : true,
+    };
+  }
+
+  _parseExpirationHours() {
+    const daysBack = this.expirationFilter.min.match(/(\d+.?\d*)$/);
+    return daysBack && daysBack[0] ? Math.round(daysBack[0] * 24).toString() : '0';
+  }
 
   _onShowSpeedToggle = e => {
     this.setState({
@@ -28,74 +38,42 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     });
     this.props.store.layerViewsMap.forEach(lV => {
       const id = lV.layer.id;
-      if (id == "speed") {
+      if (id === "speed") {
           lV.visible = e;
       }
     });
 
   }
   _onSpeedRadioClick = e => {
-    var rendererField = "";
-    switch(e.target.value) {
-        case 'Last 15 minutes':
-            rendererField = 'avg_last_15_min';
-            break;
-        case 'Last hour':
-            rendererField = 'avg_last_hour';
-            break;
-        case 'Last 3 hours':
-            rendererField = 'avg_last_3_hours';
-            break;
-        default:
-    }
+    const rendererField = e.target.value;
     this.setState({
-      selectedSpeedRadio: e.target.value,
       speedRendererField: rendererField
     });
 
     this.props.store.layers.forEach(layer => {
-        if (layer.id == "speed") {
-            console.log(layer.renderer);
+        if (layer.id === "speed") {
             layer.renderer.field = rendererField;
         }
     })
     this._updateSpeedLayerFilter(rendererField);
-
-
   }
 
   _updateSpeedLayerFilter(rendererField){
     this.props.store.layerViewsMap.forEach(lV => {
       const id = lV.layer.id;
-      if (id == "speed") {
+      if (id === "speed") {
           lV.filter = {where: rendererField + " > 0"};
       }
     });
   }
 
   _onRadioClick = e => {
+    const hoursBack = e.target.value;
     this.setState({
-      selectedExpirationRadio: e.target.value,
+      eventsLifeSpanHours: hoursBack,
     });
-    var hoursBack;
-    var daysForward = 0;
-    switch(e.target.value) {
-        case 'Live':
-            hoursBack = 0;
-            daysForward = 3;
-            break;
-        case 'Last hour':
-            hoursBack = 1;
-            break;
-        case 'Last 5 hours':
-            hoursBack = 5;
-            break;
-        case 'Last 24 hours':
-            hoursBack = 24;
-            break;
-        default:
-    }
-    const daysBack = hoursBack / 24;
+    const daysForward = hoursBack === '0' ? 3 : 0;
+    const daysBack = parseInt(hoursBack) / 24;
     this.expirationFilter.max = "CURRENT_TIMESTAMP + " + daysForward.toString();
     this.expirationFilter.min = "CURRENT_TIMESTAMP - " + daysBack.toString();
   }
@@ -118,22 +96,30 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       lineHeight: '30px',
     }
 
-    const speedOptions = ['Last 15 minutes','Last hour','Last 3 hours']
-    const speedOptionsRadios = speedOptions.map(entry =>
-        <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
+    const speedOptions = {
+      'avg_last_15_min':  'Last 15 minutes',
+      'avg_last_hour':    'Last hour',
+      'avg_last_3_hours': 'Last 3 hours',
+    }
+    const speedOptionsRadios = Object.entries(speedOptions).map(([value, label]) =>
+        <Radio value={value} key={value} style={radioStyle}>{label}</Radio>
     )
     const speedListGroup =
-      <RadioGroup onChange={this._onSpeedRadioClick} value={this.state.selectedSpeedRadio}>
+      <RadioGroup onChange={this._onSpeedRadioClick} value={this.state.speedRendererField}>
         {speedOptionsRadios}
       </RadioGroup>;
 
-
-    const expirationOptions = ['Live','Last hour','Last 5 hours', 'Last 24 hours']
-    const expirationOptionsRadios = expirationOptions.map(entry =>
-        <Radio value={entry} key={entry} style={radioStyle}>{entry}</Radio>
+    const expirationOptions = {
+      '0':  'Live',
+      '1':  'Last hour',
+      '5':  'Last 5 hours',
+      '24': 'Last 24 hours',
+    }
+    const expirationOptionsRadios = Object.entries(expirationOptions).map(([value, label]) =>
+        <Radio value={value} key={value} style={radioStyle}>{label}</Radio>
     )
     const statsListGroup =
-      <RadioGroup onChange={this._onRadioClick} value={this.state.selectedExpirationRadio}>
+      <RadioGroup onChange={this._onRadioClick} value={this.state.eventsLifeSpanHours}>
         {expirationOptionsRadios}
       </RadioGroup>;
 
