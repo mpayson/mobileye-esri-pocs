@@ -80,7 +80,7 @@ const eventsConfig = {
       //defaultSymbol: {type: "simple-marker", color: "blue"},
       uniqueValueInfos: [
       {
-        value: "pedestrians",
+        value: "pedestrian_aggregation",
         label:"Pedestrians",
 
         symbol: {
@@ -90,7 +90,7 @@ const eventsConfig = {
           url: pedImage
         },
       }, {
-        value: "bicycles",
+        value: "bicycle_aggregation",
         label:"Bicycles",
 
         symbol: {
@@ -101,7 +101,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "ET_PHYSICAL_OBJECT",
+        value: "object_on_road",
         label:"Physical object",
         symbol: {
           type: "picture-marker",
@@ -111,7 +111,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "EID_STOPPED_CAR_ON_HW_SHOULDER",
+        value: "stopped_car_on_highway_shoulder",
         label:"Stopped car",
 
         symbol: {
@@ -122,7 +122,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "EID_VRU_ON_HW",
+        value: "pedestrian_on_highway",
         label:"Pedestrian/cyclist on high speed road",
         symbol: {
           type: "picture-marker",
@@ -132,7 +132,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "ET_FOG",
+        value: "fog",
         label:"Fog",
         symbol: {
           type: "picture-marker",
@@ -142,7 +142,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "ET_CONSTRUCTION_AREA",
+        value: "construction",
         label:"Construction areas",
         symbol: {
           type: "simple-line",
@@ -198,17 +198,17 @@ const eventsConfig = {
     {name: 'eventType', type: 'multiselect',
         params: {style: "toggle", mode:'multiple', setSelectedValuesFromDomain:true,
             customFieldDomainMap: new Map([
-                                          ['ET_FOG', 'Fog'],
-                                          ['ET_CONSTRUCTION_AREA', 'Construction areas'],
-                                          ['ET_PHYSICAL_OBJECT', 'Physical object'],
-                                          ['EID_STOPPED_CAR_ON_HW_SHOULDER',    'Stopped car'],
+                                          ['fog', 'Fog'],
+                                          ['construction', 'Construction areas'],
+                                          ['object_on_road', 'Physical object'],
+                                          ['stopped_car_on_highway_shoulder',    'Stopped car'],
                                           ['ped_cycl', 'Pedestrian / cyclist']
                                         ]),
             optionsToRemovePostfix:"_test",
             optionsToMerge: new Map([
-                                    ['pedestrians', 'ped_cycl'],
-                                    ['bicycles', 'ped_cycl'],
-                                    ['EID_VRU_ON_HW', 'ped_cycl']
+                                    ['pedestrian_aggregation', 'ped_cycl'],
+                                    ['bicycle_aggregation', 'ped_cycl'],
+                                    ['pedestrian_on_highway', 'ped_cycl']
                                   ]),
         }
     },
@@ -225,7 +225,7 @@ const eventsConfig = {
     'eventTimestamp': {title: 'Detection time'},
   },
   overrideFieldsInfoByEventType: {
-    'ET_CONSTRUCTION_AREA': {
+    'construction': {
       'eventTimestamp': {title: 'First detected', noIcon: true},
       'eventExpirationTimestamp': {title: 'Last detected', noIcon: true},
     }
