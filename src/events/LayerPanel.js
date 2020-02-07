@@ -67,7 +67,6 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     const hoursBack = e.target.value;
     this.setState({eventsLifeSpanHours: hoursBack});
     this._updateExpirationFilter(hoursBack);
-    this.props.onExpirationFilterChange(hoursBack);
   }
 
   _updateExpirationFilter(hoursBack) {

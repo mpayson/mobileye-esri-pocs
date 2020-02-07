@@ -164,7 +164,8 @@ const eventsConfig = {
       name: "events0", 
       popupTemplate: popupTemplate,
       showLegend: true, 
-      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']
+      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp'],
+      refreshInterval: 10
     },// baselineWhereCondition:eventsBaselineWhereCondition},
     {
       id: 1, 
@@ -172,7 +173,8 @@ const eventsConfig = {
       name: "events1",
       popupTemplate: popupTemplate,
       showLegend: false,
-      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp']
+      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp'],
+      refreshInterval: 10
     },// baselineWhereCondition:eventsBaselineWhereCondition},
     {
       id: 2, 
