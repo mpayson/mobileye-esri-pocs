@@ -15,6 +15,7 @@ import BookmarkPanel from "../components/BookmarkPanel";
 import { Logo } from '../components/Logo';
 import './Legend.css';
 import EventTooltip from './EventsTooltip';
+import { parseExpirationHours } from './events-utils';
 
 const { Header, Content, Sider } = Layout;
 
@@ -90,6 +91,7 @@ const EventsApp = observer(class App extends React.Component {
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
+        this._initAutoRefreshInterval();
         App._fixLayerOrder(this.view);
       });
   }
@@ -103,11 +105,32 @@ const EventsApp = observer(class App extends React.Component {
     }
   }
 
+  _initAutoRefreshInterval() {
+    const expirationFilter = this.store.filters
+      .find(f => f.field === 'eventExpirationTimestamp');
+    const eventsLifeSpanHours = parseExpirationHours(expirationFilter.min);
+    this._updateAutoRefreshInterval(eventsLifeSpanHours);
+  }
+
+  _updateAutoRefreshInterval = eventsLifeSpanHours => {
+    const refreshInterval = eventsLifeSpanHours === '0' 
+      ? eventsConfig.liveRefreshIntervalMin 
+      : null
+    this.store.layers.forEach(l => {
+      l.refreshInterval = refreshInterval;
+    });
+  }
+
   render() {
     let panel, panelWidth;
     switch (this.state.navKey) {
       case 'Layers':
-        panel = <LayerPanel store={this.store}/>;
+        panel = (
+          <LayerPanel 
+            store={this.store} 
+            onExpirationFilterChange={this._updateAutoRefreshInterval} 
+          />
+        );
         break;
       case 'Bookmarks':
         panel = <BookmarkPanel store={this.store}/>

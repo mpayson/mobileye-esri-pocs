@@ -4,6 +4,7 @@ import PanelCard from '../components/PanelCard';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayerFilterIcon';
 import SelectFilter from '../components/filters/SelectFilter';
 import {Radio, Switch} from "antd";
+import { parseExpirationHours } from './events-utils';
 const RadioGroup = Radio.Group;
 
 
@@ -21,15 +22,10 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     const speedLayerView = props.store.layerViewsMap.get('speed');
 
     return {
-      eventsLifeSpanHours: this._parseExpirationHours(),
+      eventsLifeSpanHours: parseExpirationHours(this.expirationFilter.min),
       speedRendererField: speedLayer ? speedLayer.renderer.field : 'avg_last_hour',
       showSpeed: speedLayerView ? speedLayerView.visible : true,
     };
-  }
-
-  _parseExpirationHours() {
-    const daysBack = this.expirationFilter.min.match(/(\d+.?\d*)$/);
-    return daysBack && daysBack[0] ? Math.round(daysBack[0] * 24).toString() : '0';
   }
 
   _onShowSpeedToggle = e => {
@@ -67,11 +63,14 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
     });
   }
 
-  _onRadioClick = e => {
+  _onExpirationRadioClick = e => {
     const hoursBack = e.target.value;
-    this.setState({
-      eventsLifeSpanHours: hoursBack,
-    });
+    this.setState({eventsLifeSpanHours: hoursBack});
+    this._updateExpirationFilter(hoursBack);
+    this.props.onExpirationFilterChange(hoursBack);
+  }
+
+  _updateExpirationFilter(hoursBack) {
     const daysForward = hoursBack === '0' ? 3 : 0;
     const daysBack = parseInt(hoursBack) / 24;
     this.expirationFilter.max = "CURRENT_TIMESTAMP + " + daysForward.toString();
@@ -119,7 +118,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
         <Radio value={value} key={value} style={radioStyle}>{label}</Radio>
     )
     const statsListGroup =
-      <RadioGroup onChange={this._onRadioClick} value={this.state.eventsLifeSpanHours}>
+      <RadioGroup onChange={this._onExpirationRadioClick} value={this.state.eventsLifeSpanHours}>
         {expirationOptionsRadios}
       </RadioGroup>;
 

@@ -216,6 +216,7 @@ const eventsConfig = {
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
   hasCustomTooltip: true,
+  liveRefreshIntervalMin: 10,
   statisticsFieldsInfo: { 
     'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
     'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},
