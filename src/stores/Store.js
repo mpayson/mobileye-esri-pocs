@@ -132,6 +132,7 @@ class Store {
         }
         if(config.outFields) layer.outFields = config.outFields;
         if(config.popupTemplate !== undefined) layer.popupTemplate = config.popupTemplate;
+        if(config.refreshInterval) layer.refreshInterval = config.refreshInterval;
 
         // Port static logic
         if(config.defaultRendererField && config.type !== 'static'){
