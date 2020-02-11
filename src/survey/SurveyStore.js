@@ -21,9 +21,10 @@ class SurveyStore extends Store {
   }
 
   applyBasemap(zoom) {
+    if (!this.basemapConfig) return;
     const basemap = Object.entries(this.basemapConfig)
       .filter(([id, settings]) => settings.minZoom <= zoom && zoom < settings.maxZoom);
-      
+
     if (basemap && basemap[0]) {
       const [id, _] = basemap[0];
       if (this.view.map.basemap.id !== id) {
