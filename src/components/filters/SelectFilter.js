@@ -5,12 +5,23 @@ const { Option } = Select;
 const ButtonGroup = Button.Group;
 const RadioGroup = Radio.Group;
 
+function findLabel(domainMap, option) {
+  let label = option;
+  if (domainMap.has(option)) {
+    label = domainMap.get(option);
+  } else {
+    // some numbers might be passed as strings
+    const _option = parseInt(option);
+    if (Number.isInteger(_option)) {
+      label = domainMap.get(_option);
+    }
+  }
+  return label;
+}
+
 const DropdownSelectFilter = observer(({store, mode}) => {
   const children = store.displayOptions.map(o => {
-    let label = o;
-    if (store.domainMap.has(o)) {
-        label = store.domainMap.get(o);
-    }
+    let label = findLabel(store.domainMap, o);
     if (o === -100) {
       label = "All";
     }
@@ -40,10 +51,7 @@ const ToggleMultiSelectFilter = observer(class ToggleMultiSelectFilter extends R
   render() {
     const store = this.props.store;
     return store.displayOptions.map(o => {
-      const label = (o === -100 ? "All" : 
-          (store.domainMap.has(o) ? 
-            store.domainMap.get(o)
-            : o));
+      const label = (o === -100 ? "All" : findLabel(store.domainMap, o));
       const wrapperStyles = {display: "flex", alignItems: "center", height: "32px"}
       return (
         <div style={wrapperStyles} key={o}>
@@ -72,10 +80,7 @@ const BtnMultiSelectFilter = observer(class BtnMultiSelectFilter extends React.C
     const selectedSet = this.props.store.selectedOptionSet;
     const domainMap = this.props.store.domainMap;
     const children = this.props.store.displayOptions.map(o => {
-      let label = o;
-      if (domainMap.has(o)) {
-          label = domainMap.get(o);
-      }
+      let label = findLabel(domainMap, o);
       if (o === -100) {
         label = "All";
       }
@@ -117,10 +122,7 @@ const RadioSelectFilter = observer(class RadioSelectFilter extends React.Compone
     }
     const store = this.props.store;
     let radios = store.displayOptions.map(o => {
-      let label = (o === -100 ? "All" : 
-      (store.domainMap.has(o) ? 
-        store.domainMap.get(o)
-        : o));
+      let label = (o === -100 ? "All" : findLabel(store.domainMap, o));
       return (
         <Radio value={o} key={o} style={radioStyle}>{label}</Radio>
       )

@@ -62,7 +62,6 @@ import SingaporeImage from "../resources/images/Singapore.jpg"
 const newSymbol = (...rgba) => {
   const rgbStr = rgba.slice(0, 3).join(',');
   const rgbaStr = rgba.join(',');
-  console.log(rgba.slice(0, 3));
   return {
     type: "simple-marker", 
     color: `rgb(${rgbStr})`, 
