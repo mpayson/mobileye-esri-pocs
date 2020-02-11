@@ -44,13 +44,6 @@ import overheadStructureImage from '../resources/images/HORIZONTAL.png'
 import reflectorImage from '../resources/images/REFLECTORS.png'
 import roadCrossingImage from '../resources/images/CROSSING.png'
 import manholeImage from '../resources/images/MANHOLE_COVER.png'
-import trafficSignDot from '../resources/images/Traffic_Signs.png';
-import TrafficLightDot from '../resources/images/Traffic_Lights_dot.png';
-import roadMarkingDot from '../resources/images/Road_Markings.png';
-import manholeDot from '../resources/images/Manholes.png';
-import polesDot from '../resources/images/Poles.png';
-import otherDot from '../resources/images/Other.png';
-import dotImage from '../resources/images/dot.png';
 import NYCImage from '../resources/images/NYC.jpg';
 import LAImage from '../resources/images/LA.jpg';
 // import AtlantaImage from '../resources/images/Atlanta.jpg'
@@ -65,6 +58,21 @@ import LasVegasImage from "../resources/images/Las Vegas.jpg"
 import HanoverImage from "../resources/images/hanover.jpg"
 import ParisImage from "../resources/images/Paris.png"
 import SingaporeImage from "../resources/images/Singapore.jpg"
+
+const newSymbol = (...rgba) => {
+  const rgbStr = rgba.slice(0, 3).join(',');
+  const rgbaStr = rgba.join(',');
+  console.log(rgba.slice(0, 3));
+  return {
+    type: "simple-marker", 
+    color: `rgb(${rgbStr})`, 
+    size: "9px", 
+    outline: { 
+      color: `rgba(${rgbaStr})`, 
+      width: 2.5
+    }
+  }
+};
 
 const category_l42speed = {
                '0': '10', '1': '20', '2': '30', '3': '40', '4': '50', '5': '60',
@@ -161,13 +169,13 @@ const surveyConfig = {
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "category_l1",
       
-      defaultSymbol: {type: "picture-marker", url: otherDot, width: "10px", height: "10px"},
+      defaultSymbol: newSymbol(0,0,255,0.3),
       uniqueValueInfos: [
-        {value: 0, symbol: {type: "picture-marker", url: trafficSignDot, width: "10px", height: "10px"}}, 
-        {value: 1, symbol: {type: "picture-marker", url: TrafficLightDot, width: "10px", height: "10px"}}, 
-        {value: 2, symbol: {type: "picture-marker", url: roadMarkingDot, width: "10px", height: "10px"}}, 
-        {value: 3, symbol: {type: "picture-marker", url: polesDot, width: "10px", height: "10px"}}, 
-        {value: 4, symbol: {type: "picture-marker", url: manholeDot, width: "10px", height: "10px"}}        
+        {value: 0, symbol: newSymbol(255,255,0,0.3)},
+        {value: 1, symbol: newSymbol(255,99,71,0.3)},
+        {value: 2, symbol: newSymbol(127,255,0,0.3)},
+        {value: 3, symbol: newSymbol(64,224,208,0.3)},
+        {value: 4, symbol: newSymbol(186,85,211,0.3)},      
       ],
   }
   },
