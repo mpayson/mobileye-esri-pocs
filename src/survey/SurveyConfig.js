@@ -469,7 +469,11 @@ const surveyConfig = {
       }
     ],
   },
-  
+  hasZoomListener: true,
+  basemaps: {
+    'dark-gray': {minZoom: 0, maxZoom: 16},
+    'satellite': {minZoom: 16, maxZoom: 100},
+  },
   bookmarkInfos: {
   },
   locationsByArea: [
