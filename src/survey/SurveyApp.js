@@ -12,7 +12,7 @@ import FilterPanel from '../components/FilterPanel';
 import ChartPanel from '../components/ChartPanel';
 // import LayerListPanel from '../components/LayerListPanel';
 import BookmarkPanel from '../components/BookmarkPanel';
-import Store from '../stores/Store';
+import Store from './SurveyStore';
 import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
 import { Logo } from '../components/Logo';
@@ -86,8 +86,12 @@ const SurveyApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         })
         this.view.ui.add(searchExpand, "top-right");
-        const legend = new Legend({view: this.view,
-                                   layerInfos: [{layer: this.store.lyr, title: "Assets"}]});
+        const legend = new Legend({
+          view: this.view,
+          layerInfos: [{layer: this.store.lyr, title: "Assets"}],
+          style: 'card',
+          layout: 'stack',
+        });
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
         this.homeWidget = new Home({

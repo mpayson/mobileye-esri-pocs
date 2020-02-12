@@ -11,6 +11,7 @@ let
     // mapping
     _WebMap,
     _Map,
+    _Basemap,
     _FeatureLayer,
     _MapView,
     // widget UIs
@@ -39,6 +40,7 @@ export function preloadAllModules(){
     // mapping
     'esri/WebMap',
     'esri/Map',
+    'esri/Basemap',
     'esri/layers/FeatureLayer',
     'esri/views/MapView',
     // widget UIs
@@ -63,6 +65,7 @@ export function preloadAllModules(){
     esriId,
     WebMap,
     Map,
+    Basemap,
     FeatureLayer,
     MapView,
     Search,
@@ -83,6 +86,7 @@ export function preloadAllModules(){
 
     _WebMap = WebMap;
     _Map = Map;
+    _Basemap = Basemap;
     _FeatureLayer = FeatureLayer;
     _MapView = MapView;
     
@@ -201,6 +205,11 @@ export function loadWebMap(container, webmapId, viewOptions){
     }
   });
   return _loadMapView(map, container, viewOptions);
+}
+
+export function loadBasemap(view, basemapId) {
+  view.map.basemap = _Basemap.fromId(basemapId);
+  return view;
 }
 
 export function layerFromJson(esriJson, oidField, layerOptions){
