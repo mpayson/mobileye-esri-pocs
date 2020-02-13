@@ -176,7 +176,28 @@ const surveyConfig = {
         {value: 3, symbol: newSymbol(64,224,208,0.3)},
         {value: 4, symbol: newSymbol(186,85,211,0.3)},      
       ],
-  }
+
+      visualVariables: [
+        {
+          type: "size",
+          field: "category_l1",
+          valueExpression: "$view.scale",
+          legendOptions: {
+            showLegend: false,
+          },
+          stops: [
+            {value: 564,  size: 8},
+            {value: 1128, size: 6},
+            {value: 2256, size: 4.5},
+            {value: 4513, size: 3},
+            {value: 9027, size: 2.25},
+            {value: 18055, size: 1.5},
+            {value: 36111, size: 1},
+            {value: 144447, size: 0.5},
+          ]
+        },
+      ],
+    }
   },
   filters: [
     // {name: 'category_l1', type: 'nested', params: {
