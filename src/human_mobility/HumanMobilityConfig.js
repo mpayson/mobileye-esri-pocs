@@ -3,6 +3,7 @@
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
+import DaeguImage from '../resources/images/Daegu.jpg';
 
 var webmapIdEnv = '0b800d1e71d94002b8d2451dcd08155d';
 //var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
@@ -158,7 +159,7 @@ const humanMobilityConfig = {
         },
         {            
           'name' : 'Daegu',
-          'image' : null,
+          'image' : DaeguImage,
           'extent' : {
                       "xmin":14303307.736117812,"ymin":4274406.414936752,"xmax":14330003.368246375,"ymax":4289024.996596272,
                       "spatialReference":{"wkid":102100}

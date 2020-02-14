@@ -28,7 +28,7 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
 
     const style = {
       marginTop: '8px',
-      marginBottom: '24px',
+      marginBottom: '26px',
       lineHeight: 1.3,
     };
 
