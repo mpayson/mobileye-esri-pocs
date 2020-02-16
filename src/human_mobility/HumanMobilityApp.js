@@ -138,6 +138,12 @@ const HumanMobilityApp = observer(class App extends React.Component {
       left: "50%",
       marginLeft: "-300px",
     }
+    const hoursSliderBodyStyle = {
+      paddingLeft: '4px', 
+      paddingRight: '4px', 
+      paddingBottom: '5px', 
+      overflowX: 'hidden'
+    }
 
     const autoIcon = this.store.hourAutoplay ? "pause" : "caret-right";
 
@@ -185,21 +191,39 @@ const HumanMobilityApp = observer(class App extends React.Component {
               <Card
                 className="antd-esri-widget"
                 style={hoursSliderStyle}
+                bodyStyle={hoursSliderBodyStyle}
                 size="small"
                 title={`Time of day:`}
-                extra={
-                  <Button id="autoplay" icon={autoIcon} onClick={this.store.toggleAutoplayTime}/>
-                }>
+              >
                 <Row gutter={16} type="flex" align="middle" justify="space-around">
-                <Col span={2}>
-                  <Button id="forward" onClick={this._onHoursBackwardsButtonClick} type="primary" icon="left"/>
-                </Col>
-                <Col span={20}>
-                  {hoursSlider}
-                </Col>
-                <Col span={2}>
-                  <Button id="backwards" onClick={this._onHoursForwardButtonClick} type="primary" icon="right"/>
-                </Col>
+                  <Col span={2}>
+                    <Button 
+                      id="forward" 
+                      onClick={this._onHoursBackwardsButtonClick} 
+                      type="primary" 
+                      icon="left"
+                      aria-label="Move timespan back 1 hour"
+                    />
+                  </Col>
+                  <Col span={16}>
+                    {hoursSlider}
+                  </Col>
+                  <Col span={4}>
+                    <Button 
+                      id="backwards" 
+                      onClick={this._onHoursForwardButtonClick} 
+                      type="primary" 
+                      icon="right"
+                      style={{marginRight: '16px'}}
+                      aria-label="Move timespan forward 1 hour"
+                    />
+                    <Button 
+                      id="autoplay" 
+                      icon={autoIcon} 
+                      onClick={this.store.toggleAutoplayTime} 
+                      aria-label="Toggle auto-play" 
+                    />
+                  </Col>
                 </Row>
               </Card>
               <Drawer

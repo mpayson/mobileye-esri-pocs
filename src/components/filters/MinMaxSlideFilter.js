@@ -26,6 +26,12 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
       />
     }
 
+    const style = {
+      marginTop: '8px',
+      marginBottom: '26px',
+      lineHeight: 1.3,
+    };
+
     const min = this.store.min || this.store.min === 0
       ? this.store.min
       : this.store.lowerBound;
@@ -52,8 +58,9 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
     // 100 step values to 2 point precision (eg Math.round(trueStep * 100) / 100)
     var step = Math.round(this.store.upperBound - this.store.lowerBound) / 100;
 
-    if (this.store.step)
+    if (this.store.step) {
       step = this.store.step;
+    }
 
     let addlProps = {};
     if(this.store.tooltipVisible === false){
@@ -71,6 +78,7 @@ const MinMaxSlideFilter = observer(class MinMaxSlideFilter extends React.Compone
         onChange={this.onChange}
         disabled={!this.store.loaded}
         step={step}
+        style={style}
         {...addlProps}
       />
     )
