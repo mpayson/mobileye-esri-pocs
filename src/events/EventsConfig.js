@@ -146,9 +146,9 @@ const eventsConfig = {
         label:"Construction areas",
         symbol: {
           type: "simple-line",
-          width: '4.6px',
+          width: '4px',
           // style: 'short-dash',
-          color: 'rgba(0,153,188 ,0.35)',
+          color: 'rgba(156, 206, 214,1)',
         }
       },
       ]
