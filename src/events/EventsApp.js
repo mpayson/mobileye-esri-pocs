@@ -2,7 +2,6 @@ import React from 'react'
 import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
-import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
@@ -11,7 +10,6 @@ import Store from '../stores/Store';
 import eventsConfig from './EventsConfig';
 import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
-import BookmarkPanel from "../components/BookmarkPanel";
 import { Logo } from '../components/Logo';
 import './Legend.css';
 import EventTooltip from './EventsTooltip';
@@ -20,9 +18,6 @@ const { Header, Content, Sider } = Layout;
 
 const MenuFilterIcon = () => (
   <LayerFilterIcon size="18" filled/>
-)
-const MenuBookmarkIcon = () => (
-  <BookmarkIcon size="18" filled/>
 )
 const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
@@ -109,9 +104,6 @@ const EventsApp = observer(class App extends React.Component {
       case 'Layers':
         panel = <LayerPanel store={this.store}/>;
         break;
-      case 'Bookmarks':
-        panel = <BookmarkPanel store={this.store}/>
-        break;
       case 'Locations':
         panel = <LocationsPanel store={this.store}/>
         panelWidth = 300;
@@ -148,10 +140,6 @@ const EventsApp = observer(class App extends React.Component {
             <Menu.Item key="Layers">
               <Icon component={MenuFilterIcon} />
               <span>Layers</span>
-            </Menu.Item>
-            <Menu.Item key="Bookmarks">
-              <Icon component={MenuBookmarkIcon} />
-              <span>Bookmarks</span>
             </Menu.Item>
             <Menu.Item key="Locations">
               <Icon component={MenuLocationsIcon} />
