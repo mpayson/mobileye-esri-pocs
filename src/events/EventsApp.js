@@ -60,13 +60,12 @@ const EventsApp = observer(class App extends React.Component {
     const modulePromise = loadModules([
       'esri/widgets/Search',
       'esri/widgets/Legend',
-      'esri/widgets/TimeSlider',
       'esri/widgets/Expand'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, TimeSlider, Expand], mapView]) => {
+      .then(([[Search, Legend, Expand], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
 
@@ -85,16 +84,22 @@ const EventsApp = observer(class App extends React.Component {
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
-        App._fixLayerOrder(this.view);
+        this._fixLayerOrder(this.view);
       });
   }
 
-  static _fixLayerOrder(mapView) {
+  _fixLayerOrder(mapView) {
     const layers = mapView.map.layers;
     const iSpeed = layers.items.findIndex(lyr => lyr.id === 'speed');
     if (iSpeed > 0) {
       const speedLayer = layers.getItemAt(iSpeed);
       layers.reorder(speedLayer, 0);
+    }
+    if (eventsConfig.streetNamesBelowIcons) {
+      this.store.doAfterLayersLoaded = () => {
+        const streetNamesLayer = mapView.map.basemap.referenceLayers.pop();
+        layers.add(streetNamesLayer, 1);
+      }
     }
   }
 
