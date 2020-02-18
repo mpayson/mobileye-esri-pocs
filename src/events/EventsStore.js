@@ -24,10 +24,25 @@ class EventsStore extends Store {
   }
 
   _doAfterLayersLoaded = () => {
-    if (!this.renderIconsAboveStreetNames) return;
-    const {layers, basemap: {referenceLayers}} = this.view.map;
-    const streetNamesLayer = referenceLayers.pop();
-    layers.add(streetNamesLayer, 1);
+    if (this.renderIconsAboveStreetNames) {
+      const {layers, basemap: {referenceLayers}} = this.view.map;
+      const streetNamesLayer = referenceLayers.pop();
+      layers.add(streetNamesLayer, 1);
+    }
+    this.patchLegendIcons();
+  }
+
+  patchLegendIcons() {
+    const legend = this.view.ui._components.find(c => c.widget.label === 'Legend');
+    if (legend) {
+      const activeLayerInfo = legend.widget.activeLayerInfos.items.find(ali => ali.layer.id === 'events0');
+      if (activeLayerInfo) {
+        const elements = activeLayerInfo.legendElements[0];
+        if (elements) {
+          elements.infos = elements.infos.filter(i => i.value.endsWith('legend'));
+        }
+      }
+    }
   }
 }
 

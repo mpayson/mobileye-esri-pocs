@@ -6,6 +6,12 @@ import carSvg from '../resources/svg/events/parking-01.svg';
 import hazardSvg from '../resources/svg/events/hazard-01.svg';
 import fogSvg from '../resources/svg/events/fog-01.svg';
 
+import bikeLegendSvg from '../resources/svg/events/bike_legend-01.svg';
+import pedLegendSvg from '../resources/svg/events/ped_legend-01.svg';
+import carLegendSvg from '../resources/svg/events/car_legend-01.svg';
+import hazardLegendSvg from '../resources/svg/events/hazard_legend-01.svg';
+import fogLegendSvg from '../resources/svg/events/fog_legend-01.svg';
+
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
@@ -69,9 +75,13 @@ if (process.env.EVENTS_WEBMAP_ID){
     webmapIdEnv = process.env.EVENTS_WEBMAP_ID;
 }
 
-const defaultIconSize = {
+const defaultMapIconSize = {
   width: '35px',
   height: '35px',
+};
+const defaultLegendIconSize = {
+  width: '30px',
+  height: '30px',
 };
 const eventsConfig = {
   webmapId: '8654f5c608384b9eb7e06fd566643afc',
@@ -86,30 +96,56 @@ const eventsConfig = {
       uniqueValueInfos: [
       {
         value: "pedestrian_aggregation",
-        label:"Pedestrians",
-
+        label: "Pedestrians",
         symbol: {
           type: "picture-marker",
           url: pedSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
         },
-      }, {
+      },
+      {
+        value: "peds_legend",
+        label: "Pedestrians",
+        symbol: {
+          type: "picture-marker",
+          url: pedLegendSvg,
+          ...defaultLegendIconSize,
+        },
+      }, 
+      {
         value: "bicycle_aggregation",
-        label:"Bicycles",
-
+        label: "Bicycles",
         symbol: {
           type: "picture-marker",
           url: bikeSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        }
+      },
+      {
+        value: "bicycle_legend",
+        label: "Bicycles",
+        symbol: {
+          type: "picture-marker",
+          url: bikeLegendSvg,
+          ...defaultLegendIconSize
         }
       },
       {
         value: "object_on_road",
-        label:"Physical object",
+        label: "Physical object",
         symbol: {
           type: "picture-marker",
           url: hazardSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        }
+      },
+      {
+        value: "object_legend",
+        label: "Physical object",
+        symbol: {
+          type: "picture-marker",
+          url: hazardLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
@@ -119,7 +155,17 @@ const eventsConfig = {
         symbol: {
           type: "picture-marker",
           url: carSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        }
+      },
+      {
+        value: "stopped_car_legend",
+        label:"Stopped car",
+
+        symbol: {
+          type: "picture-marker",
+          url: carLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
@@ -128,20 +174,48 @@ const eventsConfig = {
         symbol: {
           type: "picture-marker",
           url: pedSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        }
+      },
+      {
+        value: "ped_on_hw_legend",
+        label:"Pedestrian/cyclist on high speed road",
+        symbol: {
+          type: "picture-marker",
+          url: pedLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
         value: "fog",
-        label:"Fog",
+        label: "Fog",
         symbol: {
           type: "picture-marker",
           url: fogSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        }
+      },
+      {
+        value: "fog_legend",
+        label: "Fog",
+        symbol: {
+          type: "picture-marker",
+          url: fogLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
         value: "construction",
+        label:"Construction areas",
+        symbol: {
+          type: "simple-line",
+          width: '5px',
+          // style: 'short-dash',
+          color: 'rgba(255, 255, 255,0.7)',
+        }
+      },
+      {
+        value: "construction_legend",
         label:"Construction areas",
         symbol: {
           type: "simple-line",
