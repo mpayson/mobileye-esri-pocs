@@ -6,7 +6,7 @@ import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import Store from '../stores/Store';
+import Store from './EventsStore';
 import eventsConfig from './EventsConfig';
 import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
@@ -84,23 +84,7 @@ const EventsApp = observer(class App extends React.Component {
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
-        this._fixLayerOrder(this.view);
       });
-  }
-
-  _fixLayerOrder(mapView) {
-    const layers = mapView.map.layers;
-    const iSpeed = layers.items.findIndex(lyr => lyr.id === 'speed');
-    if (iSpeed > 0) {
-      const speedLayer = layers.getItemAt(iSpeed);
-      layers.reorder(speedLayer, 0);
-    }
-    if (eventsConfig.streetNamesBelowIcons) {
-      this.store.doAfterLayersLoaded = () => {
-        const streetNamesLayer = mapView.map.basemap.referenceLayers.pop();
-        layers.add(streetNamesLayer, 1);
-      }
-    }
   }
 
   render() {
