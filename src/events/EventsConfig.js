@@ -105,7 +105,7 @@ const eventsConfig = {
       },
       {
         value: "object_on_road",
-        label:"Physical object",
+        label:"Object on road",
         symbol: {
           type: "picture-marker",
           url: hazardSvg,
