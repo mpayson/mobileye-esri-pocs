@@ -310,6 +310,10 @@ class Store {
         this.layerVisibleMap.set(layer.id, isVisible);
     }
 
+    _doAfterLayersLoaded() { 
+        // overwrite this to execute some logic after layers have been loaded
+     };
+
     async load(mapViewDiv) {
         this.appState.loadingMessage('Loading map.');
 
@@ -349,6 +353,7 @@ class Store {
             .then(_ => {
                 this.loadFilters();
                 this.loadCharts();
+                this._doAfterLayersLoaded(this.view);
             })
             .catch(er => {
                 this.appState.onError(er, 'Could not load layers, do you have access to the data?')
@@ -510,7 +515,8 @@ decorate(Store, {
     clearTooltip: action.bound,
     _onMouseLeave: action.bound,
     startAutoplayBookmarks: action.bound,
-    stopAutoplayBookmarks: action.bound
+    stopAutoplayBookmarks: action.bound,
+    _doAfterLayersLoaded: action.bound,
 });
 
 export default Store;

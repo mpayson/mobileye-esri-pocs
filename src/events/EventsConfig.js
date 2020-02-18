@@ -1,15 +1,16 @@
 // update to map
 
-import bicycleImage from '../resources/images/ET_BICYCLE.png'
-import pedImage from '../resources/images/ET_PED_ON_HW.png'
+import bikeSvg from '../resources/svg/events/bike.svg';
+import pedSvg from '../resources/svg/events/pedestrian-01.svg';
+import carSvg from '../resources/svg/events/parking-01.svg';
+import hazardSvg from '../resources/svg/events/hazard-01.svg';
+import fogSvg from '../resources/svg/events/fog-01.svg';
+
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 import DaeguImage from '../resources/images/Daegu.jpg';
-import CarImage from '../resources/svg/svgrepo/sports-car.svg';
-import BarrierImage from '../resources/svg/svgrepo/barrier.svg';
-import MistImage from '../resources/svg/svgrepo/mist.svg';
 
 const  popupTemplate =  {
     title: "Event information:",
@@ -68,6 +69,10 @@ if (process.env.EVENTS_WEBMAP_ID){
     webmapIdEnv = process.env.EVENTS_WEBMAP_ID;
 }
 
+const defaultIconSize = {
+  width: '22px',
+  height: '22px',
+};
 const eventsConfig = {
   webmapId: '8654f5c608384b9eb7e06fd566643afc',
   initialRendererField: 'eventType',
@@ -85,9 +90,8 @@ const eventsConfig = {
 
         symbol: {
           type: "picture-marker",
-          height: '20px',
-          width: '20px',
-          url: pedImage
+          url: pedSvg,
+          ...defaultIconSize,
         },
       }, {
         value: "bicycle_aggregation",
@@ -95,9 +99,8 @@ const eventsConfig = {
 
         symbol: {
           type: "picture-marker",
-          height: '20px',
-          width: '20px',
-          url: bicycleImage
+          url: bikeSvg,
+          ...defaultIconSize,
         }
       },
       {
@@ -105,9 +108,8 @@ const eventsConfig = {
         label:"Physical object",
         symbol: {
           type: "picture-marker",
-          height: '22px',
-          width: '22px',
-          url: BarrierImage,
+          url: hazardSvg,
+          ...defaultIconSize,
         }
       },
       {
@@ -116,9 +118,8 @@ const eventsConfig = {
 
         symbol: {
           type: "picture-marker",
-          height: '20px',
-          width: '20px',
-          url: CarImage,
+          url: carSvg,
+          ...defaultIconSize,
         }
       },
       {
@@ -126,9 +127,8 @@ const eventsConfig = {
         label:"Pedestrian/cyclist on high speed road",
         symbol: {
           type: "picture-marker",
-          height: '20px',
-          width: '20px',
-          url: pedImage
+          url: pedSvg,
+          ...defaultIconSize,
         }
       },
       {
@@ -136,9 +136,8 @@ const eventsConfig = {
         label:"Fog",
         symbol: {
           type: "picture-marker",
-          height: '20px',
-          width: '20px',
-          url: MistImage,
+          url: fogSvg,
+          ...defaultIconSize,
         }
       },
       {
@@ -217,6 +216,7 @@ const eventsConfig = {
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
+  renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
   statisticsFieldsInfo: { 
     'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},

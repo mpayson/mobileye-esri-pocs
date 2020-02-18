@@ -2,16 +2,14 @@ import React from 'react'
 import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col } from 'antd';
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
-import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
 import LocationsPanel from '../components/LocationsPanel';
 
 import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
-import Store from '../stores/Store';
+import Store from './EventsStore';
 import eventsConfig from './EventsConfig';
 import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
-import BookmarkPanel from "../components/BookmarkPanel";
 import { Logo } from '../components/Logo';
 import './Legend.css';
 import EventTooltip from './EventsTooltip';
@@ -20,9 +18,6 @@ const { Header, Content, Sider } = Layout;
 
 const MenuFilterIcon = () => (
   <LayerFilterIcon size="18" filled/>
-)
-const MenuBookmarkIcon = () => (
-  <BookmarkIcon size="18" filled/>
 )
 const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
@@ -65,13 +60,12 @@ const EventsApp = observer(class App extends React.Component {
     const modulePromise = loadModules([
       'esri/widgets/Search',
       'esri/widgets/Legend',
-      'esri/widgets/TimeSlider',
       'esri/widgets/Expand'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, TimeSlider, Expand], mapView]) => {
+      .then(([[Search, Legend, Expand], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
 
@@ -90,17 +84,7 @@ const EventsApp = observer(class App extends React.Component {
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "top-right");
-        App._fixLayerOrder(this.view);
       });
-  }
-
-  static _fixLayerOrder(mapView) {
-    const layers = mapView.map.layers;
-    const iSpeed = layers.items.findIndex(lyr => lyr.id === 'speed');
-    if (iSpeed > 0) {
-      const speedLayer = layers.getItemAt(iSpeed);
-      layers.reorder(speedLayer, 0);
-    }
   }
 
   render() {
@@ -108,9 +92,6 @@ const EventsApp = observer(class App extends React.Component {
     switch (this.state.navKey) {
       case 'Layers':
         panel = <LayerPanel store={this.store}/>;
-        break;
-      case 'Bookmarks':
-        panel = <BookmarkPanel store={this.store}/>
         break;
       case 'Locations':
         panel = <LocationsPanel store={this.store}/>
@@ -148,10 +129,6 @@ const EventsApp = observer(class App extends React.Component {
             <Menu.Item key="Layers">
               <Icon component={MenuFilterIcon} />
               <span>Layers</span>
-            </Menu.Item>
-            <Menu.Item key="Bookmarks">
-              <Icon component={MenuBookmarkIcon} />
-              <span>Bookmarks</span>
             </Menu.Item>
             <Menu.Item key="Locations">
               <Icon component={MenuLocationsIcon} />
