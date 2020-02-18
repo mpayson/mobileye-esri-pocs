@@ -54,7 +54,7 @@ const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
 })
 const speedRenderer = (field) =>
      getClassBreakRenderer(field, [0, 15, 50, 100, 1000], ['0-15 km/h','15-50 km/h','50-100 km/h','100+ km/h '],
-      [[230,74,25,255],[255,196,0,255],[255,241,118,255],[212,225,87,255]], ["2.3px","2.3px","2.3px","2.3px"], "Average speed");
+      [[230,74,25,255],[255,128,0,255],[255,255,0,255],[51,255,51,255]], ["2.3px","2.3px","2.3px","2.3px"], "Average speed");
 
 //const eventsBaselineWhereCondition = 'eventExpirationTimestamp >= CURRENT_TIMESTAMP - 1 AND eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3'
 //                                      eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3 AND eventExpirationTimestamp >= CURRENT_TIMESTAMP
@@ -70,8 +70,8 @@ if (process.env.EVENTS_WEBMAP_ID){
 }
 
 const defaultIconSize = {
-  width: '22px',
-  height: '22px',
+  width: '35px',
+  height: '35px',
 };
 const eventsConfig = {
   webmapId: '8654f5c608384b9eb7e06fd566643afc',
@@ -145,9 +145,9 @@ const eventsConfig = {
         label:"Construction areas",
         symbol: {
           type: "simple-line",
-          width: '4px',
+          width: '5px',
           // style: 'short-dash',
-          color: 'rgba(156, 206, 214,1)',
+          color: 'rgba(255, 255, 255,0.7)',
         }
       },
       ]
@@ -233,9 +233,9 @@ const eventsConfig = {
     }
   },
   viewConfig: {
-    center: [-74.00157, 40.71955],
-    //center: [128.608705, 35.862483],
-    zoom: 12
+    //center: [-74.00157, 40.71955],
+    center: [128.608705, 35.862483],
+    zoom: 14
   },
   locationsByArea: [
     { areaName : 'Americas',
