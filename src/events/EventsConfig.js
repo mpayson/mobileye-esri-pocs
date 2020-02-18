@@ -80,8 +80,8 @@ const defaultMapIconSize = {
   height: '35px',
 };
 const defaultLegendIconSize = {
-  width: '30px',
-  height: '30px',
+  width: 30,
+  height: 30,
 };
 const eventsConfig = {
   webmapId: '8654f5c608384b9eb7e06fd566643afc',
@@ -102,16 +102,11 @@ const eventsConfig = {
           url: pedSvg,
           ...defaultMapIconSize,
         },
-      },
-      {
-        value: "peds_legend",
-        label: "Pedestrians",
-        symbol: {
-          type: "picture-marker",
+        legendSymbol: {
           url: pedLegendSvg,
           ...defaultLegendIconSize,
-        },
-      }, 
+        }
+      },
       {
         value: "bicycle_aggregation",
         label: "Bicycles",
@@ -119,15 +114,10 @@ const eventsConfig = {
           type: "picture-marker",
           url: bikeSvg,
           ...defaultMapIconSize,
-        }
-      },
-      {
-        value: "bicycle_legend",
-        label: "Bicycles",
-        symbol: {
-          type: "picture-marker",
+        },
+        legendSymbol: {
           url: bikeLegendSvg,
-          ...defaultLegendIconSize
+          ...defaultLegendIconSize,
         }
       },
       {
@@ -137,13 +127,8 @@ const eventsConfig = {
           type: "picture-marker",
           url: hazardSvg,
           ...defaultMapIconSize,
-        }
-      },
-      {
-        value: "object_legend",
-        label: "Physical object",
-        symbol: {
-          type: "picture-marker",
+        },
+        legendSymbol: {
           url: hazardLegendSvg,
           ...defaultLegendIconSize,
         }
@@ -156,14 +141,8 @@ const eventsConfig = {
           type: "picture-marker",
           url: carSvg,
           ...defaultMapIconSize,
-        }
-      },
-      {
-        value: "stopped_car_legend",
-        label:"Stopped car",
-
-        symbol: {
-          type: "picture-marker",
+        },
+        legendSymbol: {
           url: carLegendSvg,
           ...defaultLegendIconSize,
         }
@@ -175,13 +154,8 @@ const eventsConfig = {
           type: "picture-marker",
           url: pedSvg,
           ...defaultMapIconSize,
-        }
-      },
-      {
-        value: "ped_on_hw_legend",
-        label:"Pedestrian/cyclist on high speed road",
-        symbol: {
-          type: "picture-marker",
+        },
+        legendSymbol: {
           url: pedLegendSvg,
           ...defaultLegendIconSize,
         }
@@ -193,29 +167,14 @@ const eventsConfig = {
           type: "picture-marker",
           url: fogSvg,
           ...defaultMapIconSize,
-        }
-      },
-      {
-        value: "fog_legend",
-        label: "Fog",
-        symbol: {
-          type: "picture-marker",
+        },
+        legendSymbol: {
           url: fogLegendSvg,
           ...defaultLegendIconSize,
         }
       },
       {
         value: "construction",
-        label:"Construction areas",
-        symbol: {
-          type: "simple-line",
-          width: '5px',
-          // style: 'short-dash',
-          color: 'rgba(255, 255, 255,0.7)',
-        }
-      },
-      {
-        value: "construction_legend",
         label:"Construction areas",
         symbol: {
           type: "simple-line",
@@ -290,6 +249,7 @@ const eventsConfig = {
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
+  customLegendIcons: true,
   renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
   statisticsFieldsInfo: { 
