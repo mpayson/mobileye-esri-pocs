@@ -69,12 +69,75 @@ class EventsStore extends Store {
         };
       });
     });
+  }
 
+  _onMouseMove(evt) {
+    const promise = (this._tooltipPromise = this.view
+        .hitTest(evt)
+        .then(hit => {
+          if (promise !== this._tooltipPromise) {
+            return; // another test was performed
+          }
+
+          const results = hit.results.filter(
+            r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
+          );
+          
+          if (results.length) {
+            const graphic = results[0].graphic;
+            const screenPoint = hit.screenPoint;
+            const eventType = graphic.attributes.eventType;
+            if (eventType) {
+              const uniqVal = this.renderers.eventType.uniqueValueInfos
+              .find(u => u.value === eventType);
+              
+              if (uniqVal) {
+                graphic.symbol = uniqVal.symbol;
+                graphic.symbol.width *= 1.3;
+                graphic.symbol.height *= 1.3;
+                setImmediate(() => {
+                    this.view.graphics.removeAll();
+                    this.view.graphics.add(graphic);
+                  });
+                }
+              } else {
+                this.view.graphics.removeAll();
+              }
+
+              if (this.onMouseOutStatistics) {
+                var new_geometry = results[0].graphic.geometry;
+                new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
+                new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
+                this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
+                    where: this.where,
+                    geometry: results[0].graphic.geometry,
+                    returnGeometry: true,
+                    spatialRelationship: "contains",
+                    outStatistics: this.onMouseOutStatistics
+                }).then(queryFeaturesResults => {
+                    const queryResults = queryFeaturesResults.features;
+                    this.tooltipResults = {
+                        screenPoint,
+                        graphic,
+                        queryResults
+                    }
+                });
+              } else {
+                this.tooltipResults = {screenPoint, graphic}
+              }
+
+          } else {
+            this.view.graphics.removeAll();
+            this.tooltipResults = null;
+          }
+        })
+    );
   }
 }
 
 decorate(EventsStore, {
   load: action.bound,
+  _onMouseMove: action.bound,
   _doAfterLayersLoaded: action.bound,
 })
 
