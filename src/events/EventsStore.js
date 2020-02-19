@@ -38,30 +38,36 @@ class EventsStore extends Store {
   patchLegendIcons() {
     const legend = this.view.ui._components.find(c => c.widget.label === 'Legend');
     if (!legend) return;
-    const activeLayerInfo = legend.widget.activeLayerInfos.items.find(ali => ali.layer.id === 'events0');
-    if (!activeLayerInfo) return;
-    const elements = activeLayerInfo.legendElements[0];
+    const activeLayersInfos = legend.widget.activeLayerInfos.items;
+    const eventLayerInfo = activeLayersInfos.find(ali => ali.layer.id === 'events0');
+    if (!eventLayerInfo) return;
+    const elements = eventLayerInfo.legendElements[0];
     if (!elements) return;
+    const renderer = Object.values(this.renderers).find(r => r.type === 'unique-value'); // eventType
 
-    this.renderers.eventType.uniqueValueInfos.forEach((uniqVal, i) => {
+    const batch = renderer.uniqueValueInfos.map((uniqVal, i) => {
       if (uniqVal.legendSymbol) {
-        const svg = elements.infos[i].preview.querySelector('svg');
-        if (svg) {
-          const svgImage = svg.querySelector('image');
-          if (svgImage) {
-            const {url, width, height} = uniqVal.legendSymbol;
-            if (url) svgImage.href.baseVal = url;
-            if (width) {
-              svg.width.baseVal.value = width;
-              svgImage.width.baseVal.value = width;
-            };
-            if (height) {
-              svg.height.baseVal.value = height;
-              svgImage.height.baseVal.value = height;
-            };
-          }
-        }
+        const container = elements.infos[i].preview;
+        const svg = container.querySelector('svg');
+        const svgImage = svg ? svg.querySelector('image') : null;
+        return svgImage ? {svg, svgImage, ...uniqVal.legendSymbol} : null;
       }
+      return null;
+    }).filter(Boolean);
+
+    requestAnimationFrame(() => {
+      batch.forEach(upd => {
+        const {svg, svgImage, url, width, height} = upd;
+        if (url) svgImage.href.baseVal = url;
+        if (width) {
+          svg.width.baseVal.value = width;
+          svgImage.width.baseVal.value = width;
+        };
+        if (height) {
+          svg.height.baseVal.value = height;
+          svgImage.height.baseVal.value = height;
+        };
+      });
     });
 
   }
