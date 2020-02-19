@@ -6,6 +6,12 @@ import carSvg from '../resources/svg/events/parking-01.svg';
 import hazardSvg from '../resources/svg/events/hazard-01.svg';
 import fogSvg from '../resources/svg/events/fog-01.svg';
 
+import bikeLegendSvg from '../resources/svg/events/bike_legend-01.svg';
+import pedLegendSvg from '../resources/svg/events/ped_legend-01.svg';
+import carLegendSvg from '../resources/svg/events/car_legend-01.svg';
+import hazardLegendSvg from '../resources/svg/events/hazard_legend-01.svg';
+import fogLegendSvg from '../resources/svg/events/fog_legend-01.svg';
+
 import NYCImage from "../resources/images/NYC.jpg";
 import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
@@ -69,9 +75,13 @@ if (process.env.EVENTS_WEBMAP_ID){
     webmapIdEnv = process.env.EVENTS_WEBMAP_ID;
 }
 
-const defaultIconSize = {
+const defaultMapIconSize = {
   width: '35px',
   height: '35px',
+};
+const defaultLegendIconSize = {
+  width: 30,
+  height: 30,
 };
 const eventsConfig = {
   webmapId: '8654f5c608384b9eb7e06fd566643afc',
@@ -86,21 +96,28 @@ const eventsConfig = {
       uniqueValueInfos: [
       {
         value: "pedestrian_aggregation",
-        label:"Pedestrians",
-
+        label: "Pedestrians",
         symbol: {
           type: "picture-marker",
           url: pedSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
         },
-      }, {
+        legendSymbol: {
+          url: pedLegendSvg,
+          ...defaultLegendIconSize,
+        }
+      },
+      {
         value: "bicycle_aggregation",
-        label:"Bicycles",
-
+        label: "Bicycles",
         symbol: {
           type: "picture-marker",
           url: bikeSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        },
+        legendSymbol: {
+          url: bikeLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
@@ -109,7 +126,11 @@ const eventsConfig = {
         symbol: {
           type: "picture-marker",
           url: hazardSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        },
+        legendSymbol: {
+          url: hazardLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
@@ -119,7 +140,11 @@ const eventsConfig = {
         symbol: {
           type: "picture-marker",
           url: carSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        },
+        legendSymbol: {
+          url: carLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
@@ -128,16 +153,24 @@ const eventsConfig = {
         symbol: {
           type: "picture-marker",
           url: pedSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        },
+        legendSymbol: {
+          url: pedLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
         value: "fog",
-        label:"Fog",
+        label: "Fog",
         symbol: {
           type: "picture-marker",
           url: fogSvg,
-          ...defaultIconSize,
+          ...defaultMapIconSize,
+        },
+        legendSymbol: {
+          url: fogLegendSvg,
+          ...defaultLegendIconSize,
         }
       },
       {
@@ -216,6 +249,7 @@ const eventsConfig = {
 //    {name: 'project', type: 'multiselect', params: {lowerBound: 0, upperBound: 100, log: true}},
 //    {name: 'eventtimestamp', type: 'minmax', params: {lowerBound: 0, upperBound: 100, log: true}},
   ],
+  customLegendIcons: true,
   renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
   statisticsFieldsInfo: { 

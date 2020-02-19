@@ -353,7 +353,7 @@ class Store {
             .then(_ => {
                 this.loadFilters();
                 this.loadCharts();
-                this._doAfterLayersLoaded(this.view);
+                this._doAfterLayersLoaded();
             })
             .catch(er => {
                 this.appState.onError(er, 'Could not load layers, do you have access to the data?')
