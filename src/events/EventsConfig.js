@@ -148,7 +148,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "pedestrian_on_highway",
+        value: "pedestrian_on_high_speed_road",
         label:"Pedestrian/cyclist on high speed road",
         symbol: {
           type: "picture-marker",
@@ -242,7 +242,7 @@ const eventsConfig = {
             optionsToMerge: new Map([
                                     ['pedestrian_aggregation', 'ped_cycl'],
                                     ['bicycle_aggregation', 'ped_cycl'],
-                                    ['pedestrian_on_highway', 'ped_cycl']
+                                    ['pedestrian_on_high_speed_road', 'ped_cycl']
                                   ]),
         }
     },
