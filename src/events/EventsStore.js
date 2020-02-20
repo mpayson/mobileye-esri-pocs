@@ -1,5 +1,5 @@
 import Store from '../stores/Store';
-import { action, decorate } from 'mobx';
+import { action, decorate, observable } from 'mobx';
 
 class EventsStore extends Store {
 
@@ -100,6 +100,10 @@ class EventsStore extends Store {
     });
   }
 
+  _clearGraphics() {
+    this.view.graphics.removeAll();
+  }
+
   _onMouseMove(evt) {
     const promise = (this._tooltipPromise = this.view
       .hitTest(evt)
@@ -128,7 +132,7 @@ class EventsStore extends Store {
               this._scheduleGraphicsUpdate(graphic);
             }
           } else {
-            this.view.graphics.removeAll();
+            this._clearGraphics();
           }
 
           if (this.onMouseOutStatistics) {
@@ -154,17 +158,25 @@ class EventsStore extends Store {
           }
 
         } else {
-          this.view.graphics.removeAll();
+          this._clearGraphics();
           this.tooltipResults = null;
         }
       })
     );
   }
+
+  _onMouseLeave(evt) {
+    super._onMouseLeave();
+    this._clearGraphics();
+  }
 }
 
 decorate(EventsStore, {
+  _graphicUpdate: observable.ref,
   load: action.bound,
   _onMouseMove: action.bound,
+  _onMouseLeave: action.bound,
+  _clearGraphics: action.bound,
   _doAfterLayersLoaded: action.bound,
 })
 
