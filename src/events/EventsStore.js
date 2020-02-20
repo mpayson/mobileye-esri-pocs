@@ -31,11 +31,11 @@ class EventsStore extends Store {
       layers.add(streetNamesLayer, 1);
     }
     if (this.customLegendIcons) {
-      this.patchLegendIcons();
+      this._patchLegendIcons();
     }
   }
 
-  patchLegendIcons() {
+  _patchLegendIcons() {
     const legend = this.view.ui._components.find(c => c.widget.label === 'Legend');
     if (!legend) return;
     const activeLayersInfos = legend.widget.activeLayerInfos.items;
@@ -71,66 +71,93 @@ class EventsStore extends Store {
     });
   }
 
+  static _findValueInfo(renderer, value) {
+    let valueInfo;
+
+    switch (renderer.type) {
+      case 'unique-value':
+        valueInfo = renderer.uniqueValueInfos.find(u => u.value === value);
+        break;
+
+      case 'class-breaks':
+        valueInfo = renderer.classBreakInfos
+          .find(b => b.minValue <= value && value < b.maxValue)
+        break;
+
+      default:
+    }
+
+    return valueInfo;
+  }
+
+  _scheduleGraphicsUpdate(graphic) {
+    if (this._graphicUpdate) {
+      cancelAnimationFrame(this._graphicUpdate);
+    }
+    this._graphicUpdate = requestAnimationFrame(() => {
+      this.view.graphics.removeAll();
+      this.view.graphics.add(graphic);
+    });
+  }
+
   _onMouseMove(evt) {
     const promise = (this._tooltipPromise = this.view
-        .hitTest(evt)
-        .then(hit => {
-          if (promise !== this._tooltipPromise) {
-            return; // another test was performed
-          }
+      .hitTest(evt)
+      .then(hit => {
+        if (promise !== this._tooltipPromise) {
+          return; // another test was performed
+        }
+        const results = hit.results.filter(
+          r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
+        );
+        
+        if (results.length) {
+          const graphic = results[0].graphic;
+          const screenPoint = hit.screenPoint;
+          const attributeNames = new Set(Object.keys(graphic.attributes));
+          const renderer = Object.values(this.renderers).find(r => attributeNames.has(r.field));
+          const value = graphic.attributes[renderer.field];
+          const valueInfo = EventsStore._findValueInfo(renderer, value);
 
-          const results = hit.results.filter(
-            r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
-          );
-          
-          if (results.length) {
-            const graphic = results[0].graphic;
-            const screenPoint = hit.screenPoint;
-            const eventType = graphic.attributes.eventType;
-            if (eventType) {
-              const uniqVal = this.renderers.eventType.uniqueValueInfos
-              .find(u => u.value === eventType);
-              
-              if (uniqVal) {
-                graphic.symbol = uniqVal.symbol;
-                graphic.symbol.width *= 1.3;
-                graphic.symbol.height *= 1.3;
-                setImmediate(() => {
-                    this.view.graphics.removeAll();
-                    this.view.graphics.add(graphic);
-                  });
-                }
-              } else {
-                this.view.graphics.removeAll();
-              }
-
-              if (this.onMouseOutStatistics) {
-                var new_geometry = results[0].graphic.geometry;
-                new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
-                new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
-                this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
-                    where: this.where,
-                    geometry: results[0].graphic.geometry,
-                    returnGeometry: true,
-                    spatialRelationship: "contains",
-                    outStatistics: this.onMouseOutStatistics
-                }).then(queryFeaturesResults => {
-                    const queryResults = queryFeaturesResults.features;
-                    this.tooltipResults = {
-                        screenPoint,
-                        graphic,
-                        queryResults
-                    }
-                });
-              } else {
-                this.tooltipResults = {screenPoint, graphic}
-              }
-
+          if (valueInfo) {
+            const {onHoverScale, ...symbol} = valueInfo.symbol;
+            if (onHoverScale) {
+              graphic.symbol = symbol;
+              graphic.symbol.width *= onHoverScale;
+              graphic.symbol.height *= onHoverScale;
+              this._scheduleGraphicsUpdate(graphic);
+            }
           } else {
             this.view.graphics.removeAll();
-            this.tooltipResults = null;
           }
-        })
+
+          if (this.onMouseOutStatistics) {
+            const {geometry} = graphic;
+            geometry.paths[0][0][0] = geometry.paths[0][0][0] + 0.00001;
+            geometry.paths[0][1][0] = geometry.paths[0][1][0] - 0.00001;
+            this.layerViewsMap.get(graphic.layer.id).queryFeatures({
+              where: this.where,
+              geometry,
+              returnGeometry: true,
+              spatialRelationship: "contains",
+              outStatistics: this.onMouseOutStatistics
+            }).then(queryFeaturesResults => {
+              const queryResults = queryFeaturesResults.features;
+              this.tooltipResults = {
+                screenPoint,
+                graphic,
+                queryResults
+              }
+            });
+          } else {
+            this.tooltipResults = {screenPoint, graphic}
+          }
+
+        } else {
+          this.view.graphics.removeAll();
+          this.tooltipResults = null;
+        }
+      })
     );
   }
 }
