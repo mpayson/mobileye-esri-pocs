@@ -221,6 +221,30 @@ class Store {
         this.tooltipResults = null;
     }
 
+    _updateTooltipInfo(screenPoint, graphic) {
+        if (this.onMouseOutStatistics) {
+            const {geometry} = graphic;
+            geometry.paths[0][0][0] = geometry.paths[0][0][0] + 0.00001;
+            geometry.paths[0][1][0] = geometry.paths[0][1][0] - 0.00001;
+            this.layerViewsMap.get(graphic.layer.id).queryFeatures({
+                where: this.where,
+                geometry,
+                returnGeometry: true,
+                spatialRelationship: "contains",
+                outStatistics: this.onMouseOutStatistics
+            }).then(queryFeaturesResults => {
+                const queryResults = queryFeaturesResults.features;
+                this.tooltipResults = {
+                    screenPoint,
+                    graphic,
+                    queryResults
+                }
+            });
+        } else {
+            this.tooltipResults = {screenPoint, graphic}
+        }
+    }
+
     // function to watch for mouse movement
     _onMouseMove(evt) {
         const promise = (this._tooltipPromise = this.view
@@ -234,7 +258,7 @@ class Store {
                     this._tooltipHighlight.remove();
                     this._tooltipHighlight = null;
                 }
-
+                
                 const results = hit.results.filter(
                     r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
                 );
@@ -243,29 +267,7 @@ class Store {
                     const graphic = results[0].graphic;
                     const screenPoint = hit.screenPoint;
                     this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
-
-                    if (this.onMouseOutStatistics) {
-                        var new_geometry = results[0].graphic.geometry;
-                        new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
-                        new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
-                        this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
-                            where: this.where,
-                            geometry: results[0].graphic.geometry,
-                            returnGeometry: true,
-                            spatialRelationship: "contains",
-                            outStatistics: this.onMouseOutStatistics
-                        }).then(queryFeaturesResults => {
-                            const queryResults = queryFeaturesResults.features;
-                            this.tooltipResults = {
-                                screenPoint,
-                                graphic,
-                                queryResults
-                            }
-
-                        });
-                    } else
-                        this.tooltipResults = {screenPoint, graphic}
-
+                    this._updateTooltipInfo(screenPoint, graphic);
                 } else {
                     this.tooltipResults = null;
                 }
@@ -517,6 +519,7 @@ decorate(Store, {
     startAutoplayBookmarks: action.bound,
     stopAutoplayBookmarks: action.bound,
     _doAfterLayersLoaded: action.bound,
+    _updateTooltipInfo: action.bound,
 });
 
 export default Store;

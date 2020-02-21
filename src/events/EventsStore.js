@@ -135,28 +135,7 @@ class EventsStore extends Store {
             this._clearGraphics();
           }
 
-          if (this.onMouseOutStatistics) {
-            const {geometry} = graphic;
-            geometry.paths[0][0][0] = geometry.paths[0][0][0] + 0.00001;
-            geometry.paths[0][1][0] = geometry.paths[0][1][0] - 0.00001;
-            this.layerViewsMap.get(graphic.layer.id).queryFeatures({
-              where: this.where,
-              geometry,
-              returnGeometry: true,
-              spatialRelationship: "contains",
-              outStatistics: this.onMouseOutStatistics
-            }).then(queryFeaturesResults => {
-              const queryResults = queryFeaturesResults.features;
-              this.tooltipResults = {
-                screenPoint,
-                graphic,
-                queryResults
-              }
-            });
-          } else {
-            this.tooltipResults = {screenPoint, graphic}
-          }
-
+          this._updateTooltipInfo(screenPoint, graphic);
         } else {
           this._clearGraphics();
           this.tooltipResults = null;
@@ -172,7 +151,7 @@ class EventsStore extends Store {
 }
 
 decorate(EventsStore, {
-  _graphicUpdate: observable.ref,
+  _graphicUpdate: observable,
   load: action.bound,
   _onMouseMove: action.bound,
   _onMouseLeave: action.bound,
