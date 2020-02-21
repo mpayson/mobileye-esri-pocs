@@ -51,6 +51,7 @@ import SanFranImage from '../resources/images/SanFran.jpg'
 import HeathrowImage from '../resources/images/Heathrow.jpg'
 import ObaidaImage from '../resources/images/Obaida.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
+import RomeImage from '../resources/images/Rome.jpg'
 import FrankfurtImage from "../resources/images/frankfurt-am-main.jpg"
 import MunichImage from "../resources/images/Munich.jpg"
 import BerlinImage from "../resources/images/Berlin.jpg"
@@ -159,8 +160,8 @@ const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", 
 const surveyConfig = {
   
   
-  layerItemId: 'c12ae0ee9c974c91bf97f178b0ccc2ca',
-  webmapId: '3a979480c3644b2d91cf4053af9568b9',
+  layerItemId: 'eb63836cecbb4de0833a6ab13796a2f3',
+  webmapId: '13b7762b9e0c4c9996378be956e6bf5c',
   initialRendererField: 'all',
   renderers: {
     'all': {
@@ -627,7 +628,19 @@ const surveyConfig = {
       ]},
       { areaName: "Europe",
       locations: [
-                      {
+                    {'name' : 'Rome',
+                      'image' : RomeImage,
+                      'extent' : {
+                        'ymax' : 41.930687, 
+                        'xmin' : 12.391691,
+                        'ymin' : 41.865653, 
+                        'xmax' : 12.579500,
+                        'spatialReference' : {
+                          'wkid' : 4326
+                        }
+                      }
+                    },  
+                    {
                       'name' : 'Barcelona',
                       'image' : BarcelonaImage,
                       'extent' : {
