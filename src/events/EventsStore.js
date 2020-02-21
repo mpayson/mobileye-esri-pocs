@@ -71,91 +71,11 @@ class EventsStore extends Store {
     });
   }
 
-  static _findValueInfo(renderer, value) {
-    let valueInfo;
-
-    switch (renderer.type) {
-      case 'unique-value':
-        valueInfo = renderer.uniqueValueInfos.find(u => u.value === value);
-        break;
-
-      case 'class-breaks':
-        valueInfo = renderer.classBreakInfos
-          .find(b => b.minValue <= value && value < b.maxValue)
-        break;
-
-      default:
-    }
-
-    return valueInfo;
-  }
-
-  _scheduleGraphicsUpdate(graphic) {
-    if (this._graphicUpdate) {
-      cancelAnimationFrame(this._graphicUpdate);
-    }
-    this._graphicUpdate = requestAnimationFrame(() => {
-      this.view.graphics.removeAll();
-      this.view.graphics.add(graphic);
-    });
-  }
-
-  _clearGraphics() {
-    this.view.graphics.removeAll();
-  }
-
-  _onMouseMove(evt) {
-    const promise = (this._tooltipPromise = this.view
-      .hitTest(evt)
-      .then(hit => {
-        if (promise !== this._tooltipPromise) {
-          return; // another test was performed
-        }
-        const results = hit.results.filter(
-          r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
-        );
-        
-        if (results.length) {
-          const graphic = results[0].graphic;
-          const screenPoint = hit.screenPoint;
-          const attributeNames = new Set(Object.keys(graphic.attributes));
-          const renderer = Object.values(this.renderers).find(r => attributeNames.has(r.field));
-          const value = graphic.attributes[renderer.field];
-          const valueInfo = EventsStore._findValueInfo(renderer, value);
-
-          if (valueInfo) {
-            const {onHoverScale, ...symbol} = valueInfo.symbol;
-            if (onHoverScale) {
-              graphic.symbol = symbol;
-              graphic.symbol.width *= onHoverScale;
-              graphic.symbol.height *= onHoverScale;
-              this._scheduleGraphicsUpdate(graphic);
-            }
-          } else {
-            this._clearGraphics();
-          }
-
-          this._updateTooltipInfo(screenPoint, graphic);
-        } else {
-          this._clearGraphics();
-          this.tooltipResults = null;
-        }
-      })
-    );
-  }
-
-  _onMouseLeave(evt) {
-    super._onMouseLeave();
-    this._clearGraphics();
-  }
 }
 
 decorate(EventsStore, {
   _graphicUpdate: observable,
   load: action.bound,
-  _onMouseMove: action.bound,
-  _onMouseLeave: action.bound,
-  _clearGraphics: action.bound,
   _doAfterLayersLoaded: action.bound,
 })
 

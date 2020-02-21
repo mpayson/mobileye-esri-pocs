@@ -255,6 +255,7 @@ const eventsConfig = {
   customLegendIcons: true,
   renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
+  onHoverEffect: 'upscale',
   statisticsFieldsInfo: { 
     'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
     'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},

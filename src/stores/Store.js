@@ -43,6 +43,7 @@ class Store {
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
         this.liveLayersStartIndex = storeConfig.liveLayersStartIndex;
         this.defaultVisibleLayersList = storeConfig.defaultVisibleLayersList;
+        this.onHoverEffect = storeConfig.onHoverEffect || 'highlight';
     }
 
     // to destroy map view, need to do `view.container = view.map = null;`
@@ -245,6 +246,51 @@ class Store {
         }
     }
 
+    static _findValueInfo(renderer, value) {
+        switch (renderer.type) {
+            case 'unique-value':
+                return renderer.uniqueValueInfos.find(u => u.value === value);
+            case 'class-breaks':
+                return renderer.classBreakInfos
+                    .find(b => b.minValue <= value && value < b.maxValue)
+            default:
+                return null;
+        }
+    }
+    
+    _scheduleGraphicsUpdate(graphic) {
+        if (this._graphicUpdate) {
+            cancelAnimationFrame(this._graphicUpdate);
+        }
+        this._graphicUpdate = requestAnimationFrame(() => {
+            this.view.graphics.removeAll();
+            this.view.graphics.add(graphic);
+        });
+    }
+    
+    _clearGraphics() {
+        this.view.graphics.removeAll();
+    }
+    
+    _onHoverUpscale(graphic) {
+        const attributeNames = new Set(Object.keys(graphic.attributes));
+        const renderer = Object.values(this.renderers).find(r => attributeNames.has(r.field));
+        const value = graphic.attributes[renderer.field];
+        const valueInfo = Store._findValueInfo(renderer, value);
+
+        if (valueInfo) {
+            const {onHoverScale, ...symbol} = valueInfo.symbol;
+            if (onHoverScale) {
+                graphic.symbol = symbol;
+                graphic.symbol.width *= onHoverScale;
+                graphic.symbol.height *= onHoverScale;
+                this._scheduleGraphicsUpdate(graphic);
+            }
+        } else {
+            this._clearGraphics();
+        }
+    }
+
     // function to watch for mouse movement
     _onMouseMove(evt) {
         const promise = (this._tooltipPromise = this.view
@@ -266,10 +312,20 @@ class Store {
                 if (results.length) {
                     const graphic = results[0].graphic;
                     const screenPoint = hit.screenPoint;
-                    this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
+
+                    switch (this.onHoverEffect) {
+                        case 'upscale':
+                            this._onHoverUpscale(graphic);
+                            break;
+                        case 'highlight':
+                        default:
+                            this._tooltipHighlight = this.layerViewsMap.get(graphic.layer.id).highlight(graphic);
+                            break;
+                    }
                     this._updateTooltipInfo(screenPoint, graphic);
                 } else {
                     this.tooltipResults = null;
+                    this._clearGraphics();
                 }
             })
 
@@ -279,6 +335,7 @@ class Store {
     _onMouseLeave(evt) {
         this._tooltipPromise = null;
         this.clearTooltip();
+        this._clearGraphics();
     }
 
     _onZoomChange(zoom){
@@ -488,6 +545,7 @@ decorate(Store, {
     aliasMap: observable,
     layerVisibleMap: observable,
     autoplay: observable,
+    _graphicUpdate: observable,
     chartResultMap: observable.shallow,
     tooltipResults: observable.shallow,
     bookmarkInfo: observable.ref,
@@ -520,6 +578,9 @@ decorate(Store, {
     stopAutoplayBookmarks: action.bound,
     _doAfterLayersLoaded: action.bound,
     _updateTooltipInfo: action.bound,
+    _clearGraphics: action.bound,
+    _scheduleGraphicsUpdate: action.bound,
+    // _onHoverUpscale: action.bound,
 });
 
 export default Store;
