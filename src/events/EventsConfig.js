@@ -39,22 +39,22 @@ const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
     classBreakInfos: [{
       minValue: stops[0],
       maxValue: stops[1],
-      symbol: {type: "simple-line", width: width[0], color: colors[0]},
+      symbol: {type: "simple-line", width: width[0], color: colors[0], onHoverScale: 2.0},
       label: labels[0]
     }, {
       minValue: stops[1],
       maxValue: stops[2],
-      symbol: {type: "simple-line", width: width[1], color: colors[1]},
+      symbol: {type: "simple-line", width: width[1], color: colors[1], onHoverScale: 2.0},
       label: labels[1]
     }, {
       minValue: stops[2],
       maxValue: stops[3],
-      symbol: {type: "simple-line", width: width[2], color: colors[2]},
+      symbol: {type: "simple-line", width: width[2], color: colors[2], onHoverScale: 2.0},
       label: labels[2]
     }, {
       minValue: stops[3],
       maxValue: stops[4],
-      symbol: {type: "simple-line", width: width[3], color: colors[3]},
+      symbol: {type: "simple-line", width: width[3], color: colors[3], onHoverScale: 2.0},
       label: labels[3]
     }]
 })
@@ -78,6 +78,7 @@ if (process.env.EVENTS_WEBMAP_ID){
 const defaultMapIconSize = {
   width: '35px',
   height: '35px',
+  onHoverScale: 1.3,
 };
 const defaultLegendIconSize = {
   width: 30,
@@ -181,6 +182,7 @@ const eventsConfig = {
           width: '5px',
           // style: 'short-dash',
           color: 'rgba(255, 255, 255,0.7)',
+          onHoverScale: 1.5,
         }
       },
       ]
@@ -216,6 +218,7 @@ const eventsConfig = {
       defaultRendererField: 'averageSpeed', 
       outFields: ['avg_last_15_min', 'avg_last_hour', 'avg_last_3_hours'],
       customDefaultFilter:"avg_last_hour > 0", 
+      refreshInterval: 10,
       ignoreRendererUpdate: true, 
       ignoreFilter: true,
       // initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
@@ -252,6 +255,7 @@ const eventsConfig = {
   customLegendIcons: true,
   renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
+  onHoverEffect: 'upscale',
   statisticsFieldsInfo: { 
     'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
     'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},
