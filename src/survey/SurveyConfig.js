@@ -70,7 +70,8 @@ const newSymbol = (...rgba) => {
     outline: { 
       color: `rgba(${rgbaStr})`, 
       width: 2.5
-    }
+    },
+    onHoverScale: 1.5,
   }
 };
 
@@ -499,6 +500,8 @@ const surveyConfig = {
     ],
   },
   hasZoomListener: true,
+  hasCustomTooltip: true,
+  onHoverEffect: 'upscale',
   basemaps: {
     'dark-gray': {minZoom: 0, maxZoom: 16},
     'satellite': {minZoom: 16, maxZoom: 100},
