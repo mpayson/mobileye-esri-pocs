@@ -134,7 +134,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "stopped_car_on_highway_shoulder",
+        value: "stopped_car_on_hard_shoulder",
         label:"Stopped car",
 
         symbol: {
