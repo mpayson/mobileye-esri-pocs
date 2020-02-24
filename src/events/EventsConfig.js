@@ -39,22 +39,22 @@ const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
     classBreakInfos: [{
       minValue: stops[0],
       maxValue: stops[1],
-      symbol: {type: "simple-line", width: width[0], color: colors[0], onHoverScale: 2.0},
+      symbol: {type: "simple-line", width: width[0], color: colors[0], onHoverScale: 4.0},
       label: labels[0]
     }, {
       minValue: stops[1],
       maxValue: stops[2],
-      symbol: {type: "simple-line", width: width[1], color: colors[1], onHoverScale: 2.0},
+      symbol: {type: "simple-line", width: width[1], color: colors[1], onHoverScale: 4.0},
       label: labels[1]
     }, {
       minValue: stops[2],
       maxValue: stops[3],
-      symbol: {type: "simple-line", width: width[2], color: colors[2], onHoverScale: 2.0},
+      symbol: {type: "simple-line", width: width[2], color: colors[2], onHoverScale: 4.0},
       label: labels[2]
     }, {
       minValue: stops[3],
       maxValue: stops[4],
-      symbol: {type: "simple-line", width: width[3], color: colors[3], onHoverScale: 2.0},
+      symbol: {type: "simple-line", width: width[3], color: colors[3], onHoverScale: 4.0},
       label: labels[3]
     }]
 })
@@ -78,7 +78,7 @@ if (process.env.EVENTS_WEBMAP_ID){
 const defaultMapIconSize = {
   width: '35px',
   height: '35px',
-  onHoverScale: 1.3,
+  onHoverScale: 1.4,
 };
 const defaultLegendIconSize = {
   width: 30,
@@ -182,7 +182,7 @@ const eventsConfig = {
           width: '5px',
           // style: 'short-dash',
           color: 'rgba(255, 255, 255,0.7)',
-          onHoverScale: 1.5,
+          onHoverScale: 3,
         }
       },
       ]
