@@ -271,19 +271,44 @@ class Store {
     _clearGraphics() {
         this.view.graphics.removeAll();
     }
+
+    _findVisVarOverrides(renderer, varName) {
+        let curValue = NaN;
+        if (renderer.visualVariables) {
+            const variable = renderer.visualVariables.find(v => v.type === varName);
+            if (variable) {
+                if (variable.valueExpression === '$view.scale') {
+                    const scale = this.view.scale;
+                    curValue = variable.stops.filter(s => s.value < scale).slice(-1)[0][varName];
+                }
+                // other potential cases
+            }
+        }
+        return curValue;
+    }
     
     _onHoverUpscale(graphic) {
         const attributeNames = new Set(Object.keys(graphic.attributes));
         const renderer = Object.values(this.renderers).find(r => attributeNames.has(r.field));
         const value = graphic.attributes[renderer.field];
         const valueInfo = Store._findValueInfo(renderer, value);
-
         if (valueInfo) {
             const {onHoverScale, ...symbol} = valueInfo.symbol;
             if (onHoverScale) {
                 graphic.symbol = symbol;
-                graphic.symbol.width *= onHoverScale;
-                graphic.symbol.height *= onHoverScale;
+                ['width', 'height', 'size'].forEach(varName => {
+                    let curValue = graphic.symbol[varName];
+                    const layer = graphic.sourceLayer;
+                    if (layer && layer.renderer) {
+                        const scaledValue = this._findVisVarOverrides(layer.renderer, varName);
+                        if (scaledValue) {
+                            curValue = scaledValue;    
+                        }
+                    }
+                    if (curValue) {
+                        graphic.symbol[varName] = curValue * onHoverScale;
+                    }
+                });
                 this._scheduleGraphicsUpdate(graphic);
             }
         } else {
