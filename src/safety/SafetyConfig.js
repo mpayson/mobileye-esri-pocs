@@ -3,11 +3,13 @@ import NYCImage from '../resources/images/NYC.jpg'
 import TokyoImage from '../resources/images/Tokyo.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
 
+const onHoverScale = 2.0;
 // for now expect exactly 5 stops that map to the same color ramp
 const getRenderer = (field, stops,labels,caption) => ({
   _type: "jsapi",
   type: "simple",
-  symbol: { type: "simple-line" ,width: "2.5px"},
+  field,
+  symbol: { type: "simple-line", width: "2.5px", onHoverScale },
   label: "Road segment",
   visualVariables: [{
     type: "color",
@@ -54,22 +56,22 @@ const safetyConfig = {
       classBreakInfos: [{
         minValue: 0,
         maxValue: 0.5,
-        symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255]},
+        symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255], onHoverScale},
         label: "Low"
       }, {
         minValue: 0.5,
         maxValue: 1,
-        symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255]},
+        symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255], onHoverScale},
         label: "Average"
       }, {
         minValue: 1,
         maxValue: 12.5,
-        symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255]},
+        symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255], onHoverScale},
         label: "High"
       }, {
         minValue: 12.5,
         maxValue: 1000,
-        symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255]},
+        symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255], onHoverScale},
         label: "Very High"
       }]
     },
@@ -211,6 +213,7 @@ const safetyConfig = {
        ]
     }],
   hasCustomTooltip: true,
+  onHoverEffect: 'upscale',
   outFields: [
     'risk_score', 'harsh_cornering_ratio', 'harsh_breaking_ratio', 'pedestrians_density',
     'bicycles_density', 'speeding_ratio', 'average_speed','pcw','fcw'
