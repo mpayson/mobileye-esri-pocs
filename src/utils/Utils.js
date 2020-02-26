@@ -85,6 +85,30 @@ const reverse = (map) => {
   return reversed;
 }
 
+const sum = (values) => values.reduce((a,v) => a + v);
+
+const average = (values, weights) => {
+  if (!values || !values.length) return null;
+  if (!weights) {
+    weights = new Array(values.length).fill(1);
+  }
+  // assuming the value array is homogeneous
+  switch(typeof(values[0])) {
+    case 'number':
+      return sum(values.map((val, i) => val * weights[i])) / sum(weights);
+    case 'string':
+      return average(values.map(parseFloat), weights);
+    case 'object':
+      const returnValue = Array.isArray(values[0]) ? [] : {};
+      return Object.keys(values[0]).reduce((acc, key) => {
+        acc[key] = average(values.map(val => val[key]), weights);
+        return acc;
+      }, returnValue);
+    default:
+      return null;
+  }
+};
+
 export {
   getMinMaxWhere,
   getMultiSelectWhere,
@@ -95,5 +119,6 @@ export {
   transformQueryToRechartSeries,
   getRange,
   combineNullableWheres,
-  reverse
+  reverse,
+  average
 };

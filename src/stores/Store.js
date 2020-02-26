@@ -5,7 +5,7 @@ import {
     registerSession, jsonToExtent, layerFromId, debounce,
     whenFalseOnce
 } from '../services/MapService';
-import { combineNullableWheres } from '../utils/Utils';
+import { combineNullableWheres, average } from '../utils/Utils';
 
 class Store {
 
@@ -252,7 +252,9 @@ class Store {
                 return renderer.uniqueValueInfos.find(u => u.value === value);
             case 'class-breaks':
                 return renderer.classBreakInfos
-                    .find(b => b.minValue <= value && value < b.maxValue)
+                    .find(b => b.minValue <= value && value < b.maxValue);
+            case 'simple':
+                return renderer;
             default:
                 return null;
         }
@@ -272,18 +274,75 @@ class Store {
         this.view.graphics.removeAll();
     }
     
+    _findCurrentVisValue(graphic, visVarName, dataValue) {
+        let curVisValue = graphic.symbol[visVarName];
+        const layer = graphic.sourceLayer;
+        if (layer && layer.renderer) {
+            const scaledValue = this._findVisVarOverrides(layer.renderer, visVarName, dataValue);
+            if (scaledValue) {
+                curVisValue = scaledValue;    
+            }
+        }
+        return curVisValue;
+    }
+
+    _findVisVarOverrides(renderer, visVarName, dataValue) {
+        let curValue = NaN;
+        if (renderer.visualVariables) {
+            const variable = renderer.visualVariables.find(v => v.type === visVarName);
+            if (variable) {
+                if (!variable.valueExpression) {
+                    // simple renderer
+                    const stops = variable.stops.slice()
+                        .sort((a, b) => Math.abs(a.value - dataValue) - Math.abs(b.value - dataValue))
+                        .slice(0, 2);
+                    if (stops.every(s => s.value < dataValue) || stops.every(s => s.value > dataValue)) {
+                        // outside of the interval - pick closest stop
+                        curValue = stops[0][visVarName];
+                    } else {
+                        // inside the interval - take weighted average
+                        curValue = average(
+                            stops.map(s => s[visVarName]),
+                            // the weight of each stop is the distance to the opposite     
+                            stops.map(s => Math.abs(dataValue - s.value)).reverse()
+                        );
+                    }
+                } else if (variable.valueExpression === '$view.scale') {
+                    const scale = this.view.scale;
+                    curValue = variable.stops.filter(s => s.value <= scale).pop()[visVarName];
+                }
+                // other potential cases
+            }
+        }
+        return curValue;
+    }
+    
     _onHoverUpscale(graphic) {
-        const attributeNames = new Set(Object.keys(graphic.attributes));
-        const renderer = Object.values(this.renderers).find(r => attributeNames.has(r.field));
+        let renderer = this.renderers[this.rendererField];
+        if (!graphic.attributes.hasOwnProperty(renderer.field)) {
+            /* This is needed only for events app, 
+             * because rendererField always points to 'eventType' renderer,
+             * but we may want to highlight line markers from speed layer
+             */
+            const attributeNames = new Set(Object.keys(graphic.attributes));
+            renderer = Object.values(this.renderers).find(r => attributeNames.has(r.field));
+        }
         const value = graphic.attributes[renderer.field];
         const valueInfo = Store._findValueInfo(renderer, value);
-
         if (valueInfo) {
             const {onHoverScale, ...symbol} = valueInfo.symbol;
             if (onHoverScale) {
                 graphic.symbol = symbol;
-                graphic.symbol.width *= onHoverScale;
-                graphic.symbol.height *= onHoverScale;
+                ['width', 'height', 'size'].forEach(visVarName => {
+                    const curVisValue = this._findCurrentVisValue(graphic, visVarName, value);
+                    if (curVisValue) {
+                        graphic.symbol[visVarName] = curVisValue * onHoverScale;
+                    }
+                });
+                const overrideColor = this._findCurrentVisValue(graphic, 'color', value);
+                if (overrideColor) {
+                    graphic.symbol.color = overrideColor;
+                }
                 this._scheduleGraphicsUpdate(graphic);
             }
         } else {
@@ -304,7 +363,6 @@ class Store {
                     this._tooltipHighlight.remove();
                     this._tooltipHighlight = null;
                 }
-                
                 const results = hit.results.filter(
                     r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
                 );

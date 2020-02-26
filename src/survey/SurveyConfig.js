@@ -71,7 +71,7 @@ const newSymbol = (...rgba) => {
       color: `rgba(${rgbaStr})`, 
       width: 2.5
     },
-    onHoverScale: 1.5,
+    onHoverScale: 3.0,
   }
 };
 
