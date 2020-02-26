@@ -5,7 +5,7 @@ import {
     registerSession, jsonToExtent, layerFromId, debounce,
     whenFalseOnce
 } from '../services/MapService';
-import { combineNullableWheres } from '../utils/Utils';
+import { combineNullableWheres, average } from '../utils/Utils';
 
 class Store {
 
@@ -293,9 +293,20 @@ class Store {
             if (variable) {
                 if (!variable.valueExpression) {
                     // simple renderer
-                    // curValue = variable.stops.filter(s => s.value <= dataValue).pop()[visVarName];
-                    curValue = variable.stops.slice()
-                        .sort((a, b) => Math.abs(a.value - dataValue) - Math.abs(b.value - dataValue))[0][visVarName];
+                    const stops = variable.stops.slice()
+                        .sort((a, b) => Math.abs(a.value - dataValue) - Math.abs(b.value - dataValue))
+                        .slice(0, 2);
+                    if (stops.every(s => s.value < dataValue) || stops.every(s => s.value > dataValue)) {
+                        // outside of the interval - pick closest stop
+                        curValue = stops[0][visVarName];
+                    } else {
+                        // inside the interval - take weighted average
+                        curValue = average(
+                            stops.map(s => s[visVarName]),
+                            // the weight of each stop is the distance to the opposite     
+                            stops.map(s => Math.abs(dataValue - s.value)).reverse()
+                        );
+                    }
                 } else if (variable.valueExpression === '$view.scale') {
                     const scale = this.view.scale;
                     curValue = variable.stops.filter(s => s.value <= scale).pop()[visVarName];
