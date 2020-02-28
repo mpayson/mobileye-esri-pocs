@@ -3,15 +3,13 @@ import NYCImage from '../resources/images/NYC.jpg'
 import TokyoImage from '../resources/images/Tokyo.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
 
+export const QUERY_ME8_DATA = "project = 'me8'";
+export const QUERY_OEM_DATA = "project <> 'me8'";
+
 const onHoverScale = 2.0;
 // for now expect exactly 5 stops that map to the same color ramp
-const getRenderer = (field, stops,labels,caption) => ({
-  _type: "jsapi",
-  type: "simple",
-  field,
-  symbol: { type: "simple-line", width: "2.5px", onHoverScale },
-  label: "Road segment",
-  visualVariables: [{
+const getRenderer = (field, queries, stops, labels, caption) => {
+  const createVisualVariable = (stops) => ({
     type: "color",
     field,
     legendOptions: {
@@ -24,8 +22,23 @@ const getRenderer = (field, stops,labels,caption) => ({
       { value: stops[3], color: [253,174,97,255], label: null },
       { value: stops[4], color: [215,25,28,255], label: `${labels[2]}`},
     ]
-  }]
-})
+  });
+
+  const visualVariablesByQuery = queries.reduce((out, query, i) => {
+    out[query] = createVisualVariable(stops[i]);
+    return out;
+  }, {});
+
+  return {
+    _type: "jsapi",
+    type: "simple",
+    field,
+    symbol: { type: "simple-line", width: "2.5px", onHoverScale },
+    label: "Road segment",
+    visualVariables: [createVisualVariable(stops[0])],
+    visualVariablesByQuery,
+  }
+}
 
 var webmapIdEnv = '6512c324486d4b618ef568bdba6d9dcd';
 //var webmapIdEnv = '906b58f399944774a29e05d3d24a939b';
@@ -75,14 +88,45 @@ const safetyConfig = {
         label: "Very High"
       }]
     },
-      'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', [0,0.02,0.1,1.5,14],['Low','Medium','High'],"Harsh braking"),
-    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,0.02,0.1,1.5,14],['Low','Medium','High'],"Harsh cornering"),
-    'pedestrians_density': getRenderer('pedestrians_density', [0,1,14,20,1.2],['Low','Medium','High'],"Average pedestrian volume"),
-    'bicycles_density': getRenderer('bicycles_density', [0,1,14,20,1.2],['Low','Medium','High'],"Average cyclist volume"),
-    'speeding_ratio': getRenderer('speeding_ratio', [0,0.01,0.1,0.5,15],['Low','Medium','High'],"Above average speed"),
-    'average_speed': getRenderer('average_speed',[28,38,48,58,68],['< 25','50','> 70'],"Average speed"),
-    'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High'],"Pedestrian collision warning (PCW)"),
-    'fcw': getRenderer('fcw', [0,0.01181361,0.04357791,0.5,1],['Low','Medium','High'],"Forward collision warning (FCW)")
+    'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', 
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], 
+      [[0,0.02,0.1,1.5,14], [0,0.0,0.0,0.0,0.1]],
+      ['Low','Medium','High'], "Harsh braking"),
+
+    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', 
+      [QUERY_ME8_DATA, QUERY_OEM_DATA],
+      [[0,0.02,0.1,1.5,14], [0,0.0,0.0,0.0,0.1]],
+      ['Low','Medium','High'], "Harsh cornering"),
+
+    'pedestrians_density': getRenderer('pedestrians_density', 
+      [QUERY_ME8_DATA, QUERY_OEM_DATA],
+      [[0,1,14,20,1.2], [0,1,2,3,4]],
+      ['Low','Medium','High'], "Average pedestrian volume"),
+
+    'bicycles_density': getRenderer('bicycles_density', 
+      [QUERY_ME8_DATA, QUERY_OEM_DATA],
+      [[0,1,14,20,1.2], [0,1,2,3,4]],
+      ['Low','Medium','High'], "Average cyclist volume"),
+
+    'speeding_ratio': getRenderer('speeding_ratio',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA],
+      [[0,0.01,0.1,0.5,15], [0,0.01,0.1,0.2,1]],
+      ['Low','Medium','High'], "Above average speed"),
+
+    'average_speed': getRenderer('average_speed',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA],
+      [[28,38,48,58,68], [9,12,16,20,23]],
+      ['< 25','50','> 70'], "Average speed"),
+
+    'pcw': getRenderer('pcw',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA],
+      [[0,0.01181361,0.02357791,0.03498221,0.05745235], [0.0,0.01,0.02,0.03,0.05]],
+      ['Low','Medium','High'], "Pedestrian collision warning (PCW)"),
+
+    'fcw': getRenderer('fcw',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA],
+      [[0,0.01181361,0.04357791,0.5,1], [0.0,0.01,0.02,0.03,0.05]],
+      ['Low','Medium','High'], "Forward collision warning (FCW)")
   },
   filters: [{
     name:'risk_score',
@@ -203,7 +247,7 @@ const safetyConfig = {
       showLegend:true,
       outFields:'*',
       // baselineWhereCondition: "project = 'me8'",
-      customDefaultFilter: "project = 'me8'",
+      customDefaultFilter: QUERY_ME8_DATA,
       defaultRendererField: 'risk_score',
       name:"risk_score",
       //ignoreFilter:true,

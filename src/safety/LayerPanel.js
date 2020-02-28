@@ -21,9 +21,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   componentDidMount() {
-    const {store: {layerViewsMap}} = this.props;
-    const showPartialScore = [...layerViewsMap.values()]
-      .some(lV => lV.filter.where === "project <> 'me8'");
+    const showPartialScore = this.props.store.isPartialScoreDataVisible();
     if (showPartialScore) {
       this.setState({showPartialScore});
     }
@@ -40,8 +38,10 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   onRadioChange = (e) => {
+    const {showPartialScore} = this.state;
     const renderer = e.target.value;
     this.props.store.setRendererField(renderer);
+    this.props.store.updateDataSource(showPartialScore);
     this._updateAccordionForRender(renderer);
   }
 
@@ -72,10 +72,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   onVisibilityToggle = (showPartialScore) => {
-    const where = `project ${showPartialScore ? '<>' : '='} 'me8'`;
-    this.props.store.layerViewsMap.forEach(lV => {
-      lV.filter = {where};
-    });
+    this.props.store.updateDataSource(showPartialScore);
     this.setState({showPartialScore});
   }
 
