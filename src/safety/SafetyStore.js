@@ -11,6 +11,7 @@ import {
   buffer,
   featuresIntoFeatureSet
 } from '../services/MapService';
+import { QUERY_OEM_DATA, QUERY_ME8_DATA } from './SafetyConfig';
 
 // number of barriers to account for when routing
 const NUMBER_BARRIERS = 200;
@@ -330,12 +331,44 @@ class SafetyStore extends Store {
   }
 
   get safetyTimeDelta(){
-  if(!this.stdTravelTime || !this.safetyTravelTime){
-    return null;
+    if(!this.stdTravelTime || !this.safetyTravelTime){
+      return null;
+    }
+    return 100 * ((this.safetyTravelTime - this.stdTravelTime) / this.stdTravelTime);
   }
-  return 100 * ((this.safetyTravelTime - this.stdTravelTime) / this.stdTravelTime);
-}
 
+  static _updateVisualVariables(layerView, newVisualVariable) {
+    const renderer = layerView.layer.renderer;
+    if (renderer.field === newVisualVariable.field) {
+      const visualVariables = renderer.visualVariables
+        .filter(vv => vv.type !== newVisualVariable.type);
+      visualVariables.push(newVisualVariable);
+      
+      const newRenderer = renderer.clone();
+      newRenderer.field = renderer.field;
+      newRenderer.visualVariables = visualVariables;
+      layerView.layer.renderer = newRenderer;
+    }
+  }
+
+  updateDataSource(showPartialScoreData) {
+    const where = showPartialScoreData ? QUERY_OEM_DATA : QUERY_ME8_DATA;
+    const renderer = this.renderers[this.rendererField];
+    let visVar;
+    if (renderer.visualVariablesByQuery) {
+      visVar = renderer.visualVariablesByQuery[where];
+    }
+    this.layerViewsMap.forEach(lV => {
+      lV.filter = {where};
+      if (visVar) {
+        SafetyStore._updateVisualVariables(lV, visVar);
+      }
+    });
+  }
+
+  isPartialScoreDataVisible() {
+    return [...this.layerViewsMap.values()].some(lV => lV.filter.where === QUERY_OEM_DATA);
+  }
 }
 
 decorate(SafetyStore, {
@@ -359,7 +392,9 @@ decorate(SafetyStore, {
   generateRoutes: action.bound,
   generateStdRoute: action.bound,
   clearRouteData: action.bound,
-  onAddressSearchChange: action.bound
+  onAddressSearchChange: action.bound,
+  updateVisualVariables: action.bound,
+  updateDataSource: action.bound,
 })
 
 export default SafetyStore;
