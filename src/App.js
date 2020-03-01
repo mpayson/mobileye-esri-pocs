@@ -99,7 +99,7 @@ const Home = observer(class Home extends React.Component{
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-m.svg"
                 alt="Mobility"
               />
-              <p>Mobility</p>
+              <p>Dynamic Mobility</p>
             </Link>
 
             <a href={ParkingVideo} className="item">
@@ -131,7 +131,7 @@ const Home = observer(class Home extends React.Component{
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-l2.svg"
                 alt="L2+"
               />
-              <p>Real Time <br /> Events</p>
+              <p>Real Time <br /> Traffic Management</p>
             </Link>
           </div>
         </div>
