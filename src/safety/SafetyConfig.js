@@ -6,28 +6,36 @@ import BarcelonaImage from '../resources/images/Barcelona.jpg'
 export const QUERY_ME8_DATA = "project = 'me8'";
 export const QUERY_OEM_DATA = "project <> 'me8'";
 
+const ME8_COLORS = [
+  [44,123,182,255], [171,217,233,255], [255,255,191,255], [253,174,97,255], [215,25,28,255],
+];
+
+const OEM_COLORS = [
+  [0,99,177,1], [0,183,195,1], [255,185,0,1], [247,99,12,1], [232,17,35,1],
+];
+
 const onHoverScale = 2.0;
 // for now expect exactly 5 stops that map to the same color ramp
-const getRenderer = (field, queries, stops, labels, caption) => {
-  const createVisualVariable = (stops) => ({
+const getRenderer = (field, queries, visuals, labels, caption) => {
+  const createVisualVariable = (stops, colors) => ({
     type: "color",
     field,
-    legendOptions: {
-        title:caption
+    legendOptions: { 
+      title: caption
     },
-    stops: [
-      { value: stops[0], color: [44,123,182,255], label: `${labels[0]}` },
-      { value: stops[1], color: [171,217,233,255], label: null },
-      { value: stops[2], color: [255,255,191,255], label: `${labels[1]}` },
-      { value: stops[3], color: [253,174,97,255], label: null },
-      { value: stops[4], color: [215,25,28,255], label: `${labels[2]}`},
-    ]
+    stops: stops.map((value, i) => ({
+      value, 
+      color: colors[i], 
+      label: i % 2 ? labels[i/2] : null
+    }))
   });
 
+  Object.values(visuals).forEach(vis => vis.stops.sort());
   const visualVariablesByQuery = queries.reduce((out, query, i) => {
-    out[query] = createVisualVariable(stops[i]);
+    out[query] = createVisualVariable(visuals[i].stops, visuals[i].colors);
     return out;
   }, {});
+  const defaults = visualVariablesByQuery[queries[0]];
 
   return {
     _type: "jsapi",
@@ -35,7 +43,7 @@ const getRenderer = (field, queries, stops, labels, caption) => {
     field,
     symbol: { type: "simple-line", width: "2.5px", onHoverScale },
     label: "Road segment",
-    visualVariables: [createVisualVariable(stops[0])],
+    visualVariables: [defaults],
     visualVariablesByQuery,
   }
 }
@@ -89,44 +97,52 @@ const safetyConfig = {
       }]
     },
     'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', 
-      [QUERY_ME8_DATA, QUERY_OEM_DATA], 
-      [[0,0.02,0.1,1.5,14], [0,0.0,0.0,0.0,0.1]],
-      ['Low','Medium','High'], "Harsh braking"),
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,0.02,0.1,1.5,14], colors: ME8_COLORS},
+        {stops: [0,0.02,0.1,1.5,14], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Harsh braking"),
 
     'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', 
-      [QUERY_ME8_DATA, QUERY_OEM_DATA],
-      [[0,0.02,0.1,1.5,14], [0,0.0,0.0,0.0,0.1]],
-      ['Low','Medium','High'], "Harsh cornering"),
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,0.02,0.1,1.5,14], colors: ME8_COLORS},
+        {stops: [0,0.02,0.1,1.5,14], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Harsh cornering"),
 
     'pedestrians_density': getRenderer('pedestrians_density', 
-      [QUERY_ME8_DATA, QUERY_OEM_DATA],
-      [[0,1,14,20,1.2], [0,1,2,3,4]],
-      ['Low','Medium','High'], "Average pedestrian volume"),
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,1,14,20,1.2], colors: ME8_COLORS},
+        {stops: [0,1,14,20,1.2], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Average pedestrian volume"),
 
     'bicycles_density': getRenderer('bicycles_density', 
-      [QUERY_ME8_DATA, QUERY_OEM_DATA],
-      [[0,1,14,20,1.2], [0,1,2,3,4]],
-      ['Low','Medium','High'], "Average cyclist volume"),
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,1,14,20,1.2], colors: ME8_COLORS},
+        {stops: [0,1,14,20,1.2], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Average cyclist volume"),
 
     'speeding_ratio': getRenderer('speeding_ratio',
-      [QUERY_ME8_DATA, QUERY_OEM_DATA],
-      [[0,0.01,0.1,0.5,15], [0,0.01,0.1,0.2,1]],
-      ['Low','Medium','High'], "Above average speed"),
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,0.01,0.1,0.5,15], colors: ME8_COLORS},
+        {stops: [0,0.01,0.1,0.5,15], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Above average speed"),
 
     'average_speed': getRenderer('average_speed',
-      [QUERY_ME8_DATA, QUERY_OEM_DATA],
-      [[28,38,48,58,68], [9,12,16,20,23]],
-      ['< 25','50','> 70'], "Average speed"),
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [28,38,48,58,68], colors: ME8_COLORS},
+        {stops: [28,38,48,58,68], colors: OEM_COLORS},
+      ], ['< 25','50','> 70'], "Average speed"),
 
     'pcw': getRenderer('pcw',
-      [QUERY_ME8_DATA, QUERY_OEM_DATA],
-      [[0,0.01181361,0.02357791,0.03498221,0.05745235], [0.0,0.01,0.02,0.03,0.05]],
-      ['Low','Medium','High'], "Pedestrian collision warning (PCW)"),
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,0.01181361,0.02357791,0.03498221,0.05745235], colors: ME8_COLORS},
+        {stops: [0,0.01181361,0.02357791,0.03498221,0.05745235], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Pedestrian collision warning (PCW)"),
 
     'fcw': getRenderer('fcw',
-      [QUERY_ME8_DATA, QUERY_OEM_DATA],
-      [[0,0.01181361,0.04357791,0.5,1], [0.0,0.01,0.02,0.03,0.05]],
-      ['Low','Medium','High'], "Forward collision warning (FCW)")
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,0.01181361,0.04357791,0.5,1], colors: ME8_COLORS},
+        {stops: [0,0.01181361,0.04357791,0.5,1], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Forward collision warning (FCW)")
   },
   filters: [{
     name:'risk_score',
