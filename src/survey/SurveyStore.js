@@ -17,18 +17,21 @@ class SurveyStore extends Store {
 
   _onZoomChange(zoom) {
     super._onZoomChange(zoom);
-    this.applyBasemap(zoom);
+    console.log(zoom);
+    this._scheduleVisualUpdate(() => this.applyBasemap(zoom), '_zoomUpdate');
   }
 
   applyBasemap(zoom) {
     if (!this.basemapConfig) return;
     const basemap = Object.entries(this.basemapConfig)
-      .filter(([id, params]) => params.minZoom <= zoom && zoom < params.maxZoom);
+      .find(([id, params]) => params.minZoom <= zoom && zoom < params.maxZoom);
+    const current = this.view.map.basemap;
 
-    if (basemap && basemap[0]) {
-      const [id, params] = basemap[0];
-      if (this.view.map.basemap.id !== id) {
-        loadBasemap(this.view, id, params.streetNames);
+    if (basemap && current) {
+      const [id, params] = basemap;
+      const {portalItem} = current;
+      if ((current.id !== id) && (portalItem ? portalItem.id !== params.id : true)) {
+        loadBasemap(this.view, id, params);
       }
     }
   }
