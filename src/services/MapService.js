@@ -13,6 +13,7 @@ let
     _Map,
     _Basemap,
     _FeatureLayer,
+    _VectorTileLayer,
     _MapView,
     // widget UIs
     _Search,
@@ -42,6 +43,7 @@ export function preloadAllModules(){
     'esri/Map',
     'esri/Basemap',
     'esri/layers/FeatureLayer',
+    'esri/layers/VectorTileLayer',
     'esri/views/MapView',
     // widget UIs
     'esri/widgets/Search',
@@ -67,6 +69,7 @@ export function preloadAllModules(){
     Map,
     Basemap,
     FeatureLayer,
+    VectorTileLayer,
     MapView,
     Search,
     Legend,
@@ -88,6 +91,7 @@ export function preloadAllModules(){
     _Map = Map;
     _Basemap = Basemap;
     _FeatureLayer = FeatureLayer;
+    _VectorTileLayer = VectorTileLayer;
     _MapView = MapView;
     
     _Search = Search;
@@ -207,8 +211,16 @@ export function loadWebMap(container, webmapId, viewOptions){
   return _loadMapView(map, container, viewOptions);
 }
 
-export function loadBasemap(view, basemapId) {
+export function loadBasemap(view, basemapId, addStreetNames) {
   view.map.basemap = _Basemap.fromId(basemapId);
+  if (addStreetNames) {
+    view.map.basemap.referenceLayers = [
+      new _VectorTileLayer({
+        // street names
+        url: "https://www.arcgis.com/sharing/rest/content/items/747cb7a5329c478cbe6981076cc879c5/resources/styles/root.json"
+      })
+    ];
+  }
   return view;
 }
 

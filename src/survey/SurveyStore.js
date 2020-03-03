@@ -23,12 +23,12 @@ class SurveyStore extends Store {
   applyBasemap(zoom) {
     if (!this.basemapConfig) return;
     const basemap = Object.entries(this.basemapConfig)
-      .filter(([id, settings]) => settings.minZoom <= zoom && zoom < settings.maxZoom);
+      .filter(([id, params]) => params.minZoom <= zoom && zoom < params.maxZoom);
 
     if (basemap && basemap[0]) {
-      const [id, _] = basemap[0];
+      const [id, params] = basemap[0];
       if (this.view.map.basemap.id !== id) {
-        loadBasemap(this.view, id);
+        loadBasemap(this.view, id, params.streetNames);
       }
     }
   }
