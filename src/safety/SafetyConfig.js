@@ -86,11 +86,11 @@ const safetyConfig = {
         label: "Average"
       }, {
         minValue: 1,
-        maxValue: 12.5,
+        maxValue: 2,
         symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255], onHoverScale},
         label: "High"
       }, {
-        minValue: 12.5,
+        minValue: 2,
         maxValue: 1000,
         symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255], onHoverScale},
         label: "Very High"
@@ -280,63 +280,7 @@ const safetyConfig = {
     'bicycles_density', 'speeding_ratio', 'average_speed','pcw','fcw'
   ], 
   popupTemplate: null,
-  //for n
-  // popupTemplate: {
-  //   title: "Road Segment Information",
-  //   content: [{
-  //     type: "text",
-  //     text: "<b>Road Risk Score: {expression/round_score}</b>",
-  //   }, {
-  //     type: "fields",
-  //     fieldInfos: [{
-  //       fieldName: 'harsh_cornering_ratio',
-  //       label: 'Harsh cornering (%)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'harsh_breaking_ratio',
-  //       label: "Harsh braking (%)",
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'pedestrians_density',
-  //       label: "Average pedestrian volume",
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'bicycles_density',
-  //       label: 'Average cyclist volume',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'speeding_ratio',
-  //       label: 'Above average speeds (%)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'average_speed',
-  //       label: 'Average speed (Km/H)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }]
-  //   }],
-  //   expressionInfos: [{
-  //     name: "round_score",
-  //     expression: "Round($feature.risk_score,2)"
-  //   }]
-  // },
+
   viewConfig: {
    center: [2.1532,41.3842],
     zoom: 12

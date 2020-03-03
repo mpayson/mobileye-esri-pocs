@@ -208,7 +208,6 @@ const SafetyApp = observer(class App extends React.Component {
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
             <h1 style={{float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
-            <div style={{float: "left"}}> (Data presented from Sep 1st - Dec 1st)</div>
             {signin}
           </Header>
           <Content>
