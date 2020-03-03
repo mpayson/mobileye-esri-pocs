@@ -190,7 +190,7 @@ function _loadMapView(map, container, options){
     ...options
   });
   // adjust the default behavior of the map view
-  view.ui.move("zoom", "top-right");
+  view.ui.move("zoom", "bottom-left");
   view.popup.actions.removeAll();
   return view;
 }

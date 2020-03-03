@@ -8,7 +8,6 @@ import LocationsPanel from '../components/LocationsPanel';
 import {
   addSearchWidget,
   addLegendWidget,
-  addHomeWidget
 } from '../services/MapService';
 
 import Store from './HumanMobilityStore';
@@ -75,12 +74,6 @@ const HumanMobilityApp = observer(class App extends React.Component {
         addSearchWidget(this.view, 'top-right', 0, true);
         const layerInfos = this.store.legendLayerInfos;
         addLegendWidget(this.view, 'bottom-right', {layerInfos});
-        
-        const homeTarget = this.store.viewConfig.center && this.store.viewConfig.zoom
-          ? {...this.store.viewConfig}
-          : null
-
-        addHomeWidget(this.view, "top-right", homeTarget);
       });
   }
 

@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col, Card, Button } from 'antd';
 import {
   addSearchWidget,
-  addHomeWidget,
   addLegendWidget
 } from '../services/MapService';
 
@@ -113,7 +112,6 @@ const SafetyApp = observer(class App extends React.Component {
         addLegendWidget(this.view, 'bottom-right', {
           layerInfos: [{layer: this.store.lyr, title: ""}]
         });
-        addHomeWidget(this.view, 'top-right');
       })
   }
 
