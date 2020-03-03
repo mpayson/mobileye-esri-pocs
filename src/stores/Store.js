@@ -58,6 +58,7 @@ class Store {
             this.bookmarkAutoplayId = null;
         }
         if (this._zoomListener) this._zoomListener.remove();
+        this.container = null;
     }
 
     loadFilters() {
@@ -259,15 +260,25 @@ class Store {
                 return null;
         }
     }
+
+    _scheduleVisualUpdate(fn, propName) {
+        if (this[propName]) {
+            cancelAnimationFrame(this[propName]);
+        }
+        this[propName] = requestAnimationFrame(fn);
+    }
     
     _scheduleGraphicsUpdate(graphic) {
-        if (this._graphicUpdate) {
-            cancelAnimationFrame(this._graphicUpdate);
-        }
-        this._graphicUpdate = requestAnimationFrame(() => {
+        this._scheduleVisualUpdate(() => {
             this.view.graphics.removeAll();
             this.view.graphics.add(graphic);
-        });
+        }, '_graphicsUpdate');
+    }
+
+    _updateCursor(value = 'default') {
+        this._scheduleVisualUpdate(() => {
+            this.container.style.cursor = value;
+        }, '_cursorUpdate');
     }
     
     _clearGraphics() {
@@ -370,6 +381,7 @@ class Store {
                 if (results.length) {
                     const graphic = results[0].graphic;
                     const screenPoint = hit.screenPoint;
+                    this._updateCursor('pointer');
 
                     switch (this.onHoverEffect) {
                         case 'upscale':
@@ -384,6 +396,7 @@ class Store {
                 } else {
                     this.tooltipResults = null;
                     this._clearGraphics();
+                    this._updateCursor('default');
                 }
             })
 
@@ -394,6 +407,7 @@ class Store {
         this._tooltipPromise = null;
         this.clearTooltip();
         this._clearGraphics();
+        this._updateCursor('default');
     }
 
     _onZoomChange(zoom){
@@ -465,6 +479,7 @@ class Store {
 
         // wait for layers to load before loading filters / charts
         // can return from function and keep this going in background
+        this.container = document.querySelector('.esri-view-root');
         this.lyr = this.map.layers.getItemAt(0);
         this._loadLayers()
             .then(_ => {
