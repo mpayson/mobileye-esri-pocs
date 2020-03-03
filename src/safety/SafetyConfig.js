@@ -338,7 +338,7 @@ const safetyConfig = {
   //   }]
   // },
   viewConfig: {
-    center: [-74.00157, 40.71955],
+   center: [2.1532,41.3842],
     zoom: 12
   },
   bookmarkInfos: {
