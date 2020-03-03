@@ -211,9 +211,14 @@ export function loadWebMap(container, webmapId, viewOptions){
   return _loadMapView(map, container, viewOptions);
 }
 
-export function loadBasemap(view, basemapId, addStreetNames) {
-  view.map.basemap = _Basemap.fromId(basemapId);
-  if (addStreetNames) {
+export function loadBasemap(view, basemapId, options) {
+  const {streetNames, id} = options;
+  if (id) {
+    view.map.basemap = new _Basemap({ portalItem: { id } })
+  } else {
+    view.map.basemap = _Basemap.fromId(basemapId);
+  }
+  if (streetNames) {
     view.map.basemap.referenceLayers = [
       new _VectorTileLayer({
         // street names
