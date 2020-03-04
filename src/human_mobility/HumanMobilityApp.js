@@ -19,6 +19,7 @@ import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import BookmarkPanel from "../components/BookmarkPanel";
 import MinMaxSlideFilter from "../components/filters/MinMaxSlideFilter";
 import { Logo } from '../components/Logo';
+import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
 const Title = Typography.Title;
@@ -32,6 +33,8 @@ const MenuBookmarkIcon = () => (
 const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
 )
+
+const PANEL_WIDTH = 300;
 
 const HumanMobilityApp = observer(class App extends React.Component {
 
@@ -52,14 +55,14 @@ const HumanMobilityApp = observer(class App extends React.Component {
   onCollapse = collapsed => {
     this.setState({ collapsed });
   };
-
+  
   onSelect = item => {
     const navKey = this.state.navKey === item.key
       ? null
       : item.key;
-    this.setState({navKey});
+      this.setState({navKey});
   }
-
+  
   onClose = () => {
     this.setState({
       navKey: null,
@@ -74,6 +77,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
         addSearchWidget(this.view, 'top-right', 0, true);
         const layerInfos = this.store.legendLayerInfos;
         addLegendWidget(this.view, 'bottom-right', {layerInfos});
+        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
       });
   }
 
@@ -101,6 +105,9 @@ const HumanMobilityApp = observer(class App extends React.Component {
         panel = null;
     }
 
+    if (this.view) {
+      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
+    }
 
     const signin = this.props.appState.displayName
       ? (
@@ -225,7 +232,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
                 // onClose={this.onClose}
                 placement="left"
                 visible={this.state.navKey}
-                width={300}
+                width={PANEL_WIDTH}
                 mask={false}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}
