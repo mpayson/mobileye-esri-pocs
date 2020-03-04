@@ -238,7 +238,7 @@ const eventsConfig = {
                                           ['fog', 'Fog'],
                                           ['construction', 'Construction areas'],
                                           ['object_on_road', 'Physical object'],
-                                          ['stopped_car_on_highway_shoulder',    'Stopped car'],
+                                          ['stopped_car_on_hard_shoulder',    'Stopped car'],
                                           ['ped_cycl', 'Pedestrian / cyclist']
                                         ]),
             optionsToRemovePostfix:"_test",
