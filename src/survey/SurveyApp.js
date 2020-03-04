@@ -16,6 +16,7 @@ import Store from './SurveyStore';
 import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
 import { Logo } from '../components/Logo';
+import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
 
@@ -35,7 +36,7 @@ const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>
 )
 
-const DRAWER_WIDTH = 320;
+const PANEL_WIDTH = 320;
 
 const SurveyApp = observer(class App extends React.Component {
 
@@ -60,24 +61,13 @@ const SurveyApp = observer(class App extends React.Component {
       ? null
       : item.key;
     this.setState({navKey});
-    this._moveZoomWidget(navKey);
   }
   
   onClose = () => {
     this.setState({
       navKey: null,
     });
-    this._moveZoomWidget(false);
   };
-
-  _moveZoomWidget(isPanelOpen) {
-    const container = this.view.ui._positionNameToContainerLookup['bottom-left'];
-    if (container) {
-      requestAnimationFrame(() => {
-        container.style.transform = isPanelOpen ? `translateX(${DRAWER_WIDTH}px)` : 'none';
-      });
-    }
-  }
 
   componentDidMount = () => {
 
@@ -107,6 +97,7 @@ const SurveyApp = observer(class App extends React.Component {
         });
         this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "bottom-left");
+        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
       });
   }
 
@@ -130,6 +121,10 @@ const SurveyApp = observer(class App extends React.Component {
         break;
       default:
         panel = null;
+    }
+
+    if (this.view) {
+      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
     }
 
     const signin = this.props.appState.displayName
@@ -219,7 +214,7 @@ const SurveyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
-                width={DRAWER_WIDTH}
+                width={PANEL_WIDTH}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}

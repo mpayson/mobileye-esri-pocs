@@ -18,6 +18,7 @@ import BookmarkPanel from '../components/BookmarkPanel';
 import SafetyTooltip from './SafetyTooltip';
 import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
+import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
 
@@ -46,6 +47,7 @@ function humanize(number) {
     }
 }
 
+const PANEL_WIDTH = 340;
 
 const SafetyApp = observer(class App extends React.Component {
 
@@ -112,6 +114,7 @@ const SafetyApp = observer(class App extends React.Component {
         addLegendWidget(this.view, 'bottom-right', {
           layerInfos: [{layer: this.store.lyr, title: ""}]
         });
+        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
       })
   }
 
@@ -133,6 +136,10 @@ const SafetyApp = observer(class App extends React.Component {
         break;
       default:
         panel = null;
+    }
+
+    if (this.view) {
+      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
     }
 
     const signin = this.props.appState.displayName
