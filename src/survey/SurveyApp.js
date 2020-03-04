@@ -35,6 +35,8 @@ const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>
 )
 
+const DRAWER_WIDTH = 320;
+
 const SurveyApp = observer(class App extends React.Component {
 
   state = {
@@ -58,13 +60,24 @@ const SurveyApp = observer(class App extends React.Component {
       ? null
       : item.key;
     this.setState({navKey});
+    this._moveZoomWidget(navKey);
   }
-
+  
   onClose = () => {
     this.setState({
       navKey: null,
     });
+    this._moveZoomWidget(false);
   };
+
+  _moveZoomWidget(isPanelOpen) {
+    const container = this.view.ui._positionNameToContainerLookup['bottom-left'];
+    if (container) {
+      requestAnimationFrame(() => {
+        container.style.transform = isPanelOpen ? `translateX(${DRAWER_WIDTH}px)` : 'none';
+      });
+    }
+  }
 
   componentDidMount = () => {
 
@@ -206,7 +219,7 @@ const SurveyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
-                width={320}
+                width={DRAWER_WIDTH}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
