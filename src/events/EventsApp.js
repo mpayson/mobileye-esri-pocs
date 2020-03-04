@@ -83,7 +83,7 @@ const EventsApp = observer(class App extends React.Component {
         });
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
-        this.view.ui.move("zoom", "top-right");
+        this.view.ui.move("zoom", "bottom-left");
       });
   }
 

@@ -93,12 +93,7 @@ const SurveyApp = observer(class App extends React.Component {
           layout: 'stack',
         });
         this.view.ui.add(legend, "bottom-right");
-        this.view.ui.move("zoom", "top-right");
-        this.homeWidget = new Home({
-          view: this.view
-        });
-        // adds the home widget to the top left corner of the MapView
-        this.view.ui.add(this.homeWidget, "top-right");
+        this.view.ui.move("zoom", "bottom-left");
       });
   }
 

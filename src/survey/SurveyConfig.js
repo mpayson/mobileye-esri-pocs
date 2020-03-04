@@ -503,8 +503,8 @@ const surveyConfig = {
   hasCustomTooltip: true,
   onHoverEffect: 'upscale',
   basemaps: {
-    'dark-gray': {minZoom: 0, maxZoom: 16},
-    'satellite': {minZoom: 16, maxZoom: 100},
+    'dark-gray': {minZoom: 0, maxZoom: 16, id: '8654f5c608384b9eb7e06fd566643afc'},
+    'satellite': {minZoom: 16, maxZoom: 100, streetNames: true},
   },
   bookmarkInfos: {
   },
