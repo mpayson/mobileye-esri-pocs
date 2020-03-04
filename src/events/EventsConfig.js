@@ -96,19 +96,6 @@ const eventsConfig = {
       //defaultSymbol: {type: "simple-marker", color: "blue"},
       uniqueValueInfos: [
       {
-        value: "pedestrian_aggregation",
-        label: "Pedestrians",
-        symbol: {
-          type: "picture-marker",
-          url: pedSvg,
-          ...defaultMapIconSize,
-        },
-        legendSymbol: {
-          url: pedLegendSvg,
-          ...defaultLegendIconSize,
-        }
-      },
-      {
         value: "bicycle_aggregation",
         label: "Bicycles",
         symbol: {
