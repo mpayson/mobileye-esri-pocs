@@ -76,7 +76,7 @@ const safetyConfig = {
         title: "Road risk score"
       },
       classBreakInfos: getClassBreakInfos({
-        stops: [0, 0.5, 1, 12.5, 1000],
+        stops: [0, 0.5, 1, 2, 1000],
         labels: ["Low", "Average", "High", "Very High"],
         colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
         type: "simple-line", 
@@ -84,7 +84,7 @@ const safetyConfig = {
       }),
       classBreakInfosByQuery: {
         "project <> 'me8'": getClassBreakInfos({
-          stops: [0, 0.2, 0.75, 5, 500],
+          stops: [0, 0.2, 0.75, 1.5, 500],
           labels: ["Low", "Average", "High", "Very High"],
           colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
           type: "simple-line", 
@@ -276,65 +276,9 @@ const safetyConfig = {
     'bicycles_density', 'speeding_ratio', 'average_speed','pcw','fcw'
   ], 
   popupTemplate: null,
-  //for n
-  // popupTemplate: {
-  //   title: "Road Segment Information",
-  //   content: [{
-  //     type: "text",
-  //     text: "<b>Road Risk Score: {expression/round_score}</b>",
-  //   }, {
-  //     type: "fields",
-  //     fieldInfos: [{
-  //       fieldName: 'harsh_cornering_ratio',
-  //       label: 'Harsh cornering (%)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'harsh_breaking_ratio',
-  //       label: "Harsh braking (%)",
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'pedestrians_density',
-  //       label: "Average pedestrian volume",
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'bicycles_density',
-  //       label: 'Average cyclist volume',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'speeding_ratio',
-  //       label: 'Above average speeds (%)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'average_speed',
-  //       label: 'Average speed (Km/H)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }]
-  //   }],
-  //   expressionInfos: [{
-  //     name: "round_score",
-  //     expression: "Round($feature.risk_score,2)"
-  //   }]
-  // },
+
   viewConfig: {
-    center: [-74.00157, 40.71955],
+   center: [2.1532,41.3842],
     zoom: 12
   },
   bookmarkInfos: {

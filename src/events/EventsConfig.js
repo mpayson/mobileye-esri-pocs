@@ -96,19 +96,6 @@ const eventsConfig = {
       //defaultSymbol: {type: "simple-marker", color: "blue"},
       uniqueValueInfos: [
       {
-        value: "pedestrian_aggregation",
-        label: "Pedestrians",
-        symbol: {
-          type: "picture-marker",
-          url: pedSvg,
-          ...defaultMapIconSize,
-        },
-        legendSymbol: {
-          url: pedLegendSvg,
-          ...defaultLegendIconSize,
-        }
-      },
-      {
         value: "bicycle_aggregation",
         label: "Bicycles",
         symbol: {
@@ -239,7 +226,7 @@ const eventsConfig = {
                                           ['fog', 'Fog'],
                                           ['construction', 'Construction areas'],
                                           ['object_on_road', 'Physical object'],
-                                          ['stopped_car_on_highway_shoulder',    'Stopped car'],
+                                          ['stopped_car_on_hard_shoulder',    'Stopped car'],
                                           ['ped_cycl', 'Pedestrian / cyclist']
                                         ]),
             optionsToRemovePostfix:"_test",
