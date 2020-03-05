@@ -77,24 +77,47 @@ const safetyConfig = {
       classBreakInfos: [{
         minValue: 0,
         maxValue: 0.5,
-        symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255], onHoverScale},
+        symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,1], onHoverScale},
         label: "Low"
       }, {
         minValue: 0.5,
         maxValue: 1,
-        symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255], onHoverScale},
+        symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,1], onHoverScale},
         label: "Average"
       }, {
         minValue: 1,
         maxValue: 12.5,
-        symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255], onHoverScale},
+        symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,1], onHoverScale},
         label: "High"
       }, {
         minValue: 12.5,
         maxValue: 1000,
-        symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255], onHoverScale},
+        symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,1], onHoverScale},
         label: "Very High"
-      }]
+      }],
+      classBreakInfosByQuery: {
+        "project <> 'me8'": [{
+          minValue: 0,
+          maxValue: 0.5,
+          symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,1], onHoverScale},
+          label: "Low"
+        }, {
+          minValue: 0.5,
+          maxValue: 1,
+          symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,1], onHoverScale},
+          label: "Average"
+        }, {
+          minValue: 1,
+          maxValue: 12.5,
+          symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,1], onHoverScale},
+          label: "High"
+        }, {
+          minValue: 12.5,
+          maxValue: 1000,
+          symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,1], onHoverScale},
+          label: "Very High"
+        }]
+      }
     },
     'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', 
       [QUERY_ME8_DATA, QUERY_OEM_DATA], [

@@ -324,6 +324,14 @@ class Store {
                 }
                 // other potential cases
             }
+        } else {
+            const valueInfo = Store._findValueInfo(renderer, dataValue);
+            if (valueInfo) {
+                const value =  valueInfo.symbol[visVarName];
+                if (value) {
+                    curValue = value;
+                }
+            }
         }
         return curValue;
     }
@@ -340,6 +348,7 @@ class Store {
         }
         const value = graphic.attributes[renderer.field];
         const valueInfo = Store._findValueInfo(renderer, value);
+        console.log(graphic);
         if (valueInfo) {
             const {onHoverScale, ...symbol} = valueInfo.symbol;
             if (onHoverScale) {
@@ -351,6 +360,7 @@ class Store {
                     }
                 });
                 const overrideColor = this._findCurrentVisValue(graphic, 'color', value);
+                console.log(overrideColor);
                 if (overrideColor) {
                     graphic.symbol.color = overrideColor;
                 }

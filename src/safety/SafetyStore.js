@@ -351,17 +351,31 @@ class SafetyStore extends Store {
     }
   }
 
+  static _updateClassBreakInfos(layerView, newClassBreakInfos) {
+    const renderer = layerView.layer.renderer;
+    const newRenderer = renderer.clone();
+    newRenderer.field = renderer.field;
+    newRenderer.classBreakInfos = newClassBreakInfos;
+    layerView.layer.renderer = newRenderer;
+  }
+
   updateDataSource(showPartialScoreData) {
     const where = showPartialScoreData ? QUERY_OEM_DATA : QUERY_ME8_DATA;
     const renderer = this.renderers[this.rendererField];
-    let visVar;
+    let visVar, classBreaks;
     if (renderer.visualVariablesByQuery) {
-      visVar = renderer.visualVariablesByQuery[where];
+      visVar = renderer.visualVariablesByQuery[where] || renderer.visualVariables;
+    }
+    if (renderer.classBreakInfosByQuery) {
+      classBreaks = renderer.classBreakInfosByQuery[where] || renderer.classBreakInfos;
     }
     this.layerViewsMap.forEach(lV => {
       lV.filter = {where};
       if (visVar) {
         SafetyStore._updateVisualVariables(lV, visVar);
+      }
+      if (classBreaks) {
+        SafetyStore._updateClassBreakInfos(lV, classBreaks);
       }
     });
   }
@@ -393,7 +407,8 @@ decorate(SafetyStore, {
   generateStdRoute: action.bound,
   clearRouteData: action.bound,
   onAddressSearchChange: action.bound,
-  updateVisualVariables: action.bound,
+  _updateVisualVariables: action.bound,
+  _updateClassBreakInfos: action.bound,
   updateDataSource: action.bound,
 })
 
