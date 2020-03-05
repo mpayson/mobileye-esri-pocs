@@ -214,6 +214,7 @@ const eventsConfig = {
       id: 2, 
       type: "live", 
       name: "speed",
+      popupTemplate: null,
       showLegend: true,
       defaultRendererField: 'averageSpeed', 
       outFields: ['avg_last_15_min', 'avg_last_hour', 'avg_last_3_hours'],
