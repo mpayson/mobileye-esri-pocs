@@ -76,8 +76,8 @@ if (process.env.EVENTS_WEBMAP_ID){
 }
 
 const defaultMapIconSize = {
-  width: '35px',
-  height: '35px',
+  width: 35,
+  height: 35,
   onHoverScale: 1.4,
 };
 const defaultLegendIconSize = {
@@ -166,13 +166,31 @@ const eventsConfig = {
         label:"Construction areas",
         symbol: {
           type: "simple-line",
-          width: '5px',
+          width: 4,
           // style: 'short-dash',
           color: 'rgba(255, 255, 255,0.7)',
           onHoverScale: 3,
         }
       },
-      ]
+      ],
+      visualVariables: [
+        {
+          type: "size",
+          valueExpression: "Find('construction', $feature.eventType) * -$view.scale",
+          legendOptions: {
+            showLegend: false,
+          },
+          stops: [
+            {value: 0, size: defaultMapIconSize.width * 0.1}, // <- construction
+            {value: 1, size: defaultMapIconSize.width},       // <- all others
+            // {value: 18055, size: defaultMapIconSize.width},
+            {value: 36111, size: defaultMapIconSize.width * 0.8},
+            {value: 72223, size: defaultMapIconSize.width * 0.6},
+            {value: 144447, size: defaultMapIconSize.width * 0.5},
+            {value: 288895, size: defaultMapIconSize.width * 0.35},
+          ]
+        },
+      ],
     }
   }
   ,
