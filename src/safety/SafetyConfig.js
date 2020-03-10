@@ -2,6 +2,7 @@ import NYCImage from '../resources/images/NYC.jpg'
 //import AtlantaImage from '../resources/images/Atlanta.jpg'
 import TokyoImage from '../resources/images/Tokyo.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
+import { getClassBreakInfos } from '../utils/config';
 
 export const QUERY_ME8_DATA = "project = 'me8'";
 export const QUERY_OEM_DATA = "project <> 'me8'";
@@ -74,27 +75,22 @@ const safetyConfig = {
       legendOptions: {
         title: "Road risk score"
       },
-      classBreakInfos: [{
-        minValue: 0,
-        maxValue: 0.5,
-        symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255], onHoverScale},
-        label: "Low"
-      }, {
-        minValue: 0.5,
-        maxValue: 1,
-        symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255], onHoverScale},
-        label: "Average"
-      }, {
-        minValue: 1,
-        maxValue: 2,
-        symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255], onHoverScale},
-        label: "High"
-      }, {
-        minValue: 2,
-        maxValue: 1000,
-        symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255], onHoverScale},
-        label: "Very High"
-      }]
+      classBreakInfos: getClassBreakInfos({
+        stops: [0, 0.5, 1, 2, 1000],
+        labels: ["Low", "Average", "High", "Very High"],
+        colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
+        type: "simple-line", 
+        width: "2.5px"
+      }),
+      classBreakInfosByQuery: {
+        "project <> 'me8'": getClassBreakInfos({
+          stops: [0, 0.2, 0.75, 1.5, 500],
+          labels: ["Low", "Average", "High", "Very High"],
+          colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
+          type: "simple-line", 
+          width: "2.5px"
+        })
+      }
     },
     'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', 
       [QUERY_ME8_DATA, QUERY_OEM_DATA], [

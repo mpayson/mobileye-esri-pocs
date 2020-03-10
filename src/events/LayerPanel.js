@@ -70,7 +70,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   _updateExpirationFilter(hoursBack) {
-    const daysForward = hoursBack === '0' ? 3 : 0;
+    const daysForward = 3; // hoursBack === '0' ? 3 : 0;
     const daysBack = parseInt(hoursBack) / 24;
     this.expirationFilter.max = "CURRENT_TIMESTAMP + " + daysForward.toString();
     this.expirationFilter.min = "CURRENT_TIMESTAMP - " + daysBack.toString();
