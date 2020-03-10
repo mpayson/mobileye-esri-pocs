@@ -76,21 +76,21 @@ const safetyConfig = {
       },
       classBreakInfos: [{
         minValue: 0,
-        maxValue: 0.5,
+        maxValue: 0.12,
         symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255], onHoverScale},
         label: "Low"
       }, {
-        minValue: 0.5,
-        maxValue: 1,
+        minValue: 0.12,
+        maxValue: 0.183,
         symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255], onHoverScale},
         label: "Average"
       }, {
-        minValue: 1,
-        maxValue: 2,
+        minValue: 0.183,
+        maxValue: 0.959,
         symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255], onHoverScale},
         label: "High"
       }, {
-        minValue: 2,
+        minValue: 0.959,
         maxValue: 1000,
         symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255], onHoverScale},
         label: "Very High"
@@ -173,6 +173,26 @@ const safetyConfig = {
       style: "button"
     }
   },{
+    name: 'fcw',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "Forward collision warning (FCW)"
+    }
+  },{
+    name: 'pcw',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "Pedestrian and cyclist collision warning (PCW)"
+    }
+  },{
     name: 'harsh_breaking_ratio',
     type: 'minmax',
     params: {
@@ -191,6 +211,16 @@ const safetyConfig = {
       lowerBoundLabel: 'low',
       upperBoundLabel: 'high',
       info: "Percentage of cars that turn the corner with high G-force."
+    }
+  },{
+    name: 'speeding_ratio',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "The percentage of vehicles that drive a standard deviation above the average speed at the segment."
     }
   },{
     name: 'pedestrians_density',
@@ -213,16 +243,6 @@ const safetyConfig = {
       info: "Density of bicycles over the segment."
     }
   },{
-    name: 'speeding_ratio',
-    type: 'minmax',
-    params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "The percentage of vehicles that drive a standard deviation above the average speed at the segment."
-    }
-  },{
     name: 'average_speed',
     type: 'minmax',
     params: {
@@ -231,26 +251,6 @@ const safetyConfig = {
       lowerBoundLabel: '0',
       upperBoundLabel: '140',
       info: "Average speed of the respective segment. (Does not contribute to risk score on its own)."
-    }
-  },{
-    name: 'pcw',
-    type: 'minmax',
-    params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "Pedestrian and cyclist collision warning (PCW)"
-    }
-  },{
-    name: 'fcw',
-    type: 'minmax',
-    params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "Forward collision warning (FCW)"
     }
   }],
     hasZoomListener: true,

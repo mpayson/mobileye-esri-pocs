@@ -254,7 +254,7 @@ const eventsConfig = {
   overrideFieldsInfoByEventType: {
     'construction': {
       'eventTimestamp': {title: 'First detected', noIcon: true},
-      'eventExpirationTimestamp': {title: 'Last detected', noIcon: true},
+      'eventExpirationTimestamp': {title: 'Expiration', noIcon: true},
     }
   },
   viewConfig: {
