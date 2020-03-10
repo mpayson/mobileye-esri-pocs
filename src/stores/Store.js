@@ -285,16 +285,24 @@ class Store {
         this.view.graphics.removeAll();
     }
     
-    _findCurrentVisValue(graphic, visVarName, dataValue) {
-        let curVisValue = graphic.symbol[visVarName];
+    _findCurrentVisValue(graphic, visVarNames, dataValue) {
+        if (!Array.isArray(visVarNames)) {
+            visVarNames = [visVarNames];
+        }
+        let value;
         const layer = graphic.sourceLayer;
         if (layer && layer.renderer) {
-            const scaledValue = this._findVisVarOverrides(layer.renderer, visVarName, dataValue);
-            if (scaledValue) {
-                curVisValue = scaledValue;    
+            for (const varName of visVarNames) {
+                if (!value) {
+                    value = graphic.symbol[varName];
+                }
+                const scaledValue = this._findVisVarOverrides(layer.renderer, varName, dataValue);
+                if (scaledValue) {
+                    return scaledValue;
+                }
             }
         }
-        return curVisValue;
+        return value;
     }
 
     _findVisVarOverrides(renderer, visVarName, dataValue) {
@@ -318,7 +326,7 @@ class Store {
                             stops.map(s => Math.abs(dataValue - s.value)).reverse()
                         );
                     }
-                } else if (variable.valueExpression === '$view.scale') {
+                } else if (variable.valueExpression.includes('$view.scale')) {
                     const scale = this.view.scale;
                     curValue = variable.stops.filter(s => s.value <= scale).pop()[visVarName];
                 }
@@ -352,12 +360,17 @@ class Store {
             const {onHoverScale, ...symbol} = valueInfo.symbol;
             if (onHoverScale) {
                 graphic.symbol = symbol;
-                ['width', 'height', 'size'].forEach(visVarName => {
-                    const curVisValue = this._findCurrentVisValue(graphic, visVarName, value);
-                    if (curVisValue) {
-                        graphic.symbol[visVarName] = curVisValue * onHoverScale;
-                    }
-                });
+                let overrideSize;
+                if (symbol.ignoreVisualVariables) {
+                    overrideSize = symbol.size || symbol.width;
+                } else {
+                    overrideSize = this._findCurrentVisValue(graphic, ['size', 'width'], value);
+                }
+                if (overrideSize) {
+                    ['width', 'height', 'size'].forEach(visVarName => {
+                        graphic.symbol[visVarName] = overrideSize * onHoverScale;
+                    });
+                }
                 const overrideColor = this._findCurrentVisValue(graphic, 'color', value);
                 if (overrideColor) {
                     graphic.symbol.color = overrideColor;

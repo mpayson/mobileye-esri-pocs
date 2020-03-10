@@ -10,4 +10,4 @@ export function getClassBreakInfos({stops, labels, colors, width, type = "simple
     },
     label: labels[i],
   }));
-} 
+}

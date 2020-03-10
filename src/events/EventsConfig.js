@@ -170,6 +170,7 @@ const eventsConfig = {
           // style: 'short-dash',
           color: 'rgba(255, 255, 255,0.7)',
           onHoverScale: 3,
+          ignoreVisualVariables: true,
         }
       },
       ],
