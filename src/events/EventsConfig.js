@@ -182,7 +182,7 @@ const eventsConfig = {
             showLegend: false,
           },
           stops: [
-            {value: 0, size: defaultMapIconSize.width * 0.1}, // <- construction
+            {value: 0, size: defaultMapIconSize.width * 0.12}, // <- construction
             {value: 1, size: defaultMapIconSize.width},       // <- all others
             // {value: 18055, size: defaultMapIconSize.width},
             {value: 36111, size: defaultMapIconSize.width * 0.8},
