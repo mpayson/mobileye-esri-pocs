@@ -1,5 +1,5 @@
 import Store from '../stores/Store';
-import { action, decorate } from 'mobx';
+import { action, decorate, observable } from 'mobx';
 
 class EventsStore extends Store {
 
@@ -31,11 +31,11 @@ class EventsStore extends Store {
       layers.add(streetNamesLayer, 1);
     }
     if (this.customLegendIcons) {
-      this.patchLegendIcons();
+      this._patchLegendIcons();
     }
   }
 
-  patchLegendIcons() {
+  _patchLegendIcons() {
     const legend = this.view.ui._components.find(c => c.widget.label === 'Legend');
     if (!legend) return;
     const activeLayersInfos = legend.widget.activeLayerInfos.items;
@@ -69,11 +69,12 @@ class EventsStore extends Store {
         };
       });
     });
-
   }
+
 }
 
 decorate(EventsStore, {
+  _graphicUpdate: observable,
   load: action.bound,
   _doAfterLayersLoaded: action.bound,
 })

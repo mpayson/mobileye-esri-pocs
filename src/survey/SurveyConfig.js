@@ -70,7 +70,8 @@ const newSymbol = (...rgba) => {
     outline: { 
       color: `rgba(${rgbaStr})`, 
       width: 2.5
-    }
+    },
+    onHoverScale: 3.0,
   }
 };
 
@@ -499,9 +500,20 @@ const surveyConfig = {
     ],
   },
   hasZoomListener: true,
+  hasCustomTooltip: true,
+  onHoverEffect: 'upscale',
   basemaps: {
-    'dark-gray': {minZoom: 0, maxZoom: 16},
-    'satellite': {minZoom: 16, maxZoom: 100},
+    'dark-gray': {
+      minZoom: 0, 
+      maxZoom: 16, 
+      id: '8654f5c608384b9eb7e06fd566643afc',
+    },
+    'satellite': {
+      minZoom: 16, 
+      maxZoom: 100, 
+      id: '13b7762b9e0c4c9996378be956e6bf5c', 
+      streetNames: true,
+    },
   },
   bookmarkInfos: {
   },

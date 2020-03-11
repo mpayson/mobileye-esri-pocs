@@ -39,22 +39,22 @@ const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
     classBreakInfos: [{
       minValue: stops[0],
       maxValue: stops[1],
-      symbol: {type: "simple-line", width: width[0], color: colors[0]},
+      symbol: {type: "simple-line", width: width[0], color: colors[0], onHoverScale: 4.0},
       label: labels[0]
     }, {
       minValue: stops[1],
       maxValue: stops[2],
-      symbol: {type: "simple-line", width: width[1], color: colors[1]},
+      symbol: {type: "simple-line", width: width[1], color: colors[1], onHoverScale: 4.0},
       label: labels[1]
     }, {
       minValue: stops[2],
       maxValue: stops[3],
-      symbol: {type: "simple-line", width: width[2], color: colors[2]},
+      symbol: {type: "simple-line", width: width[2], color: colors[2], onHoverScale: 4.0},
       label: labels[2]
     }, {
       minValue: stops[3],
       maxValue: stops[4],
-      symbol: {type: "simple-line", width: width[3], color: colors[3]},
+      symbol: {type: "simple-line", width: width[3], color: colors[3], onHoverScale: 4.0},
       label: labels[3]
     }]
 })
@@ -76,8 +76,9 @@ if (process.env.EVENTS_WEBMAP_ID){
 }
 
 const defaultMapIconSize = {
-  width: '35px',
-  height: '35px',
+  width: 35,
+  height: 35,
+  onHoverScale: 1.4,
 };
 const defaultLegendIconSize = {
   width: 30,
@@ -94,19 +95,6 @@ const eventsConfig = {
       field: "eventType",
       //defaultSymbol: {type: "simple-marker", color: "blue"},
       uniqueValueInfos: [
-      {
-        value: "pedestrian_aggregation",
-        label: "Pedestrians",
-        symbol: {
-          type: "picture-marker",
-          url: pedSvg,
-          ...defaultMapIconSize,
-        },
-        legendSymbol: {
-          url: pedLegendSvg,
-          ...defaultLegendIconSize,
-        }
-      },
       {
         value: "bicycle_aggregation",
         label: "Bicycles",
@@ -134,7 +122,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "stopped_car_on_highway_shoulder",
+        value: "stopped_car_on_hard_shoulder",
         label:"Stopped car",
 
         symbol: {
@@ -148,7 +136,7 @@ const eventsConfig = {
         }
       },
       {
-        value: "pedestrian_on_highway",
+        value: "pedestrian_on_high_speed_road",
         label:"Pedestrian/cyclist on high speed road",
         symbol: {
           type: "picture-marker",
@@ -178,12 +166,32 @@ const eventsConfig = {
         label:"Construction areas",
         symbol: {
           type: "simple-line",
-          width: '5px',
+          width: 4,
           // style: 'short-dash',
           color: 'rgba(255, 255, 255,0.7)',
+          onHoverScale: 3,
+          ignoreVisualVariables: true,
         }
       },
-      ]
+      ],
+      visualVariables: [
+        {
+          type: "size",
+          valueExpression: "Find('construction', $feature.eventType) * -$view.scale",
+          legendOptions: {
+            showLegend: false,
+          },
+          stops: [
+            {value: 0, size: defaultMapIconSize.width * 0.12}, // <- construction
+            {value: 1, size: defaultMapIconSize.width},       // <- all others
+            // {value: 18055, size: defaultMapIconSize.width},
+            {value: 36111, size: defaultMapIconSize.width * 0.8},
+            {value: 72223, size: defaultMapIconSize.width * 0.6},
+            {value: 144447, size: defaultMapIconSize.width * 0.5},
+            {value: 288895, size: defaultMapIconSize.width * 0.35},
+          ]
+        },
+      ],
     }
   }
   ,
@@ -212,10 +220,12 @@ const eventsConfig = {
       id: 2, 
       type: "live", 
       name: "speed",
+      popupTemplate: null,
       showLegend: true,
       defaultRendererField: 'averageSpeed', 
       outFields: ['avg_last_15_min', 'avg_last_hour', 'avg_last_3_hours'],
       customDefaultFilter:"avg_last_hour > 0", 
+      refreshInterval: 10,
       ignoreRendererUpdate: true, 
       ignoreFilter: true,
       // initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
@@ -235,14 +245,14 @@ const eventsConfig = {
                                           ['fog', 'Fog'],
                                           ['construction', 'Construction areas'],
                                           ['object_on_road', 'Physical object'],
-                                          ['stopped_car_on_highway_shoulder',    'Stopped car'],
+                                          ['stopped_car_on_hard_shoulder',    'Stopped car'],
                                           ['ped_cycl', 'Pedestrian / cyclist']
                                         ]),
             optionsToRemovePostfix:"_test",
             optionsToMerge: new Map([
                                     ['pedestrian_aggregation', 'ped_cycl'],
                                     ['bicycle_aggregation', 'ped_cycl'],
-                                    ['pedestrian_on_highway', 'ped_cycl']
+                                    ['pedestrian_on_high_speed_road', 'ped_cycl']
                                   ]),
         }
     },
@@ -252,6 +262,7 @@ const eventsConfig = {
   customLegendIcons: true,
   renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
+  onHoverEffect: 'upscale',
   statisticsFieldsInfo: { 
     'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
     'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},
@@ -263,7 +274,7 @@ const eventsConfig = {
   overrideFieldsInfoByEventType: {
     'construction': {
       'eventTimestamp': {title: 'First detected', noIcon: true},
-      'eventExpirationTimestamp': {title: 'Last detected', noIcon: true},
+      'eventExpirationTimestamp': {title: 'Expiration', noIcon: true},
     }
   },
   viewConfig: {

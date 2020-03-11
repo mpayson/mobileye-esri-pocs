@@ -13,6 +13,7 @@ import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import { Logo } from '../components/Logo';
 import './Legend.css';
 import EventTooltip from './EventsTooltip';
+import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
 
@@ -22,6 +23,8 @@ const MenuFilterIcon = () => (
 const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
 )
+
+const PANEL_WIDTH = 300;
 
 const EventsApp = observer(class App extends React.Component {
 
@@ -83,22 +86,26 @@ const EventsApp = observer(class App extends React.Component {
         });
         this.view.ui.add(searchExpand, "top-right");
         this.view.ui.add(legend, "bottom-right");
-        this.view.ui.move("zoom", "top-right");
+        this.view.ui.move("zoom", "bottom-left");
+        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
       });
   }
 
   render() {
-    let panel, panelWidth;
+    let panel;
     switch (this.state.navKey) {
       case 'Layers':
         panel = <LayerPanel store={this.store}/>;
         break;
       case 'Locations':
         panel = <LocationsPanel store={this.store}/>
-        panelWidth = 300;
         break;
       default:
         panel = null;
+    }
+
+    if (this.view) {
+      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
     }
 
     const signin = this.props.appState.displayName
@@ -138,7 +145,7 @@ const EventsApp = observer(class App extends React.Component {
         </Sider>
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
-            <h1 style={{float: "left"}}>Real Time Events</h1>
+            <h1 style={{float: "left"}}>Real Time Traffic Management</h1>
             {signin}
           </Header>
           <Content>
@@ -163,7 +170,7 @@ const EventsApp = observer(class App extends React.Component {
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
-                width={panelWidth}
+                width={PANEL_WIDTH}
               >
                 {panel}
               </Drawer>

@@ -1,29 +1,51 @@
-import NYCImage from '../resources/images/NYC.jpg'
-//import AtlantaImage from '../resources/images/Atlanta.jpg'
-import TokyoImage from '../resources/images/Tokyo.jpg'
 import BarcelonaImage from '../resources/images/Barcelona.jpg'
+import { getClassBreakInfos } from '../utils/config';
 
+import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
+export const QUERY_ME8_DATA = "project = 'me8'";
+export const QUERY_OEM_DATA = "project <> 'me8'";
+
+const ME8_COLORS = [
+ [44,123,182,255], [171,217,233,255], [255,255,191,255], [253,174,97,255], [215,25,28,255],
+];
+
+const OEM_COLORS = [
+  [0,99,177,1], [0,183,195,1], [255,185,0,1], [247,99,12,1], [232,17,35,1],
+];
+
+const onHoverScale = 2.0;
 // for now expect exactly 5 stops that map to the same color ramp
-const getRenderer = (field, stops,labels,caption) => ({
-  _type: "jsapi",
-  type: "simple",
-  symbol: { type: "simple-line" ,width: "2.5px"},
-  label: "Road segment",
-  visualVariables: [{
+const getRenderer = (field, queries, visuals, labels, caption) => {
+  const createVisualVariable = (stops, colors) => ({
     type: "color",
     field,
-    legendOptions: {
-        title:caption
+    legendOptions: { 
+      title: caption
     },
-    stops: [
-      { value: stops[0], color: [44,123,182,255], label: `${labels[0]}` },
-      { value: stops[1], color: [171,217,233,255], label: null },
-      { value: stops[2], color: [255,255,191,255], label: `${labels[1]}` },
-      { value: stops[3], color: [253,174,97,255], label: null },
-      { value: stops[4], color: [215,25,28,255], label: `${labels[2]}`},
-    ]
-  }]
-})
+    stops: stops.map((value, i) => ({
+      value, 
+      color: colors[i], 
+      label: i % 2 ? labels[i/2] : null
+    }))
+  });
+
+  Object.values(visuals).forEach(vis => vis.stops.sort((a,b) => a-b));
+  const visualVariablesByQuery = queries.reduce((out, query, i) => {
+    out[query] = createVisualVariable(visuals[i].stops, visuals[i].colors);
+    return out;
+  }, {});
+  const defaults = visualVariablesByQuery[queries[0]];
+
+  return {
+    _type: "jsapi",
+    type: "simple",
+    field,
+    symbol: { type: "simple-line", width: "2.3px", onHoverScale },
+    label: "Road segment",
+    visualVariables: [defaults],
+    visualVariablesByQuery,
+  }
+}
 
 var webmapIdEnv = '6512c324486d4b618ef568bdba6d9dcd';
 //var webmapIdEnv = '906b58f399944774a29e05d3d24a939b';
@@ -51,36 +73,69 @@ const safetyConfig = {
       legendOptions: {
         title: "Road risk score"
       },
-      classBreakInfos: [{
-        minValue: 0,
-        maxValue: 0.5,
-        symbol: {type: "simple-line", width: "2.5px", color: [171,217,233,255]},
-        label: "Low"
-      }, {
-        minValue: 0.5,
-        maxValue: 1,
-        symbol: {type: "simple-line", width: "2.5px", color: [255,255,191,255]},
-        label: "Average"
-      }, {
-        minValue: 1,
-        maxValue: 12.5,
-        symbol: {type: "simple-line", width: "2.5px", color: [253,174,97,255]},
-        label: "High"
-      }, {
-        minValue: 12.5,
-        maxValue: 1000,
-        symbol: {type: "simple-line", width: "2.5px", color: [215,25,28,255]},
-        label: "Very High"
-      }]
+      classBreakInfos: getClassBreakInfos({
+        stops: [0, 0.15, 4, 10, 1000],
+        labels: ["Low", "Average", "High", "Very High"],
+        colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
+        type: "simple-line", width: "2.3px", onHoverScale,
+      }),
+      classBreakInfosByQuery: {
+        "project <> 'me8'": getClassBreakInfos({
+          stops: [0, 0.2, 0.75, 1.5, 500],
+          labels: ["Low", "Average", "High", "Very High"],
+          colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
+          type: "simple-line", width: "2.3px", onHoverScale,
+        })
+      }
     },
-      'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio', [0,0.02,0.1,1.5,14],['Low','Medium','High'],"Harsh braking"),
-    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', [0,0.02,0.1,1.5,14],['Low','Medium','High'],"Harsh cornering"),
-    'pedestrians_density': getRenderer('pedestrians_density', [0,1,14,20,1.2],['Low','Medium','High'],"Average pedestrian volume"),
-    'bicycles_density': getRenderer('bicycles_density', [0,1,14,20,1.2],['Low','Medium','High'],"Average cyclist volume"),
-    'speeding_ratio': getRenderer('speeding_ratio', [0,0.01,0.1,0.5,15],['Low','Medium','High'],"Above average speed"),
-    'average_speed': getRenderer('average_speed',[28,38,48,58,68],['< 25','50','> 70'],"Average speed"),
-    'pcw': getRenderer('pcw', [0,0.01181361,0.02357791,0.03498221,0.05745235],['Low','Medium','High'],"Pedestrian collision warning (PCW)"),
-    'fcw': getRenderer('fcw', [0,0.01181361,0.04357791,0.5,1],['Low','Medium','High'],"Forward collision warning (FCW)")
+
+    'pcw': getRenderer('pcw',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0, 0.75, 1.5, 3.5, 10], colors: ME8_COLORS},
+        {stops: [0,0.011,0.023,0.034,0.057], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Pedestrian collision warning (PCW)"),
+
+    'fcw': getRenderer('fcw',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0, 0.5, 1.5, 3.5, 10], colors: ME8_COLORS},
+        {stops: [0,0.011,0.043,0.5,1], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Forward collision warning (FCW)"),
+
+    'harsh_breaking_ratio': getRenderer('harsh_breaking_ratio',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0, 0.043, 0.15, 0.25, 1], colors: ME8_COLORS},
+        {stops: [0,0.02,0.1,1.5,14], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Harsh braking"),
+
+    'harsh_cornering_ratio': getRenderer('harsh_cornering_ratio', 
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0.0, 0.153, 0.4, 0.666, 1.0], colors: ME8_COLORS},
+        {stops: [0,0.02,0.1,1.5,14], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Harsh cornering"),
+
+    'pedestrians_density': getRenderer('pedestrians_density', 
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0, 9.0, 25.375, 49.5, 100], colors: ME8_COLORS},
+        {stops: [0,1,14,20,1.2], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Average pedestrian volume"),
+
+    'bicycles_density': getRenderer('bicycles_density', 
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0, 2.2, 5.28, 10.5, 100], colors: ME8_COLORS},
+        {stops: [0,1,14,20,1.2], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Average cyclist volume"),
+
+    'speeding_ratio': getRenderer('speeding_ratio',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0, 0.083, 0.187, 0.33, 1], colors: ME8_COLORS},
+        {stops: [0,0.01,0.1,0.5,15], colors: OEM_COLORS},
+      ], ['Low','Medium','High'], "Above average speed"),
+
+    'average_speed': getRenderer('average_speed',
+      [QUERY_ME8_DATA, QUERY_OEM_DATA], [
+        {stops: [0,40,70,100,190], colors: ME8_COLORS},
+        {stops: [28,38,48,58,68], colors: OEM_COLORS},
+      ],['Low','Medium','High'], "Average speed")
   },
   filters: [{
     name:'risk_score',
@@ -88,27 +143,47 @@ const safetyConfig = {
     params: {
       quantiles: [{
         min: 0,
-        max: 0.5,
+        max: 0.15,
         // label: "Low (30%)",
         label: "Low"
       }, {
-        min: 0.5,
-        max: 1,
+        min: 0.15,
+        max: 4,
         // label: "Average (40%)",
         label: "Average"
       }, {
-        min: 1,
-        max: 12.5,
+        min: 4,
+        max: 10,
         // label: "High (20%)"
         label: "High"
       }, {
-        min: 12.5,
+        min: 10,
         max: 1000,
         // label: "Very High (10%)"
         label: "Very High"
       }],
       info: "Road risk score based on the variables below.",
       style: "button"
+    }
+  },{
+    name: 'fcw',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "Forward collision warning (FCW)"
+    }
+  },{
+    name: 'pcw',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "Pedestrian and cyclist collision warning (PCW)"
     }
   },{
     name: 'harsh_breaking_ratio',
@@ -131,6 +206,16 @@ const safetyConfig = {
       info: "Percentage of cars that turn the corner with high G-force."
     }
   },{
+    name: 'speeding_ratio',
+    type: 'minmax',
+    params: {
+      isLogarithmic: false,
+      hasHistograms: false,
+      lowerBoundLabel: 'low',
+      upperBoundLabel: 'high',
+      info: "The percentage of vehicles that drive a standard deviation above the average speed at the segment."
+    }
+  },{
     name: 'pedestrians_density',
     type: 'minmax',
     params: {
@@ -151,16 +236,6 @@ const safetyConfig = {
       info: "Density of bicycles over the segment."
     }
   },{
-    name: 'speeding_ratio',
-    type: 'minmax',
-    params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "The percentage of vehicles that drive a standard deviation above the average speed at the segment."
-    }
-  },{
     name: 'average_speed',
     type: 'minmax',
     params: {
@@ -169,26 +244,6 @@ const safetyConfig = {
       lowerBoundLabel: '0',
       upperBoundLabel: '140',
       info: "Average speed of the respective segment. (Does not contribute to risk score on its own)."
-    }
-  },{
-    name: 'pcw',
-    type: 'minmax',
-    params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "Pedestrian and cyclist collision warning (PCW)"
-    }
-  },{
-    name: 'fcw',
-    type: 'minmax',
-    params: {
-      isLogarithmic: false,
-      hasHistograms: false,
-      lowerBoundLabel: 'low',
-      upperBoundLabel: 'high',
-      info: "Forward collision warning (FCW)"
     }
   }],
     hasZoomListener: true,
@@ -200,7 +255,8 @@ const safetyConfig = {
       //popupTemplate: null,
       showLegend:true,
       outFields:'*',
-      //baselineWhereCondition: "project = 'me8'",
+      // baselineWhereCondition: "project = 'me8'",
+      customDefaultFilter: QUERY_ME8_DATA,
       defaultRendererField: 'risk_score',
       name:"risk_score",
       //ignoreFilter:true,
@@ -211,70 +267,15 @@ const safetyConfig = {
        ]
     }],
   hasCustomTooltip: true,
+  onHoverEffect: 'upscale',
   outFields: [
     'risk_score', 'harsh_cornering_ratio', 'harsh_breaking_ratio', 'pedestrians_density',
     'bicycles_density', 'speeding_ratio', 'average_speed','pcw','fcw'
   ], 
   popupTemplate: null,
-  //for n
-  // popupTemplate: {
-  //   title: "Road Segment Information",
-  //   content: [{
-  //     type: "text",
-  //     text: "<b>Road Risk Score: {expression/round_score}</b>",
-  //   }, {
-  //     type: "fields",
-  //     fieldInfos: [{
-  //       fieldName: 'harsh_cornering_ratio',
-  //       label: 'Harsh cornering (%)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'harsh_breaking_ratio',
-  //       label: "Harsh braking (%)",
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'pedestrians_density',
-  //       label: "Average pedestrian volume",
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'bicycles_density',
-  //       label: 'Average cyclist volume',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'speeding_ratio',
-  //       label: 'Above average speeds (%)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }, {
-  //       fieldName: 'average_speed',
-  //       label: 'Average speed (Km/H)',
-  //       format: {
-  //         places: 2,
-  //         digitSeparator: true
-  //       },
-  //     }]
-  //   }],
-  //   expressionInfos: [{
-  //     name: "round_score",
-  //     expression: "Round($feature.risk_score,2)"
-  //   }]
-  // },
+
   viewConfig: {
-    center: [-74.00157, 40.71955],
+   center: [2.1532,41.3842],
     zoom: 12
   },
   bookmarkInfos: {
@@ -285,38 +286,9 @@ const safetyConfig = {
     'Manhattan': {
       title: 'Manhattan',
       content: ''
-    },
-    'Ed Koch Bridge - Interchange with harsh cornering and braking': {
-      title: 'Ed Koch Bridge',
-      content: 'Ed Koch Bridge - in this interchange we can see harsh braking and cornering as drivers exit the highway enter into narrower and slower city roads.'
-    },
-    'Bay Pkwy - Harsh braking between traffic lights': {
-      title: 'Bay Pkwy',
-      content: 'Two sections of the Bay Parkway have a higher rate of harsh braking when compared to  other sections of the road. This might indicate a need to change the road markings or traffic signs.'
-     },
-    '33rd and 6th Harsh braking': {
-      title: '33rd and 6th',
-      content: 'The middle section of the map shows one section that has a very high rate of harsh braking. There is a park and a subway exit near this section, which might be connected to these harsh braking incidents.'
-     },
-    'HW 95 - Harsh cornering': {
-      title: 'HW 95',
-      content: 'Most highway ramps have high harsh cornering rate, this section has extremely high rate and might require special signage to ensure drivers slow down.'
-     },
-    'Canal St - Combination of risk factors': {
-      title: 'Canal St',
-      content: 'The red section shows a concentration of alerts in one location, pedestrians, cyclists, speeding and harsh braking.'
-     }
+    }
   },
   locationsByArea: [
-      { areaName : 'North America',
-        locations: [{
-        'name' : 'New York City',
-        'image' : NYCImage,
-        'extent' : {
-                    "xmin":-74.243003,"ymin":40.60381,"xmax":-73.795653,"ymax":40.828901,
-                    "spatialReference":{"wkid":4326}
-                  }
-      }]},
   { areaName : 'Europe',
     locations: [{
                   'name' : 'Barcelona',
@@ -327,16 +299,22 @@ const safetyConfig = {
                             }
                 },
               ]
-            },
-  { areaName : 'APAC',
-    locations: [{           
-    'name' : 'Tokyo',
-    'image' : TokyoImage,
-    'extent' : {
-                 "xmin":15537201.84,"ymin":4246841.30,"xmax":15583828.48,"ymax":4290869.07,
-                 "spatialReference":{"wkid":102100}
-               }
-    }]
+  },
+  {
+        areaName: 'Middle East',
+        locations: [{
+          name: 'Israel',
+          image: TelAvivImage,
+          extent: {
+            xmin: 3757032.8142690174,
+            ymin: 3678761.2973109875,
+            xmax: 3835304.331233021,
+            ymax: 3835304.331238987,
+            spatialReference: {
+              wkid: 3857
+            }
+          }
+        }]
   }
   ]
 }

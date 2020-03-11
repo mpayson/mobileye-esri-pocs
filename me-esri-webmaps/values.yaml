@@ -22,7 +22,7 @@ periodSeconds: 3
 failureThreshold: 30
 
 safety:
-  webmapId: "906b58f399944774a29e05d3d24a939b"
+  webmapId: "6512c324486d4b618ef568bdba6d9dcd"
 
 mobility:
   webmapId: "0b800d1e71d94002b8d2451dcd08155d"

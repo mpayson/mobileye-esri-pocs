@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col, Card, Button } from 'antd';
 import {
   addSearchWidget,
-  addHomeWidget,
   addLegendWidget
 } from '../services/MapService';
 
@@ -19,6 +18,7 @@ import BookmarkPanel from '../components/BookmarkPanel';
 import SafetyTooltip from './SafetyTooltip';
 import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
+import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
 
@@ -47,6 +47,7 @@ function humanize(number) {
     }
 }
 
+const PANEL_WIDTH = 340;
 
 const SafetyApp = observer(class App extends React.Component {
 
@@ -113,7 +114,7 @@ const SafetyApp = observer(class App extends React.Component {
         addLegendWidget(this.view, 'bottom-right', {
           layerInfos: [{layer: this.store.lyr, title: ""}]
         });
-        addHomeWidget(this.view, 'top-right');
+        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
       })
   }
 
@@ -135,6 +136,10 @@ const SafetyApp = observer(class App extends React.Component {
         break;
       default:
         panel = null;
+    }
+
+    if (this.view) {
+      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
     }
 
     const signin = this.props.appState.displayName
@@ -208,7 +213,6 @@ const SafetyApp = observer(class App extends React.Component {
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
             <h1 style={{float: "left"}}>Road Risk Score&nbsp;&nbsp;  </h1>
-            <div style={{float: "left"}}> (Data presented from Sep 1st - Dec 1st)</div>
             {signin}
           </Header>
           <Content>

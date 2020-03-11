@@ -70,7 +70,7 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
   }
 
   _updateExpirationFilter(hoursBack) {
-    const daysForward = hoursBack === '0' ? 3 : 0;
+    const daysForward = 3; // hoursBack === '0' ? 3 : 0;
     const daysBack = parseInt(hoursBack) / 24;
     this.expirationFilter.max = "CURRENT_TIMESTAMP + " + daysForward.toString();
     this.expirationFilter.min = "CURRENT_TIMESTAMP - " + daysBack.toString();
@@ -108,10 +108,10 @@ const LayerPanel = observer(class LayerPanel extends React.Component{
       </RadioGroup>;
 
     const expirationOptions = {
-      '0':  'Live',
-      '1':  'Last hour',
-      '5':  'Last 5 hours',
-      '24': 'Last 24 hours',
+      '0':  'Live active events',
+      '1':  'Live + Expired in the last hour',
+      '5':  'Live + Expired in the last 5 hours',
+      '24': 'Live + Expired in the last 24 hours',
     }
     const expirationOptionsRadios = Object.entries(expirationOptions).map(([value, label]) =>
         <Radio value={value} key={value} style={radioStyle}>{label}</Radio>

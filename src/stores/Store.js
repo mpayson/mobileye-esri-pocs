@@ -5,7 +5,7 @@ import {
     registerSession, jsonToExtent, layerFromId, debounce,
     whenFalseOnce
 } from '../services/MapService';
-import { combineNullableWheres } from '../utils/Utils';
+import { combineNullableWheres, average } from '../utils/Utils';
 
 class Store {
 
@@ -43,6 +43,7 @@ class Store {
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
         this.liveLayersStartIndex = storeConfig.liveLayersStartIndex;
         this.defaultVisibleLayersList = storeConfig.defaultVisibleLayersList;
+        this.onHoverEffect = storeConfig.onHoverEffect || 'highlight';
     }
 
     // to destroy map view, need to do `view.container = view.map = null;`
@@ -57,6 +58,7 @@ class Store {
             this.bookmarkAutoplayId = null;
         }
         if (this._zoomListener) this._zoomListener.remove();
+        this.container = null;
     }
 
     loadFilters() {
@@ -221,6 +223,165 @@ class Store {
         this.tooltipResults = null;
     }
 
+    _updateTooltipInfo(screenPoint, graphic) {
+        if (this.onMouseOutStatistics) {
+            const {geometry} = graphic;
+            geometry.paths[0][0][0] = geometry.paths[0][0][0] + 0.00001;
+            geometry.paths[0][1][0] = geometry.paths[0][1][0] - 0.00001;
+            this.layerViewsMap.get(graphic.layer.id).queryFeatures({
+                where: this.where,
+                geometry,
+                returnGeometry: true,
+                spatialRelationship: "contains",
+                outStatistics: this.onMouseOutStatistics
+            }).then(queryFeaturesResults => {
+                const queryResults = queryFeaturesResults.features;
+                this.tooltipResults = {
+                    screenPoint,
+                    graphic,
+                    queryResults
+                }
+            });
+        } else {
+            this.tooltipResults = {screenPoint, graphic}
+        }
+    }
+
+    static _findValueInfo(renderer, value) {
+        switch (renderer.type) {
+            case 'unique-value':
+                return renderer.uniqueValueInfos.find(u => u.value === value);
+            case 'class-breaks':
+                return renderer.classBreakInfos
+                    .find(b => b.minValue <= value && value < b.maxValue);
+            case 'simple':
+                return renderer;
+            default:
+                return null;
+        }
+    }
+
+    _scheduleVisualUpdate(fn, propName) {
+        if (this[propName]) {
+            cancelAnimationFrame(this[propName]);
+        }
+        this[propName] = requestAnimationFrame(fn);
+    }
+    
+    _scheduleGraphicsUpdate(graphic) {
+        this._scheduleVisualUpdate(() => {
+            this.view.graphics.removeAll();
+            this.view.graphics.add(graphic);
+        }, '_graphicsUpdate');
+    }
+
+    _updateCursor(value = 'default') {
+        this._scheduleVisualUpdate(() => {
+            this.container.style.cursor = value;
+        }, '_cursorUpdate');
+    }
+    
+    _clearGraphics() {
+        this.view.graphics.removeAll();
+    }
+    
+    _findCurrentVisValue(graphic, visVarNames, dataValue) {
+        if (!Array.isArray(visVarNames)) {
+            visVarNames = [visVarNames];
+        }
+        let value;
+        const layer = graphic.sourceLayer;
+        if (layer && layer.renderer) {
+            for (const varName of visVarNames) {
+                if (!value) {
+                    value = graphic.symbol[varName];
+                }
+                const scaledValue = this._findVisVarOverrides(layer.renderer, varName, dataValue);
+                if (scaledValue) {
+                    return scaledValue;
+                }
+            }
+        }
+        return value;
+    }
+
+    _findVisVarOverrides(renderer, visVarName, dataValue) {
+        let curValue = NaN;
+        if (renderer.visualVariables) {
+            const variable = renderer.visualVariables.find(v => v.type === visVarName);
+            if (variable) {
+                if (!variable.valueExpression) {
+                    // simple renderer
+                    const stops = variable.stops.slice()
+                        .sort((a, b) => Math.abs(a.value - dataValue) - Math.abs(b.value - dataValue))
+                        .slice(0, 2);
+                    if (stops.every(s => s.value < dataValue) || stops.every(s => s.value > dataValue)) {
+                        // outside of the interval - pick closest stop
+                        curValue = stops[0][visVarName];
+                    } else {
+                        // inside the interval - take weighted average
+                        curValue = average(
+                            stops.map(s => s[visVarName]),
+                            // the weight of each stop is the distance to the opposite     
+                            stops.map(s => Math.abs(dataValue - s.value)).reverse()
+                        );
+                    }
+                } else if (variable.valueExpression.includes('$view.scale')) {
+                    const scale = this.view.scale;
+                    curValue = variable.stops.filter(s => s.value <= scale).pop()[visVarName];
+                }
+                // other potential cases
+            }
+        } else {
+            const valueInfo = Store._findValueInfo(renderer, dataValue);
+            if (valueInfo) {
+                const value =  valueInfo.symbol[visVarName];
+                if (value) {
+                    curValue = value;
+                }
+            }
+        }
+        return curValue;
+    }
+    
+    _onHoverUpscale(graphic) {
+        let renderer = this.renderers[this.rendererField];
+        if (!graphic.attributes.hasOwnProperty(renderer.field)) {
+            /* This is needed only for events app, 
+             * because rendererField always points to 'eventType' renderer,
+             * but we may want to highlight line markers from speed layer
+             */
+            const attributeNames = new Set(Object.keys(graphic.attributes));
+            renderer = Object.values(this.renderers).find(r => attributeNames.has(r.field));
+        }
+        const value = graphic.attributes[renderer.field];
+        const valueInfo = Store._findValueInfo(renderer, value);
+        if (valueInfo) {
+            const {onHoverScale, ...symbol} = valueInfo.symbol;
+            if (onHoverScale) {
+                graphic.symbol = symbol;
+                let overrideSize;
+                if (symbol.ignoreVisualVariables) {
+                    overrideSize = symbol.size || symbol.width;
+                } else {
+                    overrideSize = this._findCurrentVisValue(graphic, ['size', 'width'], value);
+                }
+                if (overrideSize) {
+                    ['width', 'height', 'size'].forEach(visVarName => {
+                        graphic.symbol[visVarName] = overrideSize * onHoverScale;
+                    });
+                }
+                const overrideColor = this._findCurrentVisValue(graphic, 'color', value);
+                if (overrideColor) {
+                    graphic.symbol.color = overrideColor;
+                }
+                this._scheduleGraphicsUpdate(graphic);
+            }
+        } else {
+            this._clearGraphics();
+        }
+    }
+
     // function to watch for mouse movement
     _onMouseMove(evt) {
         const promise = (this._tooltipPromise = this.view
@@ -234,7 +395,6 @@ class Store {
                     this._tooltipHighlight.remove();
                     this._tooltipHighlight = null;
                 }
-
                 const results = hit.results.filter(
                     r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
                 );
@@ -242,32 +402,22 @@ class Store {
                 if (results.length) {
                     const graphic = results[0].graphic;
                     const screenPoint = hit.screenPoint;
-                    this._tooltipHighlight = this.layerViewsMap.get(results[0].graphic.layer.id).highlight(graphic);
+                    this._updateCursor('pointer');
 
-                    if (this.onMouseOutStatistics) {
-                        var new_geometry = results[0].graphic.geometry;
-                        new_geometry.paths[0][0][0] = new_geometry.paths[0][0][0] + 0.00001;
-                        new_geometry.paths[0][1][0] = new_geometry.paths[0][1][0] - 0.00001;
-                        this.layerViewsMap.get(results[0].graphic.layer.id).queryFeatures({
-                            where: this.where,
-                            geometry: results[0].graphic.geometry,
-                            returnGeometry: true,
-                            spatialRelationship: "contains",
-                            outStatistics: this.onMouseOutStatistics
-                        }).then(queryFeaturesResults => {
-                            const queryResults = queryFeaturesResults.features;
-                            this.tooltipResults = {
-                                screenPoint,
-                                graphic,
-                                queryResults
-                            }
-
-                        });
-                    } else
-                        this.tooltipResults = {screenPoint, graphic}
-
+                    switch (this.onHoverEffect) {
+                        case 'upscale':
+                            this._onHoverUpscale(graphic);
+                            break;
+                        case 'highlight':
+                        default:
+                            this._tooltipHighlight = this.layerViewsMap.get(graphic.layer.id).highlight(graphic);
+                            break;
+                    }
+                    this._updateTooltipInfo(screenPoint, graphic);
                 } else {
                     this.tooltipResults = null;
+                    this._clearGraphics();
+                    this._updateCursor('default');
                 }
             })
 
@@ -277,6 +427,8 @@ class Store {
     _onMouseLeave(evt) {
         this._tooltipPromise = null;
         this.clearTooltip();
+        this._clearGraphics();
+        this._updateCursor('default');
     }
 
     _onZoomChange(zoom){
@@ -348,6 +500,7 @@ class Store {
 
         // wait for layers to load before loading filters / charts
         // can return from function and keep this going in background
+        this.container = document.querySelector('.esri-view-root');
         this.lyr = this.map.layers.getItemAt(0);
         this._loadLayers()
             .then(_ => {
@@ -486,6 +639,7 @@ decorate(Store, {
     aliasMap: observable,
     layerVisibleMap: observable,
     autoplay: observable,
+    _graphicUpdate: observable,
     chartResultMap: observable.shallow,
     tooltipResults: observable.shallow,
     bookmarkInfo: observable.ref,
@@ -517,6 +671,10 @@ decorate(Store, {
     startAutoplayBookmarks: action.bound,
     stopAutoplayBookmarks: action.bound,
     _doAfterLayersLoaded: action.bound,
+    _updateTooltipInfo: action.bound,
+    _clearGraphics: action.bound,
+    _scheduleGraphicsUpdate: action.bound,
+    // _onHoverUpscale: action.bound,
 });
 
 export default Store;

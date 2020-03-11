@@ -16,6 +16,7 @@ import Store from './SurveyStore';
 import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
 import { Logo } from '../components/Logo';
+import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
 
@@ -34,6 +35,8 @@ const MenuBookmarkIcon = () => (
 const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>
 )
+
+const PANEL_WIDTH = 320;
 
 const SurveyApp = observer(class App extends React.Component {
 
@@ -59,7 +62,7 @@ const SurveyApp = observer(class App extends React.Component {
       : item.key;
     this.setState({navKey});
   }
-
+  
   onClose = () => {
     this.setState({
       navKey: null,
@@ -93,12 +96,8 @@ const SurveyApp = observer(class App extends React.Component {
           layout: 'stack',
         });
         this.view.ui.add(legend, "bottom-right");
-        this.view.ui.move("zoom", "top-right");
-        this.homeWidget = new Home({
-          view: this.view
-        });
-        // adds the home widget to the top left corner of the MapView
-        this.view.ui.add(this.homeWidget, "top-right");
+        this.view.ui.move("zoom", "bottom-left");
+        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
       });
   }
 
@@ -122,6 +121,10 @@ const SurveyApp = observer(class App extends React.Component {
         break;
       default:
         panel = null;
+    }
+
+    if (this.view) {
+      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
     }
 
     const signin = this.props.appState.displayName
@@ -211,7 +214,7 @@ const SurveyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
-                width={320}
+                width={PANEL_WIDTH}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
