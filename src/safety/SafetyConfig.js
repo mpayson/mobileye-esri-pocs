@@ -77,16 +77,14 @@ const safetyConfig = {
         stops: [0, 0.15, 4, 10, 1000],
         labels: ["Low", "Average", "High", "Very High"],
         colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
-        type: "simple-line",
-        width: "2.3px"
+        type: "simple-line", width: "2.3px", onHoverScale,
       }),
       classBreakInfosByQuery: {
         "project <> 'me8'": getClassBreakInfos({
           stops: [0, 0.2, 0.75, 1.5, 500],
           labels: ["Low", "Average", "High", "Very High"],
           colors: [[171,217,233,1], [255,255,191,1], [253,174,97,1], [215,25,28,1]],
-          type: "simple-line",
-          width: "2.3px"
+          type: "simple-line", width: "2.3px", onHoverScale,
         })
       }
     },
