@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from "mobx-react";
 import { Card } from 'antd';
-import { Col, Button } from 'antd';
+import { Col, Button, Row } from 'antd';
 import humanMobilityConfig from './HumanMobilityConfig';
 import { ReactComponent as BikeIcon} from '../resources/svg/directions_bike-24px.svg';
 import { ReactComponent as WalkIcon} from '../resources/svg/directions_walk-24px.svg';
@@ -37,7 +37,7 @@ const HumanMobilityTooltip = observer(({store}) => {
     position: 'absolute',
     top: '15px',
     right: '55px',
-    width: '290px',
+    width: '200px',
     height: 'auto',
     overflow: 'auto',
     zIndex: '99',
@@ -82,11 +82,12 @@ const HumanMobilityTooltip = observer(({store}) => {
     const IconSvg = TAG_TO_SVG[entry[1].iconTag] || TAG_TO_SVG['none']
     const value = Math.round(results[entry[0]].count != 0 ? results[entry[0]].sum / results[entry[0]].count : 0);
     return (
-        <Col key={entry[0]} span={12} style={colStyle}>
+        <Row gutter={16}>
+        <Col key={entry[0]} span={30} style={colStyle}>
           <IconSvg 
             style={iconStyle} 
             width={28} 
-            height={28} 
+            height={28}
             fill="#6e6e6e"
             title={entry[1].title} 
           />
@@ -94,9 +95,10 @@ const HumanMobilityTooltip = observer(({store}) => {
             <span style={{fontSize: '24px'}}>
               {value}  
             </span>
-            {' '}{entry[1].postText}
+            {''}{entry[1].postText}
           </span>
         </Col>
+        </Row>
     );
   })
   // const infoContent = humanMobilityConfig.layers.filter(layer => layer.type !== "static").map(f =>
