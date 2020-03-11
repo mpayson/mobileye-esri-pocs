@@ -29,7 +29,7 @@ const getRenderer = (field, queries, visuals, labels, caption) => {
     }))
   });
 
-  Object.values(visuals).forEach(vis => vis.stops.sort());
+  Object.values(visuals).forEach(vis => vis.stops.sort((a,b) => a-b));
   const visualVariablesByQuery = queries.reduce((out, query, i) => {
     out[query] = createVisualVariable(visuals[i].stops, visuals[i].colors);
     return out;
