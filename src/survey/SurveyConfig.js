@@ -160,8 +160,8 @@ const icons_exp = "When(" + speedSignIconsExp + ", " + category_l2IconsExp + ", 
 const surveyConfig = {
   
   
-  layerItemId: 'eb63836cecbb4de0833a6ab13796a2f3',
-  webmapId: '13b7762b9e0c4c9996378be956e6bf5c',
+  layerItemId: '0112513a5f6d4d0796c8b5adbf66d091',
+  webmapId: '971f846af0d64f72a32bccb7617b2efb',
   initialRendererField: 'all',
   renderers: {
     'all': {
