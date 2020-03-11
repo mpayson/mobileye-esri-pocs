@@ -3,13 +3,14 @@ import createFilterFromConfig from './Filters';
 import {
     loadWebMap, loadMap, jsonToRenderer, 
     registerSession, jsonToExtent, layerFromId, debounce,
-    whenFalseOnce
+    whenFalseOnce, loadBasemap
 } from '../services/MapService';
 import { combineNullableWheres, average } from '../utils/Utils';
 
 class Store {
 
     aliasMap = null;
+    basemaps = new Map();
     chartResultMap = new Map();
     map = null;
     layerVisibleMap = new Map();
@@ -36,6 +37,7 @@ class Store {
         this.viewConfig = storeConfig.viewConfig;
         this.outFields = storeConfig.outFields;
         this.layersConfig = storeConfig.layers;
+        this.basemapConfig = storeConfig.basemaps;
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
         this.hasZoomListener = storeConfig.hasZoomListener;
         this.bookmarkInfos = storeConfig.bookmarkInfos;
@@ -444,6 +446,10 @@ class Store {
             ]);
             l.definitionExpression = combinedWhere;
         })
+        if (this._zoomUpdate) {
+            clearTimeout(this._zoomUpdate);
+        }
+        this._zoomUpdate = setTimeout(() => this._applyBasemap(zoom));
     }
 
     setRendererField(field) {
@@ -500,6 +506,7 @@ class Store {
 
         // wait for layers to load before loading filters / charts
         // can return from function and keep this going in background
+        this._applyBasemap(this.viewConfig.zoom);
         this.container = document.querySelector('.esri-view-root');
         this.lyr = this.map.layers.getItemAt(0);
         this._loadLayers()
@@ -524,6 +531,27 @@ class Store {
 
         return this.view;
     }
+
+    _applyBasemap(zoom) {
+        if (!this.basemapConfig) return;
+        const basemap = Object.entries(this.basemapConfig)
+          .find(([id, params]) => params.minZoom <= zoom && zoom < params.maxZoom);
+        const current = this.view.map.basemap;
+    
+        if (basemap && current) {
+          const [id, params] = basemap;
+          const {portalItem} = current;
+          if ((current.id !== id) && (portalItem ? portalItem.id !== params.id : true)) {
+            const stored = this.basemaps.get(id);
+            if (stored) {
+              this.view.map.basemap = stored;
+            } else {
+              loadBasemap(this.view, id, params);
+              this.basemaps.set(id, this.view.map.basemap);
+            }
+          }
+        }
+      }
 
     clearFilters() {
         this.filters.forEach(f => f.clear());
@@ -674,6 +702,7 @@ decorate(Store, {
     _updateTooltipInfo: action.bound,
     _clearGraphics: action.bound,
     _scheduleGraphicsUpdate: action.bound,
+    _applyBasemap: action.bound,
     // _onHoverUpscale: action.bound,
 });
 

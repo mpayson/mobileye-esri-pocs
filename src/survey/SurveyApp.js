@@ -12,7 +12,7 @@ import FilterPanel from '../components/FilterPanel';
 import ChartPanel from '../components/ChartPanel';
 // import LayerListPanel from '../components/LayerListPanel';
 import BookmarkPanel from '../components/BookmarkPanel';
-import Store from './SurveyStore';
+import Store from '../stores/Store';
 import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
 import { Logo } from '../components/Logo';
