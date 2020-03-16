@@ -57,6 +57,7 @@ import MunichImage from "../resources/images/Munich.jpg"
 import BerlinImage from "../resources/images/Berlin.jpg"
 import LasVegasImage from "../resources/images/Las Vegas.jpg"
 import HanoverImage from "../resources/images/hanover.jpg"
+import HamburgImage from "../resources/images/hamburg.jpg"
 import ParisImage from "../resources/images/Paris.png"
 import SingaporeImage from "../resources/images/Singapore.jpg"
 
@@ -524,10 +525,10 @@ const surveyConfig = {
                         'name' : 'Las Vegas',
                         'image' : LasVegasImage,
                         'extent' : {
-                                      "xmin":-115.228211,
-                                      "ymin":36.084378,
-                                      "xmax":-115.125557,
-                                      "ymax":36.116765,
+                                      "xmin": -115.136914,
+                                      "ymin":36.110392, 
+                                      "xmax":-115.183434,
+                                      "ymax":36.099025, 
                                       "spatialReference" : { 
                                         "wkid":4326
                                       }
@@ -537,12 +538,12 @@ const surveyConfig = {
                         'name' : 'New York City',
                         'image' : NYCImage,
                         'extent' : {
-                                      "xmin":-8233752.069196624,
-                                      "ymin":4976855.35232054,
-                                      "xmax":-8232870.057549805,
-                                      "ymax":4977349.2071830435,
+                                      "xmin": -73.969168,
+                                      "ymin":40.761579,
+                                      "xmax":-73.959780,
+                                      "ymax":40.764651, 
                                       "spatialReference" : { 
-                                        "wkid":102100
+                                        "wkid":4326
                                       }
                                     }
                       },
@@ -550,10 +551,10 @@ const surveyConfig = {
                         'name' : 'Los Angeles',
                         'image' : LAImage,
                         'extent' : {
-                          'ymax' : 34.062122, 
-                          'xmin' : -118.275700,
-                          'ymin' : 34.030624, 
-                          'xmax' : -118.214838,
+                          'ymin' : 34.048705, 
+                          'xmin' : -118.415457,
+                          'ymax' : 34.103705, 
+                          'xmax' : -118.243393,
                           'spatialReference' : {
                             'wkid' : 4326
                           }
@@ -563,9 +564,13 @@ const surveyConfig = {
                         'name' : 'San Francisco',
                         'image' : SanFranImage,
                         'extent' : {
-                                    "xmin":-13631513.839310113,"ymin":4547141.554969908,"xmax":-13622150.303345192,"ymax":4551144.944326338
-                                    ,
-                                    "spatialReference":{"wkid":102100}
+                                    "xmin":-122.422953,
+                                    "ymin":37.771861, 
+                                    "xmax":-122.376613,
+                                    "ymax":37.787775, 
+                                    "spatialReference": {
+                                      "wkid": 4326
+                                    }
                                   }
                       }
                     ]
@@ -576,10 +581,10 @@ const surveyConfig = {
           'name' : 'Frankfurt',
           'image' : FrankfurtImage,
           'extent' : {
-            'ymax' : 50.123851, 
-            'xmin' : 8.656489,
-            'ymin' : 50.104365, 
-            'xmax' : 8.720233,
+            'ymax' : 50.117672, 
+            'xmin' : 8.705956,
+            'ymin' : 50.106181, 
+            'xmax' : 8.661819,
             'spatialReference' : {
               'wkid' : 4326
             }
@@ -589,10 +594,10 @@ const surveyConfig = {
           'name' : 'Munich',
           'image' : MunichImage,
           'extent' : {
-            'ymax' :  48.227980, 
-            'xmin' : 11.268866,
-            'ymin' : 48.065403, 
-            'xmax' : 11.790256,
+            'ymax' :  48.152908, 
+            'xmax' : 11.627687,
+            'ymin' : 48.128038, 
+            'xmin' : 11.540434,
             'spatialReference' : {
               'wkid' : 4326
             }
@@ -602,36 +607,36 @@ const surveyConfig = {
           'name' : 'Berlin',
           'image' : BerlinImage,
           'extent' : {
-            'ymax' : 52.555150, 
-            'xmin' : 13.281972,
-            'ymin' : 52.480311, 
-            'xmax' : 13.544110,
+            'ymax' : 52.518144, 
+            'xmax' : 13.407102,
+            'ymin' : 52.511902, 
+            'xmin' :  13.379619,
             'spatialReference' : {
               'wkid' : 4326
             }
           }
         },
-        // {
-        //   'name' : 'Hamburg',
-        //   'image' : HamburgImage,
-        //   'extent' : {
-        //     'ymax' : 53.569513, 
-        //     'xmin' : 9.935844,
-        //     'ymin' : 53.538964, 
-        //     'xmax' : 10.046473,
-        //     'spatialReference' : {
-        //       'wkid' : 4326
-        //     }
-        //   }
-        // },
         {
-          'name' : 'Hanover',
+          'name' : 'Hamburg',
+          'image' : HamburgImage,
+          'extent' : {
+            'ymax' : 53.548935, 
+            'xmax' : 10.109076,
+            'ymin' : 53.506593, 
+            'xmin' : 9.909665,
+            'spatialReference' : {
+              'wkid' : 4326
+            }
+          }
+        },
+        {
+          'name' : 'Hannover',
           'image' : HanoverImage,
           'extent' : {
-            'ymax' : 52.403986, 
-            'xmin' : 9.613037,
-            'ymin' : 52.341588, 
-            'xmax' : 9.834076,
+            'ymax' : 52.387837, 
+            'xmax' : 9.791625,
+            'ymin' : 52.365245, 
+            'xmin' : 9.696535,
             'spatialReference' : {
               'wkid' : 4326
             }
@@ -643,10 +648,10 @@ const surveyConfig = {
                     {'name' : 'Rome',
                       'image' : RomeImage,
                       'extent' : {
-                        'ymax' : 41.930687, 
-                        'xmin' : 12.391691,
-                        'ymin' : 41.865653, 
-                        'xmax' : 12.579500,
+                        'ymax' : 41.909584, 
+                        'xmax' : 12.496307,
+                        'ymin' : 41.896105, 
+                        'xmin' : 12.447899,
                         'spatialReference' : {
                           'wkid' : 4326
                         }
@@ -656,10 +661,10 @@ const surveyConfig = {
                       'name' : 'Barcelona',
                       'image' : BarcelonaImage,
                       'extent' : {
-                        'ymax' : 41.432012, 
-                        'xmin' : 2.055583,
-                        'ymin' : 41.370578, 
-                        'xmax' : 2.252006,
+                        'ymax' : 41.392591,
+                        'xmax' :  2.135559,
+                        'ymin' : 41.360966, 
+                        'xmin' : 2.036986,
                         'spatialReference' : {
                           'wkid' : 4326
                         }
@@ -669,19 +674,23 @@ const surveyConfig = {
                       'name' : 'Heathrow',
                       'image' : HeathrowImage,
                       'extent' : {
-                                   "xmin":-57155.730385611794,"ymin":6702392.397662927,"xmax":-43043.54403848015,"ymax":6710294.075461897
-                                   ,
-                                   "spatialReference":{"wkid":102100}
+                                   "xmin":-0.493305,
+                                   "ymin":51.461673, 
+                                   "xmax": -0.413929,
+                                   "ymax":51.481328, 
+                                   "spatialReference": {
+                                     "wkid":4326
+                                    }
                                  }
                     },
                     {
                       'name' : "Paris",
                       'image' : ParisImage,
                       extent : {
-                        'ymax' : 48.900043, 
-                        'xmin' : 2.219860,
-                        'ymin' : 48.811833, 
-                        'xmax' : 2.461388,
+                        'ymax' : 48.862405, 
+                        'xmax' : 2.289474,
+                        'ymin' : 48.874958, 
+                        'xmin' : 2.335709,
                         'spatialReference' : {
                           'wkid' : 4326
                         }
@@ -697,7 +706,10 @@ const surveyConfig = {
                           'name' : 'Obaida (Tokyo)',
                           'image' : ObaidaImage,
                           'extent' : {
-                                      "xmin":15556162.5889992,"ymin":4246236.971771516,"xmax":15565526.124964122,"ymax":4250240.3611279465
+                                      "xmin":15556162.5889992,
+                                      "ymin":4246236.971771516,
+                                      "xmax":15565526.124964122,
+                                      "ymax":4250240.3611279465
                                       ,
                                       "spatialReference":{"wkid":102100}
                                     }
@@ -725,7 +737,7 @@ const surveyConfig = {
     
     // center: [-122.483311, 37.707744],
     center: [11.577279, 48.137732],
-    zoom: 15
+    zoom: 14
   }
 }
 
