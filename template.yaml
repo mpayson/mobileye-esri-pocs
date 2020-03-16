@@ -95,6 +95,10 @@ Resources:
         FromPort: !Ref LoadBalancerPort
         ToPort: !Ref LoadBalancerPort
         IpProtocol: tcp
+      - CidrIp: 0.0.0.0/0
+        FromPort: 443
+        ToPort: 443
+        IpProtocol: tcp
       SecurityGroupEgress:
       - CidrIp: 0.0.0.0/0
         FromPort: -1
