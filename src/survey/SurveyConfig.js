@@ -551,10 +551,10 @@ const surveyConfig = {
                         'name' : 'Los Angeles',
                         'image' : LAImage,
                         'extent' : {
-                          'ymin' : 34.048705, 
-                          'xmin' : -118.415457,
-                          'ymax' : 34.103705, 
-                          'xmax' : -118.243393,
+                          'ymin' : 34.068063, 
+                          'xmin' : -118.405936,
+                          'ymax' : 34.103037, 
+                          'xmax' : -118.308432,
                           'spatialReference' : {
                             'wkid' : 4326
                           }
