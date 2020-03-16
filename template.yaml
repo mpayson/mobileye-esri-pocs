@@ -95,6 +95,10 @@ Resources:
         FromPort: !Ref LoadBalancerPort
         ToPort: !Ref LoadBalancerPort
         IpProtocol: tcp
+      - CidrIp: 0.0.0.0/0
+        FromPort: 443
+        ToPort: 443
+        IpProtocol: tcp
       SecurityGroupEgress:
       - CidrIp: 0.0.0.0/0
         FromPort: -1
@@ -177,9 +181,22 @@ Resources:
       LoadBalancerArn: !Ref ALBLoadBalancer
       Port: "80"
       Protocol: "HTTP"
-#      Certificates:
-#        - CertificateArn:
-#            Fn::ImportValue: !Sub "${EnvironmentName}-internal-certificate-arn"
+      DefaultActions:
+        - Type: "forward"
+          TargetGroupArn: !Ref ALBTargetGroup
+    DependsOn:
+      - ALBTargetGroup
+      - ALBLoadBalancer
+
+  ALBLoadBalancerHttpsListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALBLoadBalancer
+      Port: "443"
+      Protocol: "HTTPS"
+      Certificates:
+        - CertificateArn:
+            Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-external-certificate-arn-temp"
       DefaultActions:
         - Type: "forward"
           TargetGroupArn: !Ref ALBTargetGroup
@@ -192,13 +209,13 @@ Resources:
     Condition: tlsBuildCondition
     Properties:
       HostedZoneId:
-        Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-hosted-zone-id"
+        Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-hosted-zone-id-temp"
       Name:
         !Sub
           - "webmaps-${EnvironmentName}.${ZoneName}."
           - EnvironmentName: !Ref EnvironmentName
             ZoneName:
-              Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-domain-name"
+              Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-domain-name-temp"
       Type: "CNAME"
       ResourceRecords:
         - !GetAtt [ALBLoadBalancer, DNSName]
