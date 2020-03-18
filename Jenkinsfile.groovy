@@ -126,7 +126,7 @@ slaveHandler.basicMe { label ->
                 sh "echo ${mobilityWebmapId}"
                 sh "echo ${liveEventsWebmapId}"
                 EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
-                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps-ci harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}") //--set safety.webmapId=${safetyWebmapId}")
+                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps-ci harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName} --set safety.webmapId=${safetyWebmapId}  --set mobility.webmapId=${mobilityWebmapId}  --set events.webmapId=${liveEventsWebmapId}")
 
             }
 
