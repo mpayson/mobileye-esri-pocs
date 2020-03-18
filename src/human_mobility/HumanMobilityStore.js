@@ -81,7 +81,6 @@ class HumanMobilityStore extends Store{
         "  }\n" +
         "}\n" +
         "sum/count;"
-
     this.renderers[id].valueExpression =  valueExpression;
   }
 
