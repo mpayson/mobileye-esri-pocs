@@ -116,11 +116,11 @@ slaveHandler.basicMe { label ->
                 // get relevant web map id
                 sh "pip3 install --upgrade mobileye_common==0.0.60 click arcgis==1.7.0 --no-deps --extra-index-url 'http://aa-artifactory.intel.com:8081/artifactory/api/pypi/aa-mobileye-pypi-local/simple' --trusted-host aa-artifactory.intel.com"
                 map_env = "test"
-                command = 'python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix safety-map --environment ${map_env} --username $USERNAME --password $PASSWORD'
+                command = "python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix safety-map --environment ${map_env} --username $USERNAME --password $PASSWORD"
                 safetyWebmapId = sh(script: command, returnStdout: true).trim()
-                command = 'python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix mobility-map --environment ${map_env} --username $USERNAME --password $PASSWORD'
+                command = "python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix mobility-map --environment ${map_env} --username $USERNAME --password $PASSWORD"
                 mobilityWebmapId = sh(script: command, returnStdout: true).trim()
-                command = 'python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix live-events-map --environment ${map_env} --username $USERNAME --password $PASSWORD'
+                command = "python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix live-events-map --environment ${map_env} --username $USERNAME --password $PASSWORD"
                 liveEventsWebmapId = sh(script: command, returnStdout: true).trim()
                 sh "echo ${safetyWebmapId}"
                 sh "echo ${mobilityWebmapId}"
