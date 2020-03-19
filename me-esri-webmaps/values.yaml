@@ -13,7 +13,7 @@ image:
 
 ## checking pods status
 ports:
-  targetPort: 80
+  targetPort: 3000
 checkReady: true
 readyPath: "/"
 healthzPath: "/"
