@@ -10,7 +10,7 @@ import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 //var webmapIdEnv = '0b800d1e71d94002b8d2451dcd08155d';
 var webmapIdEnv = '47c2853d45f94c1eba60266455626792';
 //var webmapIdEnv = '3f5bddef8d444030855f6489ae6eca30';
-
+console.log(process.env)
 if (process.env.MOBILITY_WEBMAP_ID){
     webmapIdEnv = process.env.MOBILITY_WEBMAP_ID;
 }
