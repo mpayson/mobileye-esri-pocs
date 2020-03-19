@@ -7,11 +7,13 @@ WORKDIR /app
 COPY ./ /app
 RUN npm run build
 
-FROM nginx:1.17.9-alpine
-COPY /app/build /usr/share/nginx/html
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
-
 # start app
-#CMD ["npm", "start"]
+CMD ["npm", "start"]
+
+#
+#FROM nginx:1.17.9-alpine
+#COPY /app/build /usr/share/nginx/html
+#EXPOSE 80
+#
+#CMD ["nginx", "-g", "daemon off;"]
+
