@@ -107,17 +107,32 @@ body {
 
 .esri-widget--button,
 .esri-search__input,
-.esri-widget {
+.esri-widget:not(.esri-legend) {
   border-radius: 3px;
   background: rgba(245,245,245,0.9) !important;
 }
 
-.esri-legend{
-  border-radius: 5px;
-  max-width: 180px;
-  background: rgba(245,245,245,0.9) !important;
+.esri-legend {
+  max-width: 200px;
 }
 
+.info-panel {
+  position: absolute;
+  bottom: -30px;
+  height: calc(100vh - 64px);
+  border-radius: 0;
+  right: -15px;
+  min-width: 200px;
+}
+.info-panel.esri-legend {
+  background-color: #eaeaea;
+}
+
+.info-panel .esri-legend__service {
+  background-color: white;
+  margin: 8px;
+  border-radius: 5px;
+}
 
 .esri-widget .esri-histogram{
   background: none !important;

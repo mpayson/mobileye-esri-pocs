@@ -17,7 +17,7 @@ import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
-import { SurveyInfoPanel } from './SurveyInfoPanel';
+import LegendPanel from '../components/LegendPanel';
 
 const { Header, Content, Sider } = Layout;
 
@@ -90,35 +90,13 @@ const SurveyApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         })
         this.view.ui.add(searchExpand, "top-left");
-        const legend = new Legend({
-          view: this.view,
-          layerInfos: [{layer: this.store.lyr, title: "Assets"}],
-          // style: 'card',
-          // layout: 'stack',
-        });
-        this.view.ui.add(legend, "bottom-right");
         this.view.ui.move("zoom", "bottom-left");
-        this.portalRoot = this.createPortalRoot(legend);
         moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
         this.forceUpdate();
       });
   }
 
-  createPortalRoot(legend) {
-    const root = document.createElement('div');
-    const style = root.style;
-    style.height = '100px';
-    style.background = 'white';
-    style.margin = '8px';
-    style.borderRadius = '5px';
-    legend.container.prepend(root);
-    return root;
-  }
-
   render() {
-
-    const info = this.portalRoot ? <SurveyInfoPanel root={this.portalRoot} /> : null;
-
     let panel;
     switch(this.state.navKey){
       case 'Locations':
@@ -182,7 +160,6 @@ const SurveyApp = observer(class App extends React.Component {
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
           <Logo/>
-          {info}
           <Menu
             defaultSelectedKeys={['0']}
             mode="inline"
@@ -220,10 +197,15 @@ const SurveyApp = observer(class App extends React.Component {
             <Row>
               <Col
                 span={24}
-                style={{height: "calc(100vh - 64px)"}}>
+                style={{height: "calc(100vh - 64px)"}}
+              >
               <div
                 ref={this.mapViewRef}
-                style={{width: "100%", height: "100%"}}/>
+                style={{width: "100%", height: "100%"}}
+              />
+              <LegendPanel store={this.store} view={this.view}>
+                Place your content here..
+              </LegendPanel>
               {bookmarkCard}
               <Drawer
                 title={this.state.navKey}

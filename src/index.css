@@ -6,8 +6,7 @@ body {
 /* Esri Overrides */
 .esri-widget--button,
 .esri-search__input,
-.esri-legend,
-.esri-widget {
+.esri-widget:not(.esri-legend) {
   border-radius: 2px;
   background: rgba(245,245,245,0.9) !important;
 }

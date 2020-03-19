@@ -8,3 +8,4 @@ public/jscss/
 temp.js
 
 .ipynb_checkpoints
+.vscode

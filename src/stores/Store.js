@@ -403,7 +403,7 @@ class Store {
                     const graphic = results[0].graphic;
                     const screenPoint = hit.screenPoint;
                     this._updateCursor('pointer');
-
+                    
                     switch (this.onHoverEffect) {
                         case 'upscale':
                             this._onHoverUpscale(graphic);
