@@ -42,3 +42,5 @@ ENV https_proxy=
 ENV http_proxy=
 ENV HTTPS_PROXY=
 ENV HTTP_PROXY=
+
+RUN npm run build

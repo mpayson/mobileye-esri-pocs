@@ -1,12 +1,17 @@
 # base image
-FROM amr-registry.caas.intel.com/intelaa/me-webmaps-base
+FROM amr-registry.caas.intel.com/intelaa/me-webmaps-base as build-stage
 
 # set working directory
+#
+#WORKDIR /app
+#COPY ./ /app
 
-WORKDIR /app
-COPY ./ /app
 
-EXPOSE 3000
+FROM nginx:1.17.9-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
 
 # start app
-CMD ["npm", "start"]
+#CMD ["npm", "start"]
