@@ -2,8 +2,22 @@ const {
   override,
   fixBabelImports,
   addLessLoader,
-  addWebpackAlias } = require('customize-cra');
-  const path = require('path');
+  addWebpackAlias, addWebpackPlugin } = require('customize-cra');
+const path = require('path');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+const parseEnvVars = () => {
+  // call dotenv and it will return an Object with a parsed key 
+  const env = dotenv.config().parsed;
+  console.log('Using env: ', env);
+  // reduce it to a nice object, the same as before
+  const envKeys = Object.keys(env).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+    return prev;
+  }, {});
+  return envKeys
+}
 
 module.exports = override(
   fixBabelImports('import', {
@@ -21,5 +35,6 @@ module.exports = override(
   }),
   addWebpackAlias({
     ['@ant-design/icons/lib/dist$']: path.resolve(__dirname, './src/icons.js')
-  })
+  }),
+  addWebpackPlugin(new webpack.DefinePlugin(parseEnvVars()))
 );

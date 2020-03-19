@@ -70,7 +70,8 @@ var webmapIdEnv = '37f6876be7dc4d7e8166c3ef0df0c3aa';
 //var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
 
 
-
+console.log(process.env);
+console.log(process.env.MY_VAR);
 if (process.env.EVENTS_WEBMAP_ID){
     webmapIdEnv = process.env.EVENTS_WEBMAP_ID;
 }
