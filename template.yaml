@@ -54,7 +54,7 @@ Parameters:
   HealthCheckPath:
     Type: String
     Description: The path for the Application Load Balancer health check
-    Default: /health_check
+    Default: /
     MinLength: 1
     MaxLength: 255
     ConstraintDescription: Value must be between 1 and 255 characters
