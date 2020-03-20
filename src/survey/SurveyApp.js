@@ -203,7 +203,7 @@ const SurveyApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              <LegendPanel store={this.store} view={this.view}>
+              <LegendPanel store={this.store} view={this.view} >
                 Place your content here..
               </LegendPanel>
               {bookmarkCard}

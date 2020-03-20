@@ -1,0 +1,41 @@
+.info-panel {
+  margin-bottom: -30px;
+  height: calc(100vh - 64px);
+  border-radius: 0;
+  margin-right: -15px;
+  min-width: 200px;
+  z-index: 9000;
+}
+
+.info-panel.esri-legend {
+  background-color: #eaeaea;
+}
+
+.info-panel .esri-legend__service, 
+.info-widget {
+  background-color: white;
+  margin: 8px;
+  border-radius: 5px;
+}
+
+.info-panel__close {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  left: -25px;
+  top: 0px;
+  background-color: rgb(245, 245, 245);
+  cursor: pointer;
+  z-index: 1;
+  border: none;
+  user-select: none;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+.info-panel__close:active, 
+.info-panel__close:focus {
+  background-color: rgb(245, 245, 245);
+  outline: none;
+  border: none;
+}
