@@ -234,18 +234,6 @@ Resources:
       ToPort: "31925"
       IpProtocol: "tcp"
 
-
-#  LoadBlalancerSecurityGroupEgress:
-#    Type: AWS::EC2::SecurityGroupEgress
-#    Properties:
-#      Description: "Load balancer security group ingress"
-#      GroupId: !Ref LoadBalancerSecurityGroup
-#      DestinationSecurityGroupId: !Ref FargateServiceSecurityGroup
-#      FromPort: !Ref ServicePort
-#      ToPort: !Ref ServicePort
-#      IpProtocol: "tcp"
-
-
   ALBWaitHandle:
     DependsOn: ALBLoadBalancerListener
     Type: "AWS::CloudFormation::WaitConditionHandle"
@@ -291,9 +279,3 @@ Outputs:
     Value: !Ref ALBLoadBalancerListener
     Export:
       Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-listener-arn"
-
-#  LoadBalancerRoute53RecordDomainName:
-#    Value: !Ref LoadBalancerRoute53Record
-#    Export:
-#      Name: !Sub "${EnvironmentName}-${Branch}-${ServiceName}-lb-domain-name"
-#
