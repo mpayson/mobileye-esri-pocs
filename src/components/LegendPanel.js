@@ -5,8 +5,9 @@ import './LegendPanel.css';
 import { Drawer } from 'antd';
 
 
-const LegendPanel = ({store, view, title=null, children}) => {
-  const [open, setOpen] = useState(true);
+const LegendPanel = (props) => {
+  const {store, view, children, width, title=null, onMountOpen=false} = props;
+  const [open, setOpen] = useState(onMountOpen);
   const ref = useRef({
     Legend: null,
     portal: null,
@@ -45,6 +46,19 @@ const LegendPanel = ({store, view, title=null, children}) => {
     </button>
   )
 
+  const style = {
+    position: 'absolute', 
+    background: "#f5f5f5", 
+    height: "calc(100% - 15px)"
+  }
+
+  const bodyStyle = {
+    padding: '12px',
+    margin: '8px',
+    background: 'white', 
+    minHeight: '100%'
+  }
+
   return (
     <>
       <Drawer
@@ -54,16 +68,16 @@ const LegendPanel = ({store, view, title=null, children}) => {
         placement="right"
         visible={open}
         mask={false}
-        width={220}
+        width={width}
         getContainer={false}
-        style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
-        bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
+        style={style}
+        bodyStyle={bodyStyle}
+        wrapClassName="drawer-root"
       >
-        <div ref={content}>
-          <div className="info-widget">
-            {children}
-          </div>
-        </div>
+        <>
+          {children}
+          <div ref={content} />
+        </>
       </Drawer>
     </>
   )

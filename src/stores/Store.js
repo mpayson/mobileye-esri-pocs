@@ -41,6 +41,7 @@ class Store {
         this.bookmarkInfos = storeConfig.bookmarkInfos;
         this.locationsByArea = storeConfig.locationsByArea ? storeConfig.locationsByArea : [];
         this.hasCustomTooltip = storeConfig.hasCustomTooltip;
+        this.hasOnClickDetails = storeConfig.hasOnClickDetails;
         this.liveLayersStartIndex = storeConfig.liveLayersStartIndex;
         this.defaultVisibleLayersList = storeConfig.defaultVisibleLayersList;
         this.onHoverEffect = storeConfig.onHoverEffect || 'highlight';
@@ -58,6 +59,7 @@ class Store {
             this.bookmarkAutoplayId = null;
         }
         if (this._zoomListener) this._zoomListener.remove();
+        if (this._clickListener) this._clickListener.remove();
         this.container = null;
     }
 
@@ -401,7 +403,6 @@ class Store {
 
                 if (results.length) {
                     const graphic = results[0].graphic;
-                    const screenPoint = hit.screenPoint;
                     this._updateCursor('pointer');
                     
                     switch (this.onHoverEffect) {
@@ -413,9 +414,7 @@ class Store {
                             this._tooltipHighlight = this.layerViewsMap.get(graphic.layer.id).highlight(graphic);
                             break;
                     }
-                    this._updateTooltipInfo(screenPoint, graphic);
                 } else {
-                    this.tooltipResults = null;
                     this._clearGraphics();
                     this._updateCursor('default');
                 }
@@ -425,10 +424,23 @@ class Store {
     }
 
     _onMouseLeave(evt) {
-        this._tooltipPromise = null;
-        this.clearTooltip();
         this._clearGraphics();
         this._updateCursor('default');
+    }
+
+    _onClick = (evt) => {
+        this._tooltipPromise = this.view.hitTest(evt).then(hit => {
+            const results = hit.results.filter(
+                r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
+            );
+            if (results.length) {
+                const graphic = results[0].graphic;
+                const screenPoint = hit.screenPoint;
+                this._updateTooltipInfo(screenPoint, graphic);
+            } else {
+                this.tooltipResults = null;
+            }
+        });
     }
 
     _onZoomChange(zoom){
@@ -511,7 +523,9 @@ class Store {
             .catch(er => {
                 this.appState.onError(er, 'Could not load layers, do you have access to the data?')
             })
-
+        if (this.hasOnClickDetails) {
+            this._clickListener = this.view.on("click", this._onClick);
+        }
         if (this.hasCustomTooltip) {
             this._tooltipListener = this.view.on("pointer-move", this._onMouseMove);
             this._mouseLeaveListener = this.view.on("pointer-leave", this._onMouseLeave);

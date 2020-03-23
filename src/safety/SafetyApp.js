@@ -15,10 +15,12 @@ import RoutePanel from './RoutePanel';
 import SafetyStore from './SafetyStore';
 import safetyConfig from './SafetyConfig';
 import BookmarkPanel from '../components/BookmarkPanel';
+import LegendPanel from '../components/LegendPanel';
 import SafetyTooltip from './SafetyTooltip';
 import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
+import { SafetyInfoPanel } from './SafetyInfoPanel';
 
 const { Header, Content, Sider } = Layout;
 
@@ -110,11 +112,12 @@ const SafetyApp = observer(class App extends React.Component {
     this.store.load(this.mapViewRef.current)
       .then(mapView => {
         this.view = mapView;
-        addSearchWidget(this.view, 'top-right', 0, true);
-        addLegendWidget(this.view, 'bottom-right', {
-          layerInfos: [{layer: this.store.lyr, title: ""}]
-        });
+        addSearchWidget(this.view, 'top-left', 0, true);
+        // addLegendWidget(this.view, 'bottom-right', {
+        //   layerInfos: [{layer: this.store.lyr, title: ""}]
+        // });
         moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
+        this.forceUpdate();
       })
   }
 
@@ -160,7 +163,6 @@ const SafetyApp = observer(class App extends React.Component {
     const tooltip = this.store.hasCustomTooltip
       ? <SafetyTooltip store={this.store}/>
       : null;
-    
     
     let bookmarkCard;
     if(this.store.bookmarkInfo){
@@ -223,7 +225,7 @@ const SafetyApp = observer(class App extends React.Component {
               <div
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%", background: '#1E2224'}}/>
-              {tooltip}
+              <SafetyInfoPanel store={this.store} onMountOpen={true} />
               {bookmarkCard}
               <Drawer
                 title={this.state.navKey}

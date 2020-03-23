@@ -1,10 +1,5 @@
 .info-panel {
-  margin-bottom: -30px;
-  height: calc(100vh - 64px);
-  border-radius: 0;
-  margin-right: -15px;
-  min-width: 200px;
-  z-index: 9000;
+  background-color: rgb(254, 254, 254);
 }
 
 .info-panel.esri-legend {
@@ -24,7 +19,7 @@
   height: 25px;
   left: -25px;
   top: 0px;
-  background-color: rgb(245, 245, 245);
+  background-color: #eaeaea;
   cursor: pointer;
   z-index: 1;
   border: none;
@@ -35,7 +30,16 @@
 }
 .info-panel__close:active, 
 .info-panel__close:focus {
-  background-color: rgb(245, 245, 245);
+  background-color: #eaeaea;
   outline: none;
   border: none;
+}
+
+.ant-drawer-right.ant-drawer-open.drawer-root .ant-drawer-content-wrapper {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.drawer-root .ant-drawer-wrapper-body {
+  background: #eaeaea;
 }

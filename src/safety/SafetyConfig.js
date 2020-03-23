@@ -252,7 +252,7 @@ const safetyConfig = {
     {
       id: 0,
       type: "live",
-      //popupTemplate: null,
+      popupTemplate: null,
       showLegend:true,
       outFields:'*',
       // baselineWhereCondition: "project = 'me8'",
@@ -266,6 +266,7 @@ const safetyConfig = {
          {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
        ]
     }],
+  hasOnClickDetails: true,
   hasCustomTooltip: true,
   onHoverEffect: 'upscale',
   outFields: [
