@@ -47,7 +47,7 @@ const getRenderer = (field, queries, visuals, labels, caption) => {
   }
 }
 
-var webmapIdEnv = '262c4947653e4455bb4a579e69e335b7';
+var webmapIdEnv = '6512c324486d4b618ef568bdba6d9dcd';
 //var webmapIdEnv = '906b58f399944774a29e05d3d24a939b';
 
 if (process.env.SAFETY_WEBMAP_ID){
