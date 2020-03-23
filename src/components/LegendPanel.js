@@ -56,7 +56,8 @@ const LegendPanel = (props) => {
     padding: '12px',
     margin: '8px',
     background: 'white', 
-    minHeight: '100%'
+    minHeight: '100%',
+    borderRadius: '5px',
   }
 
   return (

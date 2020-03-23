@@ -43,3 +43,18 @@
 .drawer-root .ant-drawer-wrapper-body {
   background: #eaeaea;
 }
+
+.drawer-root .esri-legend__service {
+  padding: 0;
+}
+.drawer-root .esri-legend__layer {
+  margin: 0;
+}
+
+.drawer-root .esri-legend__layer-caption {
+  color: rgba(0, 0, 0, 0.85);
+  display: block;
+  font-size: 1.17em;
+  font-family: 'Hind Siliguri', sans-serif;
+  margin-block-end: 1em;
+}

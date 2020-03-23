@@ -17,15 +17,20 @@ const getQuantileLabel = value => {
   return ''
 }
 
+const NothingSelected = () => (
+  <div style={{marginBottom: '15px'}}>
+    Select an object/road segment to see more
+  </div>
+)
 
 const SafetyInfoWidget = observer(({store}) => {
   if (!store.tooltipResults) {
-    return 'Select an object/road segment to see more';
+    return <NothingSelected />;
   }
 
   const {graphic} = store.tooltipResults;
   if (!graphic) {
-    return 'Select an object/road segment to see more';
+    return <NothingSelected />;
   }
 
   const isSubsetFields = store.rendererField && store.rendererField !== 'risk_score';
@@ -83,6 +88,7 @@ export function SafetyInfoPanel({store, onMountOpen}) {
       onMountOpen={onMountOpen}
       width={260}
     >
+      <h3>More info</h3>
       <SafetyInfoWidget store={store} />
     </LegendPanel>  
   );
