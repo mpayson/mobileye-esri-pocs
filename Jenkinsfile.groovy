@@ -88,21 +88,6 @@ slaveHandler.basicMe { label ->
         }
 
 
-        stage("Run tests"){
-            dir('tests/system') {
-                withCredentials([usernamePassword(credentialsId: 'mobileye-arcgis',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh 'sudo apt-get update'
-                    sh 'sudo apt-get install chromium-browser -y'
-                    sh 'sudo apt-get install chromium-chromedriver -y'
-
-                    sh 'pip3 install -r requirements.txt'
-                    sh "ENVIRONMENT=ci USERNAME=$USERNAME PASSWORD=$PASSWORD python3 test_webmaps.py"
-                    sh 'ls -l'
-                }
-            }
-        }
-
-
         stage('Push Docker to ECR') {
             EcrActions.ecrLogin()
             EcrActions.ecrDockerPush(repoName,tagName)
@@ -142,12 +127,25 @@ slaveHandler.basicMe { label ->
             }
         }
 
-
         stage("Build And Deploy CloudFormation to AWS") {
             cfnHandler.cfnBuildAndDeploy("${pipelineBucket.getBucketName()}")
 
             if ("${currentBuild.result}" == "UNSTABLE") {
                 failPipe("Deployment failed")
+            }
+        }
+
+        stage("Run UI tests"){
+            dir('tests/system') {
+                withCredentials([usernamePassword(credentialsId: 'mobileye-arcgis',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'sudo apt-get update'
+                    sh 'sudo apt-get install chromium-browser -y'
+                    sh 'sudo apt-get install chromium-chromedriver -y'
+
+                    sh 'pip3 install -r requirements.txt'
+                    sh "ENVIRONMENT=ci USERNAME=$USERNAME PASSWORD=$PASSWORD python3 test_webmaps.py"
+                    sh 'ls -l'
+                }
             }
         }
 
