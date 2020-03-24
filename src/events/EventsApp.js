@@ -12,7 +12,7 @@ import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import { Logo } from '../components/Logo';
 import './Legend.css';
-import EventTooltip from './EventsTooltip';
+import { EventsInfoPanel } from './EventsInfoPanel';
 import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
@@ -62,13 +62,12 @@ const EventsApp = observer(class App extends React.Component {
 
     const modulePromise = loadModules([
       'esri/widgets/Search',
-      'esri/widgets/Legend',
       'esri/widgets/Expand'
     ], options);
     const loadPromise = this.store.load(this.mapViewRef.current);
 
     Promise.all([modulePromise, loadPromise])
-      .then(([[Search, Legend, Expand], mapView]) => {
+      .then(([[Search, Expand], mapView]) => {
         this.view = mapView;
         const search = new Search({view: this.view});
 
@@ -78,16 +77,10 @@ const EventsApp = observer(class App extends React.Component {
           expandIconClass: 'esri-icon-search'
         })
 
-        const legend = new Legend({
-          view: this.view, 
-          layerInfos: this.store.legendLayerInfos,
-          style: 'card',
-          layout: 'stack',
-        });
-        this.view.ui.add(searchExpand, "top-right");
-        this.view.ui.add(legend, "bottom-right");
+        this.view.ui.add(searchExpand, "top-left");
         this.view.ui.move("zoom", "bottom-left");
         moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
+        this.forceUpdate();
       });
   }
 
@@ -117,10 +110,6 @@ const EventsApp = observer(class App extends React.Component {
           <Menu.Item key="sign in">{this.props.appState.displayName}</Menu.Item>
         </Menu>
       )
-      : null;
-
-    const tooltip = this.store.hasCustomTooltip
-      ? <EventTooltip store={this.store}/>
       : null;
 
     return (
@@ -159,7 +148,7 @@ const EventsApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              {tooltip}
+              <EventsInfoPanel store={this.store} />
               <Drawer
                 // title={this.state.navKey}
                 closable={false}

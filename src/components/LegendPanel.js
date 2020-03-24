@@ -3,9 +3,10 @@ import {loadModules} from 'esri-loader';
 import options from '../config/esri-loader-options';
 import './LegendPanel.css';
 import { Drawer } from 'antd';
+import { observer } from 'mobx-react';
 
 
-const LegendPanel = (props) => {
+const LegendPanel = observer((props) => {
   const {store, view, children, width, title=null, onMountOpen=false} = props;
   const [open, setOpen] = useState(onMountOpen);
   const ref = useRef({
@@ -35,6 +36,14 @@ const LegendPanel = (props) => {
       window.legend = legend;
     }
   }, [store, view, ref.current.Legend, title]);
+
+  useEffect(() => {
+    if (store.tooltipResults) {
+      console.log(store.tooltipResults);
+      setOpen(true);
+    }
+  }, [store, store.tooltipResults]);
+
 
   const toggleButton = (
     <button 
@@ -73,7 +82,7 @@ const LegendPanel = (props) => {
         getContainer={false}
         style={style}
         bodyStyle={bodyStyle}
-        wrapClassName="drawer-root"
+        className="drawer-root"
       >
         <>
           {children}
@@ -82,6 +91,6 @@ const LegendPanel = (props) => {
       </Drawer>
     </>
   )
-};
+});
 
 export default LegendPanel;

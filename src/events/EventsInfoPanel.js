@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { Card } from 'antd';
 import { Col, Button } from 'antd';
 import eventConfig from './EventsConfig';
+import LegendPanel from '../components/LegendPanel';
 import { ReactComponent as ClockIcon} from '../resources/svg/schedule-24px.svg';
 import { ReactComponent as TimerIcon} from '../resources/svg/timer-24px.svg';
 import { ReactComponent as SpeedIcon} from '../resources/svg/speed-24px.svg';
@@ -18,10 +19,16 @@ const DATE_TIME = new Intl.DateTimeFormat('en-GB', {
   timeStyle: 'short'
 });
 
-const EventsTooltip = observer(({store}) => {
+const NothingSelected = () => (
+  <div style={{marginBottom: '15px'}}>
+    Select an object/road segment to see more
+  </div>
+)
+
+const EventsInfoWidget = observer(({store}) => {
 
   if(!store.tooltipResults && !store.mouseResults){
-    return null;
+    return <NothingSelected />;
   }
 
   let graphics, title, extra;
@@ -44,14 +51,7 @@ const EventsTooltip = observer(({store}) => {
 
   const style = {
     display: 'block',
-    position: 'absolute',
-    top: '15px',
-    right: '55px',
-    width: '290px',
-    height: 'auto',
-    overflow: 'auto',
-    zIndex: '99',
-    // pointerEvents: 'none'
+    marginBottom: '20px',
   }
   if (!graphics || graphics.length < 1) style.display = 'none';
   
@@ -148,4 +148,16 @@ const EventsTooltip = observer(({store}) => {
   )
 });
 
-export default EventsTooltip;
+export function EventsInfoPanel({store, onMountOpen}) {
+  return (
+    <LegendPanel 
+      store={store} 
+      view={store.view}
+      onMountOpen={onMountOpen}
+      width={260}
+    >
+      <h3>More info</h3>
+      <EventsInfoWidget store={store} />
+    </LegendPanel>  
+  );
+}

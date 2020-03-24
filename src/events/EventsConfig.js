@@ -202,7 +202,7 @@ const eventsConfig = {
       id: 0, 
       type: "live", 
       name: "events0", 
-      popupTemplate: popupTemplate,
+      popupTemplate: null,
       showLegend: true, 
       outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp'],
       refreshInterval: 10
@@ -211,7 +211,7 @@ const eventsConfig = {
       id: 1, 
       type: "live", 
       name: "events1",
-      popupTemplate: popupTemplate,
+      popupTemplate: null,
       showLegend: false,
       outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp'],
       refreshInterval: 10
@@ -262,6 +262,7 @@ const eventsConfig = {
   customLegendIcons: true,
   renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
+  hasOnClickDetails: true,
   onHoverEffect: 'upscale',
   statisticsFieldsInfo: { 
     'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
