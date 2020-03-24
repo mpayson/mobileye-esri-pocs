@@ -1,4 +1,4 @@
-@Library('Shared-Lib-DevOps@MOBILEYE')
+@Library('Shared-Lib-DevOps@mobileye')
 import java.lang.String.*
 import intel.aa.mobileye.Build
 import intel.aa.common.DockerConstants
@@ -90,12 +90,11 @@ slaveHandler.basicMe { label ->
 
         stage("Run tests"){
             dir('tests/system') {
-                sh 'sudo apt-get update'
-                sh 'sudo apt-get install chromium-browser -y'
-                sh 'sudo apt-get install chromium-chromedriver -y'
-                def pyHandler = getPythonHandler()
-                pyHandler.Python3InstallandRunOnDynamicSlave('test_webmaps.py')
-                sh 'ls -l'
+                withCredentials([usernamePassword(credentialsId: 'mobileye-arcgis',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'pip3 install -r requirements.txt'
+                    sh "ENVIRONMENT=ci USERNAME=$USERNAME PASSWORD=$PASSWORD python3 test_webmaps.py"
+                    sh 'ls -l'
+                }
             }
         }
 

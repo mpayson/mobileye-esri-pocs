@@ -11,6 +11,10 @@ class TestCases(unittest.TestCase):
 
     # Chrome Browser Setup
     def setUp(self):
+        self.environment = os.environ.get("ENVIRONMENT", "ci")
+        self.username = os.environ.get("USERNAME", "user")
+        self.password = os.environ.get("PASSWORD", "pass")
+
         opt = options.Options()
         opt.add_argument("--headless")
         opt.add_argument("--no-sandbox")
@@ -23,7 +27,7 @@ class TestCases(unittest.TestCase):
             self.driver = webdriver.Chrome('/usr/bin/chromedriver', chrome_options=opt)
 
     def get_driver(self):
-        page_url = "http://webmaps-ci.dynamic-geo-insights-preprod.com/#/events"
+        page_url = f"http://webmaps-{self.environment}.dynamic-geo-insights-preprod.com/#/events"
         driver = self.driver
         driver.maximize_window()
 
@@ -37,9 +41,9 @@ class TestCases(unittest.TestCase):
             driver.switch_to.window(driver.window_handles[1])
             driver.save_screenshot("_05_before_credentials.png")
             user = driver.find_element_by_id('user_username')
-            user.send_keys('dynrem.generic')
+            user.send_keys(self.username)
             pwd = driver.find_element_by_id('user_password')
-            pwd.send_keys('Dynr3mG3neric')
+            pwd.send_keys(self.password)
             driver.save_screenshot("_10_after_credentials.png")
             si = driver.find_element_by_id("signIn")
             si.click()
