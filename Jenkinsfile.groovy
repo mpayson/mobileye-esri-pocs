@@ -1,4 +1,4 @@
-@Library('Shared-Lib-DevOps@mobileye')
+@Library('Shared-Lib-DevOps@MOBILEYE')
 import java.lang.String.*
 import intel.aa.mobileye.Build
 import intel.aa.common.DockerConstants
