@@ -5,9 +5,7 @@ import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 export const QUERY_ME8_DATA = "project = 'me8'";
 export const QUERY_OEM_DATA = "project <> 'me8'";
 
-const ME8_COLORS = [
- [44,123,182,255], [171,217,233,255], [255,255,191,255], [253,174,97,255], [215,25,28,255],
-];
+const ME8_COLORS = ['#55E5CD', '#00B4A0', '#FED500', '#FE8500', '#FF5050'];
 
 const OEM_COLORS = [
   [0,99,177,1], [0,183,195,1], [255,185,0,1], [247,99,12,1], [232,17,35,1],

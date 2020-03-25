@@ -176,3 +176,22 @@ body {
   margin: 3px 10px 2px 10px;
 }
 
+.flat-widget {
+  box-shadow: none;
+  background: #F3F3F3;
+  border: none;
+  border-radius: 5px;
+}
+
+.flat-widget__subtitle {
+  font-family: 'Hind Siliguri', 'Roboto', sans-serif;
+  font-weight: 500;
+  color: #0F0C01;
+}
+
+.flat-widget__title {
+  font-family: 'Hind Siliguri', 'Roboto', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #0F0C01;
+}

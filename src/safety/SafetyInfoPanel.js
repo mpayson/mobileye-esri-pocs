@@ -3,15 +3,17 @@ import LegendPanel from '../components/LegendPanel';
 import { observer } from 'mobx-react';
 import { Card, Progress } from 'antd';
 import safetyConfig from './SafetyConfig';
+import Store from '../stores/Store';
+import { stringifyColor } from '../utils/ui';
 
 // This is really lazy, should be a method in the store but need to adjust config too so
 // quantiles only get defined once
 const quantiles = safetyConfig.filters.find(
   f => f.name === 'risk_score').params.quantiles;
-const getQuantileLabel = value => {
+const getQuantile = value => {
   for(let i=0; i < quantiles.length; i++){
     if(value < quantiles[i].max){
-      return quantiles[i].label;
+      return quantiles[i];
     }
   }
   return ''
@@ -42,9 +44,10 @@ const SafetyInfoWidget = observer(({store}) => {
     overflow: 'hidden',
     marginBottom: '26px',
   }
-  if(!graphic) style.display = 'none';
-  const attrs = graphic.attributes;
 
+  const attrs = graphic.attributes;
+  let color = findColor(store, graphic);
+  color = stringifyColor(color);
   const aM = store.aliasMap;
   // this is weird, but the filter objects will all have queried attribute metadata
   // to define information in the tooltip, and we want to show them all
@@ -62,15 +65,29 @@ const SafetyInfoWidget = observer(({store}) => {
       <Progress
         percent={Math.round((attrs[f.field]/f.upperBound) * 100)}
         status="normal"
-        showInfo={false}/>
+        showInfo={false}
+        strokeColor={color}
+      />
     </div>
   )
 
-  const title = `${aM.get('risk_score')}: ${getQuantileLabel(attrs['risk_score'])}`;
+  const quantile = getQuantile(attrs['risk_score']);
+  const title = (
+    <div>
+      <div className="flat-widget__title">
+        {aM.get('risk_score')}
+      </div>
+      <div className="flat-widget__subtitle" style={{color: 'white'}}>
+        {quantile.label}
+      </div>
+    </div>
+  );
+
   const card = (
     <Card 
-      className="antd-esri-widget" 
+      className="flat-widget" 
       style={style} 
+      headStyle={{background: color}}
       size="small" 
       title={title}>
       {infoContent}
@@ -92,4 +109,22 @@ export function SafetyInfoPanel({store, onMountOpen}) {
       <SafetyInfoWidget store={store} />
     </LegendPanel>  
   );
+}
+
+
+function findColor(store, graphic) {
+  const attrs = graphic.attributes;
+  const renderer = store.renderers[store.rendererField];
+  const value = attrs[renderer.field];
+  const valueInfo = Store._findValueInfo(renderer, value);
+
+  let color;
+  const overrideColor = store._findVisVarOverrides(
+    graphic.sourceLayer.renderer, 'color', value);
+  if (overrideColor) {
+    color = overrideColor;
+  } else {
+    color = valueInfo && valueInfo.symbol && valueInfo.symbol.color;
+  }
+  return color;
 }

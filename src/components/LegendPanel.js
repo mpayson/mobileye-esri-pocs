@@ -39,7 +39,6 @@ const LegendPanel = observer((props) => {
 
   useEffect(() => {
     if (store.tooltipResults) {
-      console.log(store.tooltipResults);
       setOpen(true);
     }
   }, [store, store.tooltipResults]);
