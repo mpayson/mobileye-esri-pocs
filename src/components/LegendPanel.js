@@ -5,6 +5,11 @@ import './LegendPanel.css';
 import { Drawer } from 'antd';
 import { observer } from 'mobx-react';
 
+export const SectionTitle = ({children}) => (
+  <h3 style={{fontSize: '16px', fontWeight: 600}} >
+    {children}
+  </h3>
+);
 
 const LegendPanel = observer((props) => {
   const {store, view, children, width, title=null, onMountOpen=false} = props;

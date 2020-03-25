@@ -1,5 +1,5 @@
 import React from 'react';
-import LegendPanel from '../components/LegendPanel';
+import LegendPanel, { SectionTitle } from '../components/LegendPanel';
 import { observer } from 'mobx-react';
 import { Card, Progress } from 'antd';
 import safetyConfig from './SafetyConfig';
@@ -74,7 +74,7 @@ const SafetyInfoWidget = observer(({store}) => {
   const quantile = getQuantile(attrs['risk_score']);
   const title = (
     <div>
-      <div className="flat-widget__title">
+      <div className="flat-widget__title uppercase">
         {aM.get('risk_score')}
       </div>
       <div className="flat-widget__subtitle" style={{color: 'white'}}>
@@ -105,7 +105,7 @@ export function SafetyInfoPanel({store, onMountOpen}) {
       onMountOpen={onMountOpen}
       width={260}
     >
-      <h3>More info</h3>
+      <SectionTitle>More info</SectionTitle>
       <SafetyInfoWidget store={store} />
     </LegendPanel>  
   );

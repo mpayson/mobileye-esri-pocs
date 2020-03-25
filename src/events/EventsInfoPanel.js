@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { Card } from 'antd';
 import { Col, Button } from 'antd';
 import eventConfig from './EventsConfig';
-import LegendPanel from '../components/LegendPanel';
+import LegendPanel, { SectionTitle } from '../components/LegendPanel';
 import { ReactComponent as ClockIcon} from '../resources/svg/schedule-24px.svg';
 import { ReactComponent as TimerIcon} from '../resources/svg/timer-24px.svg';
 import { ReactComponent as SpeedIcon} from '../resources/svg/speed-24px.svg';
@@ -156,7 +156,7 @@ export function EventsInfoPanel({store, onMountOpen}) {
       onMountOpen={onMountOpen}
       width={260}
     >
-      <h3>More info</h3>
+      <SectionTitle>More info</SectionTitle>
       <EventsInfoWidget store={store} />
     </LegendPanel>  
   );

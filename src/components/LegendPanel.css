@@ -54,7 +54,8 @@
 .drawer-root .esri-legend__layer-caption {
   color: rgba(0, 0, 0, 0.85);
   display: block;
-  font-size: 1.17em;
+  font-size: 16px;
   font-family: 'Hind Siliguri', sans-serif;
+  font-weight: 600;
   margin-block-end: 1em;
 }

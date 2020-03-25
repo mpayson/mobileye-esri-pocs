@@ -192,6 +192,9 @@ body {
 .flat-widget__title {
   font-family: 'Hind Siliguri', 'Roboto', sans-serif;
   font-weight: 600;
-  text-transform: uppercase;
   color: #0F0C01;
+}
+
+.uppercase {
+  text-transform: uppercase;
 }
