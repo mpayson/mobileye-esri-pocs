@@ -5,15 +5,18 @@ import pointerImage from '../../resources/images/hand-01.png';
 
 export function Hint() {
   return (
-    <div className="info-panel__hint">
-      <img 
-        className="info-panel__icon"
-        src={pointerImage} 
-        alt="a mouse-pointer icon" 
-      />
-      <div className="info-panel__hint-text">
-        Select an object/road segment to see more
+    <>
+      <div className="details-panel__hint">
+        <img 
+          className="details-panel__icon"
+          src={pointerImage} 
+          alt="a mouse-pointer icon" 
+        />
+        <div className="details-panel__hint-text">
+          Select an object/road segment to see more
+        </div>
       </div>
-    </div>
+      <line className="details-panel__separator" />
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {loadModules} from 'esri-loader';
 import options from '../../config/esri-loader-options';
-import './DetailsPanel.css';
+import './DetailsPanel.scss';
 import { Drawer } from 'antd';
 import { observer } from 'mobx-react';
 
@@ -12,7 +12,7 @@ export const SectionTitle = ({children}) => (
 );
 
 const DetailsPanel = observer((props) => {
-  const {store, view, children, width, title=null, onMountOpen=false} = props;
+  const {store, view, children, width, title=null, onMountOpen=false, layerInfos=null} = props;
   const [open, setOpen] = useState(onMountOpen);
   const ref = useRef({
     Legend: null,
@@ -31,7 +31,7 @@ const DetailsPanel = observer((props) => {
     if (view && Legend) {
       const legend = new Legend({
         view,
-        layerInfos: [{layer: store.lyr, title}],
+        layerInfos: layerInfos || [{layer: store.lyr, title}],
       });
       view.ui.add(legend, "bottom-right");
       const wrapper = content.current;
@@ -40,7 +40,7 @@ const DetailsPanel = observer((props) => {
       wrapper.append(legendContainer);
       window.legend = legend;
     }
-  }, [store, view, ref.current.Legend, title]);
+  }, [store, view, ref.current.Legend, title, layerInfos]);
 
   useEffect(() => {
     if (store.tooltipResults) {
@@ -52,7 +52,7 @@ const DetailsPanel = observer((props) => {
   const toggleButton = (
     <button 
       aria-label={`${open ? 'close' : 'open'} info panel`}
-      className="info-panel__close"
+      className="details-panel__close"
       onClick={() => setOpen(!open)}
     >
       x
@@ -86,10 +86,11 @@ const DetailsPanel = observer((props) => {
         getContainer={false}
         style={style}
         bodyStyle={bodyStyle}
-        className="drawer-root"
+        className="details-panel"
       >
         <>
           {children}
+          <line className="details-panel__separator" />
           <div ref={content} />
         </>
       </Drawer>

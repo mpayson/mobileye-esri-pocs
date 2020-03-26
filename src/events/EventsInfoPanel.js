@@ -149,6 +149,7 @@ export function EventsInfoPanel({store, onMountOpen}) {
       view={store.view}
       onMountOpen={onMountOpen}
       width={260}
+      layerInfos={store.legendLayerInfos}
     >
       <SectionTitle>More info</SectionTitle>
       <EventDetails store={store} />
