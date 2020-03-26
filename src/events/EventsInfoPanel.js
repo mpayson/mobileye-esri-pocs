@@ -3,7 +3,8 @@ import { observer } from "mobx-react";
 import { Card } from 'antd';
 import { Col, Button } from 'antd';
 import eventConfig from './EventsConfig';
-import LegendPanel, { SectionTitle } from '../components/LegendPanel';
+import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
+import { Hint } from '../components/details/Hint';
 import { ReactComponent as ClockIcon} from '../resources/svg/schedule-24px.svg';
 import { ReactComponent as TimerIcon} from '../resources/svg/timer-24px.svg';
 import { ReactComponent as SpeedIcon} from '../resources/svg/speed-24px.svg';
@@ -19,16 +20,9 @@ const DATE_TIME = new Intl.DateTimeFormat('en-GB', {
   timeStyle: 'short'
 });
 
-const NothingSelected = () => (
-  <div style={{marginBottom: '15px'}}>
-    Select an object/road segment to see more
-  </div>
-)
-
-const EventsInfoWidget = observer(({store}) => {
-
+const EventDetails = observer(({store}) => {
   if(!store.tooltipResults && !store.mouseResults){
-    return <NothingSelected />;
+    return <Hint />;
   }
 
   let graphics, title, extra;
@@ -150,14 +144,14 @@ const EventsInfoWidget = observer(({store}) => {
 
 export function EventsInfoPanel({store, onMountOpen}) {
   return (
-    <LegendPanel 
+    <DetailsPanel 
       store={store} 
       view={store.view}
       onMountOpen={onMountOpen}
       width={260}
     >
       <SectionTitle>More info</SectionTitle>
-      <EventsInfoWidget store={store} />
-    </LegendPanel>  
+      <EventDetails store={store} />
+    </DetailsPanel>  
   );
 }

@@ -1,10 +1,7 @@
 import React from 'react'
 import { observer } from "mobx-react";
 import { Layout, Menu, Drawer, Icon, Row, Col, Card, Button } from 'antd';
-import {
-  addSearchWidget,
-  addLegendWidget
-} from '../services/MapService';
+import {addSearchWidget} from '../services/MapService';
 
 import LayerFilterIcon from 'calcite-ui-icons-react/LayersIcon';
 import BookmarkIcon from 'calcite-ui-icons-react/BookmarkIcon';
@@ -15,8 +12,6 @@ import RoutePanel from './RoutePanel';
 import SafetyStore from './SafetyStore';
 import safetyConfig from './SafetyConfig';
 import BookmarkPanel from '../components/BookmarkPanel';
-import LegendPanel from '../components/LegendPanel';
-import SafetyTooltip from './SafetyTooltip';
 import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
@@ -158,10 +153,6 @@ const SafetyApp = observer(class App extends React.Component {
           </Menu.Item>
         </Menu>
       )
-      : null;
-      
-    const tooltip = this.store.hasCustomTooltip
-      ? <SafetyTooltip store={this.store}/>
       : null;
     
     let bookmarkCard;

@@ -1,5 +1,6 @@
 import React from 'react';
-import LegendPanel, { SectionTitle } from '../components/LegendPanel';
+import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
+import {Hint} from '../components/details/Hint';
 import { observer } from 'mobx-react';
 import { Card, Progress } from 'antd';
 import safetyConfig from './SafetyConfig';
@@ -19,20 +20,14 @@ const getQuantile = value => {
   return ''
 }
 
-const NothingSelected = () => (
-  <div style={{marginBottom: '15px'}}>
-    Select an object/road segment to see more
-  </div>
-)
-
 const SafetyInfoWidget = observer(({store}) => {
   if (!store.tooltipResults) {
-    return <NothingSelected />;
+    return <Hint />;
   }
 
   const {graphic} = store.tooltipResults;
   if (!graphic) {
-    return <NothingSelected />;
+    return <Hint />;
   }
 
   const isSubsetFields = store.rendererField && store.rendererField !== 'risk_score';
@@ -99,7 +94,7 @@ const SafetyInfoWidget = observer(({store}) => {
 
 export function SafetyInfoPanel({store, onMountOpen}) {
   return (
-    <LegendPanel 
+    <DetailsPanel 
       store={store} 
       view={store.view}
       onMountOpen={onMountOpen}
@@ -107,7 +102,7 @@ export function SafetyInfoPanel({store, onMountOpen}) {
     >
       <SectionTitle>More info</SectionTitle>
       <SafetyInfoWidget store={store} />
-    </LegendPanel>  
+    </DetailsPanel>  
   );
 }
 

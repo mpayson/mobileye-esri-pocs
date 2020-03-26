@@ -17,7 +17,8 @@ import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
-import LegendPanel from '../components/LegendPanel';
+import DetailsPanel from '../components/details/DetailsPanel';
+import { Hint } from '../components/details/Hint';
 
 const { Header, Content, Sider } = Layout;
 
@@ -203,9 +204,9 @@ const SurveyApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              <LegendPanel store={this.store} view={this.view} >
-                Place your content here..
-              </LegendPanel>
+              <DetailsPanel store={this.store} view={this.view} width={260} >
+                <Hint />
+              </DetailsPanel>
               {bookmarkCard}
               <Drawer
                 title={this.state.navKey}

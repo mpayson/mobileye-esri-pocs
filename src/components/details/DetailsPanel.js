@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {loadModules} from 'esri-loader';
-import options from '../config/esri-loader-options';
-import './LegendPanel.css';
+import options from '../../config/esri-loader-options';
+import './DetailsPanel.css';
 import { Drawer } from 'antd';
 import { observer } from 'mobx-react';
 
@@ -11,7 +11,7 @@ export const SectionTitle = ({children}) => (
   </h3>
 );
 
-const LegendPanel = observer((props) => {
+const DetailsPanel = observer((props) => {
   const {store, view, children, width, title=null, onMountOpen=false} = props;
   const [open, setOpen] = useState(onMountOpen);
   const ref = useRef({
@@ -97,4 +97,4 @@ const LegendPanel = observer((props) => {
   )
 });
 
-export default LegendPanel;
+export default DetailsPanel;
