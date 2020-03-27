@@ -1,5 +1,5 @@
 import './SafetyHoverHint.scss';
-import React from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react';
 import { getQuantile } from './safety-utils';
 import { findColor, stringifyColor } from '../utils/ui';
@@ -25,19 +25,28 @@ export const SafetyHoverHint = observer(({store}) => {
       </div>
   ));
 
-  const point = store.hoverResults.screenPoint;
-  const left = point.x - 110;
-  const top = point.y > 67 ? point.y - 65 : point.y + 7;
+  const {x, y} = store.hoverResults.screenPoint;
 
   return (
-    <div className="details-hover" style={{left, top}}>
-      <span className="details-hover__title uppercase">
+    <Tooltip x={x} y={y}>
+      <span className="details-tooltip__title uppercase">
         {aM.get('risk_score')}{': '}
       </span>
-      <span className="details-hover__value uppercase" style={{color}}>
+      <span className="details-tooltip__value uppercase" style={{color}}>
         {quantile.label}
       </span>
       <span>{content}</span>
-    </div>
+    </Tooltip>
   );
 });
+
+
+export function Tooltip({children, x=0, y=0}) {
+  const left = x > 120 ? x - 110 : 10;
+  const top = y > 67 ? y - 65 : y + 10;
+  return (
+    <div className="details-tooltip" style={{left, top}}>
+      {children}
+    </div>
+  );
+}
