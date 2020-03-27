@@ -13,6 +13,8 @@ export const SectionTitle = ({children}) => (
 
 const DetailsPanel = observer((props) => {
   const {store, view, children, width, title=null, onMountOpen=false, layerInfos=null} = props;
+  const [loadedWidget, setLoadedWidget] = useState(false);
+  const [injected, setInjected] = useState(false)
   const [open, setOpen] = useState(onMountOpen);
   const ref = useRef({
     Legend: null,
@@ -23,24 +25,27 @@ const DetailsPanel = observer((props) => {
   useEffect(() => {
     loadModules(['esri/widgets/Legend'], options).then(([Legend]) => {
       ref.current.Legend = Legend
+      setLoadedWidget(true);
     });
   }, []);
   
   useEffect(() => {
     const Legend = ref.current.Legend;
-    if (view && Legend) {
-      const legend = new Legend({
-        view,
-        layerInfos: layerInfos || [{layer: store.lyr, title}],
-      });
-      view.ui.add(legend, "bottom-right");
-      const wrapper = content.current;
-      const legendContainer = legend.domNode;
-      legendContainer.remove();
-      wrapper.append(legendContainer);
-      window.legend = legend;
+    if (loadedWidget && !injected) {
+      if (view && Legend) {
+        const legend = new Legend({
+          view,
+          layerInfos: layerInfos || [{layer: store.lyr, title}],
+        });
+        view.ui.add(legend, "bottom-right");
+        const wrapper = content.current;
+        const legendContainer = legend.domNode;
+        legendContainer.remove();
+        wrapper.append(legendContainer);
+        setInjected(true);
+      }
     }
-  }, [store, view, ref.current.Legend, title, layerInfos]);
+  }, [store, view, ref, title, layerInfos, injected, loadedWidget]);
 
   useEffect(() => {
     if (store.tooltipResults) {
