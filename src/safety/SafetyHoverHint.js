@@ -27,7 +27,7 @@ export const SafetyHoverHint = observer(({store}) => {
 
   const point = store.hoverResults.screenPoint;
   const left = point.x - 110;
-  const top = point.y - 65;
+  const top = point.y > 67 ? point.y - 65 : point.y + 7;
 
   return (
     <div className="details-hover" style={{left, top}}>

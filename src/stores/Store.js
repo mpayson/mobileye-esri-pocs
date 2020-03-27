@@ -433,6 +433,7 @@ class Store {
     _onMouseLeave(evt) {
         this._clearGraphics();
         this._updateCursor('default');
+        this.hoverResults = null;
     }
 
     _onClick = (evt) => {
