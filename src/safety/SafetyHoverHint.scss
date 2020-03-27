@@ -1,9 +1,9 @@
 .details-hover {
-  min-width: 200px;
-  min-height: 50px;
+  min-width: 220px;
+  min-height: 58px;
   position: absolute;
   background-color: #222;
-  box-shadow: 0 0 7.5px 1.5px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 6px -0.2px rgba(255, 255, 255, 0.3);
   color: white;
   z-index: 3000;
   padding: 8px;
@@ -15,5 +15,9 @@
 
   .details-hover__value {
     font-size: 12px;
+  }
+
+  .gray {
+    color: #aaa
   }
 }
