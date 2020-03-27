@@ -21,25 +21,19 @@ const DATE_TIME = new Intl.DateTimeFormat('en-GB', {
 });
 
 const EventDetails = observer(({store}) => {
-  if(!store.tooltipResults && !store.mouseResults){
+  console.log(store.clickResults);
+  if(!store.clickResults || !store.clickResults.graphic) {
     return <Hint />;
   }
-
-  let graphics, title, extra;
-  if(store.mouseResults){
-    graphics = store.mouseResults.graphics;
-    title = store.mouseResults.title;
-    extra= <Button type="link" onClick={store.clearMouseResults}>X</Button>
+  const graphics = [store.clickResults.graphic]
+  let extra, title;
+  const eventType = graphics[0].attributes['eventType'];
+  if (eventType) {
+    const eventInfo = store.renderers['eventType'].uniqueValueInfos
+      .find(event => event.value === eventType);
+    title = eventInfo ? eventInfo.label : eventType;
   } else {
-    graphics = [store.tooltipResults.graphic]
-    const eventType = graphics[0].attributes['eventType'];
-    if (eventType) {
-      const eventInfo = store.renderers['eventType'].uniqueValueInfos
-        .find(event => event.value === eventType);
-      title = eventInfo ? eventInfo.label : eventType;
-    } else {
-      title = 'Average speed:'
-    }
+    title = 'Average speed:'
   }
   title = <span style={{fontSize: '16px'}}>{title}</span>
 
@@ -68,7 +62,6 @@ const EventDetails = observer(({store}) => {
   const last = graphics.slice(-1)[0];
   const activeLayer = last.layer;
   const activeFilter = activeLayer.renderer.field;
-  const eventType = last.attributes['eventType'];
 
   const colStyle = {
     lineHeight: 1.1, 

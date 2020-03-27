@@ -21,11 +21,11 @@ const getQuantile = value => {
 }
 
 const SafetyInfoWidget = observer(({store}) => {
-  if (!store.tooltipResults) {
+  if (!store.clickResults) {
     return <Hint />;
   }
 
-  const {graphic} = store.tooltipResults;
+  const {graphic} = store.clickResults;
   if (!graphic) {
     return <Hint />;
   }

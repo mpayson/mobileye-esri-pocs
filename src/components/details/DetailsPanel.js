@@ -45,13 +45,13 @@ const DetailsPanel = observer((props) => {
         setInjected(true);
       }
     }
-  }, [store, view, ref, title, layerInfos, injected, loadedWidget]);
+  }, [store, view, title, layerInfos, injected, loadedWidget]);
 
   useEffect(() => {
-    if (store.tooltipResults) {
+    if (store.clickResults) {
       setOpen(true);
     }
-  }, [store, store.tooltipResults]);
+  }, [store, store.clickResults]);
 
 
   const toggleButton = (
@@ -95,7 +95,7 @@ const DetailsPanel = observer((props) => {
       >
         <>
           {children}
-          <line className="details-panel__separator" />
+          <hr className="details-panel__separator" />
           <div ref={content} />
         </>
       </Drawer>
