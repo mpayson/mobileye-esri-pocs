@@ -3,22 +3,9 @@ import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
 import {Hint} from '../components/details/Hint';
 import { observer } from 'mobx-react';
 import { Card, Progress } from 'antd';
-import safetyConfig from './SafetyConfig';
-import Store from '../stores/Store';
-import { stringifyColor } from '../utils/ui';
+import { stringifyColor, findColor } from '../utils/ui';
+import { getQuantile } from './safety-utils';
 
-// This is really lazy, should be a method in the store but need to adjust config too so
-// quantiles only get defined once
-const quantiles = safetyConfig.filters.find(
-  f => f.name === 'risk_score').params.quantiles;
-const getQuantile = value => {
-  for(let i=0; i < quantiles.length; i++){
-    if(value < quantiles[i].max){
-      return quantiles[i];
-    }
-  }
-  return ''
-}
 
 const SafetyInfoWidget = observer(({store}) => {
   if (!store.clickResults) {
@@ -104,22 +91,4 @@ export function SafetyInfoPanel({store, onMountOpen}) {
       <SafetyInfoWidget store={store} />
     </DetailsPanel>  
   );
-}
-
-
-function findColor(store, graphic) {
-  const attrs = graphic.attributes;
-  const renderer = store.renderers[store.rendererField];
-  const value = attrs[renderer.field];
-  const valueInfo = Store._findValueInfo(renderer, value);
-
-  let color;
-  const overrideColor = store._findVisVarOverrides(
-    graphic.sourceLayer.renderer, 'color', value);
-  if (overrideColor) {
-    color = overrideColor;
-  } else {
-    color = valueInfo && valueInfo.symbol && valueInfo.symbol.color;
-  }
-  return color;
 }

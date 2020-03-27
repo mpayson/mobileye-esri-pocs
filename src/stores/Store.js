@@ -42,6 +42,7 @@ class Store {
         this.bookmarkInfos = storeConfig.bookmarkInfos;
         this.locationsByArea = storeConfig.locationsByArea ? storeConfig.locationsByArea : [];
         this.hasOnClickDetails = storeConfig.hasOnClickDetails;
+        this.hasOnHoverDetails = storeConfig.hasOnHoverDetails;
         this.liveLayersStartIndex = storeConfig.liveLayersStartIndex;
         this.defaultVisibleLayersList = storeConfig.defaultVisibleLayersList;
         this.onHoverEffect = storeConfig.onHoverEffect || 'highlight';
@@ -389,7 +390,6 @@ class Store {
         const promise = (this._hoverPromise = this.view
             .hitTest(evt)
             .then(hit => {
-
                 if (promise !== this._hoverPromise) {
                     return; // another test was performed
                 }
@@ -397,6 +397,7 @@ class Store {
                     this._hoverHighlight.remove();
                     this._hoverHighlight = null;
                 }
+                this.hoverResults = null;
                 const results = hit.results.filter(
                     r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
                 );
@@ -414,9 +415,15 @@ class Store {
                             this._hoverHighlight = this.layerViewsMap.get(graphic.layer.id).highlight(graphic);
                             break;
                     }
+
+                    if (this.hasOnHoverDetails) {
+                        const screenPoint = hit.screenPoint;
+                        this._updateTooltipInfo(screenPoint, graphic, 'hoverResults');
+                    }
                 } else {
                     this._clearGraphics();
                     this._updateCursor('default');
+                    this.hoverResults = null;
                 }
             })
 

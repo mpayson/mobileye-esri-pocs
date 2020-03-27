@@ -69,7 +69,7 @@ const safetyConfig = {
       type: 'class-breaks',
       field: 'risk_score',
       legendOptions: {
-        title: "Road risk score"
+        title: "Road risk"
       },
       classBreakInfos: getClassBreakInfos({
         stops: [0, 0.15, 4, 10, 1000],
@@ -265,6 +265,7 @@ const safetyConfig = {
        ]
     }],
   hasOnClickDetails: true,
+  hasOnHoverDetails: true,
   hasCustomTooltip: true,
   onHoverEffect: 'upscale',
   outFields: [

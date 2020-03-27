@@ -16,6 +16,7 @@ import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
 import { SafetyInfoPanel } from './SafetyInfoPanel';
+import { SafetyHoverHint } from './SafetyHoverHint';
 
 const { Header, Content, Sider } = Layout;
 
@@ -210,29 +211,30 @@ const SafetyApp = observer(class App extends React.Component {
           </Header>
           <Content>
             <Row>
-              <Col
-                span={24}
-                style={{height: "calc(100vh - 64px)"}}>
-              <div
-                ref={this.mapViewRef}
-                style={{width: "100%", height: "100%", background: '#1E2224'}}/>
-              <SafetyInfoPanel store={this.store} onMountOpen={true} />
-              {bookmarkCard}
-              <Drawer
-                title={this.state.navKey}
-                closable={true}
-                onClose={this.onClose}
-                placement="left"
-                visible={this.state.navKey}
-                mask={false}
-                width={340}
-                getContainer={false}
-                style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
-                bodyStyle={{ padding: "10px", background: "#f5f5f5", minHeight: "calc(100% - 55px)"}}
-              >
-                {panel}
-              </Drawer>
-            </Col>
+              <Col span={24} style={{height: "calc(100vh - 64px)"}}>
+                <div
+                  ref={this.mapViewRef}
+                  style={{width: "100%", height: "100%", background: '#1E2224'}}
+                >
+                  <SafetyHoverHint store={this.store} />
+                </div>
+                <SafetyInfoPanel store={this.store} onMountOpen={true} />
+                {bookmarkCard}
+                <Drawer
+                  title={this.state.navKey}
+                  closable={true}
+                  onClose={this.onClose}
+                  placement="left"
+                  visible={this.state.navKey}
+                  mask={false}
+                  width={340}
+                  getContainer={false}
+                  style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
+                  bodyStyle={{ padding: "10px", background: "#f5f5f5", minHeight: "calc(100% - 55px)"}}
+                >
+                  {panel}
+                </Drawer>
+              </Col>
             </Row>
           </Content>
         </Layout>
