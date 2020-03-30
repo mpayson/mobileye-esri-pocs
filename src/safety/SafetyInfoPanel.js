@@ -79,13 +79,13 @@ const SafetyInfoWidget = observer(({store}) => {
 });
 
 
-export function SafetyInfoPanel({store, onMountOpen}) {
+export function SafetyInfoPanel({store, onMountOpen, width}) {
   return (
     <DetailsPanel 
       store={store} 
       view={store.view}
       onMountOpen={onMountOpen}
-      width={260}
+      width={width}
     >
       <SectionTitle>More info</SectionTitle>
       <SafetyInfoWidget store={store} />

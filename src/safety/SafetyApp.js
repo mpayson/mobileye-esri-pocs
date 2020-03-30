@@ -16,7 +16,7 @@ import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
 import { SafetyInfoPanel } from './SafetyInfoPanel';
-import { SafetyHoverHint } from './SafetyHoverHint';
+import { SafetyHoverHint, Tooltip } from './SafetyHoverHint';
 
 const { Header, Content, Sider } = Layout;
 
@@ -216,8 +216,14 @@ const SafetyApp = observer(class App extends React.Component {
                   ref={this.mapViewRef}
                   style={{width: "100%", height: "100%", background: '#1E2224'}}
                 >
-                  <SafetyHoverHint store={this.store} />
                 </div>
+                <Tooltip 
+                  store={this.store} 
+                  xMin={this.state.navKey ? 340 : 0} 
+                  xMax={window.innerWidth - 80}
+                >
+                  <SafetyHoverHint store={this.store} />
+                </Tooltip>
                 <SafetyInfoPanel store={this.store} onMountOpen={true} />
                 {bookmarkCard}
                 <Drawer
