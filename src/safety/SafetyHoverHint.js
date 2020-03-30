@@ -25,8 +25,6 @@ export const SafetyHoverHint = observer(({store}) => {
       </div>
   ));
 
-  const {x, y} = store.hoverResults.screenPoint;
-
   return (
     <>
       <span className="details-tooltip__title uppercase">
@@ -52,20 +50,19 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
     x = -1000;
     y = -1000;
   }
-  console.log(xMin, xMax);
 
-  let left, right;
-  if (x > xMin + 120) {
-    if (x + 120 < xMax) {
-      left = x - 110;
-      right = null;
+  const width = 220;
+  const mid = 220 / 2;
+  const pad = 10;
+  let left;
+  if (x > xMin + mid + pad) {
+    if (x + mid + pad < xMax) {
+      left = x - mid;
     } else {
-      left = null;
-      right = 10;
+      left = xMax - pad - width;
     }
   } else {
-    left = xMin + 10;
-    right = null;
+    left = xMin + pad;
   }
 
   // const left = x > xMin + 120 ? x + 120 < xMax ? x - 110 : xMax - 250 : xMin + 10;
@@ -74,7 +71,7 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
   return (
     <>
       <div className="details-overlay" />
-      <div className="details-tooltip" style={{left, right, top}} >
+      <div className="details-tooltip" style={{left, top}} >
         {children}
       </div>
     </>

@@ -52,7 +52,8 @@ const SafetyApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: null
+    navKey: null,
+    detailsOpen: false,
   };
 
   constructor(props, context){
@@ -116,6 +117,11 @@ const SafetyApp = observer(class App extends React.Component {
         this.forceUpdate();
       })
   }
+
+  onDetailsOpen = open => {
+    console.log(open);
+    this.setState({detailsOpen: open})
+  };
 
   render() {
 
@@ -220,11 +226,15 @@ const SafetyApp = observer(class App extends React.Component {
                 <Tooltip 
                   store={this.store} 
                   xMin={this.state.navKey ? 340 : 0} 
-                  xMax={window.innerWidth - 80}
+                  xMax={this.state.detailsOpen ? window.innerWidth - 340 : window.innerWidth - 80}
                 >
-                  <SafetyHoverHint store={this.store} />
+                  <SafetyHoverHint store={this.store} width={260} />
                 </Tooltip>
-                <SafetyInfoPanel store={this.store} onMountOpen={true} />
+                <SafetyInfoPanel 
+                  store={this.store} 
+                  onMountOpen={true}
+                  onOpen={this.onDetailsOpen}
+                />
                 {bookmarkCard}
                 <Drawer
                   title={this.state.navKey}

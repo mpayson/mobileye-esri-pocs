@@ -12,7 +12,8 @@ export const SectionTitle = ({children}) => (
 );
 
 const DetailsPanel = observer((props) => {
-  const {store, view, children, width, title=null, onMountOpen=false, layerInfos=null} = props;
+  const {store, view, children, width, title=null, 
+    onMountOpen=false, layerInfos=null, onOpen} = props;
   const [loadedWidget, setLoadedWidget] = useState(false);
   const [injected, setInjected] = useState(false)
   const [open, setOpen] = useState(onMountOpen);
@@ -53,6 +54,11 @@ const DetailsPanel = observer((props) => {
     }
   }, [store, store.clickResults]);
 
+  useEffect(() => {
+    if (onOpen) {
+      onOpen(open)
+    }
+  }, [open, onOpen]);
 
   const toggleButton = (
     <button 
