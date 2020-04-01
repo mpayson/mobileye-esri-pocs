@@ -6,14 +6,16 @@ import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
 import { Hint } from '../components/details/Hint';
 import { findColor, stringifyColor } from '../utils/ui';
 import config from './EventsConfig';
+import SpeedPng from '../resources/images/gauge_01-01.png';
 
 const EventDetails = observer(({store}) => {
   if(!store.clickResults || !store.clickResults.graphic) {
     return <Hint />;
   }
-  const graphics = [store.clickResults.graphic]
-  let extra, eventName, headColor, content, widgetConfig;
-  const attrs = graphics[0].attributes;
+  const graphic = store.clickResults.graphic
+  let extra, eventName, headColor, widgetConfig;
+  const attrs = graphic.attributes;
+  const field = graphic.layer.renderer.field;
   const eventType = attrs['eventType'];
 
   if (eventType) {
@@ -25,39 +27,33 @@ const EventDetails = observer(({store}) => {
     widgetConfig = config.details['eventType'];
   } else {
     eventName = 'Average speed';
-    headColor = stringifyColor(findColor(store, graphics[0]));
+    headColor = stringifyColor(findColor(store, graphic));
     widgetConfig = config.details['averageSpeed'];
   }
 
-  content = (
-    <ul className="details-list">
-      {widgetConfig.map(({title, field, format}, i) => {
-        let value = attrs[field];
-        if (format) {
-          value = format(value);
-        }
-        return (
-          <li key={field+i}>
-            <div>{title}</div>
-            <div>{value}</div>
-          </li>
-        );
-      })}
-    </ul>
-  )
-
   const title = (
-    <div>
+    <>
       <div className="event-details__subtitle">Event</div>
       <div className="event-details__title uppercase">
         {eventName}
       </div>
-    </div>
+    </>
   );
 
-  const last = graphics.slice(-1)[0];
-  const activeLayer = last.layer;
-  const activeFilter = activeLayer.renderer.field;
+  let moreDetails;
+  if (!eventType) {
+    let value = attrs[field];
+    value = Math.round(value);
+    moreDetails = (
+      <li key="avgSpeed">
+        <img src={SpeedPng} alt="Speed icon" width={34} height={34} />
+        <div>
+          <span style={{fontSize: '11px', marginRight: '5px'}}>km/h</span>
+          <span style={{fontSize: '25px'}}>{value}</span>
+        </div>
+      </li>
+    );
+  }
 
   return (
     <Card 
@@ -68,6 +64,7 @@ const EventDetails = observer(({store}) => {
       headStyle={{background: headColor}}
     >
       <ul className="details-list">
+        {moreDetails}
         {widgetConfig.map(({title, field, format}, i) => {
           let value = attrs[field];
           if (format) {
