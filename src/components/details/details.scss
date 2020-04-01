@@ -1,8 +1,10 @@
 .details-widget {
+  display: block;
   box-shadow: none;
   background: #F3F3F3;
   border: none;
   border-radius: 5px;
+  margin-bottom: 20px;
 
   .ant-card-head {
     border-top-left-radius: 5px;

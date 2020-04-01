@@ -18,6 +18,7 @@ import TokyoImage from "../resources/images/Tokyo.jpg";
 import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 import DaeguImage from '../resources/images/Daegu.jpg';
 import { tryParse } from '../utils/str';
+import { roundTo } from '../utils/ui';
 
 const DATE = new Intl.DateTimeFormat('en-GB', {dateStyle: 'short'});
 const TIME = new Intl.DateTimeFormat('en-GB', {timeStyle: 'short'});
@@ -294,21 +295,24 @@ const eventsConfig = {
         field: 'eventStartLocation',
         format: val => tryParse(val).coordinates[1],
       }
+    ],
+    'averageSpeed': [
+      {
+        title: 'Last 15 minutes',
+        field: 'avg_last_15_min',
+        format: val => roundTo(val, 2),
+      },
+      {
+        title: 'Last 1 hour',
+        field: 'avg_last_hour',
+        format: val => roundTo(val, 2),
+      },
+      {
+        title: 'Last 3 hours',
+        field: 'avg_last_3_hours',
+        format: val => roundTo(val, 2),
+      },
     ]
-  },
-  statisticsFieldsInfo: { 
-    'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
-    'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},
-    'avg_last_3_hours': {title: 'Average speed for the last 3 hours',     postText: 'km/h', iconTag: 'speed'},
-  },
-  timestampFieldsInfo: {
-    'eventTimestamp': {title: 'Detection time'},
-  },
-  overrideFieldsInfoByEventType: {
-    'construction': {
-      'eventTimestamp': {title: 'First detected', noIcon: true},
-      'eventExpirationTimestamp': {title: 'Expiration', noIcon: true},
-    }
   },
   viewConfig: {
     //center: [-74.00157, 40.71955],

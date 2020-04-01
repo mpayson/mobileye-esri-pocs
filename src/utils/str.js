@@ -1,10 +1,16 @@
 export function tryParse(jsonLike) {
-  if (jsonLike.includes("'")) {
-    jsonLike = jsonLike.replace(/'/g, '"');
+  if (typeof(jsonLike) === 'object') {
+    return jsonLike;
   }
-  try {
-    return JSON.parse(jsonLike);
-  } catch (error) {
-    return {};
+  if (typeof(jsonLike) === 'string') {
+    if (jsonLike.includes("'")) {
+      jsonLike = jsonLike.replace(/'/g, '"');
+    }
+    try {
+      return JSON.parse(jsonLike);
+    } catch (error) {
+      return {};
+    }
   }
+  return jsonLike;
 }

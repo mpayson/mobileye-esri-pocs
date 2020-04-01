@@ -50,3 +50,8 @@ export function stringifyColor(color) {
   }
   return color;
 }
+
+export function roundTo(val, fracNum) {
+  const mult = Math.pow(10, fracNum);
+  return Math.round(val * mult) / mult;
+}
