@@ -195,7 +195,7 @@ const SurveyApp = observer(class App extends React.Component {
         </Sider>
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
-            <h1 style={{float: "left"}}>Infrastructure Asset Inventory</h1>
+            <h1 style={{float: "left"}}>Road Asset Survey</h1>
             {signin}
           </Header>
           <Content>
