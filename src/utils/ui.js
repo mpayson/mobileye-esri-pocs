@@ -11,7 +11,15 @@ export function moveWidgetsWithPanel(view, offset, defer=true) {
 
 export function findColor(store, graphic) {
   const attrs = graphic.attributes;
-  const renderer = store.renderers[store.rendererField];
+  let renderer = store.renderers[store.rendererField];
+  if (!graphic.attributes.hasOwnProperty(renderer.field)) {
+    /* This is needed only for events app, 
+    * because rendererField always points to 'eventType' renderer,
+    * but we may want to highlight line markers from speed layer
+    */
+    const attributeNames = new Set(Object.keys(graphic.attributes));
+    renderer = Object.values(store.renderers).find(r => attributeNames.has(r.field));
+  }
   const value = attrs[renderer.field];
   const valueInfo = Store._findValueInfo(renderer, value);
 

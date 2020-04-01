@@ -1,0 +1,21 @@
+.details-widget {
+  box-shadow: none;
+  background: #F3F3F3;
+  border: none;
+  border-radius: 5px;
+
+  .ant-card-head {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  .details-widget__subtitle {
+    font-weight: 500;
+    color: #0F0C01;
+  }
+  
+  .details-widget__title {
+    font-weight: 600;
+    color: #0F0C01;
+  }
+}

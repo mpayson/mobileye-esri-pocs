@@ -1,3 +1,4 @@
+import './EventsDetailsPanel.scss';
 import React from 'react';
 import { observer } from "mobx-react";
 import { Card } from 'antd';
@@ -9,6 +10,7 @@ import { ReactComponent as ClockIcon} from '../resources/svg/schedule-24px.svg';
 import { ReactComponent as TimerIcon} from '../resources/svg/timer-24px.svg';
 import { ReactComponent as SpeedIcon} from '../resources/svg/speed-24px.svg';
 import { ReactComponent as NoIcon } from '../resources/svg/not_interested-24px.svg';
+import { findColor, stringifyColor } from '../utils/ui';
 
 const TAG_TO_SVG = {
   'speed': SpeedIcon,
@@ -21,27 +23,38 @@ const DATE_TIME = new Intl.DateTimeFormat('en-GB', {
 });
 
 const EventDetails = observer(({store}) => {
-  console.log(store.clickResults);
   if(!store.clickResults || !store.clickResults.graphic) {
     return <Hint />;
   }
   const graphics = [store.clickResults.graphic]
-  let extra, title;
+  let extra, eventName, headColor;
   const eventType = graphics[0].attributes['eventType'];
   if (eventType) {
     const eventInfo = store.renderers['eventType'].uniqueValueInfos
       .find(event => event.value === eventType);
-    title = eventInfo ? eventInfo.label : eventType;
+      eventName = eventInfo ? eventInfo.label : eventType;
+    headColor = eventInfo.color;
   } else {
-    title = 'Average speed:'
+    eventName = 'Average speed';
+    headColor = stringifyColor(findColor(store, graphics[0]));
   }
-  title = <span style={{fontSize: '16px'}}>{title}</span>
+
+  const title = (
+    <div>
+      <div className="event-details__subtitle">Event</div>
+      <div className="event-details__title uppercase">
+        {eventName}
+      </div>
+    </div>
+  );
 
   const style = {
     display: 'block',
     marginBottom: '20px',
   }
-  if (!graphics || graphics.length < 1) style.display = 'none';
+  if (!graphics || graphics.length < 1) {
+    return <Hint />;
+  }
   
   const results = {};
   for (const prefix of Object.keys(eventConfig.statisticsFieldsInfo)) {
@@ -128,20 +141,27 @@ const EventDetails = observer(({store}) => {
   })
 
   return (
-    <Card className="antd-esri-widget" style={style} size="small" title={title} extra={extra}>
+    <Card 
+      className="details-widget event-details" 
+      style={style} 
+      size="small" 
+      title={title} 
+      extra={extra}
+      headStyle={{background: headColor}}
+    >
       {infoContent}
       {timeContent}
     </Card>
   )
 });
 
-export function EventsInfoPanel({store, onMountOpen}) {
+export function EventsDetailsPanel({store, onMountOpen}) {
   return (
     <DetailsPanel 
       store={store} 
       view={store.view}
       onMountOpen={onMountOpen}
-      width={260}
+      width={280}
       layerInfos={store.legendLayerInfos}
     >
       <SectionTitle>More info</SectionTitle>

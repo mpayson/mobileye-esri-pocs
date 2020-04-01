@@ -98,6 +98,7 @@ const eventsConfig = {
       {
         value: "bicycle_aggregation",
         label: "Bicycles",
+        color: "#00B4A0",
         symbol: {
           type: "picture-marker",
           url: bikeSvg,
@@ -111,6 +112,7 @@ const eventsConfig = {
       {
         value: "object_on_road",
         label:"Object on road",
+        color: "#FED500",
         symbol: {
           type: "picture-marker",
           url: hazardSvg,
@@ -124,7 +126,7 @@ const eventsConfig = {
       {
         value: "stopped_car_on_hard_shoulder",
         label:"Stopped car",
-
+        color: "#3295D8",
         symbol: {
           type: "picture-marker",
           url: carSvg,
@@ -138,6 +140,7 @@ const eventsConfig = {
       {
         value: "pedestrian_on_high_speed_road",
         label:"Pedestrian/cyclist on high speed road",
+        color: "#FF5050",
         symbol: {
           type: "picture-marker",
           url: pedSvg,
@@ -151,6 +154,7 @@ const eventsConfig = {
       {
         value: "fog",
         label: "Fog",
+        color: "#9FA7A7",
         symbol: {
           type: "picture-marker",
           url: fogSvg,
@@ -164,6 +168,7 @@ const eventsConfig = {
       {
         value: "construction",
         label:"Construction areas",
+        color: "#FE8500",
         symbol: {
           type: "simple-line",
           width: 4,

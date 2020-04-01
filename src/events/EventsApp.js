@@ -12,7 +12,7 @@ import LayerPanel from './LayerPanel';
 import LocationsIcon from "calcite-ui-icons-react/LayerZoomToIcon";
 import { Logo } from '../components/Logo';
 import './Legend.css';
-import { EventsInfoPanel } from './EventsInfoPanel';
+import { EventsDetailsPanel } from './EventsDetailsPanel';
 import { moveWidgetsWithPanel } from '../utils/ui';
 
 const { Header, Content, Sider } = Layout;
@@ -148,7 +148,7 @@ const EventsApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              <EventsInfoPanel store={this.store} />
+              <EventsDetailsPanel store={this.store} />
               <Drawer
                 // title={this.state.navKey}
                 closable={false}

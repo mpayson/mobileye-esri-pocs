@@ -1,5 +1,5 @@
 import './SafetyHoverHint.scss';
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
 import { getQuantile } from './safety-utils';
 import { findColor, stringifyColor } from '../utils/ui';
