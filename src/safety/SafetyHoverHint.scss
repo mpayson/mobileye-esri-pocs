@@ -1,32 +1,3 @@
-.details-overlay {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  z-index: -1;
-}
-
-.details-tooltip {
-  position: absolute;
-  min-width: 220px;
-  min-height: 58px;
-  background-color: #222;
-  box-shadow: 0 0 6px -0.2px rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 8px;
-  z-index: 1;
-
-  .details-tooltip__title {
-    font-size: 12px;
-    margin-right: 8px;
-  }
-
-  .details-tooltip__value {
-    font-size: 12px;
-  }
-}
-
 .gray {
   color: #aaa
 }

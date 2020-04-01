@@ -272,6 +272,7 @@ const eventsConfig = {
   renderIconsAboveStreetNames: true,
   hasCustomTooltip: true,
   hasOnClickDetails: true,
+  hasOnHoverDetails: true,
   onHoverEffect: 'upscale',
   details: {
     'eventType': [

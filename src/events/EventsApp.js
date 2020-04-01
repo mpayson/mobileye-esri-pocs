@@ -14,6 +14,8 @@ import { Logo } from '../components/Logo';
 import './Legend.css';
 import { EventsDetailsPanel } from './EventsDetailsPanel';
 import { moveWidgetsWithPanel } from '../utils/ui';
+import { Tooltip } from '../components/details/Tooltip';
+import { EventsHoverHint } from './EventsHoverHint';
 
 const { Header, Content, Sider } = Layout;
 
@@ -31,7 +33,8 @@ const EventsApp = observer(class App extends React.Component {
   state = {
     collapsed: true,
     loaded: false,
-    navKey: "Layers"
+    navKey: "Layers",
+    detailsOpen: false,
   };
 
   constructor(props, context){
@@ -84,6 +87,10 @@ const EventsApp = observer(class App extends React.Component {
       });
   }
 
+  onDetailsOpen = open => {
+    this.setState({detailsOpen: open})
+  };
+
   render() {
     let panel;
     switch (this.state.navKey) {
@@ -111,6 +118,9 @@ const EventsApp = observer(class App extends React.Component {
         </Menu>
       )
       : null;
+
+    const xMin = this.state.navKey ? PANEL_WIDTH : 0; 
+    const xMax = this.state.detailsOpen ? window.innerWidth - (280+80) : window.innerWidth - 80;
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
@@ -148,7 +158,14 @@ const EventsApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              <EventsDetailsPanel store={this.store} />
+              <Tooltip store={this.store} xMin={xMin} xMax={xMax}>
+                <EventsHoverHint store={this.store} />
+              </Tooltip>
+              <EventsDetailsPanel 
+                store={this.store} 
+                onOpen={this.onDetailsOpen}
+                width={280} 
+              />
               <Drawer
                 // title={this.state.navKey}
                 closable={false}

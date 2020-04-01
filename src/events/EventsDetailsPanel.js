@@ -82,14 +82,15 @@ const EventDetails = observer(({store}) => {
   )
 });
 
-export function EventsDetailsPanel({store, onMountOpen}) {
+export function EventsDetailsPanel({store, onMountOpen, width, onOpen}) {
   return (
     <DetailsPanel 
       store={store} 
       view={store.view}
       onMountOpen={onMountOpen}
-      width={280}
+      width={width}
       layerInfos={store.legendLayerInfos}
+      onOpen={onOpen}
     >
       <SectionTitle>More info</SectionTitle>
       <EventDetails store={store} />

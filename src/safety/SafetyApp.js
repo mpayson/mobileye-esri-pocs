@@ -16,7 +16,8 @@ import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
 import { SafetyInfoPanel } from './SafetyInfoPanel';
-import { SafetyHoverHint, Tooltip } from './SafetyHoverHint';
+import { SafetyHoverHint } from './SafetyHoverHint';
+import { Tooltip } from '../components/details/Tooltip';
 
 const { Header, Content, Sider } = Layout;
 
