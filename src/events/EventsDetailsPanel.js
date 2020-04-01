@@ -11,6 +11,7 @@ import { ReactComponent as TimerIcon} from '../resources/svg/timer-24px.svg';
 import { ReactComponent as SpeedIcon} from '../resources/svg/speed-24px.svg';
 import { ReactComponent as NoIcon } from '../resources/svg/not_interested-24px.svg';
 import { findColor, stringifyColor } from '../utils/ui';
+import config from './EventsConfig';
 
 const TAG_TO_SVG = {
   'speed': SpeedIcon,
@@ -27,16 +28,39 @@ const EventDetails = observer(({store}) => {
     return <Hint />;
   }
   const graphics = [store.clickResults.graphic]
-  let extra, eventName, headColor;
-  const eventType = graphics[0].attributes['eventType'];
+  let extra, eventName, headColor, content;
+  const attrs = graphics[0].attributes;
+  const eventType = attrs['eventType'];
   if (eventType) {
     const eventInfo = store.renderers['eventType'].uniqueValueInfos
       .find(event => event.value === eventType);
       eventName = eventInfo ? eventInfo.label : eventType;
     headColor = eventInfo.color;
+    console.log(attrs);
+    const widgetConfig = config.details['eventType'];
+
+    content = (
+      <ul className="details-list">
+        {widgetConfig.map(({title, field, format}, i) => {
+          let value = attrs[field];
+          if (format) {
+            value = format(value);
+          }
+          return (
+            <li key={field+i}>
+              <div>{title}</div>
+              <div>{value}</div>
+            </li>
+          );
+        })}
+      </ul>
+    )
+
   } else {
     eventName = 'Average speed';
     headColor = stringifyColor(findColor(store, graphics[0]));
+
+    content = null;
   }
 
   const title = (
@@ -149,8 +173,7 @@ const EventDetails = observer(({store}) => {
       extra={extra}
       headStyle={{background: headColor}}
     >
-      {infoContent}
-      {timeContent}
+      {content}
     </Card>
   )
 });

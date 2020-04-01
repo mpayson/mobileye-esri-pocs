@@ -17,6 +17,10 @@ import BarcelonaImage from "../resources/images/Barcelona.jpg";
 import TokyoImage from "../resources/images/Tokyo.jpg";
 import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 import DaeguImage from '../resources/images/Daegu.jpg';
+import { tryParse } from '../utils/str';
+
+const DATE = new Intl.DateTimeFormat('en-GB', {dateStyle: 'short'});
+const TIME = new Intl.DateTimeFormat('en-GB', {timeStyle: 'short'});
 
 const  popupTemplate =  {
     title: "Event information:",
@@ -25,7 +29,6 @@ const  popupTemplate =  {
         "Event value: {eventValue}<br>" +
         "First seen: {eventTimestamp}<br>" +
         "Expiration timestamp: {eventExpirationTimestamp}"
-
   }
 
 const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
@@ -60,7 +63,7 @@ const getClassBreakRenderer = (field,stops,labels,colors,width,caption) => ({
 })
 const speedRenderer = (field) =>
      getClassBreakRenderer(field, [0, 15, 50, 100, 1000], ['0-15 km/h','15-50 km/h','50-100 km/h','100+ km/h '],
-      [[230,74,25,255],[255,128,0,255],[255,255,0,255],[51,255,51,255]], ["2.3px","2.3px","2.3px","2.3px"], "Average speed");
+      [[230,74,25,1],[255,128,0,1],'#FED500',[51,255,51,1]], ["2.3px","2.3px","2.3px","2.3px"], "Average speed");
 
 //const eventsBaselineWhereCondition = 'eventExpirationTimestamp >= CURRENT_TIMESTAMP - 1 AND eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3'
 //                                      eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3 AND eventExpirationTimestamp >= CURRENT_TIMESTAMP
@@ -209,7 +212,7 @@ const eventsConfig = {
       name: "events0", 
       popupTemplate: null,
       showLegend: true, 
-      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp'],
+      outFields: '*',
       refreshInterval: 10
     },// baselineWhereCondition:eventsBaselineWhereCondition},
     {
@@ -218,7 +221,7 @@ const eventsConfig = {
       name: "events1",
       popupTemplate: null,
       showLegend: false,
-      outFields: ['eventType', 'eventTimestamp', 'eventExpirationTimestamp'],
+      outFields: '*',
       refreshInterval: 10
     },// baselineWhereCondition:eventsBaselineWhereCondition},
     {
@@ -269,6 +272,30 @@ const eventsConfig = {
   hasCustomTooltip: true,
   hasOnClickDetails: true,
   onHoverEffect: 'upscale',
+  details: {
+    'eventType': [
+      {
+        title: 'First detection',
+        field: 'eventTimestamp',
+        format: DATE.format,
+      },
+      {
+        title: 'Expiration time',
+        field: 'eventExpirationTimestamp',
+        format: TIME.format,
+      },
+      {
+        title: 'Latitude',
+        field: 'eventStartLocation',
+        format: val => tryParse(val).coordinates[0],
+      },
+      {
+        title: 'Longitude',
+        field: 'eventStartLocation',
+        format: val => tryParse(val).coordinates[1],
+      }
+    ]
+  },
   statisticsFieldsInfo: { 
     'avg_last_15_min':  {title: 'Average speed for the last 15 minutes',  postText: 'km/h', iconTag: 'speed'},
     'avg_last_hour':    {title: 'Average speed for the last hour',        postText: 'km/h', iconTag: 'speed'},

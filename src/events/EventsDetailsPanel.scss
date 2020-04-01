@@ -4,8 +4,11 @@
   background-color: #F0F0F0;
 
   .ant-card-head-title {
-    padding-top: 11px;
-    padding-bottom: 10px;
+    padding: 11px 10px 10px 10px;
+  }
+
+  .ant-card-body {
+    padding: 3px 10px;
   }
 
   .event-details__title {
@@ -17,5 +20,18 @@
   .event-details__subtitle {
     font-size: 12px;
     font-weight: 600;
+  }
+
+  .details-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      font-size: 12px;
+    }
   }
 }
