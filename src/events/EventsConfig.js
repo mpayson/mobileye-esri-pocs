@@ -20,8 +20,8 @@ import DaeguImage from '../resources/images/Daegu.jpg';
 import { tryParse } from '../utils/str';
 import { roundTo } from '../utils/ui';
 
-const DATE = new Intl.DateTimeFormat('en-GB', {dateStyle: 'short'});
-const TIME = new Intl.DateTimeFormat('en-GB', {timeStyle: 'short'});
+export const DATE = new Intl.DateTimeFormat('en-GB', {dateStyle: 'short'});
+export const TIME = new Intl.DateTimeFormat('en-GB', {timeStyle: 'short'});
 
 const  popupTemplate =  {
     title: "Event information:",

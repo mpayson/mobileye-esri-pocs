@@ -1,0 +1,18 @@
+.details-tooltip {
+  .event-title {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+  }
+
+  .speed-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 10px;
+  }
+
+  .event-time {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+}

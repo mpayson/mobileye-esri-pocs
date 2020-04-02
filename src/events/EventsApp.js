@@ -26,7 +26,7 @@ const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
 )
 
-const PANEL_WIDTH = 300;
+const LEFT_PANEL_WIDTH = 300;
 
 const EventsApp = observer(class App extends React.Component {
 
@@ -82,7 +82,7 @@ const EventsApp = observer(class App extends React.Component {
 
         this.view.ui.add(searchExpand, "top-left");
         this.view.ui.move("zoom", "bottom-left");
-        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
+        moveWidgetsWithPanel(this.view, this.state.navKey ? LEFT_PANEL_WIDTH : 0);
         this.forceUpdate();
       });
   }
@@ -104,8 +104,11 @@ const EventsApp = observer(class App extends React.Component {
         panel = null;
     }
 
+    const leftPanelWidth = LEFT_PANEL_WIDTH;
+    const rightPanelWidth = 280;
+
     if (this.view) {
-      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
+      moveWidgetsWithPanel(this.view, panel ? leftPanelWidth : 0);
     }
 
     const signin = this.props.appState.displayName
@@ -119,8 +122,9 @@ const EventsApp = observer(class App extends React.Component {
       )
       : null;
 
-    const xMin = this.state.navKey ? PANEL_WIDTH : 0; 
-    const xMax = this.state.detailsOpen ? window.innerWidth - (280+80) : window.innerWidth - 80;
+    const mapAreaWidth = window.innerWidth - 80;
+    const xMin = this.state.navKey ? leftPanelWidth : 0; 
+    const xMax = this.state.detailsOpen ? (mapAreaWidth - rightPanelWidth) : mapAreaWidth;
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
@@ -164,7 +168,7 @@ const EventsApp = observer(class App extends React.Component {
               <EventsDetailsPanel 
                 store={this.store} 
                 onOpen={this.onDetailsOpen}
-                width={280} 
+                width={rightPanelWidth} 
               />
               <Drawer
                 // title={this.state.navKey}
@@ -176,7 +180,7 @@ const EventsApp = observer(class App extends React.Component {
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%" }}
-                width={PANEL_WIDTH}
+                width={leftPanelWidth}
               >
                 {panel}
               </Drawer>
