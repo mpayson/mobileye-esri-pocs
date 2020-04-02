@@ -16,7 +16,7 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
   }
 
   const width = 220;
-  const mid = 220 / 2;
+  const mid = width / 2;
   const pad = 10;
   let left;
   if (x > xMin + mid + pad) {
@@ -29,7 +29,6 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
     left = xMin + pad;
   }
 
-  // const left = x > xMin + 120 ? x + 120 < xMax ? x - 110 : xMax - 250 : xMin + 10;
   const top = y > 67 ? y - 65 : y + 10;
 
   return (
