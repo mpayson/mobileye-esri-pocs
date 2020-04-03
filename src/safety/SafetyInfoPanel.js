@@ -42,13 +42,14 @@ const SafetyInfoWidget = observer(({store}) => {
       ? defaultBool && store.rendererField === f.field
       : defaultBool;
   }).map(f => 
-    <div key={f.field}>
+    <div key={f.field} style={{fontSize: '12px'}}>
       {f.alias}
       <Progress
         percent={Math.round((attrs[f.field]/f.upperBound) * 100)}
         status="normal"
         showInfo={false}
         strokeColor={color}
+        size="small"
       />
     </div>
   )
