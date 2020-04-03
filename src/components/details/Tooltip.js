@@ -2,24 +2,28 @@ import './Tooltip.scss';
 import React, { useRef, useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
 
+const MIN_WIDTH = 200;
+
 
 export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidth}) => {
   const ref = useRef(null);
-  const [width, setWidth] = useState(220);
+  const [width, setWidth] = useState(MIN_WIDTH);
 
   useEffect(() => {
     const el = ref.current;
     if (el && ResizeObserver) {
       const observer = new ResizeObserver(payload => {
-        console.log(payload);
         if (payload[0]) {
           const dims = payload[0].contentRect;
-          const newWidth = Math.max(dims.width, 200) || 200;
+          const newWidth = Math.max(dims.width, MIN_WIDTH) || MIN_WIDTH;
           setWidth(newWidth);
         }
       });
       observer.observe(el);
-      return observer.disconnect;
+      return () => {
+        observer.unobserve(el);
+        observer.disconnect();
+      };
     }
   }, [ref]);
 
@@ -35,24 +39,24 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
   }
 
   const mid = width / 2;
-  const pad = 10;
+  const pad = 1;
   let left, pointerLeft;
   if (x > xMin + mid + pad) {
     if (x + mid + pad < xMax) {
       left = x - mid;
       pointerLeft = x - left - 5
     } else {
-      left = xMax - pad * 3 - width;
-      pointerLeft = Math.min(width, x - left - 5);
+      left = xMax - pad - width;
+      pointerLeft = Math.min(width - 12, x - left - 5);
     }
   } else {
     left = xMin + pad;
-    pointerLeft = Math.max(left - 5, x - left - 5);
+    pointerLeft = Math.max(2, x - left - 5);
   }
 
   const height = 57;
   let top, pointerTop;
-  if (y > height + pad) {
+  if (y > height + 15) {
     top = y - height - 15;
     pointerTop = height - 5;
   } else {
