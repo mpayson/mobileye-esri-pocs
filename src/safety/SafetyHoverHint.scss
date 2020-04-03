@@ -1,3 +1,16 @@
 .gray {
   color: #aaa
 }
+
+.details-tooltip {
+
+  .safety-tooltip__title {
+    font-size: 12px;
+    margin-right: 8px;
+  }
+  
+  .safety-tooltip__value {
+    font-size: 12px;
+    min-width: 210px;
+  }
+}

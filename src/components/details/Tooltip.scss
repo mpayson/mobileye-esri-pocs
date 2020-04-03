@@ -13,6 +13,8 @@
   color: white;
   padding: 8px;
   z-index: 2;
+  word-wrap: none;
+  white-space: nowrap;
 
   .details-pointer {
     position: absolute;
@@ -25,14 +27,5 @@
     left: 105px;
     background-color: #222;
     box-shadow: none;
-  }
-
-  .details-tooltip__title {
-    font-size: 12px;
-    margin-right: 8px;
-  }
-
-  .details-tooltip__value {
-    font-size: 12px;
   }
 }

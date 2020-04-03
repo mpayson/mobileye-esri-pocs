@@ -27,10 +27,10 @@ export const SafetyHoverHint = observer(({store}) => {
 
   return (
     <>
-      <span className="details-tooltip__title uppercase">
+      <span className="safety-tooltip__title uppercase">
         {aM.get('risk_score')}{': '}
       </span>
-      <span className="details-tooltip__value uppercase" style={{color}}>
+      <span className="safety-tooltip__value uppercase" style={{color}}>
         {quantile.label}
       </span>
       <span>{content}</span>
