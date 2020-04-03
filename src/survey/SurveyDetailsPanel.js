@@ -11,48 +11,46 @@ const SurveyDetails = observer(({store}) => {
     return <Hint />;
   }
   const graphic = store.clickResults.graphic
-  let extra, eventName, headColor;
   const attrs = graphic.attributes;
   const field = graphic.layer.renderer.field;
-  console.log(attrs);
-  console.log(store);
+  const value = attrs[field];
+  const color = stringifyColor(findColor(store, graphic));
 
-  // if (eventType) {
-  //   const eventInfo = store.renderers['eventType'].uniqueValueInfos
-  //     .find(event => event.value === eventType);
-  //     eventName = eventInfo ? eventInfo.label : eventType;
-  //   headColor = eventInfo.color;
-  //   console.log(attrs);
-  //   widgetConfig = config.details['eventType'];
-  // } else {
-  //   eventName = 'Average speed';
-  //   headColor = stringifyColor(findColor(store, graphic));
-  //   widgetConfig = config.details['averageSpeed'];
-  // }
+  let category = 'Unknown';
+  const layer = graphic.sourceLayer || graphic.layer;
+  if (layer) {
+    const map = layer.fieldsIndex._fieldsMap.get(field).domain;
+    const description = map.codedValues.find(v => v.code === value);
+
+    if (description) {
+      category = description.name;
+    }
+  }
 
   const title = (
     <>
-      <div className="event-details__subtitle">Event</div>
-      <div className="event-details__title uppercase">
-        {eventName}
+      <div className="survey-details__category uppercase">
+        {category}
+      </div>
+      <div className="survey-details__subcategory">
+        nope
       </div>
     </>
   );
 
   return (
     <Card 
-      className="details-widget event-details" 
+      className="details-widget survey-details" 
       size="small" 
       title={title} 
-      extra={extra}
-      headStyle={{background: headColor}}
+      headStyle={{background: color}}
     >
       <ul className="details-list">
         {[1].map((val, i) => {
           return (
-            <li key={field+i}>
-              <div>{title}</div>
-              <div>{val}</div>
+            <li key={i}>
+              <div>dummy:</div>
+              <div>0.00</div>
             </li>
           );
         })}

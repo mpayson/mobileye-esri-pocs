@@ -1,20 +1,19 @@
 @import '../components/details/details.scss';
 
-.event-details {
+.survey-details {
   background-color: #F0F0F0;
 
-  .event-details__title {
-    color: white;
-    font-size: 12px;
-    font-weight: 300;
-    letter-spacing: 1.2px;
-    word-break: break-word;
-    white-space: normal;
-  }
-
-  .event-details__subtitle {
+  .survey-details__category {
+    color: black;
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+  }
+
+  .survey-details__subcategory {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.7px;
   }
 }
