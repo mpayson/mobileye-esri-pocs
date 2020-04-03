@@ -88,10 +88,6 @@ slaveHandler.basicMe { label ->
         }
 
 
-
-        stage("Run tests"){
-        }
-
         stage('Push Docker to ECR') {
             EcrActions.ecrLogin()
             EcrActions.ecrDockerPush(repoName,tagName)
@@ -114,24 +110,38 @@ slaveHandler.basicMe { label ->
 
             withCredentials([usernamePassword(credentialsId: 'mobileye-arcgis', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 // get relevant web map id
-                sh "pip3 install --no-deps -r esri_tools/requirements.txt; python3 -c 'from esri_tools.esri_tools import get_webmap_id' "
-                command = 'python3 -c "from esri_tools.esri_tools import get_webmap_id;  print(get_webmap_id(\\"safety-map\\",\\"' + envName + '\\", \\"$USERNAME\\", \\"$PASSWORD\\"))"'
+                sh "pip3 install --upgrade mobileye_common==0.0.60 click arcgis==1.7.0 --no-deps --extra-index-url 'http://aa-artifactory.intel.com:8081/artifactory/api/pypi/aa-mobileye-pypi-local/simple' --trusted-host aa-artifactory.intel.com"
+                map_env = "test"
+                command = "python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix safety-map --environment ${map_env} --username $USERNAME --password $PASSWORD"
                 safetyWebmapId = sh(script: command, returnStdout: true).trim()
+                command = "python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix mobility-map --environment ${map_env} --username $USERNAME --password $PASSWORD"
+                mobilityWebmapId = sh(script: command, returnStdout: true).trim()
+                command = "python3 -m mobileye_common.esri_tools.webmap_extractor --map-postfix live-events-map --environment ${map_env} --username $USERNAME --password $PASSWORD"
+                liveEventsWebmapId = sh(script: command, returnStdout: true).trim()
                 sh "echo ${safetyWebmapId}"
+                sh "echo ${mobilityWebmapId}"
+                sh "echo ${liveEventsWebmapId}"
                 EksActions.eksLogin(["eks_cluster_name": "eks-mobileye-${envName}"])
-                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps-ci harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName}") //--set safety.webmapId=${safetyWebmapId}")
+                awsAuth.activate_with_context("sudo helm upgrade -i ${chartLocalPath} --namespace maps-ci harbor/${chartLocalPath} --version=${chartVersion.trim()} --set global.environment=${envName} --set safety.webmapId=${safetyWebmapId}  --set mobility.webmapId=${mobilityWebmapId}  --set events.webmapId=${liveEventsWebmapId}")
 
             }
-
-
         }
-
 
         stage("Build And Deploy CloudFormation to AWS") {
             cfnHandler.cfnBuildAndDeploy("${pipelineBucket.getBucketName()}")
 
             if ("${currentBuild.result}" == "UNSTABLE") {
                 failPipe("Deployment failed")
+            }
+        }
+
+        stage("Run UI tests"){
+            dir('tests/system') {
+                withCredentials([usernamePassword(credentialsId: 'mobileye-arcgis',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'pip3 install -r requirements.txt'
+                    sh "ENVIRONMENT=ci USERNAME=$USERNAME PASSWORD=$PASSWORD python3 test_webmaps.py"
+                    sh 'ls -l'
+                }
             }
         }
 

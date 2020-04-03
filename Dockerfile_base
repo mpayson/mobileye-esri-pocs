@@ -36,6 +36,7 @@ RUN apt install -y git
 WORKDIR /app
 COPY ./ /app
 
+RUN npm update
 RUN npm install
 
 ENV https_proxy=

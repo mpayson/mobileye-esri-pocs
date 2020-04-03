@@ -88,18 +88,16 @@ const Home = observer(class Home extends React.Component{
             >
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-iai.svg"
-                alt="Infrastructure Asset Inventory"
+                alt="Road Asset Survey"
               />
-              <p>
-                Infrastructure <br /> Asset Inventory
-              </p>
+              <p>Road Asset Survey</p>
             </Link>
             <Link to="/mobility" disabled={!appState.isAuthenticated} className="item">
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-m.svg"
-                alt="Mobility"
+                alt="Dynamic Mobility Mapping"
               />
-              <p>Dynamic Mobility</p>
+              <p>Dynamic Mobility Mapping</p>
             </Link>
 
             <a href={ParkingVideo} className="item">
@@ -129,9 +127,9 @@ const Home = observer(class Home extends React.Component{
             >
               <img
                 src="https://static.mobileye.com/website/corporate/data-demos/icon-l2.svg"
-                alt="L2+"
+                alt="Live traffic"
               />
-              <p>Real Time <br /> Traffic Management</p>
+              <p>Live traffic</p>
             </Link>
           </div>
         </div>

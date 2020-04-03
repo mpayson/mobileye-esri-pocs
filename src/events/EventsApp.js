@@ -148,7 +148,7 @@ const EventsApp = observer(class App extends React.Component {
         </Sider>
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
-            <h1 style={{float: "left"}}>Real Time Traffic Management</h1>
+            <h1 style={{float: "left"}}>Live Traffic</h1>
             {signin}
           </Header>
           <Content>

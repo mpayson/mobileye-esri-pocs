@@ -173,7 +173,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
         </Sider>
         <Layout>
           <Header style={{paddingLeft: "1rem", paddingRight: "0rem", background: "white"}}>
-            <h1 style={{float: "left"}}>Dynamic Mobility</h1>
+            <h1 style={{float: "left"}}>Dynamic Mobility Mapping</h1>
             {signin}
           </Header>
           <Content>

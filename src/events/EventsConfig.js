@@ -70,10 +70,8 @@ const speedRenderer = (field) =>
 //                                      eventExpirationTimestamp <= CURRENT_TIMESTAMP + 3 AND eventExpirationTimestamp >= CURRENT_TIMESTAMP
 const eventsBaselineWhereCondition = '1=1'
 
-var webmapIdEnv = '37f6876be7dc4d7e8166c3ef0df0c3aa';
-//var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
-
-
+var webmapIdEnv = '2031e577726743ad86e9391f14209ccb';
+//var webmapIdEnv = '8654f5c608384b9eb7e06fd566643afc';
 
 if (process.env.EVENTS_WEBMAP_ID){
     webmapIdEnv = process.env.EVENTS_WEBMAP_ID;
@@ -89,7 +87,7 @@ const defaultLegendIconSize = {
   height: 30,
 };
 const eventsConfig = {
-  webmapId: '8654f5c608384b9eb7e06fd566643afc',
+  webmapId: webmapIdEnv,
   initialRendererField: 'eventType',
   renderers : {
     'averageSpeed': speedRenderer('avg_last_hour'),

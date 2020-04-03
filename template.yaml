@@ -54,7 +54,7 @@ Parameters:
   HealthCheckPath:
     Type: String
     Description: The path for the Application Load Balancer health check
-    Default: /health_check
+    Default: /
     MinLength: 1
     MaxLength: 255
     ConstraintDescription: Value must be between 1 and 255 characters
@@ -196,7 +196,7 @@ Resources:
       Protocol: "HTTPS"
       Certificates:
         - CertificateArn:
-            Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-external-certificate-arn-temp"
+            Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-external-certificate-arn"
       DefaultActions:
         - Type: "forward"
           TargetGroupArn: !Ref ALBTargetGroup
@@ -209,13 +209,13 @@ Resources:
     Condition: tlsBuildCondition
     Properties:
       HostedZoneId:
-        Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-hosted-zone-id-temp"
+        Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-hosted-zone-id"
       Name:
         !Sub
           - "webmaps-${EnvironmentName}.${ZoneName}."
           - EnvironmentName: !Ref EnvironmentName
             ZoneName:
-              Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-domain-name-temp"
+              Fn::ImportValue: !Sub "me-${EnvironmentName}-${Branch}-route53-domain-name"
       Type: "CNAME"
       ResourceRecords:
         - !GetAtt [ALBLoadBalancer, DNSName]
@@ -233,18 +233,6 @@ Resources:
       FromPort: "31925"
       ToPort: "31925"
       IpProtocol: "tcp"
-
-
-#  LoadBlalancerSecurityGroupEgress:
-#    Type: AWS::EC2::SecurityGroupEgress
-#    Properties:
-#      Description: "Load balancer security group ingress"
-#      GroupId: !Ref LoadBalancerSecurityGroup
-#      DestinationSecurityGroupId: !Ref FargateServiceSecurityGroup
-#      FromPort: !Ref ServicePort
-#      ToPort: !Ref ServicePort
-#      IpProtocol: "tcp"
-
 
   ALBWaitHandle:
     DependsOn: ALBLoadBalancerListener
@@ -291,9 +279,3 @@ Outputs:
     Value: !Ref ALBLoadBalancerListener
     Export:
       Name: !Sub "me-${EnvironmentName}-${BuildType}-${Branch}-${ServiceName}-lb-listener-arn"
-
-#  LoadBalancerRoute53RecordDomainName:
-#    Value: !Ref LoadBalancerRoute53Record
-#    Export:
-#      Name: !Sub "${EnvironmentName}-${Branch}-${ServiceName}-lb-domain-name"
-#

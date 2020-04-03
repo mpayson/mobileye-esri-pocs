@@ -7,11 +7,10 @@ import DaeguImage from '../resources/images/Daegu.jpg';
 import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 
 
-var webmapIdEnv = '0b800d1e71d94002b8d2451dcd08155d';
-//var webmapIdEnv = '8813ecd31e644560ba01e90a89fd8b3e';
+//var webmapIdEnv = '0b800d1e71d94002b8d2451dcd08155d';
+var webmapIdEnv = '47c2853d45f94c1eba60266455626792';
 
-
-
+console.log(process.env)
 if (process.env.MOBILITY_WEBMAP_ID){
     webmapIdEnv = process.env.MOBILITY_WEBMAP_ID;
 }
@@ -87,9 +86,9 @@ const humanMobilityConfig = {
       postText:"km/h",
       ignoreFilter:true,
       initialZoomExpression: 'SHAPE__LENGTH > 45', // gets initially added to baseline where
-      // applies where corresponding to lowest specified zoom that is greater than map zoom
+      //applies where corresponding to lowest specified zoom that is greater than map zoom
       zoomExpressions: [
-        {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
+       {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
       ]
     },
 
