@@ -444,63 +444,10 @@ const surveyConfig = {
     }
   },
 ], 
-  popupTemplate: {
-    title: "{expression/title-prefix} {category_l1} {expression/title_suffix}",
-    content: [
-      {
-      type: "text",
-      text: "Type: <b>{expression/type-expr}</b><br>" +
-             "Detected at {publish_date} (version {map_version})<br>" +
-             "{expression/size-expr}<br>",
-    }, 
-    {
-      type: "media", // MediaContentElement
-      mediaInfos: [
-        {
-          title: "",
-          type: "image",
-          value: {
-            sourceURL: "{expression/sign-icon}"
-          }
-        },
-      ]
-    },
-    ],
-    expressionInfos: [
-      {
-        name: "type-expr",
-        title: "Type",
-        expression: "When($feature.category_l1 == 0, DomainName($feature, 'traffic_sign_category_l4', $feature.traffic_sign_category_l4)," +
-                        "$feature.category_l1 == 1, DomainName($feature, 'tfl_category_l4', $feature.tfl_category_l4)," +
-                        "$feature.category_l1 == 2, DomainName($feature, 'road_marking_category_l4', $feature.road_marking_category_l4)," +
-                        "$feature.category_l1 == 3, DomainName($feature, 'pole_category_l4', $feature.pole_category_l4)," +
-//                        "$feature.category_l1 == 4, DomainName($feature, 'manhole_category_l4', $feature.manhole_category_l4)," +
-                        "'')"
-
-      },
-      {
-        name: "title-prefix",
-        title: "Title Prefix",
-        expression: "When($feature.new_detected_missing == 2, 'Missing', $feature.new_detected_missing == 1, 'New',  '')"
-      },
-      {
-        name: "title-suffix",
-        title: "Title Suffix",
-        expression: "When(($feature.new_detected_missing == 2) ||  ($feature.new_detected_missing == 1), '',  'detected')"
-      },
-      {
-        name: "sign-icon",
-        expression: icons_exp
-      },
-      {
-        name: "size-expr",
-        title: "Size",
-        expression: "When($feature.category_l1 == 3, '', 'Size: {height} X {width} m'"
-      }
-    ],
-  },
+  popupTemplate: null,
   hasZoomListener: true,
   hasCustomTooltip: true,
+  hasOnClickDetails: true,
   onHoverEffect: 'upscale',
   basemaps: {
     'dark-gray': {

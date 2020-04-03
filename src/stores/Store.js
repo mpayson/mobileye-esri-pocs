@@ -109,8 +109,11 @@ class Store {
         if(layer.type !== 'feature') return;
 
         // used if need to override popup from webmap
-        if(!this.layersConfig && this.popupTemplate)
-                layer.popupTemplate = this.popupTemplate;
+        if (!this.layersConfig && this.popupTemplate) {
+            layer.popupTemplate = this.popupTemplate;
+        } else {
+            layer.popupTemplate = null;
+        }
 
         // backwards compatible one-layer pattern
         if(!this.layersConfig && collectionIndex === 0){

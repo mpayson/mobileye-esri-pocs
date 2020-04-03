@@ -19,6 +19,7 @@ import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
 import DetailsPanel from '../components/details/DetailsPanel';
 import { Hint } from '../components/details/Hint';
+import { SurveyDetailsPanel } from './SurveyDetailsPanel';
 
 const { Header, Content, Sider } = Layout;
 
@@ -204,9 +205,10 @@ const SurveyApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              <DetailsPanel store={this.store} view={this.view} width={260} >
+              <SurveyDetailsPanel store={this.store} width={260} />
+              {/* <DetailsPanel store={this.store} view={this.view} width={260} >
                 <Hint />
-              </DetailsPanel>
+              </DetailsPanel> */}
               {bookmarkCard}
               <Drawer
                 title={this.state.navKey}
