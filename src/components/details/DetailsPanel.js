@@ -4,6 +4,7 @@ import options from '../../config/esri-loader-options';
 import './DetailsPanel.scss';
 import { Drawer } from 'antd';
 import { observer } from 'mobx-react';
+import arrowPng from '../../resources/images/arrow_ticker-01.png';
 
 export const SectionTitle = ({children}) => (
   <h3 style={{fontSize: '16px', fontWeight: 600}} >
@@ -66,7 +67,7 @@ const DetailsPanel = observer((props) => {
       className="details-panel__close"
       onClick={() => setOpen(!open)}
     >
-      x
+      <img src={arrowPng} alt="open/close details panel" width={9.5} height={10.5} />
     </button>
   )
 
