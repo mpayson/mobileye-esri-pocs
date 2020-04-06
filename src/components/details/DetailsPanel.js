@@ -66,8 +66,14 @@ const DetailsPanel = observer((props) => {
       aria-label={`${open ? 'close' : 'open'} info panel`}
       className="details-panel__close"
       onClick={() => setOpen(!open)}
-    >
-      <img src={arrowPng} alt="open/close details panel" width={9.5} height={10.5} />
+      >
+      <img 
+        src={arrowPng} 
+        alt="open/close details panel" 
+        width={9.5} 
+        height={10.5} 
+        style={{transform: open ? 'none' : 'rotate(-180deg)'}}
+      />
     </button>
   )
 
