@@ -16,7 +16,7 @@
   }
 
   .ant-card-body {
-    padding: 3px 10px;
+    padding: 10px;
   }
 
   .details-widget__subtitle {
@@ -38,8 +38,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
       font-size: 12px;
+
+      &:not(:last-child) {
+        margin-bottom: 24px;
+      }
+
+      &:last-child {
+        margin-bottom: 12px;
+      }
     }
   }
 }

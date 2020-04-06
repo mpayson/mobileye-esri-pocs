@@ -17,7 +17,7 @@ const SurveyDetails = observer(({store}) => {
   const color = stringifyColor(findColor(store, graphic));
 
   let category = 'Unknown';
-  const layer = graphic.sourceLayer || graphic.layer;
+  const layer = store.lyr;
   if (layer) {
     const map = layer.fieldsIndex._fieldsMap.get(field).domain;
     const description = map.codedValues.find(v => v.code === value);

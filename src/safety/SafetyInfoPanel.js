@@ -1,3 +1,4 @@
+import './SafetyInfoPanel.scss';
 import React from 'react';
 import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
 import {Hint} from '../components/details/Hint';
@@ -42,7 +43,7 @@ const SafetyInfoWidget = observer(({store}) => {
       ? defaultBool && store.rendererField === f.field
       : defaultBool;
   }).map(f => 
-    <div key={f.field} style={{fontSize: '12px'}}>
+    <div key={f.field} className="safety-details__row">
       {f.alias}
       <Progress
         percent={Math.round((attrs[f.field]/f.upperBound) * 100)}
@@ -57,10 +58,10 @@ const SafetyInfoWidget = observer(({store}) => {
   const quantile = getQuantile(attrs['risk_score']);
   const title = (
     <div>
-      <div className="flat-widget__title uppercase">
+      <div className="safety-details__title uppercase">
         {aM.get('risk_score')}
       </div>
-      <div className="flat-widget__subtitle" style={{color: 'white'}}>
+      <div className="safety-details__subtitle" style={{color: 'white'}}>
         {quantile.label}
       </div>
     </div>
@@ -68,7 +69,7 @@ const SafetyInfoWidget = observer(({store}) => {
 
   const card = (
     <Card 
-      className="flat-widget" 
+      className="details-widget safety-details" 
       style={style} 
       headStyle={{background: color}}
       size="small" 

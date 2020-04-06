@@ -1,0 +1,21 @@
+.safety-details {
+  
+  .safety-details__subtitle {
+    font-weight: 500;
+    color: #0F0C01;
+  }
+  
+  .safety-details__title {
+    font-weight: 600;
+    color: #0F0C01;
+  }
+
+  .safety-details__row {
+    font-size: 12.5px;
+    line-height: 1.2;
+    
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+}
