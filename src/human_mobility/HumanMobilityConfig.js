@@ -6,6 +6,10 @@ import TokyoImage from "../resources/images/Tokyo.jpg";
 import DaeguImage from '../resources/images/Daegu.jpg';
 import TelAvivImage from '../resources/images/tel-aviv-yafo.jpg';
 
+import bikePng from '../resources/images/bike_01-01.png';
+import gaugePng from '../resources/images/gauge_01-01.png';
+import pedestrianPng from '../resources/images/ped_01-01.png';
+
 
 //var webmapIdEnv = '0b800d1e71d94002b8d2451dcd08155d';
 var webmapIdEnv = '47c2853d45f94c1eba60266455626792';
@@ -68,6 +72,7 @@ const humanMobilityConfig = {
         step: 1, min:6, max:18, tooltipVisible:true}},
   ],
   hasCustomTooltip: true,
+  hasOnClickDetails: true,
   hasZoomListener: true,
   initialRendererField: 'ped_den',
   layers : [
@@ -91,14 +96,11 @@ const humanMobilityConfig = {
        {zoom: 14, where: 'SHAPE__LENGTH > 45'}, // 50% of data
       ]
     },
-
-    ],
-
+  ],
   statisticsFieldsInfo: { 
-
-    'ped_den': {title:"Average pedestrian volume" , postText:"  Average per ride", iconTag: 'walk'},
-    'bic_den': {title:"Average cyclist volume" , postText:"  Average per ride", iconTag: 'bike'},
-    'avg_spd': {title:"Average speed" , postText:"  km/h", iconTag: 'speed'},
+    'avg_spd': {title: "Average speed", postText: "km/h", image: gaugePng},
+    'ped_den': {title: "Average pedestrian volume", postText: "per ride", image: pedestrianPng},
+    'bic_den': {title: "Average cyclist volume", postText: "per ride", image: bikePng},
   },
   liveLayersStartIndex: 2,
   defaultVisibleLayersList: [0,1,2],
