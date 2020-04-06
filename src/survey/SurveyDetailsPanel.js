@@ -4,13 +4,14 @@ import { observer } from "mobx-react";
 import { Card } from 'antd';
 import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
 import { Hint } from '../components/details/Hint';
-import { findColor, stringifyColor } from '../utils/ui';
+import { findColor, stringifyColor, roundTo } from '../utils/ui';
 
 const SurveyDetails = observer(({store}) => {
   if(!store.clickResults || !store.clickResults.graphic) {
     return <Hint />;
   }
-  const graphic = store.clickResults.graphic
+  const graphic = store.clickResults.graphic;
+  console.log(graphic);
   const attrs = graphic.attributes;
   const field = graphic.layer.renderer.field;
   const value = attrs[field];
@@ -46,14 +47,14 @@ const SurveyDetails = observer(({store}) => {
       headStyle={{background: color}}
     >
       <ul className="details-list">
-        {[1].map((val, i) => {
-          return (
-            <li key={i}>
-              <div>dummy:</div>
-              <div>0.00</div>
-            </li>
-          );
-        })}
+        <li>
+          <div>latitude</div>
+          <div>{roundTo(graphic.geometry.latitude, 5)}</div>
+        </li>
+        <li>
+          <div>longitude</div>
+          <div>{roundTo(graphic.geometry.longitude, 5)}</div>
+        </li>
       </ul>
     </Card>
   )
