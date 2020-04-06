@@ -32,10 +32,15 @@
     background: #eaeaea;
   }
 
+  .esri-legend {
+    width: 100%;
+    max-width: none;
+  }
+
   .esri-legend__service {
     background-color: white;
     border-radius: 5px;
-    padding: 24px 8px;
+    padding: 24px 0px;
 
     &:not(:last-child) {
       border-radius: 0;
@@ -45,6 +50,10 @@
 
   .esri-legend__layer {
     margin: 0;
+
+    .esri-legend__layer-body {
+      margin-left: 8px;
+    }
   }
 
   .esri-legend__layer-caption {

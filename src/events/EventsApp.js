@@ -83,7 +83,7 @@ const EventsApp = observer(class App extends React.Component {
         this.view.ui.add(searchExpand, "top-left");
         this.view.ui.move("zoom", "bottom-left");
         moveWidgetsWithPanel(this.view, this.state.navKey ? LEFT_PANEL_WIDTH : 0);
-        this.forceUpdate();
+        setTimeout(() => this.forceUpdate(), 100);
       });
   }
 
@@ -105,7 +105,7 @@ const EventsApp = observer(class App extends React.Component {
     }
 
     const leftPanelWidth = LEFT_PANEL_WIDTH;
-    const rightPanelWidth = 280;
+    const rightPanelWidth = 260;
 
     if (this.view) {
       moveWidgetsWithPanel(this.view, panel ? leftPanelWidth : 0);

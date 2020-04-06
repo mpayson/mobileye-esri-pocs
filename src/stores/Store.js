@@ -619,9 +619,7 @@ class Store {
             })
             .map(l => ({
                 layer: l,
-                title: this.layerConfigByLayerId.get(l.id).customLegendTitle
-                    ? this.layerConfigByLayerId.get(l.id).customLegendTitle
-                    : ""
+                title: this.layerConfigByLayerId.get(l.id).customLegendTitle || ""
             }));
     }
     get interactiveLayers(){
