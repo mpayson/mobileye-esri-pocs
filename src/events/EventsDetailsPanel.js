@@ -23,7 +23,6 @@ const EventDetails = observer(({store}) => {
       .find(event => event.value === eventType);
       eventName = eventInfo ? eventInfo.label : eventType;
     headColor = eventInfo.color;
-    console.log(attrs);
     widgetConfig = config.details['eventType'];
   } else {
     eventName = 'Average speed';

@@ -20,6 +20,7 @@ import BookmarkPanel from "../components/BookmarkPanel";
 import MinMaxSlideFilter from "../components/filters/MinMaxSlideFilter";
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
+import { HumanMobilityDetailsPanel } from './HumanMobilityDetailsPanel';
 
 const { Header, Content, Sider } = Layout;
 const Title = Typography.Title;
@@ -34,14 +35,15 @@ const MenuLocationsIcon = () => (
   <LocationsIcon size="18" filled/>
 )
 
-const PANEL_WIDTH = 300;
+const LEFT_PANEL_WIDTH = 300;
 
 const HumanMobilityApp = observer(class App extends React.Component {
 
   state = {
     collapsed: true,
     loaded: false,
-    navKey: "Layers"
+    navKey: "Layers",
+    detailsOpen: false,
   };
 
   constructor(props, context){
@@ -70,14 +72,14 @@ const HumanMobilityApp = observer(class App extends React.Component {
   };
 
   componentDidMount = () => {
-
     this.store.load(this.mapViewRef.current)
       .then(mapView => {
         this.view = mapView;
-        addSearchWidget(this.view, 'top-right', 0, true);
-        const layerInfos = this.store.legendLayerInfos;
-        addLegendWidget(this.view, 'bottom-right', {layerInfos});
-        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
+        addSearchWidget(this.view, 'top-left', 0, true);
+        // const layerInfos = this.store.legendLayerInfos;
+        // addLegendWidget(this.view, 'bottom-right', {layerInfos});
+        moveWidgetsWithPanel(this.view, this.state.navKey ? LEFT_PANEL_WIDTH : 0);
+        this.forceUpdate();
       });
   }
 
@@ -88,6 +90,10 @@ const HumanMobilityApp = observer(class App extends React.Component {
   _onHoursBackwardsButtonClick = (event) => {
     this.hourFilter.decrement();
   }
+
+  onDetailsOpen = open => {
+    this.setState({detailsOpen: open})
+  };
 
   render() {
     let panel;
@@ -106,7 +112,7 @@ const HumanMobilityApp = observer(class App extends React.Component {
     }
 
     if (this.view) {
-      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
+      moveWidgetsWithPanel(this.view, panel ? LEFT_PANEL_WIDTH : 0);
     }
 
     const signin = this.props.appState.displayName
@@ -226,13 +232,18 @@ const HumanMobilityApp = observer(class App extends React.Component {
                   </Col>
                 </Row>
               </Card>
+              <HumanMobilityDetailsPanel 
+                store={this.store} 
+                onOpen={this.onDetailsOpen}
+                width={260} 
+              />
               <Drawer
                 // title={this.state.navKey}
                 closable={false}
                 // onClose={this.onClose}
                 placement="left"
                 visible={this.state.navKey}
-                width={PANEL_WIDTH}
+                width={LEFT_PANEL_WIDTH}
                 mask={false}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5"}}
