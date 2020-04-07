@@ -171,13 +171,13 @@ const surveyConfig = {
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "category_l1",
       
-      defaultSymbol: newSymbol(0,0,255,0.3),
+      defaultSymbol: newSymbol(45,116,218,0.3),
       uniqueValueInfos: [
-        {value: 0, symbol: newSymbol(255,255,0,0.3)},
-        {value: 1, symbol: newSymbol(255,99,71,0.3)},
-        {value: 2, symbol: newSymbol(127,255,0,0.3)},
-        {value: 3, symbol: newSymbol(64,224,208,0.3)},
-        {value: 4, symbol: newSymbol(186,85,211,0.3)},      
+        {value: 0, symbol: newSymbol(234,189,0,0.3)},
+        {value: 1, symbol: newSymbol(255,118,102,0.3)},
+        {value: 2, symbol: newSymbol(46,204,98,0.3)},
+        {value: 3, symbol: newSymbol(0,182,203,0.3)},
+        {value: 4, symbol: newSymbol(209,96,223,0.3)},      
       ],
 
       visualVariables: [
