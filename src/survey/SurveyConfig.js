@@ -61,7 +61,14 @@ import HamburgImage from "../resources/images/hamburg.jpg"
 import ParisImage from "../resources/images/Paris.png"
 import SingaporeImage from "../resources/images/Singapore.jpg"
 
-const newSymbol = (...rgba) => {
+import trafficSignPng from "../resources/images/survey/traffic_sign-01.png";
+import trafficLightPng from "../resources/images/survey/traffic_light-01.png";
+import polePng from "../resources/images/survey/pole-01.png";
+import roadMarkingPng from "../resources/images/survey/road_marking-01.png";
+import manholePng from "../resources/images/survey/manhole-01.png";
+import otherPng from "../resources/images/survey/other-01.png";
+
+const simpleMarker = (...rgba) => {
   const rgbStr = rgba.slice(0, 3).join(',');
   const rgbaStr = rgba.join(',');
   return {
@@ -72,6 +79,18 @@ const newSymbol = (...rgba) => {
       color: `rgba(${rgbaStr})`, 
       width: 2.5
     },
+    onHoverScale: 3.0,
+  }
+};
+
+const picMarker = (url, ...rgba) => {
+  const rgbStr = rgba.slice(0, 3).join(',');
+  return {
+    type: "picture-marker", 
+    color: `rgb(${rgbStr})`, 
+    url,
+    width: 9,
+    height: 9,
     onHoverScale: 3.0,
   }
 };
@@ -171,13 +190,13 @@ const surveyConfig = {
       type: "unique-value",  // autocasts as new UniqueValueRenderer()
       field: "category_l1",
       
-      defaultSymbol: newSymbol(45,116,218,0.3),
+      defaultSymbol: picMarker(otherPng, 45,116,218,0.3),
       uniqueValueInfos: [
-        {value: 0, symbol: newSymbol(234,189,0,0.3)},
-        {value: 1, symbol: newSymbol(255,118,102,0.3)},
-        {value: 2, symbol: newSymbol(46,204,98,0.3)},
-        {value: 3, symbol: newSymbol(0,182,203,0.3)},
-        {value: 4, symbol: newSymbol(209,96,223,0.3)},      
+        {value: 0, symbol: picMarker(trafficSignPng, 234,189,0,0.3)},
+        {value: 1, symbol: picMarker(trafficLightPng, 255,118,102,0.3)},
+        {value: 2, symbol: picMarker(roadMarkingPng, 46,204,98,0.3)},
+        {value: 3, symbol: picMarker(polePng, 0,182,203,0.3)},
+        {value: 4, symbol: picMarker(manholePng, 209,96,223,0.3)},      
       ],
 
       visualVariables: [
@@ -189,14 +208,14 @@ const surveyConfig = {
             showLegend: false,
           },
           stops: [
-            {value: 564,  size: 8},
-            {value: 1128, size: 6},
-            {value: 2256, size: 4.5},
-            {value: 4513, size: 3},
-            {value: 9027, size: 2.25},
-            {value: 18055, size: 1.5},
-            {value: 36111, size: 1},
-            {value: 144447, size: 0.5},
+            {value: 0,  size: 24},
+            {value: 1128, size: 20},
+            {value: 2256, size: 16},
+            {value: 4513, size: 12},
+            {value: 9027, size: 8},
+            {value: 18055, size: 4.5},
+            {value: 36111, size: 3},
+            {value: 144447, size: 1.5},
           ]
         },
       ],
