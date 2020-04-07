@@ -68,6 +68,7 @@ export function SurveyDetailsPanel({store, onMountOpen, width, onOpen}) {
       onMountOpen={onMountOpen}
       width={width}
       onOpen={onOpen}
+      className="survey-details-panel"
     >
       <SectionTitle>More info</SectionTitle>
       <SurveyDetails store={store} />

@@ -13,7 +13,7 @@ export const SectionTitle = ({children}) => (
 );
 
 const DetailsPanel = observer((props) => {
-  const {store, view, children, width, title=null, 
+  const {store, view, children, className, width, title=null, 
     onMountOpen=false, layerInfos=null, onOpen} = props;
   const [loadedWidget, setLoadedWidget] = useState(false);
   const [injected, setInjected] = useState(false)
@@ -104,7 +104,7 @@ const DetailsPanel = observer((props) => {
         getContainer={false}
         style={style}
         bodyStyle={bodyStyle}
-        className="details-panel"
+        className={className ? className + ' details-panel' : 'details-panel'}
       >
         <>
           {children}
