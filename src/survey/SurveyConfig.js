@@ -213,9 +213,9 @@ const surveyConfig = {
             {value: 2256, size: 16},
             {value: 4513, size: 12},
             {value: 9027, size: 8},
-            {value: 18055, size: 4.5},
+            {value: 18055, size: 6},
             {value: 36111, size: 3},
-            {value: 144447, size: 1.5},
+            {value: 144447, size: 2},
           ]
         },
       ],
