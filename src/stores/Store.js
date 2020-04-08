@@ -439,7 +439,7 @@ class Store {
         this.hoverResults = null;
     }
 
-    _onClick = (evt) => {
+    _onClick(evt) {
         this._clickPromise = this.view.hitTest(evt).then(hit => {
             const results = hit.results.filter(
                 r => this.interactiveLayerIdSet.has(r.graphic.layer.id)
@@ -535,7 +535,7 @@ class Store {
                 this.appState.onError(er, 'Could not load layers, do you have access to the data?')
             })
         if (this.hasOnClickDetails) {
-            this._clickListener = this.view.on("click", this._onClick);
+            this._clickListener = this.view.on("click", this._onClick.bind(this));
         }
         if (this.hasCustomTooltip) {
             this._mouseMoveListener = this.view.on("pointer-move", this._onMouseMove);
@@ -692,6 +692,7 @@ decorate(Store, {
     clearBookmark: action.bound,
     clearTooltip: action.bound,
     _onMouseLeave: action.bound,
+    _onClick: action.bound,
     startAutoplayBookmarks: action.bound,
     stopAutoplayBookmarks: action.bound,
     _doAfterLayersLoaded: action.bound,
