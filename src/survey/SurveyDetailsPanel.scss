@@ -13,21 +13,25 @@
   .survey-details__subcategory {
     color: white;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 300;
     letter-spacing: 0.7px;
   }
 
 }
 
-.survey-details-panel .esri-legend__symbol {
-  svg {
-    width: 28px;
-    height: 28px;
-    padding: 2px 0;
+.survey-details-panel .esri-legend__layer-cell {
+  padding: 2px 0;
 
-    image {
+  .esri-legend__symbol {
+    svg {
       width: 28px;
       height: 28px;
+      padding: 2px 0;
+
+      image {
+        width: 28px;
+        height: 28px;
+      }
     }
   }
 }

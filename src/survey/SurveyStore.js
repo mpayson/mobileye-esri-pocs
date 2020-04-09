@@ -1,15 +1,6 @@
 import Store from '../stores/Store';
 import {action, decorate, observable} from "mobx";
 import {loadBasemap} from '../services/MapService';
-import { getDomainMap } from '../utils/Utils';
-
-const CAT_CODE_TO_QUERY_FIELD = [
-  'traffic_sign_category_l3',
-  'tfl_category_l3',
-  'road_marking_category_l3',
-  'pole_category_l3',
-  'manhole_category_l3',
-];
 
 class SurveyStore extends Store {
 
@@ -55,48 +46,13 @@ class SurveyStore extends Store {
       }
     }
   }
-
-  _onClick = (evt) => {
-    super._onClick(evt);
-    this._clickPromise = this._clickPromise.then(() => {
-      const results = this.clickResults;
-
-      if (results && results.graphic) {
-        const graphic = results.graphic;
-        const attrs = graphic.attributes;
-        const field = graphic.layer.renderer.field;
-        const value = attrs[field];
-        const queryField = CAT_CODE_TO_QUERY_FIELD[value];
-  
-        this.lyr.queryFeatures({
-          where: `ObjectId = ${attrs.ObjectId}`,
-          outFields: [queryField],
-        })
-        .then(result => {
-          if (result && result.features && result.features[0]) {
-            const feature = result.features[0];
-            const code = feature.attributes[queryField];
-    
-            const field = result.fields.find(f => f.name === queryField);
-            const domainMap = getDomainMap(field.domain);
-    
-            if (domainMap.has(code)) {
-              results['subcat'] = domainMap.get(code);
-            }
-          }
-        });
-      }
-    });
-  }
 }
 
 decorate(SurveyStore, {
   basemaps: observable.shallow,
-  clickResults: observable.shallow,
   load: action.bound,
   _onZoomChange: action.bound,
   _applyBasemap: action.bound,
-  _onClick: action.bound,
 })
 
 export default SurveyStore;

@@ -469,6 +469,21 @@ const surveyConfig = {
   hasCustomTooltip: true,
   hasOnClickDetails: true,
   onHoverEffect: 'upscale',
+  layers : [{
+    id: 0, 
+    type: "live", 
+    name: "assets", 
+    popupTemplate: null,
+    showLegend: true, 
+    outFields: [
+      'publish_date', 
+      'traffic_sign_category_l3',
+      'tfl_category_l3',
+      'road_marking_category_l3',
+      'pole_category_l3',
+      'manhole_category_l3',
+    ],
+  }],
   basemaps: {
     'dark-gray': {
       minZoom: 0, 
