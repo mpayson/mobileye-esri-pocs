@@ -77,20 +77,6 @@ const DetailsPanel = observer((props) => {
     </button>
   )
 
-  const style = {
-    position: 'absolute', 
-    background: "#f5f5f5", 
-    height: "calc(100% - 15px)"
-  }
-
-  const bodyStyle = {
-    padding: '12px',
-    margin: '8px',
-    background: 'white', 
-    minHeight: '100%',
-    borderRadius: '5px',
-  }
-
   return (
     <>
       <Drawer
@@ -102,8 +88,6 @@ const DetailsPanel = observer((props) => {
         mask={false}
         width={width}
         getContainer={false}
-        style={style}
-        bodyStyle={bodyStyle}
         className={className ? className + ' details-panel' : 'details-panel'}
       >
         <>

@@ -32,7 +32,9 @@
 }
 
 .details-panel {
-  background-color: rgb(254, 254, 254);
+  position: absolute;
+  background: rgb(245, 245, 245);
+  height: calc(100% - 15px);
 
   &.ant-drawer-open .ant-drawer-content-wrapper {
     box-shadow: none;
@@ -41,6 +43,15 @@
 
   .ant-drawer-wrapper-body {
     background: #eaeaea;
+
+    .ant-drawer-body {
+      padding: 12px;
+      margin: 15px 7px;
+      background: white;
+      min-height: 100%;
+      border-radius: 3px;
+      border: 1px solid #e0e0e0;
+    }
   }
 
   .esri-legend {
