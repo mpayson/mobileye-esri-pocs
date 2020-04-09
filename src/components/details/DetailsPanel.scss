@@ -2,8 +2,10 @@
   position: absolute;
   width: 27px;
   height: 27px;
-  border-radius: 4px;
-  left: -24px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  padding: 0;
+  left: -26px;
   top: 0px;
   background-color: #eaeaea;
   cursor: pointer;
