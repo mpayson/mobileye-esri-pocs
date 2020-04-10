@@ -40,14 +40,15 @@ const MenuInformationIcon = () => (
   <InformationIcon size="17" filled/>
 )
 
-const PANEL_WIDTH = 320;
+const LEFT_PANEL_WIDTH = 320;
 
 const SurveyApp = observer(class App extends React.Component {
 
   state = {
     collapsed: true,
     loaded: false,
-    navKey: null
+    navKey: null,
+    detailsOpen: false,
   };
 
   constructor(props, context){
@@ -94,10 +95,14 @@ const SurveyApp = observer(class App extends React.Component {
         })
         this.view.ui.add(searchExpand, "top-left");
         this.view.ui.move("zoom", "bottom-left");
-        moveWidgetsWithPanel(this.view, this.state.navKey ? PANEL_WIDTH : 0);
+        moveWidgetsWithPanel(this.view, this.state.navKey ? LEFT_PANEL_WIDTH : 0);
         this.forceUpdate();
       });
   }
+
+  onDetailsOpen = open => {
+    this.setState({detailsOpen: open})
+  };
 
   render() {
     let panel;
@@ -122,7 +127,7 @@ const SurveyApp = observer(class App extends React.Component {
     }
 
     if (this.view) {
-      moveWidgetsWithPanel(this.view, panel ? PANEL_WIDTH : 0);
+      moveWidgetsWithPanel(this.view, panel ? LEFT_PANEL_WIDTH : 0);
     }
 
     const signin = this.props.appState.displayName
@@ -160,7 +165,7 @@ const SurveyApp = observer(class App extends React.Component {
       )
     }
 
-    const leftPanelWidth = PANEL_WIDTH;
+    const leftPanelWidth = LEFT_PANEL_WIDTH;
     const rightPanelWidth = 260;
 
     const mapAreaWidth = window.innerWidth - 80;
@@ -214,7 +219,11 @@ const SurveyApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              <SurveyDetailsPanel store={this.store} width={rightPanelWidth} />
+              <SurveyDetailsPanel 
+                store={this.store} 
+                onOpen={this.onDetailsOpen} 
+                width={rightPanelWidth} 
+              />
               <Tooltip store={this.store} xMin={xMin} xMax={xMax}>
                 <SurveyHoverHint store={this.store} />
               </Tooltip>
@@ -226,7 +235,7 @@ const SurveyApp = observer(class App extends React.Component {
                 placement="left"
                 visible={this.state.navKey}
                 mask={false}
-                width={PANEL_WIDTH}
+                width={LEFT_PANEL_WIDTH}
                 getContainer={false}
                 style={{ position: 'absolute', background: "#f5f5f5", height: "calc(100% - 15px)"}}
                 bodyStyle={{ padding: "10px", background: "#f5f5f5", height: "100%"}}
