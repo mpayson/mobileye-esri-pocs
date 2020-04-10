@@ -16,10 +16,11 @@ import Store from './SurveyStore';
 import surveyConfig from './SurveyConfig';
 import LocationsPanel from '../components/LocationsPanel';
 import { Logo } from '../components/Logo';
+import { Tooltip } from '../components/details/Tooltip';
 import { moveWidgetsWithPanel } from '../utils/ui';
-import DetailsPanel from '../components/details/DetailsPanel';
-import { Hint } from '../components/details/Hint';
 import { SurveyDetailsPanel } from './SurveyDetailsPanel';
+import { SurveyHoverHint } from './SurveyHoverHint';
+
 
 const { Header, Content, Sider } = Layout;
 
@@ -158,6 +159,14 @@ const SurveyApp = observer(class App extends React.Component {
         </Card>
       )
     }
+
+    const leftPanelWidth = PANEL_WIDTH;
+    const rightPanelWidth = 260;
+
+    const mapAreaWidth = window.innerWidth - 80;
+    const xMin = this.state.navKey ? leftPanelWidth : 0; 
+    const xMax = this.state.detailsOpen ? (mapAreaWidth - rightPanelWidth) : mapAreaWidth;
+
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -205,10 +214,10 @@ const SurveyApp = observer(class App extends React.Component {
                 ref={this.mapViewRef}
                 style={{width: "100%", height: "100%"}}
               />
-              <SurveyDetailsPanel store={this.store} width={260} />
-              {/* <DetailsPanel store={this.store} view={this.view} width={260} >
-                <Hint />
-              </DetailsPanel> */}
+              <SurveyDetailsPanel store={this.store} width={rightPanelWidth} />
+              <Tooltip store={this.store} xMin={xMin} xMax={xMax}>
+                <SurveyHoverHint store={this.store} />
+              </Tooltip>
               {bookmarkCard}
               <Drawer
                 title={this.state.navKey}

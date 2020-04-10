@@ -468,6 +468,7 @@ const surveyConfig = {
   hasZoomListener: true,
   hasCustomTooltip: true,
   hasOnClickDetails: true,
+  hasOnHoverDetails: true,
   onHoverEffect: 'upscale',
   layers : [{
     id: 0, 

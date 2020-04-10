@@ -1,7 +1,6 @@
 import './EventsHoverHint.scss';
 import React from 'react';
 import { observer } from 'mobx-react';
-import { findColor, stringifyColor } from '../utils/ui';
 import GaugePng from '../resources/images/gauge-01.png';
 import ClockPng from '../resources/images/hour-01.png';
 import {DATE, TIME} from './EventsConfig';
@@ -22,9 +21,7 @@ export const EventsHoverHint = observer(({store}) => {
       .find(event => event.value === eventType);
     const name = eventInfo ? eventInfo.label : eventType;
     return <EventHint name={name} timestamp={attrs['eventTimestamp']} />
-
   } else {
-    // color = stringifyColor(findColor(store, graphic));
     return <SpeedHint value={attrs[field]} />
   }
 });
