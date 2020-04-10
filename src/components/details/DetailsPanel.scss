@@ -36,6 +36,13 @@
   background: rgb(245, 245, 245);
   height: calc(100% - 15px);
 
+  .details-panel__section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 16px;
+  }
+
   &.ant-drawer-open .ant-drawer-content-wrapper {
     box-shadow: none;
     -webkit-box-shadow: none;
@@ -84,7 +91,8 @@
     font-size: 16px;
     font-family: 'Hind Siliguri', sans-serif;
     font-weight: 600;
-    margin-block-end: 1em;
+    margin-block-end: 16px;
+    padding: 0;
   }
 
 }

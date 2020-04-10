@@ -2,7 +2,7 @@ import './SurveyDetailsPanel.scss';
 import React from 'react';
 import { observer } from "mobx-react";
 import { Card } from 'antd';
-import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
+import DetailsPanel from '../components/details/DetailsPanel';
 import { Hint } from '../components/details/Hint';
 import { findColor, stringifyColor, roundTo } from '../utils/ui';
 import { CAT_CODE_TO_QUERY_FIELD, findLabel } from './survey-utils';
@@ -76,7 +76,6 @@ export function SurveyDetailsPanel({store, onMountOpen, width, onOpen}) {
       onOpen={onOpen}
       className="survey-details-panel"
     >
-      <SectionTitle>More info</SectionTitle>
       <SurveyDetails store={store} />
     </DetailsPanel>  
   );

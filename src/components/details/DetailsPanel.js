@@ -7,7 +7,7 @@ import { observer } from 'mobx-react';
 import arrowPng from '../../resources/images/arrow_ticker-01.png';
 
 export const SectionTitle = ({children}) => (
-  <h3 style={{fontSize: '16px', fontWeight: 600}} >
+  <h3 className="details-panel__section-title" >
     {children}
   </h3>
 );
@@ -91,6 +91,7 @@ const DetailsPanel = observer((props) => {
         className={className ? className + ' details-panel' : 'details-panel'}
       >
         <>
+          <SectionTitle>More info</SectionTitle>
           {children}
           <hr className="details-panel__separator" />
           <div ref={content} />

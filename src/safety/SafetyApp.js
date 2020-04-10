@@ -15,7 +15,7 @@ import BookmarkPanel from '../components/BookmarkPanel';
 import LocationsIcon from 'calcite-ui-icons-react/LayerZoomToIcon';
 import { Logo } from '../components/Logo';
 import { moveWidgetsWithPanel } from '../utils/ui';
-import { SafetyInfoPanel } from './SafetyInfoPanel';
+import { SafetyDetailsPanel } from './SafetyDetailsPanel';
 import { SafetyHoverHint } from './SafetyHoverHint';
 import { Tooltip } from '../components/details/Tooltip';
 
@@ -230,7 +230,7 @@ const SafetyApp = observer(class App extends React.Component {
                 >
                   <SafetyHoverHint store={this.store} />
                 </Tooltip>
-                <SafetyInfoPanel 
+                <SafetyDetailsPanel 
                   store={this.store} 
                   onMountOpen={true}
                   onOpen={this.onDetailsOpen}

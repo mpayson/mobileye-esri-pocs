@@ -2,7 +2,7 @@ import './EventsDetailsPanel.scss';
 import React from 'react';
 import { observer } from "mobx-react";
 import { Card } from 'antd';
-import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
+import DetailsPanel from '../components/details/DetailsPanel';
 import { Hint } from '../components/details/Hint';
 import { findColor, stringifyColor } from '../utils/ui';
 import config from './EventsConfig';
@@ -91,7 +91,6 @@ export function EventsDetailsPanel({store, onMountOpen, width, onOpen}) {
       layerInfos={store.legendLayerInfos}
       onOpen={onOpen}
     >
-      <SectionTitle>More info</SectionTitle>
       <EventDetails store={store} />
     </DetailsPanel>  
   );

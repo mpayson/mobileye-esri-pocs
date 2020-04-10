@@ -1,6 +1,6 @@
-import './SafetyInfoPanel.scss';
+import './SafetyDetailsPanel.scss';
 import React from 'react';
-import DetailsPanel, { SectionTitle } from '../components/details/DetailsPanel';
+import DetailsPanel from '../components/details/DetailsPanel';
 import {Hint} from '../components/details/Hint';
 import { observer } from 'mobx-react';
 import { Card, Progress } from 'antd';
@@ -8,7 +8,7 @@ import { stringifyColor, findColor } from '../utils/ui';
 import { getQuantile } from './safety-utils';
 
 
-const SafetyInfoWidget = observer(({store}) => {
+const SafetyDetails = observer(({store}) => {
   if (!store.clickResults) {
     return <Hint />;
   }
@@ -81,7 +81,7 @@ const SafetyInfoWidget = observer(({store}) => {
 });
 
 
-export function SafetyInfoPanel({store, onMountOpen, width, onOpen}) {
+export function SafetyDetailsPanel({store, onMountOpen, width, onOpen}) {
   return (
     <DetailsPanel 
       store={store} 
@@ -90,8 +90,7 @@ export function SafetyInfoPanel({store, onMountOpen, width, onOpen}) {
       width={width}
       onOpen={onOpen}
     >
-      <SectionTitle>More info</SectionTitle>
-      <SafetyInfoWidget store={store} />
+      <SafetyDetails store={store} />
     </DetailsPanel>  
   );
 }

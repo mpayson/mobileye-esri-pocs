@@ -1,7 +1,6 @@
 import './SurveyHoverHint.scss';
 import React from 'react';
 import { observer } from 'mobx-react';
-import ClockPng from '../resources/images/hour-01.png';
 import { findColor, stringifyColor, roundTo } from '../utils/ui';
 import { CAT_CODE_TO_QUERY_FIELD, findLabel } from './survey-utils';
 
