@@ -68,8 +68,11 @@ const SurveyDetails = observer(({store}) => {
         </li>
       </ul>
       {imgSrc && (
-        <div className="survey-details__image">
-          <img src={imgSrc} alt="asset" />
+        <div className="survey-details__dimensions">
+          <hr className="survey-details__separator" />
+          <div className="survey-details__image">
+            <img src={imgSrc} alt="asset" />
+          </div>
         </div>
       )}
     </Card>
