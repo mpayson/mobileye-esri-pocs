@@ -13,6 +13,26 @@ export const DT = new Intl.DateTimeFormat('en-GB', {
   timeStyle: 'short'
 });
 
+const Dimension = ({value, className}) => (
+  <div className={className}>
+    <span className="survey-details__dim-value">
+      {roundTo(value, 3)}
+    </span>&nbsp;
+    <span className="survey-details__measure-unit">m</span>
+  </div>
+);
+
+const Title = ({cat, subcat}) => (
+  <>
+    <div className="survey-details__category uppercase">
+      {cat}&nbsp;
+    </div>
+    <div className="survey-details__subcategory">
+      {subcat}&nbsp;
+    </div>
+  </>
+);
+
 const SurveyDetails = observer(({store}) => {
   const results = store.clickResults;
   window.store = store;
@@ -23,7 +43,6 @@ const SurveyDetails = observer(({store}) => {
 
   const graphic = results.graphic;
   const attrs = graphic.attributes;
-  console.log(attrs);
   const cat = graphic.layer.renderer.field;
   const catValue = attrs[cat];
   const subcat = CAT_CODE_TO_QUERY_FIELD[catValue];
@@ -37,31 +56,11 @@ const SurveyDetails = observer(({store}) => {
   const width = attrs['width'];
   const height = attrs['height'];
 
-  const title = (
-    <>
-      <div className="survey-details__category uppercase">
-        {catName}&nbsp;
-      </div>
-      <div className="survey-details__subcategory">
-        {subcatName}&nbsp;
-      </div>
-    </>
-  );
-
-  const Dimension = ({value, className}) => (
-    <div className={className}>
-      <span className="survey-details__dim-value">
-        {roundTo(value, 3)}
-      </span>&nbsp;
-      <span className="survey-details__measure-unit">m</span>
-    </div>
-  )
-
   return (
     <Card 
       className="details-widget survey-details" 
       size="small" 
-      title={title} 
+      title={<Title cat={catName} subcat={subcatName} />} 
       headStyle={{background: color}}
     >
       <ul className="details-list">
