@@ -23,7 +23,7 @@ const SurveyDetails = observer(({store}) => {
 
   const graphic = results.graphic;
   const attrs = graphic.attributes;
-  // console.log(attrs);
+  console.log(attrs);
   const cat = graphic.layer.renderer.field;
   const catValue = attrs[cat];
   const subcat = CAT_CODE_TO_QUERY_FIELD[catValue];
@@ -34,6 +34,8 @@ const SurveyDetails = observer(({store}) => {
 
   const l2 = attrs['category_l2'];
   const imgSrc = category_l22image[l2];
+  const width = attrs['width'];
+  const height = attrs['height'];
 
   const title = (
     <>
@@ -45,6 +47,15 @@ const SurveyDetails = observer(({store}) => {
       </div>
     </>
   );
+
+  const Dimension = ({value, className}) => (
+    <div className={className}>
+      <span className="survey-details__dim-value">
+        {roundTo(value, 3)}
+      </span>&nbsp;
+      <span className="survey-details__measure-unit">m</span>
+    </div>
+  )
 
   return (
     <Card 
@@ -70,8 +81,11 @@ const SurveyDetails = observer(({store}) => {
       {imgSrc && (
         <div className="survey-details__dimensions">
           <hr className="survey-details__separator" />
+          <div className="survey-details__caption">Dimensions</div>
           <div className="survey-details__image">
+            {width && <Dimension className="survey-details__width" value={width}/>}
             <img src={imgSrc} alt="asset" />
+            {width && <Dimension className="survey-details__height" value={height}/>}
           </div>
         </div>
       )}
