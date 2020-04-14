@@ -6,6 +6,7 @@ import DetailsPanel from '../components/details/DetailsPanel';
 import { Hint } from '../components/details/Hint';
 import { findColor, stringifyColor, roundTo } from '../utils/ui';
 import { CAT_CODE_TO_QUERY_FIELD, findLabel } from './survey-utils';
+import { category_l22image } from './SurveyConfig';
 
 export const DT = new Intl.DateTimeFormat('en-GB', {
   dateStyle: 'short' , 
@@ -22,6 +23,7 @@ const SurveyDetails = observer(({store}) => {
 
   const graphic = results.graphic;
   const attrs = graphic.attributes;
+  // console.log(attrs);
   const cat = graphic.layer.renderer.field;
   const catValue = attrs[cat];
   const subcat = CAT_CODE_TO_QUERY_FIELD[catValue];
@@ -29,6 +31,9 @@ const SurveyDetails = observer(({store}) => {
   const catName = findLabel(store.lyr, cat, catValue);
   const subcatName = findLabel(store.lyr, subcat, attrs[subcat]);
   const color = stringifyColor(findColor(store, graphic));
+
+  const l2 = attrs['category_l2'];
+  const imgSrc = category_l22image[l2];
 
   const title = (
     <>
@@ -62,6 +67,11 @@ const SurveyDetails = observer(({store}) => {
           <div>{DT.format(attrs['publish_date'])}</div>
         </li>
       </ul>
+      {imgSrc && (
+        <div className="survey-details__image">
+          <img src={imgSrc} alt="asset" />
+        </div>
+      )}
     </Card>
   )
 });

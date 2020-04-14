@@ -144,7 +144,7 @@ const speed2image = {
           '80' : `${sign80USImage}`,
         }
 };
-const category_l22image = {
+export const category_l22image = {
     '0' : `${circularSignNoSpeedImage}`,
     '1' : `${warningImage}`,
     '2' : `${constructionImage}`,
@@ -476,14 +476,7 @@ const surveyConfig = {
     name: "assets", 
     popupTemplate: null,
     showLegend: true, 
-    outFields: [
-      'publish_date', 
-      'traffic_sign_category_l3',
-      'tfl_category_l3',
-      'road_marking_category_l3',
-      'pole_category_l3',
-      'manhole_category_l3',
-    ],
+    outFields: '*',
   }],
   basemaps: {
     'dark-gray': {

@@ -17,6 +17,17 @@
     letter-spacing: 0.7px;
   }
 
+  .survey-details__image {
+    margin-top: 15px;
+
+    img {
+      max-width: 75px;
+      max-height: 75px;
+      padding: 8px;
+      border: 0.8px solid #345699;
+      // border-radius: 3px;
+    }
+  }
 }
 
 .survey-details-panel .esri-legend__layer-cell {
