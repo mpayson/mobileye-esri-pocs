@@ -38,37 +38,61 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
     y = -1000;
   }
 
-  const mid = width / 2;
+  const midWidth = width / 2;
   const pad = 1;
-  let left, pointerLeft;
-  if (x > xMin + mid + pad) {
-    if (x + mid + pad < xMax) {
-      left = x - mid;
-      pointerLeft = x - left - 5
+  let left, top, arrowLeft, arrowTop;
+  let arrow = 'vertical';
+
+  if (x - xMin > midWidth + pad) {
+
+    if (midWidth + pad < xMax - x) {
+      left = x - midWidth;
+      arrowLeft = x - left - 5;
+
+    // right from mouse pointer
+    } else if (xMax - x < 30) {
+      left = x - 20 - width;
+      arrowLeft = width - 5;
+      arrow = 'horrizontal';
+
+    // close to the right border, but not too tight
     } else {
       left = xMax - pad - width;
-      pointerLeft = Math.min(width - 12, x - left - 5);
+      arrowLeft = Math.min(width - 12, x - left - 5);
     }
+
+  // right from mouse pointer
+  } else if (x - xMin < 30) {
+    left = x + 20;
+    arrowLeft = -5;
+    arrow = 'horrizontal';
+
+  // close to the left border, but not too tight
   } else {
     left = xMin + pad;
-    pointerLeft = Math.max(2, x - left - 5);
+    arrowLeft = Math.max(2, x - left - 5);
   }
 
   const height = 57;
-  let top, pointerTop;
-  if (y > height + 15) {
-    top = y - height - 15;
-    pointerTop = height - 5;
+  if (arrow === 'vertical') {
+    if (y > height + 15) {
+      top = y - height - 15;
+      arrowTop = height - 5;
+    } else {
+      top = y + 30;
+      arrowTop = -5;
+    }
   } else {
-    top = y + 30;
-    pointerTop = -5;
+    const yMax = window.innerHeight - height - 68;
+    top = Math.max(Math.min(y - height / 2, yMax), 2)
+    arrowTop = Math.max(y - top - 2, 3);
   }
 
   return (
     <div className="details-tooltip" style={{left, top}} ref={ref} >
       <div 
-        className="details-pointer" 
-        style={{left: pointerLeft, top: pointerTop}} 
+        className={`details-arrow ${arrow}`}
+        style={{left: arrowLeft, top: arrowTop}} 
       />
       {children}
     </div>

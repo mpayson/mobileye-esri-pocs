@@ -16,7 +16,7 @@
   word-wrap: none;
   white-space: nowrap;
 
-  .details-pointer {
+  .details-arrow {
     position: absolute;
     width: 10px;
     height: 10px;
@@ -27,5 +27,13 @@
     left: 105px;
     background-color: #222;
     box-shadow: none;
+
+    &.vertical {
+      transform: rotate(55deg) skew(22deg, 0deg);
+    }
+
+    &.horrizontal {
+      transform: rotate(33deg) skew(-22deg, 0deg);
+    }
   }
 }
