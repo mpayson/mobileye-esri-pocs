@@ -54,7 +54,7 @@ const HumanMobilityDetails = observer(({store}) => {
       title={title} 
       headStyle={{background: headColor}}
     >
-      <ul className="details-list">
+      <ul className="details-list mobility-details__list">
         {Object.entries(config.statisticsFieldsInfo).map(([key, settings]) => {
           const r = results[key];
           const value = Math.round(r.sum / Math.max(r.count, 1));
