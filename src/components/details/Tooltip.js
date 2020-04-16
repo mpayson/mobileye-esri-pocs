@@ -49,9 +49,9 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
       left = x - midWidth;
       arrowLeft = x - left - 5;
 
-    // right from mouse pointer
+    // left from mouse pointer
     } else if (xMax - x < 30) {
-      left = x - 20 - width;
+      left = x - 25 - width;
       arrowLeft = width - 5;
       arrow = 'horrizontal';
 
