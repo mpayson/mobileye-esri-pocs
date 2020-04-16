@@ -39,37 +39,37 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
   }
 
   const midWidth = width / 2;
-  const pad = 1;
+  const minDistToSides = 30;
   let left, top, arrowLeft, arrowTop;
   let arrow = 'vertical';
 
-  if (x - xMin > midWidth + pad) {
+  if (x - xMin > midWidth) {
 
-    if (midWidth + pad < xMax - x) {
+    if (midWidth < xMax - x) {
       left = x - midWidth;
       arrowLeft = x - left - 5;
 
     // left from mouse pointer
-    } else if (xMax - x < 30) {
+    } else if (xMax - x < minDistToSides) {
       left = x - 25 - width;
       arrowLeft = width - 5;
       arrow = 'horrizontal';
 
     // close to the right border, but not too tight
     } else {
-      left = xMax - pad - width;
+      left = xMax - width - minDistToSides / 2;
       arrowLeft = Math.min(width - 12, x - left - 5);
     }
 
   // right from mouse pointer
-  } else if (x - xMin < 30) {
+  } else if (x - xMin < minDistToSides) {
     left = x + 20;
     arrowLeft = -5;
     arrow = 'horrizontal';
 
   // close to the left border, but not too tight
   } else {
-    left = xMin + pad;
+    left = xMin + minDistToSides / 2;
     arrowLeft = Math.max(2, x - left - 5);
   }
 
