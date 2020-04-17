@@ -14,6 +14,7 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
     if (el && ResizeObserver) {
       const observer = new ResizeObserver(payload => {
         if (payload[0]) {
+          console.log(payload[0]);
           const dims = payload[0].contentRect;
           const newWidth = Math.max(dims.width + dims.x * 2, MIN_WIDTH) || MIN_WIDTH;
           setWidth(newWidth);
@@ -51,7 +52,7 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
 
     // left from mouse pointer
     } else if (xMax - x < minDistToSides) {
-      left = x - 25 - width;
+      left = x - 30 - width;
       arrowLeft = width - 5;
       arrow = 'horrizontal';
 
@@ -73,7 +74,7 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
     arrowLeft = Math.max(2, x - left - 5);
   }
 
-  const height = 57;
+  const height = 58;
   if (arrow === 'vertical') {
     if (y > height + 15) {
       top = y - height - 15;
