@@ -6,7 +6,7 @@ import DetailsPanel from '../components/details/DetailsPanel';
 import { Hint } from '../components/details/Hint';
 import { findColor, stringifyColor, roundTo } from '../utils/ui';
 import { CAT_CODE_TO_QUERY_FIELD, findLabel } from './survey-utils';
-import { category_l22image } from './SurveyConfig';
+import { category_l22image, category_l42speed, speed2image } from './SurveyConfig';
 
 export const DT = new Intl.DateTimeFormat('en-GB', {
   dateStyle: 'short' , 
@@ -49,6 +49,22 @@ const Dimensions = ({imgSrc, width, height}) => (
     </div>
 );
 
+function findImgSrc(attrs) {
+  const l1 = attrs['category_l1']
+  if ([0, 3].some(c => c === l1)) {
+    const region = attrs['region'];
+    const l4 = attrs['traffic_sign_category_l4'];
+    const speed = category_l42speed[l4];
+    const imgSrc = speed2image[region][speed];
+    if (imgSrc) {
+      return imgSrc;
+    }
+  }
+
+  const l2 = attrs['category_l2'];
+  return category_l22image[l2];
+}
+
 const SurveyDetails = observer(({store}) => {
   const results = store.clickResults;
   if(!results || !results.graphic) {
@@ -65,8 +81,7 @@ const SurveyDetails = observer(({store}) => {
   const subcatName = findLabel(store.lyr, subcat, attrs[subcat]);
   const color = stringifyColor(findColor(store, graphic));
 
-  const l2 = attrs['category_l2'];
-  const imgSrc = category_l22image[l2];
+  const imgSrc = findImgSrc(attrs);
   const width = attrs['width'];
   const height = attrs['height'];
 

@@ -95,7 +95,7 @@ const picMarker = (url, ...rgba) => {
   }
 };
 
-const category_l42speed = {
+export const category_l42speed = {
                '0': '10', '1': '20', '2': '30', '3': '40', '4': '50', '5': '60',
                '6': '70', '7': '80', '8': '90', '9': '100', '10': '110',
                '11': '120', '12': '130', '13': '140',
@@ -110,7 +110,7 @@ const category_l42speed = {
                '126': '115', '127': '125', '128': '135', '129': '145',
 };
 
-const speed2image = {
+export const speed2image = {
   'Europe' : {'10' : `${sign10EruopeImage}`,
               '20'  : `${sign20EruopeImage}`,
               '30'  : `${sign30EruopeImage}`,
@@ -477,13 +477,16 @@ const surveyConfig = {
     popupTemplate: null,
     showLegend: true, 
     outFields: [
+      'region',
       'publish_date', 
       'traffic_sign_category_l3',
       'tfl_category_l3',
       'road_marking_category_l3',
       'pole_category_l3',
       'manhole_category_l3',
+      'category_l1',
       'category_l2',
+      'traffic_sign_category_l4',
       'width',
       'height',
     ],
