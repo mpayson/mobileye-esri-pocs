@@ -13,15 +13,6 @@ export const DT = new Intl.DateTimeFormat('en-GB', {
   timeStyle: 'short'
 });
 
-const Dimension = ({value, className}) => (
-  <div className={className}>
-    <span className="survey-details__dim-value">
-      {roundTo(value, 3)}
-    </span>&nbsp;
-    <span className="survey-details__measure-unit">m</span>
-  </div>
-);
-
 const Title = ({cat, subcat}) => (
   <>
     <div className="survey-details__category uppercase">
@@ -33,10 +24,33 @@ const Title = ({cat, subcat}) => (
   </>
 );
 
+const Dimension = ({value, className}) => (
+  <div className={className}>
+    <span className="survey-details__dim-value">
+      {roundTo(value, 3)}
+    </span>&nbsp;
+    <span className="survey-details__measure-unit">m</span>
+  </div>
+);
+
+const Dimensions = ({imgSrc, width, height}) => (
+    <div className="survey-details__dimensions">
+      <hr className="survey-details__separator" />
+      <div className="survey-details__caption">Dimensions</div>
+      <div className="survey-details__image">
+        {Number.isFinite(width) && (
+          <Dimension className="survey-details__width" value={width}/>
+        )}
+        {imgSrc ? <img src={imgSrc} alt="asset" /> : <div className="no-image" />}
+        {Number.isFinite(height) && (
+          <Dimension className="survey-details__height" value={height}/>
+        )}
+      </div>
+    </div>
+);
+
 const SurveyDetails = observer(({store}) => {
   const results = store.clickResults;
-  window.store = store;
-
   if(!results || !results.graphic) {
     return <Hint/>;
   }
@@ -55,6 +69,8 @@ const SurveyDetails = observer(({store}) => {
   const imgSrc = category_l22image[l2];
   const width = attrs['width'];
   const height = attrs['height'];
+
+  const hasDimsInfo = Boolean(imgSrc) || Number.isFinite(width) || Number.isFinite(height);
 
   return (
     <Card 
@@ -77,16 +93,8 @@ const SurveyDetails = observer(({store}) => {
           <div>{DT.format(attrs['publish_date'])}</div>
         </li>
       </ul>
-      {imgSrc && (
-        <div className="survey-details__dimensions">
-          <hr className="survey-details__separator" />
-          <div className="survey-details__caption">Dimensions</div>
-          <div className="survey-details__image">
-            {width && <Dimension className="survey-details__width" value={width}/>}
-            <img src={imgSrc} alt="asset" />
-            {width && <Dimension className="survey-details__height" value={height}/>}
-          </div>
-        </div>
+      {hasDimsInfo && (
+        <Dimensions imgSrc={imgSrc} width={width} height={height} />
       )}
     </Card>
   )

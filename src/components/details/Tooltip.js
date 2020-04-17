@@ -14,7 +14,6 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
     if (el && ResizeObserver) {
       const observer = new ResizeObserver(payload => {
         if (payload[0]) {
-          console.log(payload[0]);
           const dims = payload[0].contentRect;
           const newWidth = Math.max(dims.width + dims.x * 2, MIN_WIDTH) || MIN_WIDTH;
           setWidth(newWidth);
