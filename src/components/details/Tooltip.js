@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 
 const MIN_WIDTH = 200;
 
-
 export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidth}) => {
   const ref = useRef(null);
   const [width, setWidth] = useState(MIN_WIDTH);
@@ -31,8 +30,8 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
   let x, y;
   if (results) {
     const p = results.screenPoint
-    x = p.x;
-    y = p.y;
+    x = Math.round(p.x);
+    y = Math.round(p.y);
   } else {
     x = -1000;
     y = -1000;
@@ -40,7 +39,7 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
 
   const midWidth = width / 2;
   const minDistToSides = 30;
-  let left, top, arrowLeft, arrowTop;
+  let left, right, top, arrowLeft, arrowRight, arrowTop;
   let arrow = 'vertical';
 
   if (x - xMin > midWidth) {
@@ -51,8 +50,9 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
 
     // left from mouse pointer
     } else if (xMax - x < minDistToSides) {
-      left = x - 30 - width;
-      arrowLeft = width - 5;
+      const canvasWidth = window.innerWidth - 80;
+      right = canvasWidth - x + 25;
+      arrowRight = - 5;
       arrow = 'horrizontal';
 
     // close to the right border, but not too tight
@@ -89,10 +89,10 @@ export const Tooltip = observer(({children, store, xMin=0, xMax=window.innerWidt
   }
 
   return (
-    <div className="details-tooltip" style={{left, top}} ref={ref} >
+    <div className="details-tooltip" style={{left, right, top}} ref={ref} >
       <div 
         className={`details-arrow ${arrow}`}
-        style={{left: arrowLeft, top: arrowTop}} 
+        style={{left: arrowLeft, right: arrowRight, top: arrowTop}} 
       />
       {children}
     </div>
